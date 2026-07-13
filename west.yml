@@ -1,0 +1,70 @@
+manifest:
+  version: "0.13"
+
+  # ── Remotes ────────────────────────────────────────────────────────────────
+  # To wire up a remaining TI fork: update the url-base for the relevant remote,
+  # update the matching revision constant in scripts/sdk_versions.py, and
+  # uncomment the project entry.
+  #
+  # Find all items still needing real URLs:
+  #   grep -r "PLACEHOLDER_" ti-zephyr/
+  remotes:
+    # Upstream Zephyr project organisation — source of truth for non-TI modules
+    - name: upstream
+      url-base: https://github.com/zephyrproject-rtos
+
+    # TI downstream fork of Zephyr RTOS
+    - name: ti-zephyr
+      url-base: https://github.com/TexasInstruments
+
+    # TI downstream fork of modules/hal/ti
+    # Replace url-base → PLACEHOLDER_TI_HAL_FORK when available
+    - name: ti-hal
+      url-base: https://github.com/TexasInstruments  # PLACEHOLDER_TI_HAL_FORK
+
+    # TI downstream fork of MCUboot
+    - name: ti-mcuboot
+      url-base: https://github.com/TexasInstruments
+
+    # TI downstream fork of west tools
+    # Replace url-base → PLACEHOLDER_TI_TOOLS_FORK when available
+    - name: ti-tools
+      url-base: https://github.com/TexasInstruments  # PLACEHOLDER_TI_TOOLS_FORK
+
+  defaults:
+    remote: upstream    # any unlisted module comes from upstream
+
+  # ── Projects ───────────────────────────────────────────────────────────────
+  # import: true on zephyr pulls ALL standard modules from zephyr/west.yml.
+  # Projects listed explicitly below override the imported versions.
+  projects:
+    # ── Zephyr RTOS ──────────────────────────────────────────────────────────
+    - name: zephyr
+      remote: ti-zephyr
+      revision: main        # see TI_ZEPHYR_REVISION in scripts/sdk_versions.py
+      import: true
+
+    # ── TI HAL ───────────────────────────────────────────────────────────────
+    # Overrides hal_ti from zephyr's west.yml import.
+    # Uncomment when TI HAL fork URL is available:
+    # - name: hal_ti
+    #   remote: ti-hal
+    #   revision: main      # see TI_HAL_REVISION in scripts/sdk_versions.py
+    #   path: modules/hal/ti
+
+    # ── MCUboot ──────────────────────────────────────────────────────────────
+    # Overrides mcuboot from zephyr's west.yml import.
+    - name: mcuboot
+      remote: ti-mcuboot
+      revision: main        # see TI_MCUBOOT_REVISION in scripts/sdk_versions.py
+      path: bootloader/mcuboot
+
+    # ── west tools ───────────────────────────────────────────────────────────
+    # Uncomment when TI tools fork URL is available:
+    # - name: tools
+    #   remote: ti-tools
+    #   revision: main      # see TI_TOOLS_REVISION in scripts/sdk_versions.py
+    #   path: tools
+
+  self:
+    path: ti-zephyr
