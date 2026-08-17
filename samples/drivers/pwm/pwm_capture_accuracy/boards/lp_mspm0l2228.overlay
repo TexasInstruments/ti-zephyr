@@ -1,0 +1,57 @@
+/*
+ * Copyright (c) 2026 Texas Instruments Incorporated
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * PWM output : TIMA0/CC2 on PA15  (pwm-out)
+ * PWM capture: TIMG8/CC0 on PA29  (pwm-cap)
+ *
+ * Wire required: PA15 -> PA29
+ *
+ * LP-MSPM0L2228 has one TIMA instance (TIMA0). TIMG8 is used for capture
+ * as it supports PULSE_WIDTH capture mode on the L-series.
+ * Both timers are clocked at 4 MHz:
+ *   TIMA0: MCLK (32 MHz) / 1 / 1 = 32 MHz (ti,clk-div=1, ti,clk-prescaler=0)
+ *   TIMG8: clock driver reports MCLK rate for ULPCLK-based timers on l2228;
+ *          get_cycles_per_sec returns 32 MHz matching hardware behaviour.
+ */
+
+/ {
+	aliases {
+		pwm-out = &pwma0;
+		pwm-cap = &pwmg8;
+	};
+};
+
+&tima0 {
+	ti,clk-div = <1>;
+	ti,clk-prescaler = <0>;
+};
+
+&pwma0 {
+	pinctrl-0 = <&tima0_ccp2_pa15>;
+	ti,cc-index = <2>;
+};
+
+&pinctrl {
+	timg8_ccp0_pa29: timg8_ccp0_pa29 {
+		input-enable;
+		bias-pull-down;
+	};
+};
+
+&timg8 {
+	/* ULPCLK 4 MHz / 1 / 1 = 4 MHz; minimum enum value is 1 */
+	ti,clk-div = <1>;
+	ti,clk-prescaler = <0>;
+	status = "okay";
+
+	pwmg8: pwmg8 {
+		pinctrl-0 = <&timg8_ccp0_pa29>;
+		pinctrl-names = "default";
+		ti,cc-index = <0>;
+		ti,cc-mode = "PULSE_WIDTH";
+		ti,period = <0xffff>;
+		status = "okay";
+	};
+};

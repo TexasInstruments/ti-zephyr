@@ -1,0 +1,36 @@
+# Copyright (c) 2026 Texas Instruments Incorporated
+# SPDX-License-Identifier: BSD-3-Clause
+sample:
+  name: TI MSPM0 PWM Precision Analysis
+  description: >
+    Generates a known PWM signal on pwm-out (TIMA0) and captures it on
+    pwm-cap (TIMA1), measuring jitter, frequency accuracy, duty accuracy,
+    and dynamic duty tracking. All test frequencies are derived at runtime
+    from the capture timer clock, so the sample works with any board overlay.
+    Requires a wire between the pwm-out and pwm-cap pins.
+common:
+  tags:
+    - drivers
+    - pwm
+    - ti
+  depends_on: pwm
+  harness: console
+  harness_config:
+    type: multi_line
+    ordered: true
+    regex:
+      - "TI MSPM0 PWM Precision Analysis"
+      - "1\\. Jitter"
+      - "0 cycles"
+      - "2\\. Frequency accuracy"
+      - "AT LIMIT"
+      - "3\\. Duty accuracy"
+      - "4\\. Dynamic duty tracking"
+      - "8/8 duty changes tracked"
+tests:
+  sample.drivers.pwm.capture_accuracy:
+    platform_allow:
+      - lp_mspm0g3507
+      - lp_mspm0g3519
+      - lp_mspm0l2228
+    timeout: 30

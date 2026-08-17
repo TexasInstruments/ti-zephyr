@@ -1,0 +1,70 @@
+/*
+ * Copyright (c) 2026 Texas Instruments Incorporated
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * PWM output : TIMG6/CCP0 on PB6  (pwm-out)
+ * PWM capture: TIMA1/CC0 on PB4   (pwm-cap)
+ *
+ * Wire required: PB6 -> PB4
+ *
+ * Note: IOMUX pin definitions are declared inline here because the shared
+ * mspm0g1x0x_g3x0x-pinctrl.dtsi does not yet carry correct function codes
+ * for the MSPM0G3519 (Gx51x) variant. These inline definitions will not be
+ * needed once a dedicated mspm0gx51x-pinctrl.dtsi is added.
+ */
+
+#include <zephyr/dt-bindings/pinctrl/mspm0-pinctrl.h>
+
+/ {
+	aliases {
+		pwm-out = &pwmg6;
+		pwm-cap = &pwma1;
+	};
+};
+
+&pinctrl {
+	/* PB6 = PINCM23, TIMG6_CCP0 = function 11 on G3519 */
+	timg6_ccp0_pb6_g3519: timg6_ccp0_pb6_g3519 {
+		pinmux = <MSP_PINMUX(23, MSPM0_PIN_FUNCTION_11)>;
+	};
+
+	/* PB4 = PINCM17, TIMA1_CCP0 = function 8 on G3519 */
+	tima1_ccp0_pb4_g3519: tima1_ccp0_pb4_g3519 {
+		pinmux = <MSP_PINMUX(17, MSPM0_PIN_FUNCTION_8)>;
+		input-enable;
+		bias-pull-down;
+	};
+};
+
+&timg6 {
+	ti,clk-div = <1>;
+	ti,clk-prescaler = <15>;
+	status = "okay";
+
+	pwmg6: pwmg6 {
+		compatible = "ti,mspm0-timer-pwm";
+		#pwm-cells = <3>;
+		pinctrl-0 = <&timg6_ccp0_pb6_g3519>;
+		pinctrl-names = "default";
+		ti,cc-index = <0>;
+		ti,pwm-mode = "EDGE_ALIGN";
+		ti,period = <25000>;
+		status = "okay";
+	};
+};
+
+&tima1 {
+	ti,clk-div = <1>;
+	ti,clk-prescaler = <15>;
+	status = "okay";
+
+	pwma1: pwma1 {
+		pinctrl-0 = <&tima1_ccp0_pb4_g3519>;
+		pinctrl-names = "default";
+		ti,cc-index = <0>;
+		ti,cc-mode = "PULSE_WIDTH";
+		ti,period = <0xffff>;
+		status = "okay";
+	};
+};
