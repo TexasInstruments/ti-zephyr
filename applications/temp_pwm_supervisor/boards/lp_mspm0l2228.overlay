@@ -1,0 +1,69 @@
+/*
+ * Copyright (c) 2026 Texas Instruments Incorporated
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * LP-MSPM0L2228 overlay for temp_pwm_supervisor
+ *
+ *   ADC0 channel 11 → internal temperature sensor (no external pin)
+ *   PWM on PA0 (on-board LED, TIMA0 CC0, center-aligned)
+ *   Counter: TIMG0/counterg0 (1 Hz loop timer)
+ *   WWDT: wdt0 (safety supervisor, window configured in application)
+ */
+
+/ {
+	aliases {
+		temp-adc   = &adc0;
+		pwm-led    = &pwma0;
+		loop-timer = &counterg0;
+		/* watchdog0 already defined in board DTS */
+	};
+};
+
+/* Internal 1.4 V bandgap VREF — required for accurate temp sensor readings. */
+&vref0 {
+	status = "okay";
+};
+
+/* Enable ADC0 with internal VREF for channel 11 (temp sensor). */
+&adc0 {
+	status = "okay";
+	clocks = <&ckm MSPM0_CLOCK_MCLK>;
+	pinctrl-0 = <&analog_pa23>;
+	pinctrl-names = "default";
+	#io-channel-cells = <1>;
+	ti,clk-divider = <8>;     /* MCLK(32 MHz) / 8 = 4 MHz effective */
+	ti,clk-range = <5>;       /* source clock range: 24–32 MHz */
+	max-result-reg = <4>;     /* L-series: MEMRES0..MEMRES3 */
+	vref = <&vref0>;
+};
+
+/* TIMA0: MCLK(32 MHz) / (prescaler+1=4) = 8 MHz.
+ * CENTER_ALIGN 1 kHz: ARR = 8000000/1000/2 = 4000 ticks (fits 16-bit).
+ */
+&tima0 {
+	ti,clk-div = <1>;
+	ti,clk-prescaler = <3>;
+};
+
+/* PWM LED on PA0, center-aligned */
+&pwma0 {
+	status = "okay";
+	ti,pwm-mode = "CENTER_ALIGN";
+};
+
+/* Loop timer: TIMG0. ULPCLK(32 MHz)/div(8)/prescaler(256) = 15625 Hz.
+ * 1 s = 15625 ticks — fits 16-bit counter.
+ */
+&timg0 {
+	status = "okay";
+	ti,clk-div = <8>;
+};
+
+&counterg0 {
+	status = "okay";
+};
+
+&wdt0 {
+	status = "okay";
+};

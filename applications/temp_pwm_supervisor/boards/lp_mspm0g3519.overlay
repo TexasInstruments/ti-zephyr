@@ -1,0 +1,64 @@
+/*
+ * Copyright (c) 2026 Texas Instruments Incorporated
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * LP-MSPM0G3519 overlay for temp_pwm_supervisor
+ *
+ *   ADC0 channel 11 -> internal temperature sensor
+ *   PWM on PA0 (on-board LED, TIMA0 CC0, center-aligned)
+ *   Counter: TIMG0/counterg0 (1 Hz loop timer)
+ *   WWDT: wdt0
+ */
+
+/ {
+	aliases {
+		temp-adc   = &adc0;
+		pwm-led    = &pwma0;
+		loop-timer = &counterg0;
+	};
+};
+
+&vref0 {
+	status = "okay";
+};
+
+&adc0 {
+	status = "okay";
+	clocks = <&ckm MSPM0_CLOCK_MCLK>;
+	pinctrl-0 = <&analog_pa23>;
+	pinctrl-names = "default";
+	#io-channel-cells = <1>;
+	ti,clk-divider = <8>;
+	ti,clk-range = <5>;
+	max-result-reg = <12>;    /* G-series: MEMRES0..MEMRES11 */
+	vref = <&vref0>;
+};
+
+/* TIMA0: MCLK(32 MHz) / (prescaler+1=16) = 2 MHz.
+ * CENTER_ALIGN 1 kHz: ARR = 2000000/1000/2 = 1000 ticks (fits 16-bit).
+ */
+&tima0 {
+	ti,clk-div = <1>;
+	ti,clk-prescaler = <15>;
+};
+
+&pwma0 {
+	status = "okay";
+	ti,pwm-mode = "CENTER_ALIGN";
+};
+
+/* TIMG0: LFCLK(32768 Hz) / (prescaler+1=256) = 128 Hz.
+ * 1 s = 128 ticks — fits 16-bit counter.
+ */
+&timg0 {
+	status = "okay";
+};
+
+&counterg0 {
+	status = "okay";
+};
+
+&wdt0 {
+	status = "okay";
+};
