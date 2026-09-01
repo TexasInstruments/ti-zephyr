@@ -1,0 +1,35 @@
+# Copyright (c) 2026 Texas Instruments Incorporated
+# SPDX-License-Identifier: BSD-3-Clause
+
+sample:
+  name: TI MSPM0 Center-Aligned PWM
+  description: >
+    Demonstrates MSPM0 center-aligned (up-down counting) PWM mode configured
+    via the TI-specific 'ti,pwm-mode = "CENTER_ALIGN"' DTS property.
+    The driver activates CCUPD_ZERO_LOAD_EVT shadow latching in this mode,
+    providing glitch-free duty updates at both timer zero-crossing and peak.
+common:
+  tags:
+    - drivers
+    - pwm
+    - ti
+  depends_on: pwm
+  harness: console
+  harness_config:
+    type: multi_line
+    ordered: true
+    regex:
+      - "TI MSPM0 PWM - Center-Aligned Mode"
+      - "LOAD register: ([0-9]+) cycles"
+      - "CCUPD_ZERO_LOAD_EVT"
+      - "duty= *10%"
+      - "duty= *90%"
+      - "Shadow-latch confirmed"
+      - "Done"
+tests:
+  sample.drivers.pwm.center_align:
+    platform_allow:
+      - lp_mspm0g3507
+      - lp_mspm0g3519
+      - lp_mspm0l2228
+    timeout: 20
