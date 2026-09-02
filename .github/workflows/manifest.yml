@@ -1,0 +1,34 @@
+name: Manifest
+
+on: pull_request_target
+
+permissions:
+  contents: read
+
+jobs:
+  manifest:
+    runs-on: ubuntu-24.04
+    name: Manifest
+    permissions:
+      pull-requests: write # to comment on the PR with manifest diff results
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          path: ti-zephyr
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: west setup
+        working-directory: ti-zephyr
+        run: |
+          pip3 install west
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+          west init -l .
+
+      - name: Manifest
+        uses: zephyrproject-rtos/action-manifest@09983f53d3d878791aa37a7755ae44d695f4c1e5 # v2.0.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          manifest-path: 'west.yml'
