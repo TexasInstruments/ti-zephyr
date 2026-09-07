@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2026 Texas Instruments Incorporated
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
+/*
+ * Default am62l_evm route, auto-applied by the build system for this board:
+ * DSS VP -> Cadence DSI TX -> Raspberry Pi Touch Display 2 (ILI9881C,
+ * 720x1280, 2 data lanes, RGB888).
+ *
+ * The board's default &dss timings (720x1280 @ 83.33 MHz) already match
+ * this panel, so only the DSI host, the panel node, and the on-board MCU
+ * (backlight + reset, reached over main_i2c0) need enabling. zephyr,display
+ * stays pointed at &dss so this sample keeps its ARGB8888 framebuffer path;
+ * the panel's own init sequence starts the DSI link independently.
+ *
+ * For the DPI + HDMI route instead, see am62l_evm_am62l3_a53_hdmi.overlay.
+ */
+
+#include <zephyr/dt-bindings/mipi_dsi/mipi_dsi.h>
+#include <zephyr/dt-bindings/gpio/gpio.h>
+
+&main_i2c0 {
+	status = "okay";
+};
+
+&display_mcu {
+	status = "okay";
+	bl-default-brightness = <16>; /* 0-31 */
+};
+
+&dsi0 {
+	status = "okay";
+	data-lanes = <2>;
+
+	rpi_td2: panel@0 {
+		status = "okay";
+	};
+};
