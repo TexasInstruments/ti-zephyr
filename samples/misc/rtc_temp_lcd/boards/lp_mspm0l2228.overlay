@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2026 Texas Instruments Incorporated
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * LP-MSPM0L2228 overlay for rtc_temp_lcd
+ *
+ *   ADC0 channel 11  -> internal temperature sensor (1.4V INTREF)
+ *   RTC (LFSS block) -> elapsed time since boot
+ *   LCD (auxdisplay) -> 6-digit 14-segment onboard glass display
+ */
+
+/ {
+	aliases {
+		temp-adc    = &adc0;
+		rtc         = &rtc;
+		auxdisplay0 = &auxdisplay_0;
+	};
+};
+
+/* Internal 1.4V bandgap VREF -- required for accurate temp sensor readings */
+&vref0 {
+	status = "okay";
+};
+
+/* ADC0: internal temp sensor, MCLK clock, INTREF */
+&adc0 {
+	status = "okay";
+	pinctrl-0 = <&analog_pa23>;
+	pinctrl-names = "default";
+	#io-channel-cells = <1>;
+	vref = <&vref0>;
+};
+
+/* RTC: enabled, counts from boot time set in application */
+&rtc {
+	status = "okay";
+};
+
+/*
+ * LCD is already fully configured in the board DTS
+ * (com/seg pins, panel geometry, indicators) -- just enable it.
+ * auxdisplay_0 alias is defined by the board DTS.
+ */
