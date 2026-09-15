@@ -1,0 +1,42 @@
+# Copyright (c) 2026 Texas Instruments Incorporated
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
+menuconfig GUI_COMPOSER
+	bool "TI GUI Composer middleware"
+	select UART_INTERRUPT_DRIVEN
+	help
+	  GUI Composer's GUIComm/GUI protocol layer (JSON or MessagePack)
+	  plus a Zephyr UART backend implementing the transport.h contract
+	  (gui_composer_transport_init / gui_composer_transport_start /
+	  gui_composer_transport_send_char). Requires a devicetree /chosen/
+	  zephyr,gui-composer-uart node.
+
+if GUI_COMPOSER
+
+choice GUI_COMPOSER_PROTOCOL
+	prompt "GUI Composer wire protocol"
+	default GUI_COMPOSER_PROTOCOL_MSGPACK
+	help
+	  Exactly one protocol may be linked per image: gui_json.c and
+	  gui_mpack.c define identically-named symbols (gui_init,
+	  gui_init_rx_cmd, ...) with incompatible RX callback signatures,
+	  exactly as upstream never links both examples together.
+
+config GUI_COMPOSER_PROTOCOL_JSON
+	bool "JSON (jsmn)"
+
+config GUI_COMPOSER_PROTOCOL_MSGPACK
+	bool "MessagePack (mpack)"
+
+endchoice
+
+config GUI_COMPOSER_MAX_STR_LEN
+	int "Max RX/TX string length (MAX_STR_LEN)"
+	default 64
+	range 1 255
+	help
+	  Overrides MAX_STR_LEN, already #ifndef-guarded in both
+	  gui_mpack.h and gui_json.h.
+
+endif # GUI_COMPOSER
