@@ -1,0 +1,76 @@
+/*
+ * SPDX-FileCopyrightText: 2026 Texas Instruments Incorporated
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
+/ {
+	aliases {
+		wakeup-comp = &comp0;
+	};
+
+	chosen {
+		zephyr,console = &unicomm1_0_uart;
+	};
+};
+
+/* disable standby modes to explicitly allow entering STOP mode */
+&stdby0 {
+	status = "disabled";
+};
+
+&stdby1 {
+	status = "disabled";
+};
+
+&pinctrl {
+	analog_pa18: analog_pa18 {
+		pinmux = <MSP_PINMUX(40, MSPM0_PIN_FUNCTION_ANALOG)>;
+		bias-pull-down;
+	};
+};
+
+&unicomm12 {
+	status = "disabled";
+};
+
+&unicomm12_uart {
+	status = "disabled";
+};
+
+&unicomm1_0 {
+	status = "okay";
+};
+
+&pinctrl {
+	pa10_uc1_0_tx: pa10_uc1_0_tx {
+		pinmux = <MSP_PINMUX(21, MSPM0_PIN_FUNCTION_4)>;
+	};
+
+	pa11_uc1_0_rx: pa11_uc1_0_rx {
+		pinmux = <MSP_PINMUX(22, MSPM0_PIN_FUNCTION_4)>;
+		input-enable;
+	};
+};
+
+&unicomm1_0_uart {
+	status = "okay";
+	current-speed = <9600>;
+	clocks = <&ckm MSPM0_CLOCK_LFCLK>;
+
+	pinctrl-0 = <&pa10_uc1_0_tx &pa11_uc1_0_rx>;
+	pinctrl-names = "default";
+};
+
+&comp0 {
+	status = "okay";
+	pinctrl-0 = <&analog_pa18>;
+	pinctrl-names = "default";
+	positive-inputs = <6>;
+	ti,reference-source = "vref_dac";
+	ti,reference-terminal = "neg";
+	ti,reference-dac-code0 = <192>;
+	ti,analog-comparison-window-input = <0>;
+	ti,analog-comparison-dac-codes = <192 0 0 0>;
+	ti,filter-enable;
+	ti,filter-delay = <2700>;
+};
