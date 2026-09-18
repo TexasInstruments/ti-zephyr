@@ -1,0 +1,159 @@
+# Copyright (c) 2026 Texas Instruments Incorporated
+#
+# SPDX-License-Identifier: BSD-3-Clause
+
+mainmenu "GUI Composer demo application"
+
+menuconfig SAMPLE_GUI_COMPOSER_DEMO_BLINK
+	bool "Blink LED demo mode"
+	default y
+	help
+	  Toggles the green LED at a GUI-adjustable rate. GPIO-only --
+	  supported on every board this sample targets.
+
+if SAMPLE_GUI_COMPOSER_DEMO_BLINK
+
+config SAMPLE_GUI_COMPOSER_DEMO_BLINK_DEFAULT_PERIOD_MS
+	int "Default blink period (ms)"
+	default 500
+	help
+	  Overridable at runtime via the "blinkTick" RX command
+	  (blink_led_set_period()). This is only the value used before the
+	  GUI ever sets one.
+
+endif # SAMPLE_GUI_COMPOSER_DEMO_BLINK
+
+menuconfig SAMPLE_GUI_COMPOSER_DEMO_LIGHTSENSOR
+	bool "Light sensor demo mode"
+	default y
+	help
+	  Reads the on-board photodiode through the ADC and dims/brightens
+	  the RGB LED to match ambient light. Disable on boards without
+	  this LaunchPad's photodiode circuit.
+
+if SAMPLE_GUI_COMPOSER_DEMO_LIGHTSENSOR
+
+config SAMPLE_GUI_COMPOSER_DEMO_LIGHTSENSOR_SAMPLE_PERIOD_MS
+	int "Light sensor ADC sample period (ms)"
+	default 20
+
+choice SAMPLE_GUI_COMPOSER_DEMO_LIGHTSENSOR_TIER
+	prompt "Light sensor OPA0 implementation"
+	default SAMPLE_GUI_COMPOSER_DEMO_LIGHTSENSOR_TIER_MINIMAL
+
+config SAMPLE_GUI_COMPOSER_DEMO_LIGHTSENSOR_TIER_MINIMAL
+	bool "Minimal (no amplification, passive/unamplified reading)"
+	help
+	  Reads the photodiode divider directly with no OPA0 involvement.
+	  Reading is real but unamplified and runs in the opposite
+	  direction from the reference firmware's amplified reading (see
+	  README.rst).
+
+config SAMPLE_GUI_COMPOSER_DEMO_LIGHTSENSOR_TIER_FULL
+	bool "Full (OPA0-amplified, matches reference firmware)"
+	depends on DT_HAS_TI_MSPM0_OPA_ENABLED
+	help
+	  Matches msp-sdk's reference firmware exactly via Zephyr's opamp
+	  driver. Unselectable today: no ti,mspm0-opa binding/devicetree
+	  node exists in this tree's pinned zephyr revision yet. Becomes
+	  selectable, and buildable, once a Zephyr OPA driver is pinned
+	  in.
+
+endchoice
+
+endif # SAMPLE_GUI_COMPOSER_DEMO_LIGHTSENSOR
+
+menuconfig SAMPLE_GUI_COMPOSER_DEMO_THERMISTOR
+	bool "Thermistor demo mode"
+	default y
+	help
+	  Reads the on-board thermistor through the ADC and color-codes the
+	  RGB LED by temperature delta from the reading at mode entry.
+	  Disable on boards without this LaunchPad's thermistor circuit.
+
+if SAMPLE_GUI_COMPOSER_DEMO_THERMISTOR
+
+config SAMPLE_GUI_COMPOSER_DEMO_THERMISTOR_SAMPLE_PERIOD_MS
+	int "Thermistor ADC sample period (ms)"
+	default 25
+
+config SAMPLE_GUI_COMPOSER_DEMO_THERMISTOR_DELTA_THRESHOLD_C
+	int "Thermistor RGB color-change threshold (degrees C)"
+	default 2
+	help
+	  How far the reading must move from the baseline captured at mode
+	  entry, in either direction, before the RGB LED switches from
+	  green to red (warmer) or blue (colder).
+
+endif # SAMPLE_GUI_COMPOSER_DEMO_THERMISTOR
+
+menuconfig SAMPLE_GUI_COMPOSER_DEMO_FUNCTION_GENERATOR
+	bool "Function generator (DAC) demo mode"
+	default y
+	depends on DT_HAS_TI_MSPM0_DAC_ENABLED
+	help
+	  Outputs a selectable waveform on the DAC and reports the ADC
+	  readback. Hidden on boards whose SoC has no DAC node -- MSPM0's
+	  L-series parts have none.
+
+if SAMPLE_GUI_COMPOSER_DEMO_FUNCTION_GENERATOR
+
+config SAMPLE_GUI_COMPOSER_DEMO_FUNCTION_GENERATOR_REPORT_PERIOD_MS
+	int "DAC readback report period (ms)"
+	default 25
+	help
+	  How often the ADC readback is sampled and sent to the GUI while
+	  the "adcEnable" widget is set.
+
+config SAMPLE_GUI_COMPOSER_DEMO_FUNCTION_GENERATOR_DEFAULT_AMPLITUDE_PCT
+	int "Default waveform amplitude (percent of full scale)"
+	default 100
+	range 0 100
+	help
+	  Reset to this value every time DAC mode is entered, matching the
+	  reference firmware's functiongenerator_runExample(). Overridable
+	  at runtime via the "setAmp" RX command.
+
+choice SAMPLE_GUI_COMPOSER_DEMO_FUNCTION_GENERATOR_OPA_TIER
+	prompt "OPA1 signal-path implementation"
+	default SAMPLE_GUI_COMPOSER_DEMO_FUNCTION_GENERATOR_OPA_TIER_MINIMAL
+	help
+	  The reference firmware's DAC output is routed through this SoC's
+	  OPA1 module before the GUI-plotted ADC readback -- OPA1 sits in
+	  the signal path unconditionally, not just when gain/inversion
+	  are being actively adjusted. No Zephyr OPA1 driver exists yet,
+	  so this affects more than just the two interactive RX commands.
+
+config SAMPLE_GUI_COMPOSER_DEMO_FUNCTION_GENERATOR_OPA_TIER_MINIMAL
+	bool "Minimal (DAC-loopback readback, no OPA1 involvement at all)"
+	help
+	  ADC readback reads the DAC's own internal loopback node
+	  (ADC1 channel 0), not OPA1's real output (channel 13) -- the
+	  reference firmware's actual DAC->OPA1->ADC signal path isn't
+	  replicated at all under this tier, not just its adjustable gain/
+	  inversion. The setGain/inversion RX commands aren't registered:
+	  there's no real OPA1 involvement here to attach them to.
+
+config SAMPLE_GUI_COMPOSER_DEMO_FUNCTION_GENERATOR_OPA_TIER_FULL
+	bool "Full (real OPA1 signal path, matches reference firmware)"
+	depends on DT_HAS_TI_MSPM0_OPA_ENABLED
+	help
+	  ADC readback reads OPA1's real output (channel 13) once a Zephyr
+	  OPA1 driver is pinned in (unselectable until then -- no
+	  ti,mspm0-opa binding/devicetree node exists in this tree's
+	  pinned zephyr revision yet) -- genuinely matches the reference
+	  firmware's signal path, not just its numeric gain steps. Gain
+	  becomes a real runtime opamp_set_gain() call. Inversion does NOT
+	  become live: Zephyr's generic opamp API has no runtime
+	  functional-mode setter by design (functional-mode is a
+	  devicetree property, fixed at build time) -- a permanent
+	  characteristic of this tier, not a temporary gap a later Zephyr
+	  release closes. Under this tier, "inversion" selects which of
+	  two overlay variants (functional-mode =
+	  "inverting"/"non_inverting") gets built, not a live GUI toggle.
+
+endchoice
+
+endif # SAMPLE_GUI_COMPOSER_DEMO_FUNCTION_GENERATOR
+
+source "Kconfig.zephyr"

@@ -1,0 +1,131 @@
+/*
+ * Copyright (c) 2026 Texas Instruments Incorporated
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+#include <zephyr/dt-bindings/adc/adc.h>
+#include <zephyr/dt-bindings/clock/mspm0_clock.h>
+
+/ {
+	chosen {
+		zephyr,gui-composer-uart = &uart0;
+		zephyr,console = &uart1;
+		zephyr,shell-uart = &uart1;
+	};
+
+	leds_oob: leds_oob {
+		compatible = "gpio-leds";
+		led_green: led_green {
+			gpios = <&gpiob 27 GPIO_ACTIVE_HIGH>;
+			label = "Green LED (RGB LED2)";
+		};
+		led_red: led_red {
+			gpios = <&gpiob 26 GPIO_ACTIVE_HIGH>;
+			label = "Red LED (RGB LED2)";
+		};
+		led_blue: led_blue {
+			gpios = <&gpiob 22 GPIO_ACTIVE_HIGH>;
+			label = "Blue LED (RGB LED2)";
+		};
+		led_heartbeat: led_heartbeat {
+			gpios = <&gpioa 0 GPIO_ACTIVE_HIGH>;
+			label = "Heartbeat LED (LED1)";
+		};
+	};
+
+	aliases {
+		led1 = &led_green;
+		led2 = &led_red;
+		led3 = &led_blue;
+		sw0 = &btn1;
+	};
+};
+
+&btn1 {
+	gpios = <&gpiob 21 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+};
+
+&uart0 {
+	rx-fifo-threshold = <0>;
+};
+
+&uart1 {
+	status = "okay";
+	current-speed = <115200>;
+	pinctrl-0 = <&uart1_tx_pa8 &uart1_rx_pa9>;
+	pinctrl-names = "default";
+};
+
+&adc0 {
+	status = "okay";
+	pinctrl-0 = <&analog_pb24 &analog_pa22>;
+	pinctrl-names = "default";
+	clocks = <&ckm MSPM0_CLOCK_ULPCLK>;
+	max-result-reg = <12>;
+	ti,clk-range = <5>;
+	ti,clk-divider = <4>;
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	channel@5 {
+		reg = <5>;
+		zephyr,gain = "ADC_GAIN_1";
+		zephyr,reference = "ADC_REF_VDD_1";
+		zephyr,acquisition-time = <ADC_ACQ_TIME(ADC_ACQ_TIME_TICKS, 26)>;
+		zephyr,resolution = <12>;
+	};
+
+	channel@7 {
+		reg = <7>;
+		zephyr,gain = "ADC_GAIN_1";
+		zephyr,reference = "ADC_REF_VDD_1";
+		zephyr,acquisition-time = <ADC_ACQ_TIME(ADC_ACQ_TIME_TICKS, 26)>;
+		zephyr,resolution = <12>;
+	};
+
+};
+
+&adc1 {
+	status = "okay";
+	pinctrl-0 = <&analog_pa15>;
+	pinctrl-names = "default";
+	clocks = <&ckm MSPM0_CLOCK_ULPCLK>;
+	max-result-reg = <12>;
+	ti,clk-range = <5>;
+	ti,clk-divider = <4>;
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	channel@0 {
+		reg = <0>;
+		zephyr,gain = "ADC_GAIN_1";
+		zephyr,reference = "ADC_REF_VDD_1";
+		zephyr,acquisition-time = <ADC_ACQ_TIME(ADC_ACQ_TIME_TICKS, 26)>;
+		zephyr,resolution = <12>;
+	};
+
+	channel@d {
+		reg = <13>;
+		zephyr,gain = "ADC_GAIN_1";
+		zephyr,reference = "ADC_REF_VDD_1";
+		zephyr,acquisition-time = <ADC_ACQ_TIME(ADC_ACQ_TIME_TICKS, 26)>;
+		zephyr,resolution = <12>;
+	};
+};
+
+&pwma1 {
+	status = "okay";
+	pinctrl-0 = <&tima1_ccp0_pb26 &tima1_ccp1_pb27>;
+	pinctrl-names = "default";
+	ti,cc-index = <0 1>;
+	ti,pwm-mode = "EDGE_ALIGN";
+	ti,period = <512>;
+};
+
+/ {
+	zephyr,user {
+		io-channel-names = "thermistor", "lightsensor",
+				    "fngen-readback-minimal", "fngen-readback-full";
+		io-channels = <&adc0 5>, <&adc0 7>, <&adc1 0>, <&adc1 13>;
+	};
+};
