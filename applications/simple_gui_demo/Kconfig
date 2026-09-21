@@ -1,0 +1,50 @@
+#
+# Copyright (c) 2026 Texas Instruments Incorporated
+#
+# SPDX-License-Identifier: BSD-3-Clause
+#
+
+mainmenu "Simple GUI demo application"
+
+menuconfig SAMPLE_SIMPLE_GUI_DEMO_COUNTERS
+	bool "Periodic counter demo mode"
+	default y
+	help
+	  SW1/SW2 bump an 8-bit and a 16-bit counter on press; a periodic
+	  timer bumps a 32-bit counter and a Q8 fixed-point counter.
+
+if SAMPLE_SIMPLE_GUI_DEMO_COUNTERS
+
+config SAMPLE_SIMPLE_GUI_DEMO_COUNTERS_PERIOD_MS
+	int "Counter update period (ms)"
+	default 500
+	range 1 60000
+	help
+	  How often the 32-bit and Q8 counters update, and how often all
+	  four counters are sent to the GUI.
+
+config SAMPLE_SIMPLE_GUI_DEMO_COUNTERS_U8_STEP
+	int "8-bit counter step per SW1 press"
+	default 50
+	range 1 255
+
+config SAMPLE_SIMPLE_GUI_DEMO_COUNTERS_U16_STEP
+	int "16-bit counter step per SW2 press"
+	default 5000
+	range 1 65535
+
+config SAMPLE_SIMPLE_GUI_DEMO_COUNTERS_U32_STEP
+	int "32-bit counter step per timer tick"
+	default 10000
+
+config SAMPLE_SIMPLE_GUI_DEMO_COUNTERS_Q8_DEFAULT_INCREMENT
+	int "Default Q8 counter increment per timer tick (raw Q8 units, 256 = 1.0)"
+	default 0
+	help
+	  Overridable at runtime via the "u16Data" RX command
+	  (counters_set_increment()). This is only the value sent/used
+	  before the GUI ever sets one.
+
+endif # SAMPLE_SIMPLE_GUI_DEMO_COUNTERS
+
+source "Kconfig.zephyr"
