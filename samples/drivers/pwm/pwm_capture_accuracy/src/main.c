@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2026 Texas Instruments Incorporated
+ * SPDX-FileCopyrightText: 2026 Texas Instruments Incorporated
  *
- * SPDX-License-Identifier: BSD-3-Clause
+ * SPDX-License-Identifier: LicenseRef-TI-TFL
  */
 
 /**

@@ -1,6 +1,6 @@
 #
-# Copyright (c) 2026 Texas Instruments Incorporated
-# SPDX-License-Identifier: BSD-3-Clause
+# SPDX-FileCopyrightText: 2026 Texas Instruments Incorporated
+# SPDX-License-Identifier: LicenseRef-TI-TFL
 #
 
 cmake_minimum_required(VERSION 3.28.0)
