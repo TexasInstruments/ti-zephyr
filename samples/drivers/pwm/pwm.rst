@@ -8,5 +8,6 @@ Samples demonstrating the PWM driver on TI MSPM0 devices.
 .. toctree::
    :titlesonly:
    :maxdepth: 1
+   :glob:
 
-   pwm_capture_accuracy/README
+   */README
