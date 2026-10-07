@@ -1,7 +1,10 @@
 """Sphinx configuration for TI Zephyr documentation."""
 
+import os
 import sys
 from pathlib import Path
+
+from sphinx.errors import ConfigError
 
 REPO_BASE = Path(__file__).resolve().parent.parent
 DOC_BASE  = Path(__file__).resolve().parent
@@ -28,6 +31,30 @@ if _version_file.exists():
 else:
     version = "main"
     release = "main"
+
+# -- SoC selection -------------------------------------------------------------
+# ``make html SOC=<soc>`` (or ``SOC=<soc> sphinx-build ...``) builds the docs
+# for one SoC family. Family-specific content goes in ``.. only:: <soc>``
+# blocks. Without SOC, every family tag is set so all content is included.
+#
+# Keep in sync with the matrix in .github/workflows/docs.yml.
+
+SOCS = {
+    "mspm0":  "MSPM0",
+    "mspm33": "MSPM33",
+    "am13":   "AM13",
+    "am62l":  "AM62L",
+}
+
+soc = os.environ.get("SOC", "").strip().lower()
+if soc and soc not in SOCS:
+    raise ConfigError(f"Unknown SOC '{soc}', expected one of: {', '.join(SOCS)}")
+
+for _s in [soc] if soc else SOCS:
+    tags.add(_s)  # noqa: F821 - injected by Sphinx
+
+if soc:
+    html_title = f"{project} for {SOCS[soc]} {release} documentation"
 
 # -- General configuration -----------------------------------------------------
 
