@@ -45,4 +45,6 @@ Getting started
 License
 *******
 
-BSD 3-Clause License — see the `LICENSE file <LICENSE>`_.
+BSD 3-Clause License — see the `LICENSE file <LICENSE>`_. One
+reference-only third-party tool invocation is disclosed in
+`NOTICE <NOTICE>`_.
