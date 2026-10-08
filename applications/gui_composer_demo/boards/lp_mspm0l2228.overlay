@@ -1,0 +1,81 @@
+/*
+ * SPDX-FileCopyrightText: 2026 Texas Instruments Incorporated
+ *
+ * SPDX-License-Identifier: LicenseRef-TI-TFL
+ */
+#include <zephyr/dt-bindings/adc/adc.h>
+#include <zephyr/dt-bindings/clock/mspm0_clock.h>
+
+/ {
+	chosen {
+		zephyr,gui-composer-uart = &uart0;
+	};
+
+	leds_oob: leds_oob {
+		compatible = "gpio-leds";
+		led_blue: led_blue {
+			gpios = <&gpiob 23 GPIO_ACTIVE_HIGH>;
+			label = "Blue LED (RGB LED2)";
+		};
+		led_heartbeat: led_heartbeat {
+			gpios = <&gpioa 0 GPIO_ACTIVE_HIGH>;
+			label = "Heartbeat LED (LED1)";
+		};
+	};
+
+	aliases {
+		led1 = &led0;
+		led2 = &led1;
+		led3 = &led_blue;
+		sw0 = &btn1;
+		sw1 = &btn0;
+	};
+};
+
+&uart0 {
+	rx-fifo-threshold = <0>;
+};
+
+&rtc {
+	status = "okay";
+	ti,rtc-x;
+};
+
+&adc0 {
+	status = "okay";
+	vref = <&vref0>;
+	pinctrl-0 = <>;
+	pinctrl-names = "default";
+	clocks = <&ckm MSPM0_CLOCK_ULPCLK>;
+	max-result-reg = <4>; /* L-series MEMRES0:3 */
+	ti,clk-divider = <4>;
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	channel@1d {
+		reg = <29>;
+		zephyr,gain = "ADC_GAIN_1";
+		zephyr,reference = "ADC_REF_INTERNAL";
+		zephyr,acquisition-time = <ADC_ACQ_TIME(ADC_ACQ_TIME_TICKS, 26)>;
+		zephyr,resolution = <12>;
+	};
+};
+
+/ {
+	zephyr,user {
+		io-channel-names = "temperature";
+		io-channels = <&adc0 29>;
+	};
+};
+
+/ {
+	cpuss_syscon: cpuss-syscon@40400000 {
+		compatible = "syscon";
+		reg = <0x40400000 0x1400>;
+	};
+
+	factoryregion_syscon: factoryregion-syscon@41c40000 {
+		compatible = "syscon";
+		reg = <0x41c40000 0x100>;
+	};
+};
