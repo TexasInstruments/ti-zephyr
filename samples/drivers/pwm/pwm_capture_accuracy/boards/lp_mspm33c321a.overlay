@@ -1,0 +1,54 @@
+/*
+ * SPDX-FileCopyrightText: 2026 Texas Instruments Incorporated
+ *
+ * SPDX-License-Identifier: LicenseRef-TI-TFL
+ *
+ * PWM output : TIMA0_0/CC0 on PA8  (pwm-out)
+ * PWM capture: TIMA0_1/CC0 on PB6  (pwm-cap)
+ *
+ * Wire required: PA8 -> PB6
+ *
+ * Both timers clocked at 10 MHz:
+ *   MCLK (160 MHz) / clk-div 1 / (prescaler 15 + 1) = 10 MHz
+ *   At 10 MHz: 5 kHz period = 2000 cycles -> max quantization ~500 ppm.
+ */
+
+/ {
+	aliases {
+		pwm-out = &pwma0_0;
+		pwm-cap = &pwma0_1;
+	};
+};
+
+&tima0_0 {
+	ti,clk-div = <1>;
+	ti,clk-prescaler = <15>;
+};
+
+&pwma0_0 {
+	ti,period = <2000>;
+};
+
+&pinctrl {
+	tima0_1_ccp0_pb6 {
+		input-enable;
+		bias-pull-down;
+	};
+};
+
+&tima0_1 {
+	ti,clk-div = <1>;
+	ti,clk-prescaler = <15>;
+	status = "okay";
+
+	pwma0_1: pwma0_1 {
+		compatible = "ti,mspm0-timer-pwm";
+		#pwm-cells = <3>;
+		pinctrl-0 = <&tima0_1_ccp0_pb6>;
+		pinctrl-names = "default";
+		ti,cc-index = <0>;
+		ti,cc-mode = "PULSE_WIDTH";
+		ti,period = <0xffff>;
+		status = "okay";
+	};
+};
