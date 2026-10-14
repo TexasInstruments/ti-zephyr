@@ -1,0 +1,28 @@
+Step 4: Flash Hello World Example
+#################################
+
+AM62L runs the application from the SD card prepared in Step 2. Copy the build
+output from the ``zephyr`` folder used for the build to the first FAT partition
+of the SD card:
+
+.. code-block:: shell
+
+   cp <sdk-install-dir>/zephyr/build/zephyr/zephyr.bin <sd-card-fat-partition>/
+
+Power up the board and stop U-Boot at the prompt, then run:
+
+.. code-block:: shell
+
+   fatload mmc 1:1 0x82000000 zephyr.bin; dcache flush; icache flush; dcache off; icache off; go 0x82000000
+
+The Zephyr application should start running on the A53 core.
+
+Verify
+******
+
+Open a serial terminal at 115200 8N1. Expected output:
+
+.. code-block:: console
+
+   *** Booting Zephyr OS build v4.4.0-ti ***
+   Hello World! <board>
