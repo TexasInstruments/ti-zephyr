@@ -1,0 +1,45 @@
+/*
+ * SPDX-FileCopyrightText: 2026 Texas Instruments Incorporated
+ *
+ * SPDX-License-Identifier: LicenseRef-TI-TFL
+ *
+ * LP-MSPM0L2228 overlay for rtc_temp_lcd
+ *
+ *   ADC0 channel 11  -> internal temperature sensor (1.4 V INTREF)
+ *   RTC (LFSS block) -> elapsed time/date since boot
+ *   LCD (auxdisplay) -> 6-digit 14-segment onboard glass display
+ *
+ * Buttons (S1 PA18, S2 PB8) are defined in the board DTS with sw0/sw1 aliases.
+ */
+
+/ {
+	aliases {
+		temp-adc    = &adc0;
+		rtc         = &rtc;
+		auxdisplay0 = &auxdisplay_0;
+	};
+};
+
+/* Internal 1.4 V bandgap VREF — required for accurate temp sensor readings */
+&vref0 {
+	status = "okay";
+};
+
+/* ADC0: internal temp sensor, MCLK clock, INTREF */
+&adc0 {
+	status = "okay";
+	pinctrl-0 = <&analog_pa23>;
+	pinctrl-names = "default";
+	#io-channel-cells = <1>;
+	vref = <&vref0>;
+};
+
+/* RTC: enabled, counts from boot time set in application */
+&rtc {
+	status = "okay";
+};
+
+/* SPI1 uses PB8 (PICO) which conflicts with btn1 (S3, sw1) */
+&spi1 {
+	status = "disabled";
+};
