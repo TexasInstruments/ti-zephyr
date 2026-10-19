@@ -1,9 +1,7 @@
-.. _ti-zephyr-tests-drivers:
+.. ti-generated-category
 
-Driver Tests
-############
-
-Tests that exercise TI-specific peripheral drivers.
+Drivers
+#######
 
 .. toctree::
    :titlesonly:

@@ -1,3 +1,5 @@
+.. ti-socs: mspm0 mspm33 am13 am62l
+
 .. _sample-hello-world-ti:
 
 Hello World
@@ -17,7 +19,7 @@ Building and Running
 ********************
 
 Replace ``<board>`` with the ID of your board. The supported boards are listed
-in the |soc_datasheet|.
+in the |soc_board_support|.
 
 .. code-block:: console
 

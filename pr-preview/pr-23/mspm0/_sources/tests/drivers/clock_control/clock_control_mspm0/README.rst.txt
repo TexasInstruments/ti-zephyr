@@ -1,6 +1,5 @@
 .. SPDX-FileCopyrightText: 2026 Texas Instruments Incorporated
 .. SPDX-License-Identifier: LicenseRef-TI-TFL
-.. ti-socs: mspm0 mspm33 am13
 
 TI MSPM0 Clock Control Test
 ###########################

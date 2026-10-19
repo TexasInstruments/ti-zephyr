@@ -1,9 +1,7 @@
-.. _ti-zephyr-tests-clock-control:
+.. ti-generated-category
 
-Clock Control Tests
-###################
-
-Tests for the clock control driver.
+Clock Control
+#############
 
 .. toctree::
    :titlesonly:
