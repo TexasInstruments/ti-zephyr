@@ -3,14 +3,14 @@
 
 .. _pwm_capture_accuracy:
 
-TI MSPM0 PWM Precision Analysis
-################################
+TI PWM Precision Analysis
+#########################
 
 Overview
 ********
 
 Generates a known PWM signal on the ``pwm-out`` device and captures it on
-``pwm-cap``, measuring four precision properties of the MSPM0 PWM subsystem.
+``pwm-cap``, measuring four precision properties of the PWM subsystem.
 All test frequencies are derived at runtime from the capture timer clock, so
 the sample adapts automatically to any board overlay and timer configuration.
 
@@ -28,11 +28,11 @@ Sections
 ********
 
 1. **Jitter** — captures the same signal 5 times at three frequencies. Confirms
-   MSPM0 timer output is bit-reproducible (jitter = 0 cycles).
+   timer output is bit-reproducible (jitter = 0 cycles).
 
 2. **Frequency accuracy** — sweeps five frequencies and compares measured vs
    programmed frequency against the theoretical ±1-cycle quantisation limit.
-   Note: the MSPM0 timer counts ``LOAD+1`` cycles per period, so the measured
+   Note: the timer counts ``LOAD+1`` cycles per period, so the measured
    frequency is consistently 1 cycle below the programmed value — this is
    correct hardware behaviour, not a driver bug.
 
@@ -48,6 +48,7 @@ Supported boards
 - ``lp_mspm0g3507`` — wire PA15 (pwm-out) to PB4 (pwm-cap)
 - ``lp_mspm0g3519`` — wire PB6 (pwm-out) to PB4 (pwm-cap)
 - ``lp_mspm0l2228`` — wire PA15 (pwm-out) to PA29 (pwm-cap)
+- ``lp_mspm33c321a`` — wire PA8 (pwm-out) to PB6 (pwm-cap)
 
 Building and Running
 ********************
@@ -62,7 +63,7 @@ Sample Output
 
 .. code-block:: console
 
-   TI MSPM0 PWM Precision Analysis
+   TI PWM Precision Analysis
      Output  (pwma0): 5000000 Hz
      Capture (pwma1): 5000000 Hz
      Wire pwm-out to pwm-cap (see board overlay for pin names)

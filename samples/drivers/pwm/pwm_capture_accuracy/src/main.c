@@ -6,22 +6,22 @@
 
 /**
  * @file
- * @brief TI MSPM0 PWM Output and Capture Precision Analysis
+ * @brief TI PWM Output and Capture Precision Analysis
  *
  * Generates a known PWM signal on the pwm-out device and captures it on
- * pwm-cap, measuring four precision properties of the MSPM0 PWM subsystem.
+ * pwm-cap, measuring four precision properties of the PWM subsystem.
  * All test frequencies are derived at runtime from the capture timer clock so
  * the sample works with any board overlay and timer configuration.
  *
  * Sections:
  *
  * 1. JITTER — captures the same signal 5 times, computes min/max/mean period.
- *    Confirms that the MSPM0 timer output is bit-reproducible (0-jitter).
+ *    Confirms that the timer output is bit-reproducible (0-jitter).
  *
  * 2. FREQUENCY ACCURACY — sweeps five frequencies from the timer's reliable
  *    range, comparing measured vs programmed frequency against the theoretical
  *    ±1-cycle quantisation limit. Confirms the driver achieves hardware minimum
- *    error.  Note: the MSPM0 timer counts LOAD+1 cycles per period, so measured
+ *    error.  Note: the timer counts LOAD+1 cycles per period, so measured
  *    frequency is systematically 1 cycle lower than programmed — this is correct
  *    hardware behaviour, not a driver bug.
  *
@@ -342,7 +342,7 @@ int main(void)
 		return ret;
 	}
 
-	printf("TI MSPM0 PWM Precision Analysis\n");
+	printf("TI PWM Precision Analysis\n");
 	printf("  Output  (%s): %llu Hz\n", out->name, out_clk);
 	printf("  Capture (%s): %llu Hz\n", cap->name, cap_clk);
 	printf("  Wire pwm-out to pwm-cap (see board overlay for pin names)\n\n");
