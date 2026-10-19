@@ -6,10 +6,10 @@
 
 /**
  * @file
- * @brief TI MSPM0 WWDT Window Mode
+ * @brief TI WWDT Window Mode
  *
- * Demonstrates the MSPM0 Window Watchdog Timer (WWDT) closed-window
- * constraint using the standard Zephyr watchdog API.
+ * Demonstrates the Window Watchdog Timer (WWDT) closed-window constraint
+ * using the standard Zephyr watchdog API.
  *
  * The WWDT enforces a feed window:
  *
@@ -19,8 +19,8 @@
  * - Feed after  t=max: immediate SYSRST (timeout)
  * - Feed in [t=min, t=max): safe zone
  *
- * The upstream watchdog sample sets WDT_MIN_WINDOW=0 for MSPM0 so the closed
- * window is never exercised. This sample demonstrates all three zones across
+ * The upstream watchdog sample sets WDT_MIN_WINDOW=0 so the closed window is
+ * never exercised. This sample demonstrates all three zones across
  * two boots:
  *
  *   Boot 1: five correct feeds at 1000 ms, then a deliberate early feed at
@@ -35,8 +35,8 @@
  *
  * SDK analog: wwdt_window_mode_periodic_reset
  *
- * Note: MSPM0 WWDT violations route through the ESM safety block, not the
- * NVIC, so a pre-reset callback is architecturally impossible.
+ * Note: WWDT violations route through the ESM safety block, not the NVIC,
+ * so a pre-reset callback is architecturally impossible.
  */
 
 #include <zephyr/kernel.h>
@@ -52,8 +52,7 @@
 #define WDT_NODE DT_ALIAS(watchdog0)
 
 /*
- * The WWDT reset action (CPU core vs full SoC) is a DT property that differs
- * between MSPM0 G-series (<0> = CPU_CORE) and L-series (<1> = SOC).
+ * The WWDT reset action is a DT property: 0 = CPU_CORE reset, 1 = SOC reset.
  * Derive the flag from the same DT property the driver uses so that
  * wdt_install_timeout() does not reject a mismatched flag.
  */
@@ -69,7 +68,7 @@
 
 /*
  * SYSCTL RSTCAUSE register — same base address and layout across MSPM0,
- * MSPM33, and AM13 families (all share the MSPM0 SYSCTL peripheral).
+ * MSPM33, and AM13 families (all share the same SYSCTL peripheral).
  * The field is read-to-clear, so a single read both retrieves and resets it.
  */
 #define WDT_SAMPLE_SYSCTL_BASE         DT_REG_ADDR(DT_NODELABEL(sysctl))
@@ -78,7 +77,7 @@
 #define WDT_SAMPLE_RSTCAUSE_SYSWWDT0   0x0EU /* WWDT0 closed-window or timeout violation */
 #define WDT_SAMPLE_RSTCAUSE_SYSWWDT1   0x13U /* WWDT1 closed-window or timeout violation */
 
-static bool mspm0_wdt_reboot(void)
+static bool ti_wdt_reboot(void)
 {
 	uint32_t cause = sys_read32(WDT_SAMPLE_SYSCTL_BASE + WDT_SAMPLE_RSTCAUSE_OFS) &
 			 WDT_SAMPLE_RSTCAUSE_ID_MASK;
@@ -89,7 +88,7 @@ static bool mspm0_wdt_reboot(void)
 int main(void)
 {
 	const struct device *wdt = DEVICE_DT_GET(WDT_NODE);
-	bool wdt_reboot = mspm0_wdt_reboot(); /* read-to-clear: call once at boot */
+	bool wdt_reboot = ti_wdt_reboot(); /* read-to-clear: call once at boot */
 	uint32_t t_start;
 	uint32_t t_feed;
 	int wdt_ch;
@@ -100,7 +99,7 @@ int main(void)
 		return -ENODEV;
 	}
 
-	printf("TI MSPM0 WWDT Window Mode\n");
+	printf("TI WWDT Window Mode\n");
 
 	if (wdt_reboot) {
 		printf("*** Rebooted by WWDT window violation ***\n\n");

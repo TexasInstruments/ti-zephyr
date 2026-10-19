@@ -6,9 +6,9 @@
 
 /**
  * @file
- * @brief TI MSPM0 Center-Aligned PWM
+ * @brief TI PWM Center-Aligned Mode
  *
- * Demonstrates center-aligned (up-down counting) PWM on TI MSPM0 TIMA/TIMG,
+ * Demonstrates center-aligned (up-down counting) PWM on TI TIMA/TIMG timers,
  * enabled via the ti,pwm-mode = "CENTER_ALIGN" board overlay property.
  *
  * In this mode the driver configures CCUPD_ZERO_LOAD_EVT so CC register
@@ -28,7 +28,7 @@
 
 #define PWM_DEV   DEVICE_DT_GET(DT_ALIAS(pwm_out))
 #define PWM_CH    0U
-#define PERIOD_NS PWM_MSEC(250) /* 4 Hz; fits 16-bit MSPM0 timer at any board clock */
+#define PERIOD_NS PWM_MSEC(250) /* 4 Hz; fits 16-bit timer at any board clock */
 
 static const uint8_t duty_pct[] = {10, 20, 30, 40, 50, 60, 70, 80, 90};
 
@@ -57,7 +57,7 @@ int main(void)
 		return -EINVAL;
 	}
 
-	printf("TI MSPM0 PWM - Center-Aligned Mode\n");
+	printf("TI PWM - Center-Aligned Mode\n");
 	printf("  Timer clock  : %llu Hz\n", clk_hz);
 	printf("  Period       : %lu ns (%u cycles)\n", PERIOD_NS, period_cycles);
 	printf("  LOAD register: %u cycles (period/2, up-down counting)\n", period_cycles / 2U);

@@ -3,17 +3,16 @@
 
 .. _pwm_center_align:
 
-TI MSPM0 PWM Center-Aligned Mode
-#################################
+TI PWM Center-Aligned Mode
+##########################
 
 Overview
 ********
 
-Demonstrates center-aligned (up-down counting) PWM on TI MSPM0 TIMA/TIMG
-timers, enabled via the ``ti,pwm-mode = "CENTER_ALIGN"`` board overlay
-property.
+Demonstrates center-aligned (up-down counting) PWM on TI TIMA/TIMG timers,
+enabled via the ``ti,pwm-mode = "CENTER_ALIGN"`` board overlay property.
 
-In this mode the MSPM0 driver configures the CC shadow update to
+In this mode the driver configures the CC shadow update to
 ``CCUPD_ZERO_LOAD_EVT``, latching new duty-cycle values at both the
 zero-crossing **and** the counter peak.  This provides two glitch-free update
 opportunities per period (vs. one in edge-aligned mode) and produces a
@@ -47,6 +46,7 @@ Supported Boards
 - ``lp_mspm0g3507``
 - ``lp_mspm0g3519``
 - ``lp_mspm0l2228``
+- ``lp_mspm33c321a``
 
 Building and Running
 ********************
@@ -61,7 +61,7 @@ Sample Output
 
 .. code-block:: console
 
-   TI MSPM0 PWM - Center-Aligned Mode
+   TI PWM - Center-Aligned Mode
      Timer clock  : 15625 Hz
      Period       : 250000000 ns (3906 cycles)
      LOAD register: 1953 cycles (period/2, up-down counting)

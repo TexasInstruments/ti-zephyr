@@ -3,14 +3,14 @@
 
 .. _watchdog_window:
 
-TI MSPM0 WWDT Window Mode
-##########################
+TI WWDT Window Mode
+###################
 
 Overview
 ********
 
-Demonstrates the MSPM0 Window Watchdog Timer (WWDT) closed-window constraint
-using the standard Zephyr watchdog API.
+Demonstrates the Window Watchdog Timer (WWDT) closed-window constraint using
+the standard Zephyr watchdog API.
 
 The WWDT enforces a three-zone feed window::
 
@@ -20,8 +20,8 @@ The WWDT enforces a three-zone feed window::
 - Feed after  ``t=max``: immediate SYSRST (timeout)
 - Feed in ``[t=min, t=max)``: safe zone
 
-The upstream ``samples/drivers/watchdog`` sample sets ``WDT_MIN_WINDOW=0``
-for MSPM0, so the closed window is never exercised.  This sample demonstrates
+The upstream ``samples/drivers/watchdog`` sample sets ``WDT_MIN_WINDOW=0``,
+so the closed window is never exercised.  This sample demonstrates
 all three zones across two boots.
 
 Behaviour
@@ -47,6 +47,8 @@ Supported Boards
 - ``lp_mspm0g3507``
 - ``lp_mspm0g3519``
 - ``lp_mspm0l2228``
+- ``lp_mspm33c321a``
+- ``lp_am13e230``
 
 Building and Running
 ********************
@@ -63,7 +65,7 @@ Sample Output
 
 .. code-block:: console
 
-   TI MSPM0 WWDT Window Mode
+   TI WWDT Window Mode
    Clean boot.
 
    WWDT window:  min=500 ms (closed)  max=2000 ms (open)
@@ -83,7 +85,7 @@ Sample Output
 
 .. code-block:: console
 
-   TI MSPM0 WWDT Window Mode
+   TI WWDT Window Mode
    *** Rebooted by WWDT window violation ***
 
    WWDT window:  min=500 ms (closed)  max=2000 ms (open)
