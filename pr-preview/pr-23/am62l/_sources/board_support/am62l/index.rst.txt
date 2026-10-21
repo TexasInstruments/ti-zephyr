@@ -25,6 +25,18 @@ Supported Boards
      - Arm Cortex-A53 @ 1.4 GHz
      - `TMDS62LEVM <https://www.ti.com/product/AM62L>`_
 
+Hardware Features
+*****************
+
+The table below is generated from the devicetree of the board.
+
+.. ti-hw-features-legend::
+
+``am62l_evm``
+=============
+
+.. ti-hw-features:: am62l_evm
+
 Resources
 *********
 
