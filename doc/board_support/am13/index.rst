@@ -25,6 +25,18 @@ Supported Boards
      - Single-core Arm Cortex-M33 @ 200 MHz
      - `AM13 <https://www.ti.com/product/AM13E23019>`_
 
+Hardware Features
+*****************
+
+The table below is generated from the devicetree of the board.
+
+.. ti-hw-features-legend::
+
+``lp_am13e230``
+===============
+
+.. ti-hw-features:: lp_am13e230
+
 Resources
 *********
 

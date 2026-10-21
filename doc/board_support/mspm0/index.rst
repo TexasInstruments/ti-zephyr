@@ -34,6 +34,28 @@ Supported Boards
      - Arm Cortex-M0+ @ 32 MHz
      - `LP-MSPM0L2228 <https://www.ti.com/tool/LP-MSPM0L2228>`_
 
+Hardware Features
+*****************
+
+The tables below are generated from the devicetree of each board.
+
+.. ti-hw-features-legend::
+
+``lp_mspm0g3507``
+=================
+
+.. ti-hw-features:: lp_mspm0g3507
+
+``lp_mspm0g3519``
+=================
+
+.. ti-hw-features:: lp_mspm0g3519
+
+``lp_mspm0l2228``
+=================
+
+.. ti-hw-features:: lp_mspm0l2228
+
 Resources
 *********
 

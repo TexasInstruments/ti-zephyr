@@ -25,6 +25,18 @@ Supported Boards
      - Single-core Arm Cortex-M33 @ 160 MHz
      - `MSPM33C321 <https://www.ti.com/product/MSPM33C321A>`_
 
+Hardware Features
+*****************
+
+The table below is generated from the devicetree of the board.
+
+.. ti-hw-features-legend::
+
+``lp_mspm33c321a``
+==================
+
+.. ti-hw-features:: lp_mspm33c321a
+
 Resources
 *********
 
