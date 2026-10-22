@@ -1,0 +1,89 @@
+.. _ti-zephyr-tests:
+
+Tests
+#####
+
+TI Zephyr test suites live under ``tests/`` and are run with
+`Twister <https://docs.zephyrproject.org/latest/develop/test/twister.html>`_,
+Zephyr's standard test runner. Only the tests that apply to |soc_name| are
+listed.
+
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+   :glob:
+
+   */README
+
+Test Structure
+**************
+
+Tests follow the same structure as upstream Zephyr tests:
+
+.. code-block:: text
+
+   tests/
+   └── <subsystem>/
+       └── <test_name>/
+           ├── src/
+           │   └── main.c
+           ├── CMakeLists.txt
+           ├── prj.conf
+           └── testcase.yaml
+
+The ``testcase.yaml`` file defines one or more test scenarios, board filters,
+and harness configuration. See the
+`Zephyr testcase.yaml reference
+<https://docs.zephyrproject.org/latest/develop/test/ztest.html>`_
+for the full schema. Samples use ``sample.yaml`` instead; Twister in this
+Zephyr version only discovers tests by those two file names.
+
+Running Tests with Twister
+**************************
+
+``west ti-twister`` runs Zephyr's twister on the ``tests/`` and ``samples/``
+directories of this repository and passes every other argument to twister
+unchanged. It can be run from anywhere inside the west workspace.
+
+Run all TI Zephyr tests and samples on a specific board (see the
+|soc_board_support| for the board IDs):
+
+.. code-block:: console
+
+   west ti-twister -p <board>
+
+Build only, without flashing or running on hardware:
+
+.. code-block:: console
+
+   west ti-twister -p <board> --build-only
+
+Run a single test or sample by its directory. Paths are relative to the
+directory the command is run from, so run it from ``ti-zephyr``:
+
+.. code-block:: console
+
+   west ti-twister -T tests/<subsystem>/<test_name> -p <board>
+   west ti-twister -T samples/<subsystem>/<sample_name> -p <board>
+
+A test can also be selected by scenario name instead of path
+(``west ti-twister --list-tests`` shows the names):
+
+.. code-block:: console
+
+   west ti-twister -s <scenario> -p <board>
+
+Filter by tag:
+
+.. code-block:: console
+
+   west ti-twister --tag drivers -p <board>
+
+Save the selected tests as a test plan and run it later:
+
+.. code-block:: console
+
+   west ti-twister -p <board> --save-tests plan.json
+   west ti-twister --load-tests plan.json
+
+Passing ``-T <path>`` replaces the default ``tests/`` and ``samples/`` roots.
