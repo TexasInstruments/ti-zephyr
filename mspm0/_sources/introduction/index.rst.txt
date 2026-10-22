@@ -146,17 +146,26 @@ each site only describes what applies to it. This site covers |soc_name|
 Licenses
 ********
 
-The ``ti-zephyr`` repository is covered by the license in the ``LICENSE`` file
-at its root. Zephyr, as well as the other third-party components included in
-the SDK, are made available under a number of other open-source licenses, which
-can be found in the respective repositories of the workspace.
+.. only:: mspm0
 
-A complete manifest of the licensing information of this SDK, along with export
-control information, is detailed here:
+   The licensing information of this SDK, as well as any third-party components included which are made available under a number of other open-source licenses are enumerated as part of the manifest.
+   A complete manifest along with export control information is detailed `here <../../MSPM0-ZEPHYR-SDK_manifest.html>`_
 
-.. note::
 
-   Link to detailed Licensing information to be added for the SDK
+.. only:: mspm33
+
+   The licensing information of this SDK, as well as any third-party components included which are made available under a number of other open-source licenses are enumerated as part of the manifest.
+   A complete manifest along with export control information is detailed `here <../../MSPM33-ZEPHYR-SDK_manifest.html>`_
+
+.. only:: am13
+
+   The licensing information of this SDK, as well as any third-party components included which are made available under a number of other open-source licenses are enumerated as part of the manifest.
+   A complete manifest along with export control information is detailed `here <../../AM13E2X-ZEPHYR-SDK_manifest.html>`_
+
+.. only:: am62l
+
+   The licensing information of this SDK, as well as any third-party components included which are made available under a number of other open-source licenses are enumerated as part of the manifest.
+   A complete manifest along with export control information is detailed `here <../../AM62L-ZEPHYR-SDK_manifest.html>`_
 
 Help and Support
 ****************
