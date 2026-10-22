@@ -97,6 +97,14 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
+      - name: Upload manifest files
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: manifests
+          path: doc/html/*-ZEPHYR-SDK_manifest.html
+          if-no-files-found: ignore
+          retention-days: 7
+
   assemble:
     name: Assemble site
     needs: build
@@ -119,6 +127,12 @@ jobs:
           pattern: html-*
           path: site
 
+      - name: Download manifest files
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: manifests
+          path: site
+
       # download-artifact keeps each artifact's name as a subdirectory
       # (site/html-mspm0/, ...) - rename to the bare SoC name (site/mspm0/).
       - name: Flatten per-SoC directories
@@ -126,6 +140,12 @@ jobs:
           for d in site/html-*; do
             mv "$d" "site/${d#site/html-}"
           done
+
+      # Move manifest files to site root so relative links like ../../AM13E2X-ZEPHYR-SDK_manifest.html work
+      - name: Move manifests to site root
+        run: |
+          mv site/*-ZEPHYR-SDK_manifest.html . 2>/dev/null || true
+          mv ./*-ZEPHYR-SDK_manifest.html site/ 2>/dev/null || true
 
       - name: Generate landing page
         run: python3 .github/workflows/generate_docs_index.py site doc/_static/ti_logo.png doc/socs.json
