@@ -1,0 +1,20 @@
+Step 4: Flash Hello World Example
+#################################
+
+Flash the application built in the previous step. Run the command from the same
+``zephyr`` folder used for the build:
+
+.. code-block:: shell
+
+   cd <sdk-install-dir>/zephyr
+   west flash --openocd ../openocd/src/openocd --openocd-search ../openocd/tcl/
+
+Verify
+******
+
+Open a serial terminal at 115200 8N1. Expected output:
+
+.. code-block:: console
+
+   *** Booting Zephyr OS build v4.4.0-ti ***
+   Hello World! <board>
