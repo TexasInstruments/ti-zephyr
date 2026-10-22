@@ -274,10 +274,6 @@ make_message()
             ;;
     esac
 
-    if (( ${#subject} > 75 )); then
-        subject="${subject:0:72}..."
-    fi
-
     printf '%s\n\n' "$subject"
 
     case "$kind" in
