@@ -72,7 +72,7 @@ ti_zephyr_base = None
 source_suffix   = {".rst": "restructuredtext"}
 master_doc      = "index"
 templates_path  = ["_templates"]
-exclude_patterns = ["_build", "_extensions", "Thumbs.db", ".DS_Store"]
+exclude_patterns = ["_build", "_extensions", "Thumbs.db", ".DS_Store", "html"]
 
 _subs_file = DOC_BASE / "substitutions.txt"
 rst_epilog = _subs_file.read_text() if _subs_file.exists() else ""

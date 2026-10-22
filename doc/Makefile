@@ -10,6 +10,7 @@ SOC           ?=
 export SOC
 SOCS           = $(shell python3 -c "import json; print(' '.join(json.load(open('socs.json'))))")
 BUILDDIR       = $(BUILDBASE)/$(SOC)
+HTMLOUTDIR	   = ./html/$(SOC)
 
 .PHONY: html linkcheck clean help check-soc
 
@@ -29,9 +30,9 @@ ifeq ($(filter $(SOC),$(SOCS)),)
 endif
 
 html: check-soc
-	$(SPHINX_BUILD) -b html $(SPHINXOPTS) -d $(BUILDDIR)/doctrees $(SOURCEDIR) $(BUILDDIR)/html
+	$(SPHINX_BUILD) -b html $(SPHINXOPTS) -d $(BUILDDIR)/doctrees $(SOURCEDIR) $(HTMLOUTDIR)
 	@echo ""
-	@echo "Build finished. Output is in $(BUILDDIR)/html/"
+	@echo "Build finished. Output is in $(HTMLOUTDIR)"
 
 linkcheck: check-soc
 	$(SPHINX_BUILD) -b linkcheck $(SPHINXOPTS) -d $(BUILDDIR)/doctrees $(SOURCEDIR) $(BUILDDIR)/linkcheck
