@@ -257,3 +257,19 @@ License
 *******
 
 LicenseRef-TI-TFL License — see the `LICENSE file <LICENSE>`_.
+
+Documentation
+*******
+
+TI Zephyr SDK documentation can be build by running following commands. 
+.. code-block:: shell
+
+ # Ubuntu
+ cd zephyrproject/ti-zephyr/doc
+ make html SOC=am13
+
+Valid options for SOC are mspm0, mspm33, am13 and am62l.
+The following page contains the live documents for all the SOCs
+
+https://texasinstruments.github.io/ti-zephyr/
+
