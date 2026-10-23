@@ -1,0 +1,154 @@
+<screen>
+	<consts>
+		<color name="color_card1_bg" value="0xFFFFFF" />
+		<color name="color_card1_text" value="0x003199" />
+		<color name="color_card2_bg" value="0x98D79A" />
+		<color name="color_card2_text" value="0x0E3E02" />
+		<color name="color_card3_bg" value="0xC0D4F4" />
+		<color name="color_card3_text" value="0x003199" />
+	</consts>
+	<styles>
+		<style name="ev_charging_bar" bg_color="#color_card1_text" />
+	</styles>
+	<view>
+		<subject_set_int_event subject="subject_nav_index" value="#ref_nav_ev" trigger="screen_loaded" />
+
+		<column
+			name="root"
+			width="100%"
+			height="100%"
+			padding_side="0"
+			padding_inside="#base_lib_unit_md"
+			scrollable="false"
+			style_pad_top="12"
+			style_bg_color="0xDEE5F0"
+			style_bg_opa="100%"
+		>
+			<header name="statusbar" style_pad_hor="#base_lib_unit_xl" />
+
+			<column
+				name="content"
+				width="100%"
+				grow="1"
+				padding_side="0"
+				padding_inside="#base_lib_unit_xxl"
+				style_pad_hor="#base_lib_unit_xl"
+				scrollable="false"
+			>
+				<column padding_inside="-8" width="100%">
+					<h2 text="EV Charging" style_text_color="0x003199" />
+					<h1 text="Tesla Model 3" />
+				</column>
+
+				<image src="image_car_large" width="672" height="248" inner_align="stretch" clickable="false" />
+
+				<card_empty
+					name="card_ev"
+					flex_flow="column"
+					style_flex_main_place="space_between"
+					width="100%"
+					height="270"
+					style_bg_color="#color_card1_bg"
+					style_text_color="#color_card1_text"
+					scrollable="false"
+					overflow_visible="false"
+				>
+					<row horizontal_align="start" vertical_align="center" padding_inside="#base_lib_unit_sm">
+						<image_mono src="icon_charge" style_image_recolor="#color_card1_text" />
+						<h3 text="Charging" />
+					</row>
+					<column padding_inside="-8" width="100%">
+						<row vertical_align="end" width="100%" horizontal_align="space_between">
+							<value_large value="subject_ev_soc" format="%d" unit="%" />
+							<text text="Full in ~2 h 15 min" font="font_md" height="40" />
+						</row>
+						<lv_bar bind_value="subject_ev_soc" width="100%" height="12">
+							<style name="ev_charging_bar" />
+							<style name="ev_charging_bar" selector="indicator" />
+						</lv_bar>
+					</column>
+					<text text="Started at 14:32" font="font_md" style_text_opa="64%" />
+				</card_empty>
+			</column>
+
+				<!-- Range + chart as a horizontally snapping strip: the chart wants more
+				     width than the range card, so they don't share a row evenly. -->
+				<row
+					name="stat_strip"
+					width="100%"
+					height="340"
+					padding_side="0"
+					style_pad_left="#base_lib_unit_xl"
+					style_pad_right="#base_lib_unit_xl"
+					padding_inside="#base_lib_unit_lg"
+					clickable="true"
+					scroll_snap_x="start"
+					scrollbar_mode="off"
+					scroll_chain_hor="false"
+				>
+					<card_empty
+						name="card_range"
+						flex_flow="column"
+						style_flex_main_place="space_between"
+						width="280"
+						height="100%"
+						style_bg_color="#color_card2_bg"
+						style_text_color="#color_card2_text"
+						scrollable="false"
+						overflow_visible="false"
+						snappable="true"
+					>
+						<row horizontal_align="start" vertical_align="center" padding_inside="#base_lib_unit_sm">
+							<image_mono src="icon_range" style_image_recolor="#color_card2_text" />
+							<h3 text="Range" />
+						</row>
+						<column style_margin_bottom="-28" width="100%">
+							<value_xlarge name="ev_range" value="subject_ev_range_km" format="%d" unit=" km" />
+						</column>
+						<text text="360 km after full charge" font="font_md" style_text_opa="64%" />
+					</card_empty>
+
+					<card_empty
+						name="card_chart"
+						flex_flow="column"
+						style_flex_main_place="space_between"
+						width="600"
+						height="100%"
+						style_bg_color="#color_card3_bg"
+						style_text_color="#color_card3_text"
+						scrollable="false"
+						overflow_visible="false"
+						snappable="true"
+					>
+						<row horizontal_align="start" vertical_align="center" padding_inside="#base_lib_unit_sm">
+							<image_mono src="icon_chart" style_image_recolor="#color_card3_text" />
+							<h3 text="Weekly Consumption" />
+						</row>
+
+						<chart
+							name="weekly_consumption"
+							chart_type="bar"
+							width="100%"
+							height="200"
+							min_value="0"
+							max_value="25"
+							tick_count="5"
+							point_count="7"
+							color="#color_card3_text"
+						/>
+						<row width="100%" grow="1" style_pad_left="48" style_pad_right="16" padding_inside="10">
+							<text text="Today" font="font_sm" flex_grow="1" style_text_align="center" />
+							<text text="Jan 11" font="font_sm" flex_grow="1" style_text_align="center" />
+							<text text="Jan 10" font="font_sm" flex_grow="1" style_text_align="center" />
+							<text text="Jan 9" font="font_sm" flex_grow="1" style_text_align="center" />
+							<text text="Jan 8" font="font_sm" flex_grow="1" style_text_align="center" />
+							<text text="Jan 7" font="font_sm" flex_grow="1" style_text_align="center" />
+							<text text="Jan 6" font="font_sm" flex_grow="1" style_text_align="center" />
+						</row>
+					</card_empty>
+				</row>
+
+			<navbar />
+		</column>
+	</view>
+</screen>
