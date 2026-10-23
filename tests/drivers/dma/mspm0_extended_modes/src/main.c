@@ -48,13 +48,19 @@ static void reset_buffers(void)
 static int do_dma_transfer(void)
 {
 	int ret = TC_FAIL;
+	int err;
 	int chan_id = dma_request_channel(dma, NULL);
 	if (chan_id < 0) {
 		TC_PRINT("failed to request dma channel\n");
 		return TC_FAIL;
 	}
 
-	if (dma_config(dma, chan_id, &dma_cfg) != 0) {
+	err = dma_config(dma, chan_id, &dma_cfg);
+	if (err == -ENOTSUP) {
+		TC_PRINT("mode not supported by this dma (%d)\n", chan_id);
+		ret = TC_SKIP;
+		goto cleanup;
+	} else if (err != 0) {
 		TC_PRINT("failed to configure dma (%d)\n", chan_id);
 		goto cleanup;
 	}
@@ -82,6 +88,7 @@ static int gather_mode(enum dma_addr_adj src_adj)
 	const int entries = CONFIG_DMA_XFER_SIZE / sizeof(uint32_t);
 	static uint32_t data[CONFIG_DMA_XFER_SIZE / sizeof(uint32_t)];
 	uint32_t source_address;
+	int ret;
 
 	reset_buffers();
 
@@ -119,8 +126,9 @@ static int gather_mode(enum dma_addr_adj src_adj)
 		.source_addr_adj = src_adj,
 	};
 
-	if (do_dma_transfer() != TC_PASS) {
-		return TC_FAIL;
+	ret = do_dma_transfer();
+	if (ret != TC_PASS) {
+		return ret;
 	}
 
 	for (int i = 0; i < entries; i++) {
@@ -137,6 +145,7 @@ static int table_mode(enum dma_addr_adj src_adj)
 {
 	const int entries = CONFIG_DMA_XFER_SIZE / sizeof(uint64_t);
 	uint32_t source_address;
+	int ret;
 
 	reset_buffers();
 
@@ -167,8 +176,9 @@ static int table_mode(enum dma_addr_adj src_adj)
 		.source_addr_adj = src_adj,
 	};
 
-	if (do_dma_transfer() != TC_PASS) {
-		return TC_FAIL;
+	ret = do_dma_transfer();
+	if (ret != TC_PASS) {
+		return ret;
 	}
 
 	for (int i = 0; i < entries; i++) {
@@ -184,6 +194,7 @@ static int table_mode(enum dma_addr_adj src_adj)
 static int fill_mode(uint8_t delta, enum dma_addr_adj src_adj, uint8_t width)
 {
 	int increment;
+	int ret;
 
 	reset_buffers();
 
@@ -211,8 +222,9 @@ static int fill_mode(uint8_t delta, enum dma_addr_adj src_adj, uint8_t width)
 		.source_addr_adj = src_adj,
 	};
 
-	if (do_dma_transfer() != TC_PASS) {
-		return TC_FAIL;
+	ret = do_dma_transfer();
+	if (ret != TC_PASS) {
+		return ret;
 	}
 
 	for (int i = 0; i < CONFIG_DMA_XFER_SIZE / width; i++) {
@@ -265,7 +277,13 @@ ZTEST(mspm0_extended_modes, test_table_mode)
 
 ZTEST(mspm0_extended_modes, test_gather_mode)
 {
-	zassert_true((gather_mode(DMA_ADDR_ADJ_INCREMENT) == TC_PASS));
+	int ret = gather_mode(DMA_ADDR_ADJ_INCREMENT);
+
+	if (ret == TC_SKIP) {
+		ztest_test_skip();
+	}
+
+	zassert_true((ret == TC_PASS));
 	zassert_true((gather_mode(DMA_ADDR_ADJ_DECREMENT) == TC_PASS));
 }
 
