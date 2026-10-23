@@ -1,0 +1,249 @@
+<screen>
+	<consts>
+		<color name="color_card1_bg" value="0xF6EAB8" />
+		<color name="color_card1_text" value="0x564500" />
+		<color name="color_card2_bg" value="0xDDE5F2" />
+		<color name="color_card2_text" value="0x003199" />
+		<color name="color_card3_bg" value="0xE3F5DB" />
+		<color name="color_card3_text" value="0x0E3E02" />
+		<color name="color_notification_badge_bg" value="0xEC4346" />
+	</consts>
+	<styles>
+		<style name="ev_charging_bar" bg_color="#color_card2_text" />
+		<style name="hero_box" border_width="0" radius="0" shadow_width="0" pad_all="0" bg_opa="0%" />
+		<style
+			name="messages_notification_badge"
+			width="12"
+			height="12"
+			radius="6"
+			border_width="0"
+			bg_color="#color_notification_badge_bg"
+			shadow_color="#color_notification_badge_bg"
+			shadow_spread="2"
+			shadow_opa="40%"
+			shadow_width="12"
+			margin_all="6"
+		/>
+	</styles>
+	<view>
+		<subject_set_int_event subject="subject_nav_index" value="#ref_nav_home" trigger="screen_loaded" />
+
+		<column
+			name="root"
+			width="100%"
+			height="100%"
+			padding_side="0"
+			padding_inside="#base_lib_unit_xxl"
+			scrollable="false"
+			style_pad_top="0"
+			style_bg_color="#color_bg"
+			style_bg_opa="100%"
+		>
+			<!-- Hero: full-bleed image area that also carries the clock and greeting,
+			     so the photo backs the type rather than sitting above it. -->
+			<lv_obj name="hero" width="100%" style_flex_grow="1" scrollable="false">
+				<style name="hero_box" />
+				<!-- 900x900 source, uniformly downscaled. Sized a few px past the 720x720
+				     hero and centred: "stretch" rounds its scale to 1/256 steps, so an exact
+				     fit leaves a hairline of background along an edge. The excess is clipped. -->
+				<image
+					src="image_home_hero"
+					ignore_layout="true"
+					align="center"
+					width="728"
+					height="728"
+					inner_align="stretch"
+					clickable="false"
+				/>
+				<image src="logostrip_large" ignore_layout="true" align="top_right" x="-24" y="24" clickable="false" />
+				<column
+					name="intro"
+					ignore_layout="true"
+					align="bottom_left"
+					x="#base_lib_unit_xl"
+					y="-32"
+					horizontal_align="start"
+					padding_inside="-24"
+				>
+					<row vertical_align="end" padding_inside="#base_lib_unit_lg">
+						<time
+							bind_subject_hour="subject_hour"
+							bind_subject_minute="subject_minute"
+							font="font_xxxl"
+							style_text_color="0xFFFFFF"
+						/>
+						<date
+							bind_subject_day_name="subject_day_name"
+							font="font_xl"
+							style_pad_bottom="22"
+							style_text_color="0xFFFFFF"
+							style_text_opa="75%"
+						/>
+					</row>
+					<h1 name="welcome_title" text="Morning, Gábor!" style_text_color="0xFFFFFF" />
+				</column>
+			</lv_obj>
+
+			<!-- Horizontally snapping card strip: full-bleed so cards scroll to the
+			     screen edge; the page gutter lives inside as left/right padding. -->
+			<row
+				name="cards"
+				width="100%"
+				height="400"
+				padding_side="0"
+				style_pad_left="#base_lib_unit_xl"
+				style_pad_right="#base_lib_unit_xl"
+				padding_inside="#base_lib_unit_lg"
+				clickable="true"
+				scroll_snap_x="start"
+				scrollbar_mode="off"
+				scroll_chain_hor="false"
+			>
+				<card_empty
+					name="card_smart_home"
+					flex_flow="column"
+					style_flex_main_place="start"
+					width="280"
+					height="100%"
+					style_bg_color="#color_card1_bg"
+					style_text_color="#color_card1_text"
+					scrollable="false"
+					snappable="true"
+				>
+					<image
+						event_bubble="true"
+						clickable="false"
+						src="image_weather_cloudy"
+						ignore_layout="true"
+						align="bottom_left"
+						x="-40"
+						y="-24"
+					/>
+					<row
+						clickable="false"
+						event_bubble="true"
+						horizontal_align="start"
+						vertical_align="center"
+						padding_inside="#base_lib_unit_sm"
+					>
+						<image_mono src="icon_charge" style_image_recolor="#color_card1_text" />
+						<h3 text="Smart Home" />
+					</row>
+					<column clickable="false" grow="1" padding_inside="#base_lib_unit_sm" width="100%">
+						<row clickable="false" padding_inside="#base_lib_unit_xs">
+							<value_xlarge
+								clickable="false"
+								value="subject_outside_temp_current"
+								format="%d°"
+								unit="out"
+							/>
+						</row>
+					</column>
+					<value_medium clickable="false" event_bubble="true" value="subject_temp" format="%d° in" unit="" />
+					<subject_set_int_event subject="subject_nav_index" value="#ref_nav_smart_home" trigger="clicked" />
+					<screen_create_event
+						trigger="clicked"
+						screen="screen_smart_home"
+						anim_type="fade_in"
+						duration="200"
+					/>
+				</card_empty>
+
+				<card_empty
+					name="card_ev"
+					flex_flow="column"
+					style_flex_main_place="start"
+					width="280"
+					height="100%"
+					style_bg_color="#color_card2_bg"
+					style_text_color="#color_card2_text"
+					scrollable="false"
+					snappable="true"
+				>
+					<image
+						src="image_car_small"
+						ignore_layout="true"
+						align="bottom_left"
+						x="-16"
+						y="8"
+						clickable="false"
+					/>
+					<row
+						horizontal_align="start"
+						vertical_align="center"
+						padding_inside="#base_lib_unit_sm"
+						clickable="false"
+					>
+						<image_mono src="icon_charge" style_image_recolor="#color_card2_text" />
+						<h3 text="EV Charging" />
+					</row>
+					<column grow="1" padding_inside="-20" width="100%" clickable="false">
+						<value_xlarge value="subject_ev_soc" format="%d" unit="%" />
+						<lv_bar bind_value="subject_ev_soc" width="100%" height="12" clickable="false">
+							<style name="ev_charging_bar" />
+							<style name="ev_charging_bar" selector="indicator" />
+						</lv_bar>
+					</column>
+					<subject_set_int_event subject="subject_nav_index" value="#ref_nav_ev" trigger="clicked" />
+					<screen_create_event
+						trigger="clicked"
+						screen="screen_ev_charging"
+						anim_type="fade_in"
+						duration="200"
+					/>
+				</card_empty>
+
+				<card_empty
+					name="card_messages"
+					flex_flow="column"
+					style_flex_main_place="start"
+					width="280"
+					height="100%"
+					style_bg_color="#color_card3_bg"
+					style_text_color="#color_card3_text"
+					scrollable="false"
+					snappable="true"
+				>
+					<row
+						horizontal_align="start"
+						vertical_align="center"
+						padding_inside="#base_lib_unit_sm"
+						clickable="false"
+					>
+						<image_mono src="icon_messages" style_image_recolor="#color_card3_text" />
+						<h3 text="Messages" />
+					</row>
+					<column grow="1" width="100%" padding_inside="0" clickable="false">
+						<image
+							src="image_avatar_lisa"
+							style_margin_top="#base_lib_unit_md"
+							style_margin_bottom="#base_lib_unit_sm"
+						/>
+						<text text="8:32  ·  Lisa" font="font_md" />
+						<text
+							width="100%"
+							text="Could you pick up milk on the way, babe?"
+							font="font_md"
+							style_text_opa="60%"
+						/>
+					</column>
+					<row vertical_align="center" padding_inside="#base_lib_unit_md" clickable="false">
+						<lv_obj scrollable="false">
+							<style name="messages_notification_badge" />
+						</lv_obj>
+						<text text="3 new" font="font_xl" />
+					</row>
+					<subject_set_int_event subject="subject_nav_index" value="#ref_nav_messages" trigger="clicked" />
+					<screen_create_event
+						trigger="clicked"
+						screen="screen_messages"
+						anim_type="fade_in"
+						duration="200"
+					/>
+				</card_empty>
+			</row>
+
+			<navbar />
+		</column>
+	</view>
+</screen>

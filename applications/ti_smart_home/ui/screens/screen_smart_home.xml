@@ -1,0 +1,332 @@
+<screen>
+	<consts>
+		<color name="color_view_bg" value="0xF5F1DB" />
+		<color name="color_card1_bg" value="0xFFFEF9" />
+		<color name="color_card1_text" value="0x484242" />
+		<color name="color_card2_bg" value="0xF6EAB8" />
+		<color name="color_card2_text" value="0x564500" />
+		<color name="color_card3_bg" value="0xFFB598" />
+		<color name="color_card3_text" value="0x532715" />
+		<color name="color_card4_bg" value="0xAA895D" />
+		<color name="color_card4_text" value="0xfff" />
+		<color name="color_card5_bg" value="0xFFFEF9" />
+		<color name="color_card5_text" value="0x0E3E02" />
+	</consts>
+	<styles>
+		<style name="style_thermo_arc" arc_color="#color_card1_text" />
+		<style name="style_button_pause" bg_color="0x003199" bg_image_src="icon_pause" />
+	</styles>
+	<view>
+		<subject_set_int_event subject="subject_nav_index" value="#ref_nav_smart_home" trigger="screen_loaded" />
+
+		<column
+			name="root"
+			width="100%"
+			height="100%"
+			padding_side="0"
+			padding_inside="#base_lib_unit_md"
+			scrollable="false"
+			style_pad_top="12"
+			style_bg_color="#color_view_bg"
+			style_bg_opa="100%"
+		>
+			<header name="statusbar" style_pad_hor="#base_lib_unit_xl" />
+
+			<column
+				name="content"
+				width="100%"
+				grow="1"
+				padding_side="0"
+				padding_inside="#base_lib_unit_xl"
+				style_pad_hor="#base_lib_unit_xl"
+				style_pad_bottom="#base_lib_unit_md"
+				scrollable="true"
+				scroll_chain_ver="false"
+				scrollbar_mode="off"
+			>
+				<column width="100%">
+					<h1 text="Smart Home" />
+				</column>
+
+				<!-- Thermostat + weather share a row; both keep close to their
+				     landscape proportions at ~324 wide. -->
+				<row name="main_stats" padding_inside="#base_lib_unit_xl" width="100%" height="340">
+					<card_empty
+						name="card_thermostat"
+						flex_flow="column"
+						style_flex_main_place="space_between"
+						style_flex_grow="1"
+						height="100%"
+						style_bg_color="#color_card1_bg"
+						style_text_color="#color_card1_text"
+						scrollable="false"
+						overflow_visible="false"
+					>
+						<row horizontal_align="start" vertical_align="center" padding_inside="#base_lib_unit_sm">
+							<image_mono src="icon_temp" style_image_recolor="#color_card1_text" />
+							<h3 text="Thermostat" />
+						</row>
+						<column width="100%" grow="1" style_flex_track_place="center">
+							<arc subject="subject_temp" min_value="16" max_value="32" width="196" height="196">
+								<style name="style_thermo_arc" />
+								<style name="style_thermo_arc" selector="indicator" />
+
+								<value_large value="subject_temp" align="center" format="%d°" unit="" />
+							</arc>
+
+							<button_circle size="56" icon="icon_minus" ignore_layout="true" align="bottom_left">
+								<subject_increment_event
+									min_value="16"
+									step="-1"
+									subject="subject_temp"
+									trigger="clicked"
+								/>
+								<subject_increment_event
+									min_value="16"
+									step="-1"
+									subject="subject_temp"
+									trigger="long_pressed_repeat"
+								/>
+							</button_circle>
+
+							<button_circle size="56" ignore_layout="true" align="bottom_right" icon="icon_plus">
+								<subject_increment_event
+									max_value="32"
+									step="1"
+									subject="subject_temp"
+									trigger="clicked"
+								/>
+								<subject_increment_event
+									max_value="32"
+									step="1"
+									subject="subject_temp"
+									trigger="long_pressed_repeat"
+								/>
+							</button_circle>
+						</column>
+					</card_empty>
+
+					<card_empty
+						name="card_weather"
+						flex_flow="column"
+						style_flex_main_place="space_between"
+						style_flex_grow="1"
+						height="100%"
+						style_bg_color="#color_card2_bg"
+						style_text_color="#color_card2_text"
+						scrollable="false"
+						overflow_visible="false"
+					>
+						<image src="image_weather_cloudy" ignore_layout="true" x="38" y="90" />
+						<row horizontal_align="start" vertical_align="center" padding_inside="#base_lib_unit_sm">
+							<image_mono src="icon_weather" style_image_recolor="#color_card2_text" />
+							<h3 text="Current Weather" />
+						</row>
+						<column padding_inside="-8" width="100%" ignore_layout="true" y="80">
+							<row vertical_align="end" width="100%" horizontal_align="start">
+								<value_large value="subject_outside_temp_current" format="%d°" unit="" />
+								<value_medium
+									value="subject_outside_temp_highest"
+									format="/ %d°"
+									unit=""
+									style_text_opa="60%"
+									style_pad_bottom="10"
+								/>
+							</row>
+						</column>
+						<text bind_text="subject_weather_desc" font="font_md" style_text_opa="64%" />
+					</card_empty>
+				</row>
+
+				<!-- Music player is full width now, so it leaves the tile grid -->
+				<card_empty
+					name="card_music_player"
+					flex_flow="row"
+					width="100%"
+					height="180"
+					style_flex_cross_place="center"
+					style_pad_all="0"
+					style_pad_column="0"
+					style_flex_main_place="space_between"
+					style_bg_color="#color_card5_bg"
+					style_text_color="#color_text"
+					scrollable="false"
+				>
+					<image name="album_cover" src="image_album_cover" bind_src="subject_album_cover" style_radius="16" />
+					<image src="icon_spotify" ignore_layout="true" align="top_left" x="120" y="8" />
+					<column scrollable="false" grow="1" height="100%" padding_side="12">
+						<column style_pad_hor="#base_lib_unit_lg" width="100%">
+							<h4 bind_text="subject_album_name" style_opa="60%" />
+							<h3 bind_text="subject_track_name" width="100%" long_mode="dots" />
+						</column>
+						<row
+							width="100%"
+							grow="1"
+							content_align="center"
+							vertical_align="center"
+							horizontal_align="space_between"
+							style_pad_hor="6"
+						>
+							<button_circle icon="icon_shuffle" size="56" bg_opa="0" color="#color_text" />
+							<button_circle icon="icon_prev" size="56" bg_opa="0" color="#color_text">
+								<event_cb callback="on_music_previous_cb" trigger="clicked" />
+							</button_circle>
+							<container>
+								<button_circle
+									icon="icon_play"
+									size="64"
+									bg_color="#color_text"
+									bg_opa="100%"
+									color="#color_bg"
+								>
+									<remove_style selector="checked" />
+									<bind_state_if_eq subject="subject_play" state="checked" ref_value="1" />
+									<bind_style
+										subject="subject_play"
+										name="style_button_pause"
+										ref_value="1"
+										selector="checked"
+									/>
+									<subject_toggle_event subject="subject_play" trigger="clicked" />
+								</button_circle>
+							</container>
+							<button_circle icon="icon_next" size="56" bg_opa="0" color="#color_text">
+								<event_cb callback="on_music_next_cb" trigger="clicked" />
+							</button_circle>
+							<button_circle icon="icon_repeat" size="56" bg_opa="0" color="#color_text" />
+						</row>
+					</column>
+				</card_empty>
+
+				<!-- 2x2 device tile wall -->
+				<column
+					name="devices"
+					width="100%"
+					height="424"
+					style_layout="grid"
+					style_grid_column_dsc_array="fr(1) fr(1)"
+					style_grid_row_dsc_array="240 160"
+					padding_inside="#base_lib_unit_xl"
+					overflow_visible="true"
+				>
+					<card_empty
+						name="card_range"
+						flex_flow="column"
+						style_flex_main_place="start"
+						style_bg_color="#color_card3_bg"
+						style_text_color="#color_card3_text"
+						style_grid_cell_column_pos="0"
+						style_grid_cell_row_pos="0"
+						style_grid_cell_y_align="stretch"
+						style_grid_cell_x_align="stretch"
+						style_pad_all="20"
+						style_radius="16"
+						scrollable="false"
+					>
+						<image src="image_kettle" ignore_layout="true" x="70" y="83" />
+						<column horizontal_align="start" vertical_align="center" padding_inside="-2">
+							<h4 text="Smart Kettle" />
+							<text text="MI Smart Kettle Pro" font="font_sm" style_text_opa="60%" />
+						</column>
+						<column padding_inside="-16">
+							<value_large value="subject_kettle_temp" format="%d°" unit="" />
+							<text text="Cooling Down" font="font_md" />
+						</column>
+
+						<switch ignore_layout="true" align="top_right" bind_checked="subject_kettle_on" />
+					</card_empty>
+
+					<card_empty
+						name="card_kettle"
+						flex_flow="column"
+						style_flex_main_place="start"
+						style_bg_color="#color_card4_bg"
+						style_text_color="#color_card4_text"
+						style_grid_cell_column_pos="1"
+						style_grid_cell_row_pos="0"
+						style_grid_cell_y_align="stretch"
+						style_grid_cell_x_align="stretch"
+						style_pad_all="20"
+						style_radius="16"
+						scrollable="false"
+					>
+						<image src="image_vacuum" ignore_layout="true" x="70" y="96" />
+						<column horizontal_align="start" vertical_align="center" padding_inside="-2">
+							<h4 text="Vacuum Cleaner" />
+							<text text="MI Robot Vacuum S20" font="font_sm" style_text_opa="60%" />
+						</column>
+						<column padding_inside="-16">
+							<value_large value="subject_vacuum_battery" unit="%" />
+							<text text="Battery: Low" font="font_md" />
+						</column>
+
+						<switch ignore_layout="true" align="top_right" bind_checked="subject_vacuum_on" />
+					</card_empty>
+
+					<card_empty
+						name="card_wifi"
+						flex_flow="column"
+						style_pad_all="20"
+						style_radius="16"
+						style_flex_main_place="space_between"
+						style_bg_color="#color_card5_bg"
+						style_text_color="#color_card5_text"
+						style_grid_cell_column_pos="0"
+						style_grid_cell_row_pos="1"
+						style_grid_cell_y_align="stretch"
+						style_grid_cell_x_align="stretch"
+						scrollable="false"
+					>
+						<image src="image_wifi" ignore_layout="true" align="center" y="15" />
+						<column horizontal_align="start" vertical_align="center" padding_inside="-2">
+							<h4 text="On" />
+							<text text="Living room" font="font_sm" style_text_opa="60%" />
+						</column>
+						<switch ignore_layout="true" align="top_right" bind_checked="subject_wifi_on" />
+					</card_empty>
+
+					<card_empty
+						name="card_cam"
+						flex_flow="column"
+						style_flex_main_place="space_between"
+						style_bg_color="#color_card3_bg"
+						style_text_color="#color_card3_text"
+						style_grid_cell_column_pos="1"
+						style_grid_cell_row_pos="1"
+						style_grid_cell_y_align="stretch"
+						style_grid_cell_x_align="stretch"
+						style_radius="16"
+						style_pad_all="0"
+						scrollable="false"
+					>
+						<!-- The feed is pre-scaled to the tile (324x160) and drawn 1:1, rounding
+						     its own corners with radius instead of the tile using clip_corner, which
+						     renders children through ARGB8888 layers. lv_image's radius only clips
+						     unscaled images, so do not bring back inner_align="stretch". -->
+						<image
+							src="image_livecam"
+							ignore_layout="true"
+							align="center"
+							style_radius="16"
+						/>
+						<text
+							style_margin_all="12"
+							text="LIVE"
+							font="font_sm"
+							width="48"
+							height="24"
+							style_pad_top="2"
+							style_text_align="center"
+							style_text_color="0xfff"
+							style_bg_color="0xEC4346"
+							style_bg_opa="100%"
+							style_radius="12"
+						/>
+					</card_empty>
+				</column>
+			</column>
+
+			<navbar />
+		</column>
+	</view>
+</screen>
