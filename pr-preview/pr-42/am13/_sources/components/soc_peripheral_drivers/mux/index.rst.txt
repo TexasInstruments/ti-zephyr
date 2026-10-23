@@ -1,0 +1,290 @@
+.. ti-socs: am13
+
+.. _ti-zephyr-component-mux:
+
+MUX
+###
+
+.. rst-class:: ti-subtitle
+
+   Zephyr multiplexer API, ``<zephyr/drivers/mux.h>``
+
+.. important::
+
+   The XBAR drivers apply to AM13E230 (``lp_am13e230``).
+
+.. contents::
+   :depth: 1
+   :local:
+   :class: hidden-title
+
+The AM13E2 crossbar is exposed through Zephyr's MUX API. Two controllers
+are instantiated in the SoC devicetree:
+
+- ``xbar1`` (``ti,am13e2-xbar-in``) is the Input XBAR. It routes a GPIO
+  into one of 28 channels that other peripherals use as inputs.
+- ``xbar2`` (``ti,am13e2-xbar-out``) is the Output XBAR. It connects
+  internal peripheral sources onto one of 8 outputs.
+
+Both nodes are ``disabled`` in the SoC devicetree and already carry the
+SYSCTL power-enable specifier. Enabling a node makes the driver turn that
+power bit on during init and wait for the peripheral to start. The driver
+does not program a route at init. A consumer applies the route.
+
+Features Supported
+******************
+
+- Input XBAR: route GPIO 0-127 to a channel, with the raw-pad or
+  post-GPIO select bit
+- Output XBAR: set or clear one source-select bit on one output
+- Output XBAR disconnect, which clears every source on that output
+- Readback of the programmed route with :c:func:`mux_state_get`
+- Fixed routes in devicetree (``mux-states``) and routes chosen at runtime
+  (``mux-controls``)
+
+Features NOT Supported
+**********************
+
+- Output XBAR index 8 and above. The driver accepts outputs 0 through 7
+  (OUTPUTXBAR1 through OUTPUTXBAR8) and returns ``-EINVAL`` otherwise.
+- PWM XBAR. Although the EQEP nodes can name PWMXBAR1 through PWMXBAR8 as 
+  a phase or index source with ``ti,qepa-src``, ``ti,qepb-src``, 
+  and ``ti,qepi-src``, the events that form the trip
+  are left unprogrammed.
+
+Usage
+*****
+
+A consumer includes ``mux-consumer.yaml`` and points at ``xbar1`` or
+``xbar2``. Two properties are available:
+
+- ``mux-states`` stores the route in devicetree. One
+  :c:func:`mux_state_apply` call programs it. Peripheral drivers that
+  include this property, including EQEP and eCAP, do that from their own
+  init.
+- ``mux-controls`` stores only the address of the control line. The
+  application passes the state to :c:func:`mux_control_set`.
+
+``mux-state-names`` and ``mux-control-names`` name those entries so the
+driver can look them up with ``MUX_STATE_DT_GET_BY_NAME()`` and
+``MUX_CONTROL_DT_GET_BY_NAME()``.
+
+The pad electrical configuration is separate. The XBAR selects a GPIO
+number; input enable and pull are still a pinctrl state on that pad.
+
+Enabling the Driver
+===================
+
+Set ``CONFIG_MUX=y``. ``CONFIG_MUX_TI_AM13E2_XBAR_IN`` and
+``CONFIG_MUX_TI_AM13E2_XBAR_OUT`` then default to ``y`` for each enabled
+node. A peripheral driver that needs the crossbar may select ``CONFIG_MUX``
+itself, in which case the application config can leave it unset.
+
+.. code-block:: kconfig
+
+   CONFIG_MUX=y
+
+.. code-block:: devicetree
+
+   &xbar1 {
+           status = "okay";
+   };
+
+   &xbar2 {
+           status = "okay";
+   };
+
+``CONFIG_MUX_INIT_PRIORITY`` defaults to 40, which is earlier than the
+usual device init priority, so a consumer can apply its route from its
+own init function.
+
+.. _ti-zephyr-mux-input:
+
+Input XBAR
+==========
+
+``#mux-control-cells`` is 1 and ``#mux-state-cells`` is 2:
+
+.. code-block:: text
+
+   <&xbar1 CHANNEL STATE>
+
+``CHANNEL`` is 0-based. A channel outside 0-27 makes :c:func:`mux_control_set` return
+``-EINVAL``.
+
+``STATE`` is packed with ``AM13E2_XBAR_IN_STATE(pin, raw)`` from
+``<zephyr/dt-bindings/mux/ti_am13e2_xbar_in.h>``.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 25 75
+
+   * - Field
+     - Description
+   * - ``pin``
+     - GPIO number, ``port * 32 + pin_in_port``. Port A is 0, B is 1, C is
+       2, D is 3, so PB11 is 43. Values above 127 return ``-EINVAL``.
+   * - ``raw``
+     - ``1`` selects the pad signal through ``RAW_INPUTSELECT``. ``0``
+       selects the signal after the GPIO module (the reset default).
+
+The raw bit belongs to the GPIO, not to the channel. Every channel that
+selects the same GPIO shares it. Giving that GPIO two different ``raw``
+values from two routes is an authoring error; the driver keeps the value
+from the last write.
+
+.. note::
+
+   Use ``raw = 1`` for a signal that comes in on the pad, as in the EQEP                                                                                                      
+   example below. Use ``raw = 0`` when the signal should be the one the GPIO                                                                                                  
+   module drives.
+
+This overlay routes the raw PB11 pad to INPUTXBAR17, the EQEP0 phase A
+input. That signal is channel 16:
+
+.. code-block:: devicetree
+
+   #include <zephyr/dt-bindings/mux/ti_am13e2_xbar_in.h>
+
+   &xbar1 {
+           status = "okay";
+   };
+
+   &eqep0 {
+           mux-states = <&xbar1 16 AM13E2_XBAR_IN_STATE(43, 1)>;
+           mux-state-names = "qepa";
+   };
+
+The same channel can be moved at runtime. The control cell is only the
+channel; the packed state is the argument to :c:func:`mux_control_set`:
+
+.. code-block:: devicetree
+
+   / {
+           consumer: my_consumer {
+                   mux-controls = <&xbar1 16>;
+                   mux-control-names = "qepa";
+           };
+   };
+
+.. code-block:: c
+
+   #include <zephyr/device.h>
+   #include <zephyr/drivers/mux.h>
+   #include <zephyr/dt-bindings/mux/ti_am13e2_xbar_in.h>
+
+   #define CONSUMER DT_NODELABEL(consumer)
+
+   MUX_CONTROL_DT_SPEC_DEFINE_BY_NAME(CONSUMER, qepa);
+
+   static const struct device *const xbar = MUX_CONTROL_DT_DEV_GET(CONSUMER);
+
+   int route_qepa(void)
+   {
+           return mux_control_set(xbar, MUX_CONTROL_DT_GET_BY_NAME(CONSUMER, qepa),
+                                  AM13E2_XBAR_IN_STATE(43, 1));
+   }
+
+A ``mux-states`` entry is applied with :c:func:`mux_state_apply` and can be
+read back with :c:func:`mux_state_get`. The value read back is the same
+packed state the macro builds.
+
+.. _ti-zephyr-mux-output:
+
+Output XBAR
+===========
+
+``#mux-control-cells`` is 1 and ``#mux-state-cells`` is 2:
+
+.. code-block:: text
+
+   <&xbar2 SELECT STATE>
+
+``SELECT`` is packed with ``AM13E2_XBAR_OUT_CTRL(idx, group, bit)`` from
+``<zephyr/dt-bindings/mux/ti_am13e2_xbar_out.h>``.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 25 75
+
+   * - Field
+     - Description
+   * - ``idx``
+     - Output index, 0 through 7. Index 0 is OUTPUTXBAR1 and index 7 is
+       OUTPUTXBAR8. An index of 8 or more returns ``-EINVAL``.
+   * - ``group``
+     - ``AM13E2_XBAR_OUT_GROUP_G0`` or ``AM13E2_XBAR_OUT_GROUP_G1``, the
+       two 32-bit source-select registers for that output.
+   * - ``bit``
+     - Bit 0 through 31 in that register. The bit for a given peripheral
+       source is the one-hot encoding in the device TRM.
+   * - ``STATE``
+     - ``1`` sets the bit and selects that source. ``0`` clears it.
+       Any other value returns ``-EINVAL``.
+
+:c:func:`mux_control_set` changes exactly one bit. Selecting a source
+leaves the other source bits on that output as they are.
+
+:c:func:`mux_control_disconnect` writes zero to both source-select
+registers. The group and bit in the control
+cell are ignored. A later :c:func:`mux_control_set` selects a source
+again.
+
+Here is an example. The group and bit below are placeholder for the source select bit 
+by referring the device TRM.
+
+.. code-block:: devicetree
+
+   #include <zephyr/dt-bindings/mux/ti_am13e2_xbar_out.h>
+
+   &xbar2 {
+           status = "okay";
+   };
+
+   / {
+           consumer: my_consumer {
+                   mux-states = <&xbar2 AM13E2_XBAR_OUT_CTRL(0, AM13E2_XBAR_OUT_GROUP_G0, 3) 1>;
+           };
+   };
+
+.. code-block:: c
+
+   #include <zephyr/device.h>
+   #include <zephyr/drivers/mux.h>
+
+   #define CONSUMER DT_NODELABEL(consumer)
+
+   MUX_STATE_DT_SPEC_DEFINE(CONSUMER);
+
+   static const struct device *const xbar = MUX_STATE_DT_DEV_GET(CONSUMER);
+
+   void apply_default(void)
+   {
+           const struct mux_state *route = MUX_STATE_DT_GET(CONSUMER);
+
+           mux_state_apply(xbar, route);
+   }
+
+   void release_output(void)
+   {
+           const struct mux_state *route = MUX_STATE_DT_GET(CONSUMER);
+
+           mux_control_disconnect(xbar, route->control);
+   }
+
+Samples and Tests
+*****************
+
+Samples
+=======
+
+There is no standalone XBAR sample. Consumers apply ``mux-states`` from
+their own init. The EQEP driver does this for its phase and index inputs,
+and the eCAP driver does this for its input and output routes.
+
+Tests
+=====
+
+- ``mux_api`` (``drivers.mux.am13e2_xbar_in``) on ``lp_am13e230`` sets an
+  Input XBAR channel, applies a ``mux-states`` entry, and reads both routes
+  back with :c:func:`mux_state_get`.
