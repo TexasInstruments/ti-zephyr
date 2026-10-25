@@ -15,7 +15,7 @@ installation is required.
 Download
 ********
 
-Download the MSPM33 SDK installer from ``<download-location>``.
+Download the MSPM33 SDK installer from `MSPM33-ZEPHYR-SDK page <https://www.ti.com/tool/download/MSPM33-ZEPHYR-SDK>`__
 
 Install
 *******
