@@ -1,0 +1,223 @@
+.. ti-socs: mspm0 am13
+
+.. _ti-zephyr-component-aes:
+
+AES
+###
+
+Overview
+********
+
+The AES engine encrypts and decrypts data in hardware. The driver implements
+Zephyr's crypto API (``<zephyr/crypto/crypto.h>``): a session is opened with
+:c:func:`cipher_begin_session`, data is processed with
+:c:func:`cipher_block_op` (ECB) or :c:func:`cipher_cbc_op` (CBC), and the
+session is closed with :c:func:`cipher_free_session`.
+
+.. only:: mspm0
+
+   There are two variants of the peripheral, each with its own devicetree
+   compatible and Kconfig symbol:
+
+   .. list-table::
+      :header-rows: 1
+      :widths: 15 25 30 30
+
+      * - Variant
+        - Compatible
+        - Kconfig
+        - Boards
+      * - AES
+        - ``ti,mspm0-aes``
+        - ``CONFIG_CRYPTO_MSPM0_AES``
+        - ``lp_mspm0g3507``
+      * - AES-ADV
+        - ``ti,mspm0-aes-adv``
+        - ``CONFIG_CRYPTO_MSPM0_AES_ADV``
+        - ``lp_mspm0g3519``, ``lp_mspm0l2228``
+
+   Both variants are used through the same API and support the same cipher
+   modes and key sizes.
+
+.. only:: am13
+
+   The |soc_name| device has the AES-ADV variant of the peripheral
+   (``ti,mspm0-aes-adv``, ``CONFIG_CRYPTO_MSPM0_AES_ADV``), used on
+   ``lp_am13e230``. Its control register defines bits for further modes (CTR,
+   CFB, GCM, CCM and CBC-MAC) that the driver does not use.
+
+Features Supported
+******************
+
+- AES-128 and AES-256 (16-byte and 32-byte keys)
+- ECB and CBC modes, for both encryption and decryption
+- Multi-block data: the input can be any non-zero multiple of the 16-byte AES
+  block size
+- Several sessions open at the same time, up to ``CONFIG_CRYPTO_MSPM0_MAX_SESSION``
+  (default 2)
+- Synchronous operation (``CAP_SYNC_OPS``): the call returns once the data has
+  been processed, with the engine's interrupt used to signal each completed
+  block
+
+Features NOT Supported
+***********************
+
+- Cipher modes other than ECB and CBC (CFB, OFB, CTR, CCM and GCM).
+  :c:func:`cipher_begin_session` returns ``-EINVAL`` for them.
+- Key sizes other than 128 and 256 bits, such as AES-192
+- Padding. The caller must supply whole 16-byte blocks.
+- Asynchronous operation
+- DMA based data transfer. The CPU writes each block to the engine and reads
+  the result back.
+- In-place operation. The driver reports ``CAP_SEPARATE_IO_BUFS``, so input
+  and output must be separate buffers.
+
+Usage
+*****
+
+Enabling the Driver
+===================
+
+Enable the AES node in the board devicetree (or an application overlay) and the
+crypto subsystem in ``prj.conf``. The driver is selected automatically once an
+enabled AES node is present.
+
+.. code-block:: devicetree
+
+   &aes {
+           status = "okay";
+   };
+
+.. code-block:: kconfig
+
+   CONFIG_CRYPTO=y
+
+Devicetree Bindings
+===================
+
+The node properties are described in
+`ti,mspm0-aes <../../../../../zephyr/build/dts/api/bindings/rtc/ti,mspm0-aes.html>`_
+and
+`ti,mspm0-aes-adv <../../../../../zephyr/build/dts/api/bindings/rtc/ti,mspm0-aes-adv.html>`_
+devicetree binding.
+
+Optional Kconfig
+================
+
+.. list-table::
+   :header-rows: 1
+   :widths: 35 65
+
+   * - Symbol
+     - Effect
+   * - ``CONFIG_CRYPTO_MSPM0_MAX_SESSION``
+     - Number of sessions the driver can have open in parallel. Default ``2``.
+       :c:func:`cipher_begin_session` returns ``-EBUSY`` once all sessions are
+       in use.
+
+Encrypting Data
+===============
+
+The node label ``aes`` is used by both variants, so the same code works on all
+boards.
+
+.. code-block:: c
+
+   #include <zephyr/crypto/crypto.h>
+   #include <zephyr/device.h>
+
+   static const struct device *const crypto_dev = DEVICE_DT_GET(DT_NODELABEL(aes));
+
+   int main(void)
+   {
+           static const uint8_t key[16] = {
+                   0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+                   0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
+           };
+           uint8_t plaintext[16] = {
+                   0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+                   0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF,
+           };
+           uint8_t ciphertext[16];
+
+           struct cipher_ctx ctx = {
+                   .keylen = sizeof(key),
+                   .key.bit_stream = key,
+                   .flags = CAP_RAW_KEY | CAP_SEPARATE_IO_BUFS | CAP_SYNC_OPS |
+                            CAP_NO_IV_PREFIX,
+           };
+           struct cipher_pkt pkt = {
+                   .in_buf = plaintext,
+                   .in_len = sizeof(plaintext),
+                   .out_buf = ciphertext,
+                   .out_buf_max = sizeof(ciphertext),
+           };
+
+           if (!device_is_ready(crypto_dev)) {
+                   return -ENODEV;
+           }
+
+           if (cipher_begin_session(crypto_dev, &ctx, CRYPTO_CIPHER_ALGO_AES,
+                                    CRYPTO_CIPHER_MODE_ECB,
+                                    CRYPTO_CIPHER_OP_ENCRYPT) != 0) {
+                   return -EIO;
+           }
+
+           /* pkt.out_len is the number of bytes written to ciphertext */
+           int ret = cipher_block_op(&ctx, &pkt);
+
+           cipher_free_session(crypto_dev, &ctx);
+
+           /* this key and data give 69 C4 E0 D8 6A 7B 04 30 D8 CD B7 80 70 B4 C5 5A */
+           return ret;
+   }
+
+For CBC, open the session with ``CRYPTO_CIPHER_MODE_CBC`` and call
+:c:func:`cipher_cbc_op` with the 16-byte IV instead of
+:c:func:`cipher_block_op`. The driver does not put the IV in front of the
+output (``CAP_NO_IV_PREFIX``), so pass the same IV for encryption and
+decryption.
+
+The ``struct cipher_ctx`` and ``struct cipher_pkt`` fields follow these rules:
+
+- ``keylen`` must be ``16`` or ``32``.
+- ``flags`` may only contain ``CAP_RAW_KEY``, ``CAP_SEPARATE_IO_BUFS``,
+  ``CAP_SYNC_OPS`` and ``CAP_NO_IV_PREFIX``. Any other flag makes
+  :c:func:`cipher_begin_session` fail with ``-ENOTSUP``.
+- ``in_len`` must be non-zero and a multiple of 16, and ``out_buf_max`` must be
+  at least ``in_len``.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 25 75
+
+   * - Return value
+     - Cause
+   * - ``-EINVAL``
+     - Algorithm other than AES, key length other than 16 or 32, cipher mode
+       other than ECB or CBC, NULL key, packet or buffer, ``in_len`` of zero or
+       not a multiple of 16, output buffer smaller than the input, a NULL IV
+       for CBC, or a session that is not open.
+   * - ``-ENOTSUP``
+     - ``flags`` contains a capability the driver does not provide.
+   * - ``-EBUSY``
+     - All sessions are in use.
+   * - ``-EAGAIN``
+     - The engine is busy with another operation, or a block did not complete
+       in time.
+
+Samples
+*******
+
+- `Crypto Sample <../../../../../zephyr/samples/drivers/crypto/README.html>`_
+
+  - Encrypts and decrypts known test vectors and logs ``Match`` or
+    ``Mismatch`` for each mode.
+  - ECB and CBC are the modes the AES driver supports.
+  - The sample selects the AES or AES-ADV device from the driver Kconfig, so it
+    needs no changes between boards.
+
+Zephyr Documentation
+********************
+
+`Crypto Zephyr Documentation <../../../../../zephyr/services/crypto/index.html>`_
