@@ -132,7 +132,7 @@ ti_unavailable_labels = []
 
 for _other in SOCS:
     if _other != soc:
-        exclude_patterns += [f"board_support/{_other}/*", f"getting_started/{_other}/*"]
+        exclude_patterns += [f"board_support/{_other}/*", f"getting_started/{_other}/*", f"release_notes/{_other}/*", f"release_notes/{_other}/index"]
 
 for _page in (f"board_support/{soc}/index.rst", f"getting_started/{soc}"):
     if not (DOC_BASE / _page).exists():
