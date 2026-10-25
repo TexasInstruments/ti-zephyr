@@ -12,6 +12,8 @@ SOCS           = $(shell python3 -c "import json; print(' '.join(json.load(open(
 BUILDDIR       = $(BUILDBASE)/$(SOC)
 HTMLOUTDIR	   = ./html/$(SOC)
 
+.DEFAULT_GOAL := html
+
 .PHONY: html linkcheck clean help check-soc
 
 help:
@@ -29,7 +31,15 @@ ifeq ($(filter $(SOC),$(SOCS)),)
 	$(error SOC is required and must be one of: $(SOCS). Example: make html SOC=$(firstword $(SOCS)))
 endif
 
-html: check-soc
+html:
+ifeq ($(SOC),)
+	@echo "No SOC specified — building for all: $(SOCS)"
+	@for s in $(SOCS); do $(MAKE) html SOC=$$s || exit 1; done
+else
+	$(MAKE) check-soc html-target
+endif
+
+html-target: check-soc
 	$(SPHINX_BUILD) -b html $(SPHINXOPTS) -d $(BUILDDIR)/doctrees $(SOURCEDIR) $(HTMLOUTDIR)
 	@echo ""
 	@echo "Build finished. Output is in $(HTMLOUTDIR)"
@@ -40,3 +50,4 @@ linkcheck: check-soc
 clean:
 	rm -rf $(BUILDBASE)
 	rm -rf samples/ tests/
+	if [ -n "$(SOC)" ]; then rm -rf ./html/$(SOC); else for s in $(SOCS); do rm -rf ./html/$$s; done; fi
