@@ -99,6 +99,23 @@ external_content_contents = [
 ]
 exclude_patterns += ["samples/README.rst", "tests/README.rst"]
 
+# Include fragments: in components/ and tools/, every .rst next to an index.rst
+# other than index.rst itself is content pulled into that index.rst with
+# ``.. include::`` (typically one fragment per SoC family inside ``.. only::``).
+# A fragment is not a page of its own, so it is excluded from the build.
+# autosectionlabel registers the sections of all included fragments before
+# ``only`` is resolved, so the section titles they share are reported as
+# duplicates although just one fragment is ever built; that warning is
+# suppressed for the including page.
+for _top in ("components", "tools"):
+    for _fragment in sorted((DOC_BASE / _top).rglob("*.rst")):
+        if _fragment.name == "index.rst" or not (_fragment.parent / "index.rst").is_file():
+            continue
+        exclude_patterns.append(_fragment.relative_to(DOC_BASE).as_posix())
+        suppress_warnings.append(
+            "autosectionlabel." + (_fragment.parent / "index").relative_to(DOC_BASE).as_posix()
+        )
+
 external_content_keep = [
     "_static/**/*",
     "_templates/**/*",
