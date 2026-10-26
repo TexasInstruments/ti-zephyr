@@ -25,17 +25,23 @@ Supported Boards
      - Single-core Arm Cortex-M33 @ 200 MHz
      - `AM13 <https://www.ti.com/product/AM13E23019>`_
 
-Hardware Features
-*****************
+Board Documentation
+*******************
 
-The table below is generated from the devicetree of the board.
+The hardware features, connections and flash/debug instructions of the board
+are documented on its page in the main Zephyr documentation. Each link below
+opens the matching section of that page.
 
-.. ti-hw-features-legend::
+.. list-table::
+   :header-rows: 1
+   :widths: 30 35 35
 
-``lp_am13e230``
-===============
-
-.. ti-hw-features:: lp_am13e230
+   * - Board ID
+     - Board page
+     - Hardware features
+   * - ``lp_am13e230``
+     - `LP-AM13E230 <../../../../zephyr/boards/ti/lp_am13e230/doc/index.html>`__
+     - `Supported features <../../../../zephyr/boards/ti/lp_am13e230/doc/index.html#supported-features>`__
 
 Resources
 *********

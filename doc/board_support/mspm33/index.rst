@@ -25,17 +25,23 @@ Supported Boards
      - Single-core Arm Cortex-M33 @ 160 MHz
      - `MSPM33C321 <https://www.ti.com/product/MSPM33C321A>`_
 
-Hardware Features
-*****************
+Board Documentation
+*******************
 
-The table below is generated from the devicetree of the board.
+The hardware features, connections and build/flash instructions of the board
+are documented on its page in the main Zephyr documentation. Each link below
+opens the matching section of that page.
 
-.. ti-hw-features-legend::
+.. list-table::
+   :header-rows: 1
+   :widths: 30 35 35
 
-``lp_mspm33c321a``
-==================
-
-.. ti-hw-features:: lp_mspm33c321a
+   * - Board ID
+     - Board page
+     - Hardware features
+   * - ``lp_mspm33c321a``
+     - `LP-MSPM33C321A <../../../../zephyr/boards/ti/lp_mspm33c321a/doc/index.html>`__
+     - `Supported features <../../../../zephyr/boards/ti/lp_mspm33c321a/doc/index.html#supported-features>`__
 
 Resources
 *********
