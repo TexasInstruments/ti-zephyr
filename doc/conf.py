@@ -62,12 +62,7 @@ extensions = [
     "external_content",
     "sphinx.ext.autosectionlabel",
     "ti_ref",
-    "ti_hw_features",
 ]
-
-# Zephyr tree the board hardware feature tables are read from. Empty means
-# $ZEPHYR_BASE, else the zephyr/ folder next to ti-zephyr in the west workspace.
-ti_zephyr_base = None
 
 source_suffix   = {".rst": "restructuredtext"}
 master_doc      = "index"
