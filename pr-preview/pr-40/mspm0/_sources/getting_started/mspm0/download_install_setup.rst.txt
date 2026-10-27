@@ -15,7 +15,7 @@ installation is required.
 Download
 ********
 
-Download the MSPM0 SDK installer from ``<download-location>``.
+Download the MSPM0 SDK installer from `MSPM0-ZEPHYR-SDK page <https://www.ti.com/tool/download/MSPM0-ZEPHYR-SDK>`__
 
 Install
 *******
