@@ -12,7 +12,7 @@ Welcome to the **Zephyr SDK for** |soc_name| documentation.
 
    introduction/index
    getting_started/index
-   release_notes/index
+   release_notes/*/index
    board_support/*/index
    components/index
    samples_and_tests/index

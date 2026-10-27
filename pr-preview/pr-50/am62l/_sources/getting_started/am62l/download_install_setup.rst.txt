@@ -15,7 +15,7 @@ installation is required.
 Download
 ********
 
-Download the AM62L SDK installer from ``<download-location>``.
+Download the AM62L SDK installer from `AM62L-ZEPHYR-SDK page <https://www.ti.com/tool/download/AM62L-ZEPHYR-SDK>`__
 
 Install
 *******
