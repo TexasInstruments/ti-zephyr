@@ -7,7 +7,7 @@ LCD Segment Display (Auxdisplay)
 
 .. rst-class:: ti-subtitle
 
-`Auxdisplay Zephyr Documentation <https://docs.zephyrproject.org/4.4.0/hardware/peripherals/auxdisplay.html>`_
+`Auxdisplay Zephyr Documentation <../../../../../zephyr/hardware/peripherals/auxdisplay.html>`_
 
 .. important::
 
@@ -15,10 +15,6 @@ LCD Segment Display (Auxdisplay)
    **MSPM0L series** (``lp_mspm0l2228``).  MSPM0G and MSPM33 devices do not
    have an LCD controller.
 
-.. contents::
-   :depth: 1
-   :local:
-   :class: hidden-title
 
 Overview
 ========
@@ -112,6 +108,9 @@ devicetree.  Enable the node and add the ``auxdisplay_0`` alias:
 
    CONFIG_AUXDISPLAY=y
 
+The ``auxdisplay_0:`` prefix in the overlay assigns the node label used by
+``DT_NODELABEL(auxdisplay_0)`` in application code.
+
 The full panel configuration (COM/SEG pins, segment-type, position maps)
 is already set in ``lp_mspm0l2228.dts`` and does not need modification for
 the on-board display.
@@ -188,8 +187,8 @@ Panel child node (``compatible = "slcd-panel"``)
    * - ``rows``
      - Number of character rows (typically ``1`` for segment displays).
    * - ``segment-type``
-     - Segments per character: ``7`` (A–G, digits 0–9), ``14`` (A–N,
-       digits 0–9 + A–Z), or ``16`` (not yet supported).
+     - Segments per character: ``7`` (A–G, digits 0–9) or ``14`` (A–N,
+       digits 0–9 + A–Z).  Value ``16`` is reserved; do not use.
    * - ``segment-pins``
      - 2-D array of LCDIO pin indices, ``[columns × segments]`` elements.
        Row ``i``, column ``j`` gives the pin controlling segment ``j`` of
@@ -302,12 +301,12 @@ Samples
 In-tree
 -------
 
-- `Auxdisplay Digits Sample <https://docs.zephyrproject.org/4.4.0/samples/drivers/auxdisplay_digits/README.html>`_ —
+- `Auxdisplay Digits Sample <../../../../../zephyr/samples/drivers/auxdisplay_digits/README.html>`_ —
   scrolls digits and letters across the display using
   :c:func:`auxdisplay_write` with a moving window.  Listed as
   ``platform_allow: lp_mspm0l2228`` in ``sample.yaml``.  No board overlay
   required; the board DTS already enables the panel.
-- `Auxdisplay Sample <https://docs.zephyrproject.org/4.4.0/samples/drivers/auxdisplay/README.html>`_ —
+- `Auxdisplay Sample <../../../../../zephyr/samples/drivers/auxdisplay/README.html>`_ —
   basic write demonstration using the standard auxdisplay API.
 
 Applications (``applications/rtc_temp_lcd/``)
@@ -335,7 +334,7 @@ Applications (``applications/rtc_temp_lcd/``)
        - Notes
      * - ``TEMP``
        - ``  49.0 °C``
-       - °C indicator (COL4) lit
+       - °C indicator (index 7) lit
      * - ``TIME``
        - ``HH:MM:SS``
        - Colon indicators (COL2, COL3) lit

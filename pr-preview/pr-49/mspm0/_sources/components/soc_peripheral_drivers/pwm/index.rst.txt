@@ -7,12 +7,8 @@ PWM (GPTIMER)
 
 .. rst-class:: ti-subtitle
 
-`PWM Zephyr Documentation <https://docs.zephyrproject.org/4.4.0/hardware/peripherals/pwm.html>`_
+`PWM Zephyr Documentation <../../../../../zephyr/hardware/peripherals/pwm.html>`_
 
-.. contents::
-   :depth: 1
-   :local:
-   :class: hidden-title
 
 Overview
 ========
@@ -95,11 +91,6 @@ PWM Capture (``CONFIG_PWM_CAPTURE``)
 Features NOT Supported
 ======================
 
-The following Zephyr PWM API feature is not implemented:
-
-- PWM event callbacks (``pwm_set_event()``, ``PWM_EVENT_TYPE_PERIOD``,
-  ``PWM_EVENT_TYPE_FAULT``, ``PWM_EVENT_TYPE_COMPARE_CAPTURE``)
-
 The following silicon capabilities have no Zephyr PWM API mapping.
 Items marked **(TIMA only)** are absent on TIMG instances:
 
@@ -111,7 +102,7 @@ Items marked **(TIMA only)** are absent on TIMG instances:
 - QEI / quadrature encoder input (TIMG8 instances only) — use a dedicated
   ``qdec`` driver when one becomes available
 - Cross-trigger: hardware timer-to-timer and timer-to-ADC/DMA chaining
-- Event fabric publish/subscribe
+- Event fabric publish/subscribe (ZERO, LOAD, CC events to the MSPM0 event bus)
 - Repeat counter — interrupt only after every N counter cycles
 
 Enabling the Driver
@@ -125,6 +116,9 @@ an enabled ``ti,mspm0-timer-pwm`` node is present.
 
    &pwma0 {
            status = "okay";
+           /* pwma0_default is pre-defined in the SoC pinctrl DTSI.
+            * For a new board, define a pinctrl state under &pinctrl
+            * (see :ref:`ti-zephyr-component-pinctrl`). */
            pinctrl-0 = <&pwma0_default>;
            pinctrl-names = "default";
    };
@@ -237,11 +231,15 @@ Basic PWM Output
    static const struct pwm_dt_spec pwm_out =
            PWM_DT_SPEC_GET(DT_ALIAS(pwm_out));
 
+   if (!pwm_is_ready_dt(&pwm_out)) {
+           return;
+   }
+
    /* 1 kHz, 50 % duty cycle, normal polarity */
    pwm_set_dt(&pwm_out, PWM_HZ(1000), PWM_HZ(1000) / 2);
 
-   /* Inverted polarity — active-low pulse */
-   pwm_set(&pwm_out.dev, pwm_out.channel,
+   /* Inverted polarity — use pwm_set() to override the flags from the DT spec */
+   pwm_set(pwm_out.dev, pwm_out.channel,
            PWM_HZ(1000), PWM_HZ(1000) / 2,
            PWM_POLARITY_INVERTED);
 
@@ -276,7 +274,10 @@ Configure a capture node in devicetree:
                    compatible = "ti,mspm0-timer-pwm";
                    ti,cc-index = <0>;        /* uses CC0 (fall) + CC1 (rise) */
                    ti,cc-mode = "PULSE_WIDTH";
-                   ti,period = <0xffff>;
+                   ti,period = <0xffff>;  /* max 16-bit top — signals longer than
+                                          * 0xffff / f_pwm seconds will time out;
+                                          * reduce ti,clk-div or ti,clk-prescaler
+                                          * for slower signals */
                    pinctrl-0 = <&tima1_ccp0_pb4>;
                    pinctrl-names = "default";
                    status = "okay";
@@ -296,6 +297,10 @@ Single-shot capture:
    #include <zephyr/drivers/pwm.h>
 
    static const struct device *cap = DEVICE_DT_GET(DT_ALIAS(capture));
+
+   if (!device_is_ready(cap)) {
+           return;
+   }
 
    static void capture_cb(const struct device *dev, uint32_t channel,
                           uint32_t period_cycles, uint32_t pulse_cycles,
@@ -333,10 +338,10 @@ Samples
 In-tree
 -------
 
-- `Blinky PWM Sample <https://docs.zephyrproject.org/4.4.0/samples/basic/blinky_pwm/README.html>`_ —
+- `Blinky PWM Sample <../../../../../zephyr/samples/basic/blinky_pwm/README.html>`_ —
   fades an LED using :c:func:`pwm_set_dt` on the ``pwm-led0`` alias.  Passes
   on ``lp_mspm0g3507`` and ``lp_mspm33c321a``.
-- `PWM Capture Sample <https://docs.zephyrproject.org/4.4.0/samples/drivers/pwm/capture/README.html>`_ —
+- `PWM Capture Sample <../../../../../zephyr/samples/drivers/pwm/capture/README.html>`_ —
   measures period and pulse width of an input signal using ``PULSE_WIDTH``
   mode.  Board overlay for ``lp_mspm0g3507`` is included
   (``samples/drivers/pwm/capture/boards/lp_mspm0g3507.overlay``).

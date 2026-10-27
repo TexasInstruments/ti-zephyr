@@ -7,12 +7,8 @@ GPIO
 
 .. rst-class:: ti-subtitle
 
-`GPIO Zephyr Documentation <https://docs.zephyrproject.org/4.4.0/hardware/peripherals/gpio.html>`_
+`GPIO Zephyr Documentation <../../../../../zephyr/hardware/peripherals/gpio.html>`_
 
-.. contents::
-   :depth: 1
-   :local:
-   :class: hidden-title
 
 Overview
 ========
@@ -200,9 +196,10 @@ Edge Interrupt with Callback
    }
 
    gpio_pin_configure_dt(&btn, GPIO_INPUT);
-   gpio_pin_interrupt_configure_dt(&btn, GPIO_INT_EDGE_BOTH);
+   /* Register callback before enabling interrupts to avoid missing edges */
    gpio_init_callback(&btn_cb, btn_handler, BIT(btn.pin));
    gpio_add_callback(btn.port, &btn_cb);
+   gpio_pin_interrupt_configure_dt(&btn, GPIO_INT_EDGE_BOTH);
 
 .. important::
 
@@ -214,35 +211,16 @@ Edge Interrupt with Callback
 Open-Drain Output
 ------------------
 
-Open-drain mode is controlled jointly by the pinctrl configuration and the
-GPIO API.  The MSPM0 driver reads the ``GPIO_OPEN_DRAIN`` flag from
-:c:func:`gpio_pin_configure` and programs the IOMUX open-drain bit
-accordingly.  The pin must also have ``drive-open-drain`` in its pinctrl
-node, which is pre-set for I²C signals in the SoC DTSI files; for GPIO
-open-drain the simplest approach is to pass ``GPIO_OPEN_DRAIN`` directly
-to the driver:
+Passing ``GPIO_OPEN_DRAIN`` to :c:func:`gpio_pin_configure_dt` is sufficient;
+the driver sets the IOMUX open-drain bit automatically.
 
 .. code-block:: c
 
-   static const struct gpio_dt_spec od_pin =
-           GPIO_DT_SPEC_GET(DT_NODELABEL(gpioa), gpios);
+   static const struct gpio_dt_spec led =
+           GPIO_DT_SPEC_GET(DT_ALIAS(led0), gpios);
 
-   /* Driver sets the IOMUX open-drain bit automatically */
-   gpio_pin_configure_dt(&od_pin, GPIO_OUTPUT_HIGH | GPIO_OPEN_DRAIN);
-
-For a custom pin not pre-populated in the SoC DTSI, add a pinctrl node
-with ``drive-open-drain`` and reference it from the GPIO binding in an
-application overlay:
-
-.. code-block:: devicetree
-
-   &pinctrl {
-           my_gpio_od: my_gpio_od {
-                   pinmux = <MSP_PINMUX(5, MSPM0_PIN_FUNCTION_GPIO)>;
-                   drive-open-drain;
-                   bias-pull-up;
-           };
-   };
+   /* Driver programs the IOMUX open-drain bit from the GPIO_OPEN_DRAIN flag */
+   gpio_pin_configure_dt(&led, GPIO_OUTPUT_HIGH | GPIO_OPEN_DRAIN);
 
 High Drive Strength
 ---------------------
@@ -255,10 +233,10 @@ GPIO API.
 Samples
 =======
 
-- `Blinky Sample <https://docs.zephyrproject.org/4.4.0/samples/basic/blinky/README.html>`_ —
+- `Blinky Sample <../../../../../zephyr/samples/basic/blinky/README.html>`_ —
   toggles the ``led0`` alias using :c:func:`gpio_pin_toggle_dt`.  Works on
   all supported boards without any overlay.
-- `Button Sample <https://docs.zephyrproject.org/4.4.0/samples/basic/button/README.html>`_ —
+- `Button Sample <../../../../../zephyr/samples/basic/button/README.html>`_ —
   reads the ``sw0`` alias and mirrors its state to ``led0``.  Uses
   :c:func:`gpio_pin_interrupt_configure` with ``GPIO_INT_EDGE_TO_ACTIVE``.
   Works on all supported boards.

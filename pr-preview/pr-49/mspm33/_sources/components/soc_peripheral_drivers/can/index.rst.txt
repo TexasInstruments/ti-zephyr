@@ -7,15 +7,16 @@ CAN / CAN FD (MCAN)
 
 .. rst-class:: ti-subtitle
 
-`CAN Zephyr Documentation <https://docs.zephyrproject.org/4.4.0/hardware/peripherals/can/index.html>`_
+`CAN Zephyr Documentation <../../../../../zephyr/hardware/peripherals/can/index.html>`_
 
-.. contents::
-   :depth: 1
-   :local:
-   :class: hidden-title
 
 Overview
 ========
+
+.. important::
+
+   CAN FD is available on **MSPM0G** and **MSPM33** and **AM13E** devices.
+   MSPM0L devices (``lp_mspm0l2228``) have no CAN controller.
 
 The TI MSPM0G, MSPM33, and AM13E devices integrate a Bosch M_CAN IP
 (``ti,mspm0-canfd``) exposed through Zephyr's standard CAN API
@@ -178,6 +179,10 @@ subsystem.
      - Reference to the clock controller providing CANCLK.  Required.
    * - ``interrupts``
      - Two interrupt lines (INT line 0 and INT line 1).  Required.
+   * - ``bosch,timestamp-counter-prescaler``
+     - Internal timestamp counter prescaler for ``CONFIG_CAN_RX_TIMESTAMP``.
+       Range 1–16; default 1 (one CAN bit time per timestamp tick).
+       Part of ``bosch,m_can-base.yaml``.
    * - ``pinctrl-0``, ``pinctrl-names``
      - Required.  Pin control configuration for CANTX and CANRX.
 
@@ -255,13 +260,16 @@ CAN FD Transmit
 
 .. code-block:: c
 
+   /* Enable CAN FD mode before starting — required for FDF frames */
+   can_set_mode(can_dev, CAN_MODE_FD);
+   can_start(can_dev);
+
    struct can_frame fd_frame = {
            .id    = 0x123,
            .flags = CAN_FRAME_FDF | CAN_FRAME_BRS,
-           .dlc   = can_bytes_to_dlc(64), /* 64-byte payload */
+           .dlc   = can_bytes_to_dlc(8),
+           .data  = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 },
    };
-
-   /* Fill fd_frame.data[0..63] */
 
    can_send(can_dev, &fd_frame, K_MSEC(100), NULL, NULL);
 
@@ -281,13 +289,13 @@ Bus-Off Recovery
 Samples
 =======
 
-- `CAN Counter Sample <https://docs.zephyrproject.org/4.4.0/samples/drivers/can/counter/README.html>`_ —
+- `CAN Counter Sample <../../../../../zephyr/samples/drivers/can/counter/README.html>`_ —
   sends periodic CAN frames and counts received frames; uses
   ``DT_CHOSEN(zephyr_canbus)``.  No board overlay required on supported
   boards.
-- `CAN Babbling Sample <https://docs.zephyrproject.org/4.4.0/samples/drivers/can/babbling/README.html>`_ —
+- `CAN Babbling Sample <../../../../../zephyr/samples/drivers/can/babbling/README.html>`_ —
   generates continuous CAN bus traffic to test bus load.
-- `ISO-TP Sample <https://docs.zephyrproject.org/4.4.0/samples/subsys/canbus/isotp/README.html>`_ —
+- `ISO-TP Sample <../../../../../zephyr/samples/subsys/canbus/isotp/README.html>`_ —
   demonstrates multi-frame ISO-TP message exchange over CAN; sends a
   248-byte message and receives it back.  Uses ``DT_CHOSEN(zephyr_canbus)``.
 

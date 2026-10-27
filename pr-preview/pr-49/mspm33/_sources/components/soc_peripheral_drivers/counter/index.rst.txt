@@ -1,4 +1,4 @@
-.. ti-socs: mspm0 mspm33
+.. ti-socs: mspm0 mspm33 am13
 
 .. _ti-zephyr-component-counter:
 
@@ -7,12 +7,8 @@ Counter (GPTIMER)
 
 .. rst-class:: ti-subtitle
 
-`Counter Zephyr Documentation <https://docs.zephyrproject.org/4.4.0/hardware/peripherals/counter.html>`_
+`Counter Zephyr Documentation <../../../../../zephyr/hardware/peripherals/counter.html>`_
 
-.. contents::
-   :depth: 1
-   :local:
-   :class: hidden-title
 
 Overview
 ========
@@ -169,6 +165,10 @@ With no top value set the counter wraps at the hardware maximum.
 
    const struct device *cnt = DEVICE_DT_GET(DT_ALIAS(counter));
 
+   if (!device_is_ready(cnt)) {
+           return;
+   }
+
    counter_start(cnt);
 
    uint32_t ticks;
@@ -220,11 +220,12 @@ Each alarm is one-shot and is automatically disarmed after firing.
 
    counter_set_channel_alarm(cnt, 0, &alarm_cfg);
 
-**Absolute alarm** with late-expiry:
+**Absolute alarm** with late-expiry (uses ``cnt`` and ``alarm_cb`` from above):
 
 .. code-block:: c
 
    struct counter_alarm_cfg alarm_cfg = {
+           /* 1000 raw ticks at f_counter — use counter_us_to_ticks() for time-based values */
            .ticks    = 1000U,
            .callback = alarm_cb,
            .flags    = COUNTER_ALARM_CFG_ABSOLUTE |
@@ -252,7 +253,7 @@ period.
 Samples
 =======
 
-- `Counter Alarm Sample <https://docs.zephyrproject.org/4.4.0/samples/drivers/counter/alarm/README.html>`_
+- `Counter Alarm Sample <../../../../../zephyr/samples/drivers/counter/alarm/README.html>`_
   (passes on ``lp_mspm0g3507``, ``lp_mspm0g3519``, ``lp_mspm0l2228``,
   ``lp_mspm33c321a``, and ``lp_am13e230``)
 

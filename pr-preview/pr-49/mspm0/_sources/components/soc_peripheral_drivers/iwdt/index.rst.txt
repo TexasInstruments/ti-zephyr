@@ -7,7 +7,7 @@ IWDT — Independent Watchdog Timer
 
 .. rst-class:: ti-subtitle
 
-`Watchdog Zephyr Documentation <https://docs.zephyrproject.org/4.4.0/hardware/peripherals/watchdog.html>`_
+`Watchdog Zephyr Documentation <../../../../../zephyr/hardware/peripherals/watchdog.html>`_
 
 .. important::
 
@@ -16,10 +16,6 @@ IWDT — Independent Watchdog Timer
    (``lp_mspm33c321a``) devices.  **MSPM0G3507 and MSPM0G3519 do not
    have LFSS** and therefore do not have an IWDT.
 
-.. contents::
-   :depth: 1
-   :local:
-   :class: hidden-title
 
 Overview
 ========
@@ -47,8 +43,9 @@ Features Supported
 - Only ``WDT_FLAG_RESET_SOC`` is accepted.  The hardware always generates a
   POR; no other reset action is possible.
 - Single channel (channel 0) only.
-- After :c:func:`wdt_setup`, the IWDT register file is write-locked.  A
-  reset is required before the timeout period can be changed.
+- After :c:func:`wdt_setup`, the IWDT register file is write-locked against
+  further configuration changes.  Call :c:func:`wdt_disable` to unlock it
+  before calling :c:func:`wdt_install_timeout` again with a new timeout.
 
 Features NOT Supported
 ======================
@@ -74,6 +71,20 @@ Features NOT Supported
    After :c:func:`wdt_setup` the IWDT is locked against further
    configuration writes.  Call :c:func:`wdt_disable` to unlock it for
    re-configuration.
+
+.. warning::
+
+   The IWDT lives in the always-on LFSS domain and **survives software and
+   debug resets**.  Once armed with :c:func:`wdt_setup`, it keeps counting
+   and will reset the device on every expiry until the VBAT supply is
+   power-cycled.  A debugger-initiated reset does **not** stop or clear the
+   IWDT.
+
+   This means: if the IWDT fires during development or automated testing,
+   the board will keep rebooting on every subsequent debug session until the
+   board is power-cycled at the VBAT rail.  For development and test
+   workflows use the WWDT (``&wdt0``) as ``watchdog0`` instead; switch to
+   IWDT only in production firmware.
 
 Enabling the Driver
 ===================
@@ -151,34 +162,15 @@ Samples
 =======
 
 The standard in-tree watchdog sample (``samples/drivers/watchdog``) works
-with the IWDT.  Point the ``watchdog0`` alias at ``&iwdt`` in a board
-overlay or the board DTS:
-
-.. code-block:: devicetree
-
-   / {
-           aliases {
-                   watchdog0 = &iwdt;
-           };
-   };
-
-   &iwdt {
-           status = "okay";
-   };
-
-.. code-block:: kconfig
-
-   CONFIG_WATCHDOG=y
-
-Note that the standard sample uses ``WDT_FLAG_RESET_SOC`` and sets
-``window.min = 0``, which are the only values accepted by the IWDT.
+with the IWDT using the overlay shown in `Enabling the Driver`_.  The sample
+uses ``WDT_FLAG_RESET_SOC`` and ``window.min = 0``, which are the only
+values accepted by the IWDT.
 
 Tests
 =====
 
-- ``tests/drivers/watchdog/wdt_basic_api`` — exercises
-  :c:func:`wdt_install_timeout`, :c:func:`wdt_setup`, :c:func:`wdt_feed`,
-  and reset behaviour.  A dedicated IWDT overlay
-  ``boards/lp_mspm0l2228_iwdt.overlay`` is included for ``lp_mspm0l2228``.
-  To run on ``lp_mspm33c321a``, provide an overlay pointing
-  ``watchdog0 = &iwdt`` and enabling the ``iwdt`` node.
+Automated regression testing of the IWDT is not supported.  Because the IWDT
+survives debug resets and keeps asserting POR until the VBAT supply is
+power-cycled, running it under a standard test harness would break all
+subsequent tests on the same board.  Validate IWDT behaviour manually on
+hardware with a controlled power-cycle between runs.

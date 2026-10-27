@@ -7,12 +7,8 @@ WWDT — Window Watchdog Timer
 
 .. rst-class:: ti-subtitle
 
-`Watchdog Zephyr Documentation <https://docs.zephyrproject.org/4.4.0/hardware/peripherals/watchdog.html>`_
+`Watchdog Zephyr Documentation <../../../../../zephyr/hardware/peripherals/watchdog.html>`_
 
-.. contents::
-   :depth: 1
-   :local:
-   :class: hidden-title
 
 Overview
 ========
@@ -52,9 +48,9 @@ Features Supported
   a periodic interrupt source.  The callback fires on every expiry.
   :c:func:`wdt_feed` (which restarts the counter) may be called from inside
   the callback; the driver handles ISR-context feed safely.
-- **Pre-reset callback**: only available in interval timer mode.  Setting a
-  callback with any reset flag (``WDT_FLAG_RESET_SOC`` or
-  ``WDT_FLAG_RESET_CPU_CORE``) returns ``-EINVAL``.
+- **Interval timer callback**: a non-NULL callback is only valid with
+  ``WDT_FLAG_RESET_NONE``.  Setting a callback with ``WDT_FLAG_RESET_SOC``
+  or ``WDT_FLAG_RESET_CPU_CORE`` returns ``-EINVAL``.
 - **Two reset actions** (hardware-fixed per WWDT instance, selected in
   devicetree via ``ti,watchdog-reset-action``):
 
@@ -83,6 +79,12 @@ Features NOT Supported
 
 - Multi-stage timeouts (``CONFIG_WDT_MULTISTAGE``)
 - Multiple channels — only channel 0
+- Pre-reset callback in watchdog mode — WWDT violations route through the
+  ESM safety block, not the NVIC.  A callback that fires before a hardware
+  reset is architecturally impossible in watchdog mode.  Setting a non-NULL
+  callback with ``WDT_FLAG_RESET_SOC`` or ``WDT_FLAG_RESET_CPU_CORE``
+  returns ``-EINVAL``; use ``WDT_FLAG_RESET_NONE`` (interval timer mode)
+  if a pre-expiry callback is required.
 
 .. important::
 
@@ -132,9 +134,11 @@ Devicetree Properties
        ``1`` = SYSRST (``WDT_FLAG_RESET_SOC``).  Must match the flag passed to
        :c:func:`wdt_install_timeout`.
    * - ``closed-window``
-     - Selects the hardware window register: ``0`` = WINDOW0, ``1`` = WINDOW1.
-       This is a hardware register index, not the Zephyr API ``window.min``
-       value.
+     - Selects which hardware window register stores the closed-window boundary:
+       ``0`` = WINDOW0 (default for most applications), ``1`` = WINDOW1.  The
+       driver programs the selected register with the hardware fraction closest
+       to the ``window.min`` value passed to :c:func:`wdt_install_timeout`.
+       Set to ``1`` only if WINDOW0 must be preserved for another use.
    * - ``clocks``
      - Reference to the clock controller providing LFCLK.  Required.
    * - ``interrupts``
@@ -193,7 +197,7 @@ Interval Timer Mode
    };
 
    int chan = wdt_install_timeout(wdt, &cfg);
-   wdt_setup(wdt, 0);
+   wdt_setup(wdt, 0); /* no pause options — counter runs through debug halt */
 
    /* wdt_disable() is valid in interval mode and stops the counter */
 
@@ -203,7 +207,7 @@ Samples
 In-tree
 -------
 
-- `Watchdog Sample <https://docs.zephyrproject.org/4.4.0/samples/drivers/watchdog/README.html>`_ —
+- `Watchdog Sample <../../../../../zephyr/samples/drivers/watchdog/README.html>`_ —
   basic feed loop using the ``watchdog0`` alias.  Board overlays for
   ``lp_mspm0g3507``, ``lp_mspm0g3519``, and ``lp_mspm0l2228`` are included
   (``samples/drivers/watchdog/boards/``).
