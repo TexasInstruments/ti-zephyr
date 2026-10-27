@@ -3,8 +3,7 @@
 Introduction
 ############
 
-Zephyr SDK is a west workspace based SDK maintained by Texas Instruments that
-provides TI-specific samples and tests along with upstream
+Zephyr SDK is a west workspace based SDK that provides TI-specific samples and tests along with upstream
 `Zephyr RTOS <https://zephyrproject.org>`_.
 
 Block Diagram
@@ -139,9 +138,7 @@ The ``ti-zephyr`` module is organized as follows:
 Supported Hardware
 ******************
 
-Zephyr SDK documentation is published separately for each SoC family so that
-each site only describes what applies to it. This site covers |soc_name|
-(|soc_devices|); see the |soc_board_support| for the supported boards.
+Refer |soc_board_support| for the supported boards.
 
 Licenses
 ********
