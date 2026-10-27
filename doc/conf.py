@@ -8,6 +8,9 @@ from pathlib import Path
 
 import yaml
 from sphinx.errors import ConfigError
+from sphinx.util import logging as sphinx_logging
+
+logger = sphinx_logging.getLogger(__name__)
 
 REPO_BASE = Path(__file__).resolve().parent.parent
 DOC_BASE  = Path(__file__).resolve().parent
@@ -91,6 +94,7 @@ external_content_contents = [
     (DOC_BASE, "[!_]*"),
     (REPO_BASE, "samples/**/*.rst"),
     (REPO_BASE, "tests/**/*.rst"),
+    (REPO_BASE, "applications/**/*.rst"),
 ]
 exclude_patterns += ["samples/README.rst", "tests/README.rst"]
 
@@ -124,17 +128,18 @@ external_content_keep = [
 # drop out of them.
 #
 # 1. Per-SoC pages: board_support/<soc>/ and getting_started/<soc>/.
-# 2. Samples, tests, components and tools: a page (README.rst for samples and
-#    tests, index.rst for components and tools) may declare the SoCs it applies
-#    to with an (invisible) comment line, e.g.
+# 2. Samples, tests, applications, components and tools: a page (README.rst for
+#    samples, tests and applications, index.rst for components and tools) may
+#    declare the SoCs it applies to with an (invisible) comment line, e.g.
 #        .. ti-socs: mspm0 am13
-#    For components and tools, no line means all SoCs. For a sample or test
-#    page, no line means the SoCs owning a board in the platform_allow of its
-#    sample.yaml / testcase.yaml / tests.yaml, and a page with neither is an
-#    error. A directory with pages below it is a category page: it needs
-#    neither, and is kept only while at least one child is kept. In samples/
-#    and tests/ the category README.rst is optional; when missing it is
-#    generated into doc/ with the title taken from the directory name.
+#    For components and tools, no line means all SoCs. For a sample, test or
+#    application page, no line means the SoCs owning a board in the
+#    platform_allow of its sample.yaml / testcase.yaml / tests.yaml, and a page
+#    with neither is an error. A directory with pages below it is a category
+#    page: it needs neither, and is kept only while at least one child is kept.
+#    In samples/, tests/ and applications/ the category README.rst is optional;
+#    when missing it is generated into doc/ with the title taken from the
+#    directory name.
 #
 # The explicit labels (.. _label:) of every page excluded this way are collected
 # in ti_unavailable_labels, so the :ti-ref: role (see _extensions/ti_ref.py) can
@@ -156,21 +161,45 @@ _LABEL_RE = re.compile(r"^\.\. _([^:\n]+):[ \t]*$", re.MULTILINE)
 
 _TWISTER_YAMLS = ("sample.yaml", "testcase.yaml", "tests.yaml")
 
+# Top-level directories whose README.rst pages are copied into doc/ and pruned.
+_TWISTER_TREES = ("samples", "tests", "applications")
+
+
+_ALL_BOARDS = {board for info in SOCS.values() for board in info["boards"]}
+
+
+def _board_name(target):
+    """Bare board name of a twister platform: ``board@rev/soc/cpu`` -> ``board``."""
+    return re.split("[/@]", target)[0]
+
 
 def _yaml_boards(directory):
-    """Boards in the platform_allow of the twister yaml files, or None if none."""
+    """Boards in the platform_allow of the twister yaml files, or None if none.
+
+    socs.json lists bare board names, so the revision and qualifiers of each
+    platform_allow entry are dropped. An entry whose board is in no SoC of
+    socs.json is warned about, since it can never make a page show up.
+    """
     boards = None
     for name in _TWISTER_YAMLS:
         path = directory / name
         if not path.is_file():
             continue
         data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        file_boards = set()
         for scope in [data.get("common"), *(data.get("tests") or {}).values()]:
             allow = (scope or {}).get("platform_allow")
             if allow:
-                boards = (boards or set()) | set(
-                    allow.split() if isinstance(allow, str) else allow
-                )
+                names = allow.split() if isinstance(allow, str) else allow
+                file_boards |= {_board_name(n) for n in names}
+        for board in sorted(file_boards - _ALL_BOARDS):
+            logger.warning(
+                "%s: platform_allow board '%s' is not listed in any SoC of socs.json",
+                path.relative_to(REPO_BASE),
+                board,
+            )
+        if file_boards:
+            boards = (boards or set()) | file_boards
     return boards
 
 
@@ -216,7 +245,7 @@ _GENERATED_MARKER = ".. ti-generated-category"
 
 # external_content treats whatever is in doc/ as source and never deletes it, so
 # generated pages left over from a build for another SoC are removed up front.
-for _top in ("samples", "tests"):
+for _top in _TWISTER_TREES:
     for _old in (DOC_BASE / _top).rglob("README.rst"):
         if _old.read_text(encoding="utf-8").startswith(_GENERATED_MARKER):
             _old.unlink()
@@ -258,10 +287,10 @@ def _prune(directory, page_name, base, twister_tree=False):
     return keep
 
 
-# The samples/ and tests/ landing pages list their children with a glob
-# toctree; a glob that matches nothing is an unsuppressible warning, so a
+# The samples/, tests/ and applications/ landing pages list their children with
+# a glob toctree; a glob that matches nothing is an unsuppressible warning, so a
 # landing page with no page left for this SoC is excluded as well.
-for _top in ("samples", "tests"):
+for _top in _TWISTER_TREES:
     _kept = [
         _prune(_d, "README.rst", REPO_BASE, twister_tree=True)
         for _d in sorted((REPO_BASE / _top).iterdir())

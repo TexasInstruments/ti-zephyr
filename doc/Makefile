@@ -58,7 +58,7 @@ FP_PRUNE        = -name .git -o -name __pycache__ -o -name '*.pyc'
 ZEPHYR_PRUNE    = -path '$(ZEPHYR_DIR)/doc/_build' -o -path '$(ZEPHYR_DIR)/twister-out*' \
                   -o -path '$(ZEPHYR_DIR)/scripts/pylib/twister/parsetab.py'
 TI_PRUNE        = -path '$(TI_DIR)/_build' -o -path '$(TI_DIR)/build' -o -path '$(TI_DIR)/twister-out*' \
-                  -o -path '$(TI_DIR)/doc/html' -o -path '$(TI_DIR)/doc/samples' -o -path '$(TI_DIR)/doc/tests'
+                  -o -path '$(TI_DIR)/doc/html' -o -path '$(TI_DIR)/doc/samples' -o -path '$(TI_DIR)/doc/tests' -o -path '$(TI_DIR)/doc/applications'
 
 # $(call fingerprint,dir,prune-expr): hash of "path mtime size" for every file
 # under dir, minus the pruned paths. Empty if dir does not exist.
@@ -159,7 +159,7 @@ linkcheck: check-soc
 
 clean:
 	rm -rf $(BUILDBASE)
-	rm -rf samples/ tests/
+	rm -rf samples/ tests/ applications/
 	if [ -n "$(SOC)" ]; then rm -rf ./html/$(SOC); else for s in $(SOCS); do rm -rf ./html/$$s; done; fi
 ifeq ($(HAVE_ZEPHYR),1)
 	if [ -n "$(SOC)" ]; then rm -rf $(PUBLISH_DIR)/ti-zephyr/$(SOC); else rm -rf $(PUBLISH_DIR)/ti-zephyr $(PUBLISH_DIR)/zephyr; fi
