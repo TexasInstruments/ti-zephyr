@@ -53,10 +53,10 @@ defined by the west manifest (``west.yml``) in ``ti-zephyr``.
        and SoC support) from TI's Zephyr repository (``TexasInstruments/zephyr``),
        at the revision pinned by the west manifest.
    * - ti-zephyr
-     - :ref:`Samples and Tests <ti-zephyr-samples-and-tests>`
+     - :ref:`Samples, Tests and Applications <ti-zephyr-samples-tests-and-applications>`
      - The SDK's own Zephyr module and west manifest repository. It provides
-       the TI-specific samples, tests, devicetree bindings, out-of-tree drivers
-       and reference application scaffolding.
+       the TI-specific samples, tests, applications, devicetree bindings and
+       out-of-tree drivers.
 
 Directory Structure
 *******************
@@ -102,12 +102,13 @@ The ``ti-zephyr`` module is organized as follows:
    * - ``drivers/``
      - Out-of-tree drivers.
    * - ``samples/``
-     - TI sample applications; see
-       :ref:`Samples and Tests <ti-zephyr-samples-and-tests>`.
+     - TI samples; see
+       :ref:`Samples, Tests and Applications <ti-zephyr-samples-tests-and-applications>`.
    * - ``dts/``, ``include/``, ``lib/``
      - Devicetree bindings, public headers and libraries.
    * - ``applications/``
-     - Reference application scaffolding.
+     - TI reference applications; see
+       :ref:`Samples, Tests and Applications <ti-zephyr-samples-tests-and-applications>`.
    * - ``cmake/``
      - Shared CMake extensions.
    * - ``modules/``
