@@ -1,7 +1,7 @@
 .. SPDX-FileCopyrightText: 2026 Texas Instruments Incorporated
 .. SPDX-License-Identifier: LicenseRef-TI-TFL
 
-.. _eqep_freq_meas:
+.. _eqep_freq_measurement:
 
 TI EQEP Frequency Measurement
 #############################
@@ -57,7 +57,7 @@ Building and Running
 
 .. code-block:: console
 
-   west build -p always -b lp_am13e230 samples/drivers/counter/eqep_freq_meas
+   west build -p always -b lp_am13e230 samples/drivers/counter/eqep_freq_measurement
    west flash
 
 Sample Output
