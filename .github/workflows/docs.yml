@@ -73,10 +73,16 @@ jobs:
       matrix:
         soc: ${{ fromJSON(needs.socs.outputs.matrix) }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
-        with:
-          persist-credentials: false
+      - name: Install west
+        run: pip install west
+
+      - name: Initialize west manifest
+        run: |
+          west init -m https://github.com/TexasInstruments/ti-zephyr.git --mr next .
+          west update
+          cd ti-zephyr
+          git checkout ${{ github.event.pull_request.head.ref || github.ref_name }}
+          cp -r zephyr/doc ti-zephyr/doc_zephyr || true
 
       - name: Set up Python
         uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
@@ -89,22 +95,14 @@ jobs:
         run: pip install -r doc/requirements.txt
 
       - name: Build HTML
-        run: make -C doc html SOC=${{ matrix.soc }} SPHINXOPTS="-W --keep-going"
+        run: cd ti-zephyr && make html SOC=${{ matrix.soc }} SPHINXOPTS="-W --keep-going"
 
       - name: Upload HTML
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: html-${{ matrix.soc }}
-          path: doc/html/${{ matrix.soc }}
+          path: docs
           if-no-files-found: error
-          retention-days: 7
-
-      - name: Upload manifest files
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: manifests
-          path: doc/html/*-ZEPHYR-SDK_manifest.html
-          if-no-files-found: ignore
           retention-days: 7
 
   assemble:
@@ -142,12 +140,6 @@ jobs:
           for d in site/html-*; do
             mv "$d" "site/${d#site/html-}"
           done
-
-      # Move manifest files to site root so relative links like ../../AM13E2X-ZEPHYR-SDK_manifest.html work
-      - name: Move manifests to site root
-        run: |
-          mv site/*-ZEPHYR-SDK_manifest.html . 2>/dev/null || true
-          mv ./*-ZEPHYR-SDK_manifest.html site/ 2>/dev/null || true
 
       - name: Generate landing page
         run: python3 .github/workflows/generate_docs_index.py site doc/_static/ti_logo.png doc/socs.json

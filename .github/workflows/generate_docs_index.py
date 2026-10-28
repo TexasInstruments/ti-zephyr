@@ -33,7 +33,7 @@ def main():
 
     socs = [
         soc for soc in soc_info
-        if (site_dir / soc / "introduction/index.html").is_file()
+        if (site_dir / "docs" / "ti-zephyr" / soc / "introduction/index.html").is_file()
     ]
     if not socs:
         sys.exit(f"No SoC builds found in {site_dir}")
@@ -43,7 +43,7 @@ def main():
     cards = []
     for soc in socs:
         name, devices = soc_info[soc]["name"], soc_info[soc]["devices"]
-        cards.append(f"""      <a class="card" href="{soc}/introduction/index.html">
+        cards.append(f"""      <a class="card" href="docs/ti-zephyr/{soc}/introduction/index.html">
         <h2>{html.escape(name)}</h2>
         <p>{html.escape(devices)}</p>
         <span class="card-link">View documentation &rarr;</span>
