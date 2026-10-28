@@ -76,7 +76,6 @@ installer installs it to, as used in :ref:`Getting Started
      - Description
    * - ``<sdk-install-dir>/zephyr/``
      - Zephyr RTOS.
-       directory.
    * - ``<sdk-install-dir>/ti-zephyr/``
      - The ``ti-zephyr`` module and west manifest repository, described below.
    * - ``<sdk-install-dir>/modules/``
@@ -118,23 +117,9 @@ The ``ti-zephyr`` module is organized as follows:
    * - ``doc/``
      - Sphinx sources of this documentation.
 
-.. only:: mspm0
-
-   In addition, the OpenOCD flashing tool is installed in
-   ``<sdk-install-dir>/openocd/``, and ``ti-zephyr/tests/`` holds the TI test
-   suites; see :ti-ref:`Tests <ti-zephyr-tests>`.
-
-.. only:: mspm33
-
-   In addition, the OpenOCD flashing tool is installed in
-   ``<sdk-install-dir>/openocd/``, and ``ti-zephyr/tests/`` holds the TI test
-   suites; see :ti-ref:`Tests <ti-zephyr-tests>`.
-
-.. only:: am13
-
-   In addition, the OpenOCD flashing tool is installed in
-   ``<sdk-install-dir>/openocd/``, and ``ti-zephyr/tests/`` holds the TI test
-   suites; see :ti-ref:`Tests <ti-zephyr-tests>`.
+In addition, the OpenOCD flashing tool is installed in
+``<sdk-install-dir>/openocd/``, and ``ti-zephyr/tests/`` holds the TI test
+suites; see :ti-ref:`Tests <ti-zephyr-tests>`.
 
 Supported Hardware
 ******************
