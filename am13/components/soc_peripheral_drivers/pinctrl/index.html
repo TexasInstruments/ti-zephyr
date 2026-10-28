@@ -145,28 +145,26 @@
 <span id="ti-zephyr-component-pinctrl"></span><h1>Pin Control<a class="headerlink" href="#pin-control" title="Link to this heading"></a></h1>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
-<p>MSPM0, MSPM33, and AM13E devices route peripheral signals through an IOMUX
-block that contains one PINCM (Pin Configuration and Mux) register per
-physical pin.  Writing a PINCM register selects which peripheral function
-appears on the pad and configures the pad’s electrical properties (pull,
-drive strength, open-drain, hysteresis, inversion).</p>
-<p>The Zephyr pin control driver (<code class="docutils literal notranslate"><span class="pre">pinctrl_mspm0</span></code>) writes directly to the
-PINCM register array in the IOMUX peripheral.  It is a helper used by other
-drivers; applications do not call the pin control API directly.</p>
-<p><code class="docutils literal notranslate"><span class="pre">CONFIG_PINCTRL_MSPM0</span></code> is selected automatically when a driver that
-requires <code class="docutils literal notranslate"><span class="pre">PINCTRL</span></code> (GPIO, UART, SPI, I2C, PWM, CAN, …) is enabled.</p>
+<p>MSPM0, MSPM33, and AM13E devices route peripheral signals through an IOMUX block that contains one
+PINCM (Pin Configuration and Mux) register per physical pin. Writing a PINCM register selects which
+peripheral function appears on the pad and configures the pad’s electrical properties (pull, drive
+strength, open-drain, hysteresis, inversion).</p>
+<p>The Zephyr pin control driver (<code class="docutils literal notranslate"><span class="pre">pinctrl_mspm0</span></code>) writes directly to the PINCM register array in the
+IOMUX peripheral. It is a helper used by other drivers; applications do not call the pin control API
+directly.</p>
+<p><code class="docutils literal notranslate"><span class="pre">CONFIG_PINCTRL_MSPM0</span></code> is selected automatically when a driver that requires <code class="docutils literal notranslate"><span class="pre">PINCTRL</span></code> (GPIO,
+UART, SPI, I2C, PWM, CAN, …) is enabled.</p>
 </section>
 <section id="pin-encoding">
 <h2>Pin Encoding<a class="headerlink" href="#pin-encoding" title="Link to this heading"></a></h2>
-<p>Every pin configuration is described by a single 32-bit <code class="docutils literal notranslate"><span class="pre">pinmux</span></code> value
-built with the <code class="docutils literal notranslate"><span class="pre">MSP_PINMUX</span></code> macro:</p>
+<p>Every pin configuration is described by a single 32-bit <code class="docutils literal notranslate"><span class="pre">pinmux</span></code> value built with the
+<code class="docutils literal notranslate"><span class="pre">MSP_PINMUX</span></code> macro:</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* From &lt;zephyr/dt-bindings/pinctrl/mspm0-pinctrl.h&gt; */</span>
 <span class="cp">#define MSP_PINMUX(pincm, function) (((pincm - 1) &lt;&lt; 0x10) | function)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">pincm</span></code> is the <strong>1-based</strong> PINCM register index for the pin, taken from
-the device datasheet or pin tables.  <code class="docutils literal notranslate"><span class="pre">function</span></code> selects which peripheral
-signal is routed to the pad:</p>
+<p><code class="docutils literal notranslate"><span class="pre">pincm</span></code> is the <strong>1-based</strong> PINCM register index for the pin, taken from the device datasheet or
+pin tables. <code class="docutils literal notranslate"><span class="pre">function</span></code> selects which peripheral signal is routed to the pad:</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 30.0%" />
@@ -192,16 +190,13 @@ device datasheet.</p></td>
 </tr>
 </tbody>
 </table>
-<p>The driver sets bit 7 (<code class="docutils literal notranslate"><span class="pre">PC</span></code>, peripheral connect) automatically for all
-non-analog functions.  A <code class="docutils literal notranslate"><span class="pre">pinmux</span></code> value with <code class="docutils literal notranslate"><span class="pre">function</span> <span class="pre">=</span> <span class="pre">0</span></code> clears the
-entire PINCM register to put the pad in a high-impedance analog state.</p>
+<p>The driver sets bit 7 (<code class="docutils literal notranslate"><span class="pre">PC</span></code>, peripheral connect) automatically for all non-analog functions. A
+<code class="docutils literal notranslate"><span class="pre">pinmux</span></code> value with <code class="docutils literal notranslate"><span class="pre">function</span> <span class="pre">=</span> <span class="pre">0</span></code> clears the entire PINCM register to put the pad in a
+high-impedance analog state.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The IOMUX PINCM register array starts at a different offset on MSPM0/MSPM33
-vs. AM13E:</p>
+<p>The IOMUX PINCM register array starts at a different offset on MSPM0/MSPM33 vs. AM13E:</p>
 <ul class="simple">
-<li><p>MSPM0 / MSPM33: PINCM[0] is at <code class="docutils literal notranslate"><span class="pre">IOMUX_BASE</span> <span class="pre">+</span> <span class="pre">0x4</span></code> (one reserved word
-before the first PINCM register).</p></li>
 <li><p>AM13E: PINCM[0] is at <code class="docutils literal notranslate"><span class="pre">IOMUX_BASE</span> <span class="pre">+</span> <span class="pre">0x0</span></code>.</p></li>
 </ul>
 <p>The driver handles this automatically based on <code class="docutils literal notranslate"><span class="pre">CONFIG_SOC_SERIES_AM13E</span></code>.</p>
@@ -209,9 +204,8 @@ before the first PINCM register).</p></li>
 </section>
 <section id="pinctrl-dtsi-files">
 <h2>Pinctrl DTSI Files<a class="headerlink" href="#pinctrl-dtsi-files" title="Link to this heading"></a></h2>
-<p>Each board includes a chip-level pinctrl DTSI that pre-defines every valid
-pin mux node for that SoC variant.  The DTSI file location differs by
-board:</p>
+<p>Each board includes a chip-level pinctrl DTSI that pre-defines every valid pin mux node for that SoC
+variant. The DTSI file location differs by board:</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 28.0%" />
@@ -247,33 +241,30 @@ board:</p>
 </tr>
 </tbody>
 </table>
-<p>All pre-defined nodes use the <code class="docutils literal notranslate"><span class="pre">/omit-if-no-ref/</span></code> directive so unused pin
-configurations are dropped from the final DTB without any linker overhead.</p>
+<p>All pre-defined nodes use the <code class="docutils literal notranslate"><span class="pre">/omit-if-no-ref/</span></code> directive so unused pin configurations are
+dropped from the final DTB without any linker overhead.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><code class="docutils literal notranslate"><span class="pre">lp_mspm0g3507</span></code> and <code class="docutils literal notranslate"><span class="pre">lp_mspm0l2228</span></code> pin definitions are maintained
-in the TI HAL module (<code class="docutils literal notranslate"><span class="pre">modules/hal/ti/dts/</span></code>).  <code class="docutils literal notranslate"><span class="pre">lp_mspm0g3519</span></code>,
-<code class="docutils literal notranslate"><span class="pre">lp_mspm33c321a</span></code>, and <code class="docutils literal notranslate"><span class="pre">lp_am13e230</span></code> use in-tree definitions under
-<code class="docutils literal notranslate"><span class="pre">zephyr/dts/ti/</span></code>.  To inspect or modify pin assignments for a board,
-look in the location shown in the table above.</p>
+<p><code class="docutils literal notranslate"><span class="pre">lp_mspm0g3507</span></code> and <code class="docutils literal notranslate"><span class="pre">lp_mspm0l2228</span></code> pin definitions are maintained in the TI HAL module
+(<code class="docutils literal notranslate"><span class="pre">modules/hal/ti/dts/</span></code>). <code class="docutils literal notranslate"><span class="pre">lp_mspm0g3519</span></code>, <code class="docutils literal notranslate"><span class="pre">lp_mspm33c321a</span></code>, and <code class="docutils literal notranslate"><span class="pre">lp_am13e230</span></code> use in-tree
+definitions under <code class="docutils literal notranslate"><span class="pre">zephyr/dts/ti/</span></code>. To inspect or modify pin assignments for a board, look in
+the location shown in the table above.</p>
 </div>
 </section>
-<section id="enabling-the-driver">
-<h2>Enabling the Driver<a class="headerlink" href="#enabling-the-driver" title="Link to this heading"></a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">CONFIG_PINCTRL_MSPM0</span></code> is auto-selected.  The <code class="docutils literal notranslate"><span class="pre">pinctrl</span></code> node is enabled
-in the board devicetree:</p>
+<section id="id1">
+<h2>Enabling the Driver<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">CONFIG_PINCTRL_MSPM0</span></code> is auto-selected. The <code class="docutils literal notranslate"><span class="pre">pinctrl</span></code> node is enabled in the board devicetree:</p>
 <div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">pinctrl</span><span class="cm"> </span><span class="p">{</span>
 <span class="w">        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
 <span class="p">};</span>
 </pre></div>
 </div>
-<p>This is already set in all supported board DTS files.  No application-level
-change is needed.</p>
+<p>This is already set in all supported board DTS files. No application-level change is needed.</p>
 </section>
 <section id="devicetree-properties">
 <h2>Devicetree Properties<a class="headerlink" href="#devicetree-properties" title="Link to this heading"></a></h2>
-<p>Each child node of <code class="docutils literal notranslate"><span class="pre">&amp;pinctrl</span></code> represents one pin configuration state.
-The <code class="docutils literal notranslate"><span class="pre">pinmux</span></code> property is mandatory; all others are optional overrides.</p>
+<p>Each child node of <code class="docutils literal notranslate"><span class="pre">&amp;pinctrl</span></code> represents one pin configuration state. The <code class="docutils literal notranslate"><span class="pre">pinmux</span></code> property is
+mandatory; all others are optional overrides.</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 30.0%" />
@@ -326,19 +317,17 @@ immunity at the switching threshold.</p></td>
 </tbody>
 </table>
 </section>
-<section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<section id="id2">
+<h2>Usage<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
 <section id="defining-a-pin-configuration">
 <h3>Defining a Pin Configuration<a class="headerlink" href="#defining-a-pin-configuration" title="Link to this heading"></a></h3>
-<p>Pin configurations live under <code class="docutils literal notranslate"><span class="pre">&amp;pinctrl</span></code> in the board DTS or an
-application overlay.  The DTSI already provides commonly used states; extend
-or override them as needed.</p>
+<p>Pin configurations live under <code class="docutils literal notranslate"><span class="pre">&amp;pinctrl</span></code> in the board DTS or an application overlay. The DTSI
+already provides commonly used states; extend or override them as needed.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>PINCM indices and function numbers in the examples below are specific to
-MSPM0G3507 / MSPM0G3519.  They will differ on other variants.  Always
-look up the correct values in the device-specific pin table (datasheet
-appendix) or in the pre-built pinctrl DTSI for your board.</p>
+<p>PINCM indices and function numbers in the examples below are specific to MSPM0G3507 / MSPM0G3519.
+They will differ on other variants. Always look up the correct values in the device-specific pin
+table (datasheet appendix) or in the pre-built pinctrl DTSI for your board.</p>
 </div>
 <div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="cm"> </span><span class="cpf">&lt;zephyr/dt-bindings/pinctrl/mspm0-pinctrl.h&gt;</span>
 
@@ -380,14 +369,13 @@ appendix) or in the pre-built pinctrl DTSI for your board.</p>
 <span class="p">};</span>
 </pre></div>
 </div>
-<p>The Zephyr pinctrl subsystem calls <code class="docutils literal notranslate"><span class="pre">pinctrl_apply_state()</span></code> during driver
-init, which invokes <code class="docutils literal notranslate"><span class="pre">pinctrl_configure_pins()</span></code> once per pin.  Each call
-writes one PINCM register.</p>
+<p>The Zephyr pinctrl subsystem calls <code class="docutils literal notranslate"><span class="pre">pinctrl_apply_state()</span></code> during driver init, which invokes
+<code class="docutils literal notranslate"><span class="pre">pinctrl_configure_pins()</span></code> once per pin. Each call writes one PINCM register.</p>
 </section>
 <section id="optional-sleep-state">
 <h3>Optional Sleep State<a class="headerlink" href="#optional-sleep-state" title="Link to this heading"></a></h3>
-<p>Drivers with power management support can define a <code class="docutils literal notranslate"><span class="pre">sleep</span></code> state to
-reconfigure pins when the peripheral is suspended:</p>
+<p>Drivers with power management support can define a <code class="docutils literal notranslate"><span class="pre">sleep</span></code> state to reconfigure pins when the
+peripheral is suspended:</p>
 <div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">uart0</span><span class="cm"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">pinctrl-0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">uart0_tx_pa10</span><span class="w"> </span><span class="o">&amp;</span><span class="na">uart0_rx_pa11</span><span class="o">&gt;</span><span class="p">;</span>
 <span class="w">        </span><span class="n">pinctrl-1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">uart0_tx_pa10_sleep</span><span class="w"> </span><span class="o">&amp;</span><span class="na">uart0_rx_pa11_sleep</span><span class="o">&gt;</span><span class="p">;</span>
@@ -395,26 +383,28 @@ reconfigure pins when the peripheral is suspended:</p>
 <span class="p">};</span>
 </pre></div>
 </div>
-<p>Where the <code class="docutils literal notranslate"><span class="pre">_sleep</span></code> variants typically use <code class="docutils literal notranslate"><span class="pre">bias-pull-down</span></code> or
-<code class="docutils literal notranslate"><span class="pre">input-enable</span></code> to prevent floating pins from drawing current.</p>
+<p>Where the <code class="docutils literal notranslate"><span class="pre">_sleep</span></code> variants typically use <code class="docutils literal notranslate"><span class="pre">bias-pull-down</span></code> or <code class="docutils literal notranslate"><span class="pre">input-enable</span></code> to prevent
+floating pins from drawing current.</p>
 </section>
 <section id="finding-the-pincm-index-for-a-pin">
 <h3>Finding the PINCM Index for a Pin<a class="headerlink" href="#finding-the-pincm-index-for-a-pin" title="Link to this heading"></a></h3>
-<p>The PINCM index for each physical pad is listed in the device-specific
-datasheet pin-multiplexing table (usually an appendix labelled “IOMUX” or
-“Pin Functions”).  The index is 1-based in <code class="docutils literal notranslate"><span class="pre">MSP_PINMUX</span></code> and matches the
-<code class="docutils literal notranslate"><span class="pre">PINCMx</span></code> row in the table.  The function number selects which row in the
-<code class="docutils literal notranslate"><span class="pre">PINCMX.PF</span></code> column corresponds to the desired peripheral signal.</p>
-<p>The pre-built DTSI files already contain correct entries for all supported
-peripherals on each SoC variant.  Consulting them is the easiest way to
-find valid combinations.</p>
+<p>The PINCM index for each physical pad is listed in the device-specific datasheet pin-multiplexing
+table (usually an appendix labelled “IOMUX” or “Pin Functions”). The index is 1-based in
+<code class="docutils literal notranslate"><span class="pre">MSP_PINMUX</span></code> and matches the <code class="docutils literal notranslate"><span class="pre">PINCMx</span></code> row in the table. The function number selects which row in
+the <code class="docutils literal notranslate"><span class="pre">PINCMX.PF</span></code> column corresponds to the desired peripheral signal.</p>
+<p>The pre-built DTSI files already contain correct entries for all supported peripherals on each SoC
+variant. Consulting them is the easiest way to find valid combinations.</p>
 </section>
+</section>
+<section id="id3">
+<h2>Devicetree Bindings<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="../../../../../zephyr/build/dts/api/bindings/pinctrl/ti,mspm0-pinctrl.html">ti,mspm0-pinctrl</a></p></li>
+</ul>
 </section>
 <section id="zephyr-documentation">
 <h2>Zephyr Documentation<a class="headerlink" href="#zephyr-documentation" title="Link to this heading"></a></h2>
-<ul class="simple">
-<li><p><a class="reference external" href="../../../../../zephyr/hardware/pinctrl/index.html">Pin Control Zephyr Documentation</a></p></li>
-</ul>
+<p><a class="reference external" href="../../../../../zephyr/hardware/pinctrl/index.html">Pinctrl Zephyr Documentation</a></p>
 </section>
 </section>
 

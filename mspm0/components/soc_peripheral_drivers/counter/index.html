@@ -166,74 +166,62 @@
              
   <section id="counter">
 <span id="ti-zephyr-component-counter"></span><h1>Counter<a class="headerlink" href="#counter" title="Link to this heading"></a></h1>
+<section id="mspm0-counter">
+<h2>MSPM0 Counter<a class="headerlink" href="#mspm0-counter" title="Link to this heading"></a></h2>
 <section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
-<p>The MSPM0 and MSPM33 General-Purpose Timer (GPTIMER) peripherals are exposed
-through Zephyr’s standard counter API (<code class="docutils literal notranslate"><span class="pre">&lt;zephyr/drivers/counter.h&gt;</span></code>).  Each
-GPTIMER instance hosts a child devicetree node (<code class="docutils literal notranslate"><span class="pre">ti,mspm0-timer-counter</span></code>)
-that binds to this driver.  The counter runs in up-counting mode and
-reloads to zero when it reaches the programmed top value.  Compare-capture
-(CC) registers generate one-shot alarm interrupts when the counter reaches a
-programmed value.</p>
+<h3>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h3>
+<p>The MSPM0 and MSPM33 General-Purpose Timer (GPTIMER) peripherals are exposed through Zephyr’s
+standard counter API (<code class="docutils literal notranslate"><span class="pre">&lt;zephyr/drivers/counter.h&gt;</span></code>). Each GPTIMER instance hosts a child
+devicetree node (<code class="docutils literal notranslate"><span class="pre">ti,mspm0-timer-counter</span></code>) that binds to this driver. The counter runs in
+up-counting mode and reloads to zero when it reaches the programmed top value. Compare-capture (CC)
+registers generate one-shot alarm interrupts when the counter reaches a programmed value.</p>
 </section>
-<section id="features-supported">
-<h2>Features Supported<a class="headerlink" href="#features-supported" title="Link to this heading"></a></h2>
-<p>The driver implements all mandatory counter API operations and the following
-optional operations:</p>
+<section id="id1">
+<h3>Features Supported<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>The driver implements all mandatory counter API operations and the following optional operations:</p>
 <ul class="simple">
 <li><p>Up-counting mode; <code class="xref c c-func docutils literal notranslate"><span class="pre">counter_is_counting_up()</span></code> always returns <code class="docutils literal notranslate"><span class="pre">true</span></code></p></li>
 <li><p>16-bit or 32-bit counter resolution, selected per instance in devicetree</p></li>
-<li><p>Up to 4 independent alarm channels backed by hardware CC registers (CC0–CC3);
-actual channel count is set per instance via the <code class="docutils literal notranslate"><span class="pre">channels</span></code> devicetree
-property</p></li>
+<li><p>Up to 4 independent alarm channels backed by hardware CC registers (CC0–CC3); actual channel count
+is set per instance via the <code class="docutils literal notranslate"><span class="pre">channels</span></code> devicetree property</p></li>
 <li><p>Top value and top-wrap callback (<code class="xref c c-func docutils literal notranslate"><span class="pre">counter_set_top_value()</span></code>)</p></li>
-<li><p>Alarm scheduling in relative and absolute modes
-(<code class="xref c c-macro docutils literal notranslate"><span class="pre">COUNTER_ALARM_CFG_ABSOLUTE</span></code>)</p></li>
-<li><p>Late alarm detection via <code class="xref c c-macro docutils literal notranslate"><span class="pre">COUNTER_ALARM_CFG_EXPIRE_WHEN_LATE</span></code>:
-when an absolute alarm deadline has already passed at call time, the driver
-pends the NVIC interrupt in software and fires the callback on the next
-interrupt dispatch instead of silently discarding the alarm</p></li>
-<li><p>Reliable alarm cancellation: <code class="xref c c-func docutils literal notranslate"><span class="pre">counter_cancel_channel_alarm()</span></code> does not
-produce spurious callbacks after the alarm has fired or been cancelled</p></li>
-<li><p>Guard period (<code class="xref c c-func docutils literal notranslate"><span class="pre">counter_set_guard_period()</span></code>,
-<code class="xref c c-func docutils literal notranslate"><span class="pre">counter_get_guard_period()</span></code>)</p></li>
-<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">counter_reset()</span></code> — resets the counter to zero while it continues
-running</p></li>
-<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">counter_set_value()</span></code> — writes an arbitrary value to the counter while
-it is running</p></li>
-<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">counter_get_freq()</span></code> — returns the tick frequency after applying
-prescaler and clock divider</p></li>
+<li><p>Alarm scheduling in relative and absolute modes (<code class="xref c c-macro docutils literal notranslate"><span class="pre">COUNTER_ALARM_CFG_ABSOLUTE</span></code>)</p></li>
+<li><p>Late alarm detection via <code class="xref c c-macro docutils literal notranslate"><span class="pre">COUNTER_ALARM_CFG_EXPIRE_WHEN_LATE</span></code>: when an absolute alarm
+deadline has already passed at call time, the driver pends the NVIC interrupt in software and
+fires the callback on the next interrupt dispatch instead of silently discarding the alarm</p></li>
+<li><p>Reliable alarm cancellation: <code class="xref c c-func docutils literal notranslate"><span class="pre">counter_cancel_channel_alarm()</span></code> does not produce spurious
+callbacks after the alarm has fired or been cancelled</p></li>
+<li><p>Guard period (<code class="xref c c-func docutils literal notranslate"><span class="pre">counter_set_guard_period()</span></code>, <code class="xref c c-func docutils literal notranslate"><span class="pre">counter_get_guard_period()</span></code>)</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">counter_reset()</span></code> — resets the counter to zero while it continues running</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">counter_set_value()</span></code> — writes an arbitrary value to the counter while it is running</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">counter_get_freq()</span></code> — returns the tick frequency after applying prescaler and clock divider</p></li>
 </ul>
 </section>
-<section id="features-not-supported">
-<h2>Features NOT Supported<a class="headerlink" href="#features-not-supported" title="Link to this heading"></a></h2>
+<section id="id2">
+<h3>Features NOT Supported<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
 <p>The following Zephyr counter API features are not implemented:</p>
 <ul class="simple">
-<li><p>64-bit tick operations (<code class="docutils literal notranslate"><span class="pre">CONFIG_COUNTER_64BITS_TICKS</span></code>):
-<code class="xref c c-func docutils literal notranslate"><span class="pre">counter_get_value_64()</span></code>, <code class="xref c c-func docutils literal notranslate"><span class="pre">counter_set_value_64()</span></code>,
-<code class="xref c c-func docutils literal notranslate"><span class="pre">counter_set_channel_alarm()</span></code> with 64-bit ticks,
+<li><p>64-bit tick operations (<code class="docutils literal notranslate"><span class="pre">CONFIG_COUNTER_64BITS_TICKS</span></code>): <code class="xref c c-func docutils literal notranslate"><span class="pre">counter_get_value_64()</span></code>,
+<code class="xref c c-func docutils literal notranslate"><span class="pre">counter_set_value_64()</span></code>, <code class="xref c c-func docutils literal notranslate"><span class="pre">counter_set_channel_alarm()</span></code> with 64-bit ticks,
 <code class="xref c c-func docutils literal notranslate"><span class="pre">counter_set_top_value()</span></code> with 64-bit ticks</p></li>
-<li><p>64-bit frequency (<code class="xref c c-func docutils literal notranslate"><span class="pre">counter_get_frequency_64()</span></code>,
-<code class="docutils literal notranslate"><span class="pre">CONFIG_COUNTER_64BITS_FREQ</span></code>)</p></li>
+<li><p>64-bit frequency (<code class="xref c c-func docutils literal notranslate"><span class="pre">counter_get_frequency_64()</span></code>, <code class="docutils literal notranslate"><span class="pre">CONFIG_COUNTER_64BITS_FREQ</span></code>)</p></li>
 </ul>
-<p>The following silicon capabilities have no corresponding Zephyr counter API
-and are therefore not accessible through this driver:</p>
+<p>The following silicon capabilities have no corresponding Zephyr counter API and are therefore not
+accessible through this driver:</p>
 <ul class="simple">
 <li><p>Input capture (edge timestamping via CC registers in capture mode)</p></li>
-<li><p>QEI / quadrature encoder input (TIMG8 instances only; no Zephyr qdec
-driver is available for this platform)</p></li>
+<li><p>QEI / quadrature encoder input (TIMG8 instances only; no Zephyr qdec driver is available for this
+platform)</p></li>
 <li><p>Cross-trigger: hardware-to-hardware timer chains and ADC/DMA trigger output</p></li>
-<li><p>Event fabric publish/subscribe (ZERO, LOAD, CC events to the MSPM0 event
-bus)</p></li>
+<li><p>Event fabric publish/subscribe (ZERO, LOAD, CC events to the MSPM0 event bus)</p></li>
 <li><p>Repeat counter (trigger every N counts without CPU involvement)</p></li>
 </ul>
 </section>
-<section id="enabling-the-driver">
-<h2>Enabling the Driver<a class="headerlink" href="#enabling-the-driver" title="Link to this heading"></a></h2>
-<p>Enable the counter child node of the target GPTIMER instance in the board
-devicetree or an application overlay.  <code class="docutils literal notranslate"><span class="pre">CONFIG_COUNTER_MSPM0_TIMER</span></code> is
-selected automatically when an enabled <code class="docutils literal notranslate"><span class="pre">ti,mspm0-timer-counter</span></code> node is
-present.</p>
+<section id="id3">
+<h3>Enabling the Driver<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<p>Enable the counter child node of the target GPTIMER instance in the board devicetree or an
+application overlay. <code class="docutils literal notranslate"><span class="pre">CONFIG_COUNTER_MSPM0_TIMER</span></code> is selected automatically when an enabled
+<code class="docutils literal notranslate"><span class="pre">ti,mspm0-timer-counter</span></code> node is present.</p>
 <div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">counterg0</span><span class="cm"> </span><span class="p">{</span>
 <span class="w">        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
 <span class="p">};</span>
@@ -249,20 +237,19 @@ present.</p>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">counter</span></code> alias is required by the standard counter alarm sample
-(<code class="docutils literal notranslate"><span class="pre">samples/drivers/counter/alarm</span></code>), which selects the device through
-<code class="docutils literal notranslate"><span class="pre">DT_ALIAS(counter)</span></code> when <code class="docutils literal notranslate"><span class="pre">CONFIG_COUNTER_MSPM0_TIMER</span></code> is set.</p>
+(<code class="docutils literal notranslate"><span class="pre">samples/drivers/counter/alarm</span></code>), which selects the device through <code class="docutils literal notranslate"><span class="pre">DT_ALIAS(counter)</span></code> when
+<code class="docutils literal notranslate"><span class="pre">CONFIG_COUNTER_MSPM0_TIMER</span></code> is set.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>TIMA instances (<code class="docutils literal notranslate"><span class="pre">countera0_0</span></code>, <code class="docutils literal notranslate"><span class="pre">countera0_1</span></code> on MSPM33C;
-<code class="docutils literal notranslate"><span class="pre">countera0</span></code> on MSPM0G) share the same GPTIMER hardware block with the
-PWM driver (<code class="docutils literal notranslate"><span class="pre">ti,mspm0-timer-pwm</span></code>).  Enabling both child nodes on the
-same parent TIMA instance simultaneously is not supported.</p>
+<p>TIMA instances (<code class="docutils literal notranslate"><span class="pre">countera0_0</span></code>, <code class="docutils literal notranslate"><span class="pre">countera0_1</span></code> on MSPM33C; <code class="docutils literal notranslate"><span class="pre">countera0</span></code> on MSPM0G) share the
+same GPTIMER hardware block with the PWM driver (<code class="docutils literal notranslate"><span class="pre">ti,mspm0-timer-pwm</span></code>). Enabling both child
+nodes on the same parent TIMA instance simultaneously is not supported.</p>
 </div>
 </section>
 <section id="devicetree-properties">
-<h2>Devicetree Properties<a class="headerlink" href="#devicetree-properties" title="Link to this heading"></a></h2>
+<h3>Devicetree Properties<a class="headerlink" href="#devicetree-properties" title="Link to this heading"></a></h3>
 <section id="counter-node-compatible-ti-mspm0-timer-counter">
-<h3>Counter node (<code class="docutils literal notranslate"><span class="pre">compatible</span> <span class="pre">=</span> <span class="pre">&quot;ti,mspm0-timer-counter&quot;</span></code>)<a class="headerlink" href="#counter-node-compatible-ti-mspm0-timer-counter" title="Link to this heading"></a></h3>
+<h4>Counter node (<code class="docutils literal notranslate"><span class="pre">compatible</span> <span class="pre">=</span> <span class="pre">&quot;ti,mspm0-timer-counter&quot;</span></code>)<a class="headerlink" href="#counter-node-compatible-ti-mspm0-timer-counter" title="Link to this heading"></a></h4>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 20.0%" />
@@ -287,7 +274,7 @@ CC register (CC0–CC3).  Hardware maximum is 4.</p></td>
 </table>
 </section>
 <section id="parent-timer-node-compatible-ti-mspm0-timer">
-<h3>Parent timer node (<code class="docutils literal notranslate"><span class="pre">compatible</span> <span class="pre">=</span> <span class="pre">&quot;ti,mspm0-timer&quot;</span></code>)<a class="headerlink" href="#parent-timer-node-compatible-ti-mspm0-timer" title="Link to this heading"></a></h3>
+<h4>Parent timer node (<code class="docutils literal notranslate"><span class="pre">compatible</span> <span class="pre">=</span> <span class="pre">&quot;ti,mspm0-timer&quot;</span></code>)<a class="headerlink" href="#parent-timer-node-compatible-ti-mspm0-timer" title="Link to this heading"></a></h4>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 20.0%" />
@@ -315,10 +302,10 @@ which have no hardware prescaler.</p></td>
 </div>
 </section>
 </section>
-<section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<section id="id4">
+<h3>Usage<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
 <section id="free-running-counter">
-<h3>Free-Running Counter<a class="headerlink" href="#free-running-counter" title="Link to this heading"></a></h3>
+<h4>Free-Running Counter<a class="headerlink" href="#free-running-counter" title="Link to this heading"></a></h4>
 <p>With no top value set the counter wraps at the hardware maximum.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/device.h&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/drivers/counter.h&gt;</span>
@@ -337,7 +324,7 @@ which have no hardware prescaler.</p></td>
 </div>
 </section>
 <section id="periodic-counter-with-top-callback">
-<h3>Periodic Counter with Top Callback<a class="headerlink" href="#periodic-counter-with-top-callback" title="Link to this heading"></a></h3>
+<h4>Periodic Counter with Top Callback<a class="headerlink" href="#periodic-counter-with-top-callback" title="Link to this heading"></a></h4>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">period_cb</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">user_data</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
 
 <span class="k">struct</span><span class="w"> </span><span class="nc">counter_top_cfg</span><span class="w"> </span><span class="n">top_cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
@@ -352,16 +339,15 @@ which have no hardware prescaler.</p></td>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><code class="xref c c-func docutils literal notranslate"><span class="pre">counter_set_top_value()</span></code> returns <code class="docutils literal notranslate"><span class="pre">-EBUSY</span></code> if any alarm channel
-has an active callback.  Cancel all pending alarms before changing the top
-value.</p>
-<p>When <code class="docutils literal notranslate"><span class="pre">COUNTER_TOP_CFG_DONT_RESET</span></code> is set and the current counter value is
-already past the new top, the call returns <code class="docutils literal notranslate"><span class="pre">-ETIME</span></code>.  Pass
-<code class="docutils literal notranslate"><span class="pre">COUNTER_TOP_CFG_RESET_WHEN_LATE</span></code> to force a counter reset in that case.</p>
+<p><code class="xref c c-func docutils literal notranslate"><span class="pre">counter_set_top_value()</span></code> returns <code class="docutils literal notranslate"><span class="pre">-EBUSY</span></code> if any alarm channel has an active callback.
+Cancel all pending alarms before changing the top value.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">COUNTER_TOP_CFG_DONT_RESET</span></code> is set and the current counter value is already past the new
+top, the call returns <code class="docutils literal notranslate"><span class="pre">-ETIME</span></code>. Pass <code class="docutils literal notranslate"><span class="pre">COUNTER_TOP_CFG_RESET_WHEN_LATE</span></code> to force a counter
+reset in that case.</p>
 </div>
 </section>
 <section id="alarm-scheduling">
-<h3>Alarm Scheduling<a class="headerlink" href="#alarm-scheduling" title="Link to this heading"></a></h3>
+<h4>Alarm Scheduling<a class="headerlink" href="#alarm-scheduling" title="Link to this heading"></a></h4>
 <p>Each alarm is one-shot and is automatically disarmed after firing.</p>
 <p><strong>Relative alarm</strong> (fires <code class="docutils literal notranslate"><span class="pre">ticks</span></code> after the current counter value):</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">alarm_cb</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">chan_id</span><span class="p">,</span>
@@ -388,43 +374,39 @@ already past the new top, the call returns <code class="docutils literal notrans
 <span class="n">counter_set_channel_alarm</span><span class="p">(</span><span class="n">cnt</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">alarm_cfg</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>Without <code class="xref c c-macro docutils literal notranslate"><span class="pre">COUNTER_ALARM_CFG_EXPIRE_WHEN_LATE</span></code>, a late absolute alarm
-returns <code class="docutils literal notranslate"><span class="pre">-ETIME</span></code> and the callback is never invoked.</p>
+<p>Without <code class="xref c c-macro docutils literal notranslate"><span class="pre">COUNTER_ALARM_CFG_EXPIRE_WHEN_LATE</span></code>, a late absolute alarm returns <code class="docutils literal notranslate"><span class="pre">-ETIME</span></code> and
+the callback is never invoked.</p>
 </section>
 <section id="guard-period">
-<h3>Guard Period<a class="headerlink" href="#guard-period" title="Link to this heading"></a></h3>
-<p>The guard period prevents a relative alarm from being scheduled so close to
-the top wrap that the counter may have advanced past the target before the CC
-register write takes effect.  <code class="xref c c-func docutils literal notranslate"><span class="pre">counter_set_channel_alarm()</span></code> returns
-<code class="docutils literal notranslate"><span class="pre">-EINVAL</span></code> for relative alarms whose tick value falls within the guard
-period.</p>
+<h4>Guard Period<a class="headerlink" href="#guard-period" title="Link to this heading"></a></h4>
+<p>The guard period prevents a relative alarm from being scheduled so close to the top wrap that the
+counter may have advanced past the target before the CC register write takes effect.
+<code class="xref c c-func docutils literal notranslate"><span class="pre">counter_set_channel_alarm()</span></code> returns <code class="docutils literal notranslate"><span class="pre">-EINVAL</span></code> for relative alarms whose tick value falls
+within the guard period.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">counter_set_guard_period</span><span class="p">(</span><span class="n">cnt</span><span class="p">,</span><span class="w"> </span><span class="mi">200U</span><span class="p">,</span><span class="w"> </span><span class="n">COUNTER_GUARD_PERIOD_LATE_TO_SET</span><span class="p">);</span>
 </pre></div>
 </div>
 </section>
 </section>
-<section id="samples">
-<h2>Samples<a class="headerlink" href="#samples" title="Link to this heading"></a></h2>
+<section id="id5">
+<h3>Samples<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p><a class="reference external" href="../../../../../zephyr/samples/drivers/counter/alarm/README.html">Counter Alarm Sample</a>
-(passes on <code class="docutils literal notranslate"><span class="pre">lp_mspm0g3507</span></code>, <code class="docutils literal notranslate"><span class="pre">lp_mspm0g3519</span></code>, <code class="docutils literal notranslate"><span class="pre">lp_mspm0l2228</span></code>,
-<code class="docutils literal notranslate"><span class="pre">lp_mspm33c321a</span></code>, and <code class="docutils literal notranslate"><span class="pre">lp_am13e230</span></code>)</p></li>
+<li><p><a class="reference external" href="../../../../../zephyr/samples/drivers/counter/alarm/README.html">Counter Alarm Sample</a> (passes on
+<code class="docutils literal notranslate"><span class="pre">lp_mspm0g3507</span></code>, <code class="docutils literal notranslate"><span class="pre">lp_mspm0g3519</span></code>, <code class="docutils literal notranslate"><span class="pre">lp_mspm0l2228</span></code>, <code class="docutils literal notranslate"><span class="pre">lp_mspm33c321a</span></code>, and <code class="docutils literal notranslate"><span class="pre">lp_am13e230</span></code>)</p></li>
 </ul>
 </section>
 <section id="tests">
-<h2>Tests<a class="headerlink" href="#tests" title="Link to this heading"></a></h2>
+<h3>Tests<a class="headerlink" href="#tests" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">tests/drivers/counter/counter_basic_api</span></code> — exercises the full mandatory
-and optional counter API: start/stop, get/set/reset value, alarm set/cancel,
-top value, guard period, absolute and relative modes, and late-alarm
-detection across all enabled <code class="docutils literal notranslate"><span class="pre">ti,mspm0-timer-counter</span></code> instances</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tests/drivers/counter/counter_basic_api</span></code> — exercises the full mandatory and optional counter
+API: start/stop, get/set/reset value, alarm set/cancel, top value, guard period, absolute and
+relative modes, and late-alarm detection across all enabled <code class="docutils literal notranslate"><span class="pre">ti,mspm0-timer-counter</span></code> instances</p></li>
 </ul>
+</section>
 </section>
 <section id="zephyr-documentation">
 <h2>Zephyr Documentation<a class="headerlink" href="#zephyr-documentation" title="Link to this heading"></a></h2>
-<ul class="simple">
-<li><p><a class="reference external" href="../../../../../zephyr/hardware/peripherals/counter.html">Counter Zephyr Documentation</a></p></li>
-</ul>
+<p><a class="reference external" href="../../../../../zephyr/hardware/peripherals/counter.html">Counter Zephyr Documentation</a></p>
 </section>
 </section>
 

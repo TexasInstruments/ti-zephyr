@@ -20,7 +20,7 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="RTC" href="../rtc/index.html" />
+    <link rel="next" title="eCAP" href="am62l/ecap.html" />
     <link rel="prev" title="Pin Control" href="../pinctrl/index.html" /> 
 </head>
 
@@ -67,7 +67,11 @@
 <li class="toctree-l3"><a class="reference internal" href="../gpio/index.html">GPIO</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../iwdt/index.html">Independent Watchdog</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../pinctrl/index.html">Pin Control</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">PWM</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">PWM</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="am62l/ecap.html">eCAP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="am62l/ehrpwm.html">eHRPWM</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="../rtc/index.html">RTC</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../uart/index.html">UART</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../unicomm_i2c/index.html">UNICOMM I2C</a></li>
@@ -152,18 +156,15 @@
 <span id="ti-zephyr-component-pwm"></span><h1>PWM<a class="headerlink" href="#pwm" title="Link to this heading"></a></h1>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
-<p>The MSPM0 and MSPM33 General-Purpose Timer (GPTIMER) peripheral — both the
-advanced-control timer (TIMA) and general-purpose timer (TIMG) variants — is
-exposed through Zephyr’s standard PWM API (<code class="docutils literal notranslate"><span class="pre">&lt;zephyr/drivers/pwm.h&gt;</span></code>).  A
-<code class="docutils literal notranslate"><span class="pre">ti,mspm0-timer-pwm</span></code> child node under the parent <code class="docutils literal notranslate"><span class="pre">ti,mspm0-timer</span></code> instance
-binds to this driver.  The same node can be configured either as a PWM output
-or as a PWM capture input; the presence or absence of the <code class="docutils literal notranslate"><span class="pre">ti,cc-mode</span></code>
-property determines which function is active.</p>
-<p>The driver implements <code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_set_cycles()</span></code> and
-<code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_get_cycles_per_sec()</span></code>.  PWM capture
-(<code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_configure_capture()</span></code>, <code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_enable_capture()</span></code>,
-<code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_disable_capture()</span></code>) is conditionally compiled under
-<code class="docutils literal notranslate"><span class="pre">CONFIG_PWM_CAPTURE</span></code>.</p>
+<p>The MSPM0 and MSPM33 General-Purpose Timer (GPTIMER) peripheral — both the advanced-control timer
+(TIMA) and general-purpose timer (TIMG) variants — is exposed through Zephyr’s standard PWM API
+(<code class="docutils literal notranslate"><span class="pre">&lt;zephyr/drivers/pwm.h&gt;</span></code>). A <code class="docutils literal notranslate"><span class="pre">ti,mspm0-timer-pwm</span></code> child node under the parent
+<code class="docutils literal notranslate"><span class="pre">ti,mspm0-timer</span></code> instance binds to this driver. The same node can be configured either as a PWM
+output or as a PWM capture input; the presence or absence of the <code class="docutils literal notranslate"><span class="pre">ti,cc-mode</span></code> property determines
+which function is active.</p>
+<p>The driver implements <code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_set_cycles()</span></code> and <code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_get_cycles_per_sec()</span></code>. PWM capture
+(<code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_configure_capture()</span></code>, <code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_enable_capture()</span></code>, <code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_disable_capture()</span></code>) is
+conditionally compiled under <code class="docutils literal notranslate"><span class="pre">CONFIG_PWM_CAPTURE</span></code>.</p>
 </section>
 <section id="features-supported">
 <h2>Features Supported<a class="headerlink" href="#features-supported" title="Link to this heading"></a></h2>
@@ -172,75 +173,66 @@ property determines which function is active.</p>
 <ul class="simple">
 <li><p>Three output alignment modes selectable per node in devicetree:</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">EDGE_ALIGN</span></code> (default) — edge-aligned, down-counting.  Counter counts
-from <code class="docutils literal notranslate"><span class="pre">LOAD</span></code> to 0.  Output goes HIGH when the counter reaches the CC
-compare value (on the way down) and LOW at the LOAD reload event.
-Active-high pulse width equals <code class="docutils literal notranslate"><span class="pre">pulse_cycles</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">EDGE_ALIGN_UP</span></code> — edge-aligned, up-counting.  Active-high pulse:
-output goes high at ZERO, low at CC compare.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">CENTER_ALIGN</span></code> — center-aligned, up-down counting.  Pulse is
-symmetric around the counter peak.  The driver programs
-<code class="docutils literal notranslate"><span class="pre">LOAD</span> <span class="pre">=</span> <span class="pre">period_cycles</span> <span class="pre">/</span> <span class="pre">2</span></code> automatically; the application passes the
-full period to <code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_set_cycles()</span></code> unchanged.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EDGE_ALIGN</span></code> (default) — edge-aligned, down-counting. Counter counts from <code class="docutils literal notranslate"><span class="pre">LOAD</span></code> to 0.
+Output goes HIGH when the counter reaches the CC compare value (on the way down) and LOW at the
+LOAD reload event. Active-high pulse width equals <code class="docutils literal notranslate"><span class="pre">pulse_cycles</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EDGE_ALIGN_UP</span></code> — edge-aligned, up-counting. Active-high pulse: output goes high at ZERO, low
+at CC compare.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CENTER_ALIGN</span></code> — center-aligned, up-down counting. Pulse is symmetric around the counter peak.
+The driver programs <code class="docutils literal notranslate"><span class="pre">LOAD</span> <span class="pre">=</span> <span class="pre">period_cycles</span> <span class="pre">/</span> <span class="pre">2</span></code> automatically; the application passes the full
+period to <code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_set_cycles()</span></code> unchanged.</p></li>
 </ul>
 </li>
-<li><p>Normal and inverted polarity (<code class="docutils literal notranslate"><span class="pre">PWM_POLARITY_NORMAL</span></code>,
-<code class="docutils literal notranslate"><span class="pre">PWM_POLARITY_INVERTED</span></code>).  Inverted mode subtracts the pulse from the
-period before writing the CC register.</p></li>
-<li><p>Glitch-free 0 % and 100 % duty cycle: the driver selects a fixed pin
-action instead of a compare-based action at the boundary values, so the
-output holds the correct level without a spurious pulse.</p></li>
-<li><p>Multi-channel output: multiple CC channels on the same GPTIMER instance
-can be driven independently by listing them all in <code class="docutils literal notranslate"><span class="pre">ti,cc-index</span></code>.  In
-<code class="docutils literal notranslate"><span class="pre">CENTER_ALIGN</span></code> mode all channels share <code class="docutils literal notranslate"><span class="pre">LOAD</span></code>; the driver recomputes
-every channel’s CC value whenever the period changes.</p></li>
-<li><p>Configurable clock prescaler (÷1 to ÷256) and clock divider (÷1 to ÷8)
-on the parent timer node.  TIMG12 instances have no hardware prescaler.</p></li>
+<li><p>Normal and inverted polarity (<code class="docutils literal notranslate"><span class="pre">PWM_POLARITY_NORMAL</span></code>, <code class="docutils literal notranslate"><span class="pre">PWM_POLARITY_INVERTED</span></code>). Inverted mode
+subtracts the pulse from the period before writing the CC register.</p></li>
+<li><p>Glitch-free 0 % and 100 % duty cycle: the driver selects a fixed pin action instead of a
+compare-based action at the boundary values, so the output holds the correct level without a
+spurious pulse.</p></li>
+<li><p>Multi-channel output: multiple CC channels on the same GPTIMER instance can be driven
+independently by listing them all in <code class="docutils literal notranslate"><span class="pre">ti,cc-index</span></code>. In <code class="docutils literal notranslate"><span class="pre">CENTER_ALIGN</span></code> mode all channels share
+<code class="docutils literal notranslate"><span class="pre">LOAD</span></code>; the driver recomputes every channel’s CC value whenever the period changes.</p></li>
+<li><p>Configurable clock prescaler (÷1 to ÷256) and clock divider (÷1 to ÷8) on the parent timer node.
+TIMG12 instances have no hardware prescaler.</p></li>
 </ul>
 </section>
 <section id="pwm-capture-config-pwm-capture">
 <h3>PWM Capture (<code class="docutils literal notranslate"><span class="pre">CONFIG_PWM_CAPTURE</span></code>)<a class="headerlink" href="#pwm-capture-config-pwm-capture" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>Only <strong>channel 0</strong> is supported.  Passing any other channel to
-<code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_configure_capture()</span></code> or <code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_enable_capture()</span></code> returns
-<code class="docutils literal notranslate"><span class="pre">-EINVAL</span></code>.</p></li>
+<li><p>Only <strong>channel 0</strong> is supported. Passing any other channel to <code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_configure_capture()</span></code> or
+<code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_enable_capture()</span></code> returns <code class="docutils literal notranslate"><span class="pre">-EINVAL</span></code>.</p></li>
 <li><p>Two hardware capture modes selectable via <code class="docutils literal notranslate"><span class="pre">ti,cc-mode</span></code> in devicetree:</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">PULSE_WIDTH</span></code> — measures period and/or pulse width.  Two adjacent CC
-channels are used (the index in <code class="docutils literal notranslate"><span class="pre">ti,cc-index</span></code> for the falling edge and
-its hardware pair <code class="docutils literal notranslate"><span class="pre">index</span> <span class="pre">^</span> <span class="pre">1</span></code> for the rising edge).  The first
-measurement after <code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_enable_capture()</span></code> is discarded to establish
-a clean edge baseline.  Supports <code class="docutils literal notranslate"><span class="pre">PWM_CAPTURE_TYPE_PERIOD</span></code>,
-<code class="docutils literal notranslate"><span class="pre">PWM_CAPTURE_TYPE_PULSE</span></code>, and <code class="docutils literal notranslate"><span class="pre">PWM_CAPTURE_TYPE_BOTH</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">EDGE_TIME</span></code> — captures the raw timestamp of each successive edge on a
-single CC channel.  Supports <code class="docutils literal notranslate"><span class="pre">PWM_CAPTURE_TYPE_PERIOD</span></code>,
-<code class="docutils literal notranslate"><span class="pre">PWM_CAPTURE_TYPE_PULSE</span></code>, and <code class="docutils literal notranslate"><span class="pre">PWM_CAPTURE_TYPE_BOTH</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PULSE_WIDTH</span></code> — measures period and/or pulse width. Two adjacent CC channels are used (the
+index in <code class="docutils literal notranslate"><span class="pre">ti,cc-index</span></code> for the falling edge and its hardware pair <code class="docutils literal notranslate"><span class="pre">index</span> <span class="pre">^</span> <span class="pre">1</span></code> for the rising
+edge). The first measurement after <code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_enable_capture()</span></code> is discarded to establish a
+clean edge baseline. Supports <code class="docutils literal notranslate"><span class="pre">PWM_CAPTURE_TYPE_PERIOD</span></code>, <code class="docutils literal notranslate"><span class="pre">PWM_CAPTURE_TYPE_PULSE</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">PWM_CAPTURE_TYPE_BOTH</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EDGE_TIME</span></code> — captures the raw timestamp of each successive edge on a single CC channel.
+Supports <code class="docutils literal notranslate"><span class="pre">PWM_CAPTURE_TYPE_PERIOD</span></code>, <code class="docutils literal notranslate"><span class="pre">PWM_CAPTURE_TYPE_PULSE</span></code>, and <code class="docutils literal notranslate"><span class="pre">PWM_CAPTURE_TYPE_BOTH</span></code>.</p></li>
 </ul>
 </li>
-<li><p>Single-shot capture (<code class="docutils literal notranslate"><span class="pre">PWM_CAPTURE_MODE_SINGLE</span></code>) — stops the counter and
-disarms interrupts after the first valid measurement.</p></li>
-<li><p>Continuous capture (<code class="docutils literal notranslate"><span class="pre">PWM_CAPTURE_MODE_CONTINUOUS</span></code>) — delivers
-measurements to the callback on every cycle; counter ZERO events are
-treated as normal counter wraps, not errors.</p></li>
-<li><p>Inverted polarity in <code class="docutils literal notranslate"><span class="pre">PULSE_WIDTH</span></code> mode
-(<code class="docutils literal notranslate"><span class="pre">PWM_POLARITY_INVERTED</span></code>): swaps the falling-edge and rising-edge CC
-channel assignments so the driver measures the low-active pulse width
-instead of the high-active pulse width.</p></li>
+<li><p>Single-shot capture (<code class="docutils literal notranslate"><span class="pre">PWM_CAPTURE_MODE_SINGLE</span></code>) — stops the counter and disarms interrupts after
+the first valid measurement.</p></li>
+<li><p>Continuous capture (<code class="docutils literal notranslate"><span class="pre">PWM_CAPTURE_MODE_CONTINUOUS</span></code>) — delivers measurements to the callback on
+every cycle; counter ZERO events are treated as normal counter wraps, not errors.</p></li>
+<li><p>Inverted polarity in <code class="docutils literal notranslate"><span class="pre">PULSE_WIDTH</span></code> mode (<code class="docutils literal notranslate"><span class="pre">PWM_POLARITY_INVERTED</span></code>): swaps the falling-edge and
+rising-edge CC channel assignments so the driver measures the low-active pulse width instead of
+the high-active pulse width.</p></li>
 </ul>
 </section>
 </section>
 <section id="features-not-supported">
 <h2>Features NOT Supported<a class="headerlink" href="#features-not-supported" title="Link to this heading"></a></h2>
-<p>The following silicon capabilities have no Zephyr PWM API mapping.
-Items marked <strong>(TIMA only)</strong> are absent on TIMG instances:</p>
+<p>The following silicon capabilities have no Zephyr PWM API mapping. Items marked <strong>(TIMA only)</strong> are
+absent on TIMG instances:</p>
 <ul class="simple">
 <li><p>Complementary output pairs with dead-band insertion <strong>(TIMA only)</strong></p></li>
-<li><p>Asymmetric PWM <strong>(TIMA only)</strong> — phase-shifted center-aligned outputs
-across two synchronized TIMA instances</p></li>
-<li><p>Hardware fault handler <strong>(TIMA only)</strong> — drives outputs to a safe state
-when an internal comparator or external fault pin asserts</p></li>
-<li><p>QEI / quadrature encoder input (TIMG8 instances only; no Zephyr qdec
-driver is available for this platform)</p></li>
+<li><p>Asymmetric PWM <strong>(TIMA only)</strong> — phase-shifted center-aligned outputs across two synchronized TIMA
+instances</p></li>
+<li><p>Hardware fault handler <strong>(TIMA only)</strong> — drives outputs to a safe state when an internal
+comparator or external fault pin asserts</p></li>
+<li><p>QEI / quadrature encoder input (TIMG8 instances only; no Zephyr qdec driver is available for this
+platform)</p></li>
 <li><p>Cross-trigger: hardware timer-to-timer and timer-to-ADC/DMA chaining</p></li>
 <li><p>Event fabric publish/subscribe (ZERO, LOAD, CC events to the MSPM0 event bus)</p></li>
 <li><p>Repeat counter — interrupt only after every N counter cycles</p></li>
@@ -248,9 +240,9 @@ driver is available for this platform)</p></li>
 </section>
 <section id="enabling-the-driver">
 <h2>Enabling the Driver<a class="headerlink" href="#enabling-the-driver" title="Link to this heading"></a></h2>
-<p>Enable the PWM child node of the target GPTIMER instance.
-<code class="docutils literal notranslate"><span class="pre">CONFIG_PWM_MSPM0</span></code> and <code class="docutils literal notranslate"><span class="pre">CONFIG_PINCTRL</span></code> are selected automatically when
-an enabled <code class="docutils literal notranslate"><span class="pre">ti,mspm0-timer-pwm</span></code> node is present.</p>
+<p>Enable the PWM child node of the target GPTIMER instance. <code class="docutils literal notranslate"><span class="pre">CONFIG_PWM_MSPM0</span></code> and
+<code class="docutils literal notranslate"><span class="pre">CONFIG_PINCTRL</span></code> are selected automatically when an enabled <code class="docutils literal notranslate"><span class="pre">ti,mspm0-timer-pwm</span></code> node is
+present.</p>
 <div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">pwma0</span><span class="cm"> </span><span class="p">{</span>
 <span class="w">        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
 <span class="w">        </span><span class="cm">/* pwma0_default is pre-defined in the SoC pinctrl DTSI.</span>
@@ -278,12 +270,11 @@ CONFIG_PWM_CAPTURE=y
 <div class="admonition important">
 <p class="admonition-title">Important</p>
 <p>TIMA instances share their GPTIMER hardware block with the counter driver
-(<code class="docutils literal notranslate"><span class="pre">ti,mspm0-timer-counter</span></code>).  Enabling both child nodes on the same
-parent TIMA instance simultaneously is not supported.</p>
-<p>In <code class="docutils literal notranslate"><span class="pre">PULSE_WIDTH</span></code> capture mode the driver uses two adjacent CC channels.
-Set <code class="docutils literal notranslate"><span class="pre">ti,cc-index</span></code> to the <strong>even</strong> channel of the pair (e.g. <code class="docutils literal notranslate"><span class="pre">&lt;0&gt;</span></code>);
-the driver claims channel <code class="docutils literal notranslate"><span class="pre">index</span></code> for the falling edge and channel
-<code class="docutils literal notranslate"><span class="pre">index</span> <span class="pre">^</span> <span class="pre">1</span></code> for the rising edge automatically.</p>
+(<code class="docutils literal notranslate"><span class="pre">ti,mspm0-timer-counter</span></code>). Enabling both child nodes on the same parent TIMA instance
+simultaneously is not supported.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">PULSE_WIDTH</span></code> capture mode the driver uses two adjacent CC channels. Set <code class="docutils literal notranslate"><span class="pre">ti,cc-index</span></code> to
+the <strong>even</strong> channel of the pair (e.g. <code class="docutils literal notranslate"><span class="pre">&lt;0&gt;</span></code>); the driver claims channel <code class="docutils literal notranslate"><span class="pre">index</span></code> for the
+falling edge and channel <code class="docutils literal notranslate"><span class="pre">index</span> <span class="pre">^</span> <span class="pre">1</span></code> for the rising edge automatically.</p>
 </div>
 </section>
 <section id="devicetree-properties">
@@ -472,13 +463,12 @@ used.  Adds interrupt registration and ISR code for the capture path.</p></td>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>In <code class="docutils literal notranslate"><span class="pre">PULSE_WIDTH</span></code> mode the driver discards the first measurement to
-establish a clean edge baseline; the callback fires on the second complete
-cycle.  A <code class="docutils literal notranslate"><span class="pre">-ERANGE</span></code> status means the input signal period exceeded the
-counter top value (<code class="docutils literal notranslate"><span class="pre">ti,period</span></code>) before an edge arrived — increase
+<p>In <code class="docutils literal notranslate"><span class="pre">PULSE_WIDTH</span></code> mode the driver discards the first measurement to establish a clean edge
+baseline; the callback fires on the second complete cycle. A <code class="docutils literal notranslate"><span class="pre">-ERANGE</span></code> status means the input
+signal period exceeded the counter top value (<code class="docutils literal notranslate"><span class="pre">ti,period</span></code>) before an edge arrived — increase
 <code class="docutils literal notranslate"><span class="pre">ti,period</span></code> or reduce the prescaler.</p>
-<p><code class="docutils literal notranslate"><span class="pre">ti,period</span></code> sets the counter top for the capture timer.  A signal with
-a period longer than <code class="docutils literal notranslate"><span class="pre">ti,period</span> <span class="pre">/</span> <span class="pre">f_pwm</span></code> seconds will time out.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ti,period</span></code> sets the counter top for the capture timer. A signal with a period longer than
+<code class="docutils literal notranslate"><span class="pre">ti,period</span> <span class="pre">/</span> <span class="pre">f_pwm</span></code> seconds will time out.</p>
 </div>
 </section>
 </section>
@@ -487,54 +477,53 @@ a period longer than <code class="docutils literal notranslate"><span class="pre
 <section id="in-tree">
 <h3>In-tree<a class="headerlink" href="#in-tree" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p><a class="reference external" href="../../../../../zephyr/samples/basic/blinky_pwm/README.html">Blinky PWM Sample</a> —
-fades an LED using <code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_set_dt()</span></code> on the <code class="docutils literal notranslate"><span class="pre">pwm-led0</span></code> alias.  Passes
-on <code class="docutils literal notranslate"><span class="pre">lp_mspm0g3507</span></code> and <code class="docutils literal notranslate"><span class="pre">lp_mspm33c321a</span></code>.</p></li>
-<li><p><a class="reference external" href="../../../../../zephyr/samples/drivers/pwm/capture/README.html">PWM Capture Sample</a> —
-measures period and pulse width of an input signal using <code class="docutils literal notranslate"><span class="pre">PULSE_WIDTH</span></code>
-mode.  Board overlay for <code class="docutils literal notranslate"><span class="pre">lp_mspm0g3507</span></code> is included
-(<code class="docutils literal notranslate"><span class="pre">samples/drivers/pwm/capture/boards/lp_mspm0g3507.overlay</span></code>).</p></li>
+<li><p><a class="reference external" href="../../../../../zephyr/samples/basic/blinky_pwm/README.html">Blinky PWM Sample</a> — fades an LED using
+<code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_set_dt()</span></code> on the <code class="docutils literal notranslate"><span class="pre">pwm-led0</span></code> alias. Passes on <code class="docutils literal notranslate"><span class="pre">lp_mspm0g3507</span></code> and
+<code class="docutils literal notranslate"><span class="pre">lp_mspm33c321a</span></code>.</p></li>
+<li><p><a class="reference external" href="../../../../../zephyr/samples/drivers/pwm/capture/README.html">PWM Capture Sample</a> — measures period
+and pulse width of an input signal using <code class="docutils literal notranslate"><span class="pre">PULSE_WIDTH</span></code> mode. Board overlay for <code class="docutils literal notranslate"><span class="pre">lp_mspm0g3507</span></code>
+is included (<code class="docutils literal notranslate"><span class="pre">samples/drivers/pwm/capture/boards/lp_mspm0g3507.overlay</span></code>).</p></li>
 </ul>
 </section>
 <section id="ti-zephyr-samples-drivers-pwm">
 <h3>TI-ZEPHYR (<code class="docutils literal notranslate"><span class="pre">samples/drivers/pwm/</span></code>)<a class="headerlink" href="#ti-zephyr-samples-drivers-pwm" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p><strong>pwm_center_align</strong> — demonstrates <code class="docutils literal notranslate"><span class="pre">CENTER_ALIGN</span></code> mode on
-<code class="docutils literal notranslate"><span class="pre">lp_mspm0g3507</span></code>, <code class="docutils literal notranslate"><span class="pre">lp_mspm0g3519</span></code>, <code class="docutils literal notranslate"><span class="pre">lp_mspm0l2228</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">lp_mspm33c321a</span></code>.  The board overlays show how to switch an existing
-<code class="docutils literal notranslate"><span class="pre">EDGE_ALIGN</span></code> node to <code class="docutils literal notranslate"><span class="pre">CENTER_ALIGN</span></code> with a single devicetree property
-change and no application code modification.</p></li>
-<li><p><strong>pwm_capture_accuracy</strong> — generates a reference signal on <code class="docutils literal notranslate"><span class="pre">pwm-out</span></code> and
-measures it on <code class="docutils literal notranslate"><span class="pre">pwm-cap</span></code> (a wire between the two pins is required).
-Reports jitter (in cycles), frequency accuracy in ppm, duty-cycle accuracy,
-and dynamic duty-change tracking across multiple test frequencies.  All
-test frequencies are derived at runtime from the capture timer clock, so
-the sample adapts to any board overlay without code changes.  Runs on
-<code class="docutils literal notranslate"><span class="pre">lp_mspm0g3507</span></code>, <code class="docutils literal notranslate"><span class="pre">lp_mspm0g3519</span></code>, <code class="docutils literal notranslate"><span class="pre">lp_mspm0l2228</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">lp_mspm33c321a</span></code>.</p></li>
+<li><p><strong>pwm_center_align</strong> — demonstrates <code class="docutils literal notranslate"><span class="pre">CENTER_ALIGN</span></code> mode on <code class="docutils literal notranslate"><span class="pre">lp_mspm0g3507</span></code>, <code class="docutils literal notranslate"><span class="pre">lp_mspm0g3519</span></code>,
+<code class="docutils literal notranslate"><span class="pre">lp_mspm0l2228</span></code>, and <code class="docutils literal notranslate"><span class="pre">lp_mspm33c321a</span></code>. The board overlays show how to switch an existing
+<code class="docutils literal notranslate"><span class="pre">EDGE_ALIGN</span></code> node to <code class="docutils literal notranslate"><span class="pre">CENTER_ALIGN</span></code> with a single devicetree property change and no
+application code modification.</p></li>
+<li><p><strong>pwm_capture_accuracy</strong> — generates a reference signal on <code class="docutils literal notranslate"><span class="pre">pwm-out</span></code> and measures it on
+<code class="docutils literal notranslate"><span class="pre">pwm-cap</span></code> (a wire between the two pins is required). Reports jitter (in cycles), frequency
+accuracy in ppm, duty-cycle accuracy, and dynamic duty-change tracking across multiple test
+frequencies. All test frequencies are derived at runtime from the capture timer clock, so the
+sample adapts to any board overlay without code changes. Runs on <code class="docutils literal notranslate"><span class="pre">lp_mspm0g3507</span></code>,
+<code class="docutils literal notranslate"><span class="pre">lp_mspm0g3519</span></code>, <code class="docutils literal notranslate"><span class="pre">lp_mspm0l2228</span></code>, and <code class="docutils literal notranslate"><span class="pre">lp_mspm33c321a</span></code>.</p></li>
 </ul>
 </section>
 </section>
 <section id="tests">
 <h2>Tests<a class="headerlink" href="#tests" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">tests/drivers/pwm/pwm_api</span></code> — exercises <code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_set_cycles()</span></code> and
-<code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_set()</span></code> at 50 %, 100 %, and 0 % duty cycle.  Board overlays for
-<code class="docutils literal notranslate"><span class="pre">lp_mspm0g3507</span></code>, <code class="docutils literal notranslate"><span class="pre">lp_mspm0g3519</span></code>, <code class="docutils literal notranslate"><span class="pre">lp_mspm0l2228</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">lp_mspm33c321a</span></code> are included; each sets a <code class="docutils literal notranslate"><span class="pre">pwm-test</span></code> alias to the
+<li><p><code class="docutils literal notranslate"><span class="pre">tests/drivers/pwm/pwm_api</span></code> — exercises <code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_set_cycles()</span></code> and <code class="xref c c-func docutils literal notranslate"><span class="pre">pwm_set()</span></code> at 50 %,
+100 %, and 0 % duty cycle. Board overlays for <code class="docutils literal notranslate"><span class="pre">lp_mspm0g3507</span></code>, <code class="docutils literal notranslate"><span class="pre">lp_mspm0g3519</span></code>,
+<code class="docutils literal notranslate"><span class="pre">lp_mspm0l2228</span></code>, and <code class="docutils literal notranslate"><span class="pre">lp_mspm33c321a</span></code> are included; each sets a <code class="docutils literal notranslate"><span class="pre">pwm-test</span></code> alias to the
 default TIMA PWM node.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tests/drivers/pwm/pwm_loopback</span></code> — hardware loopback test: drives a PWM
-output and captures it on a second channel to verify period and pulse width
-round-trip accuracy.  Board overlays for <code class="docutils literal notranslate"><span class="pre">lp_mspm0g3507</span></code>,
-<code class="docutils literal notranslate"><span class="pre">lp_mspm0g3519</span></code>, <code class="docutils literal notranslate"><span class="pre">lp_mspm0l2228</span></code>, and <code class="docutils literal notranslate"><span class="pre">lp_mspm33c321a</span></code> are included.
+<li><p><code class="docutils literal notranslate"><span class="pre">tests/drivers/pwm/pwm_loopback</span></code> — hardware loopback test: drives a PWM output and captures it
+on a second channel to verify period and pulse width round-trip accuracy. Board overlays for
+<code class="docutils literal notranslate"><span class="pre">lp_mspm0g3507</span></code>, <code class="docutils literal notranslate"><span class="pre">lp_mspm0g3519</span></code>, <code class="docutils literal notranslate"><span class="pre">lp_mspm0l2228</span></code>, and <code class="docutils literal notranslate"><span class="pre">lp_mspm33c321a</span></code> are included.
 Requires a wire connecting the output pin to the capture pin on the board.</p></li>
+</ul>
+</section>
+<section id="devicetree-bindings">
+<h2>Devicetree Bindings<a class="headerlink" href="#devicetree-bindings" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="../../../../../zephyr/build/dts/api/bindings/pwm/ti,mspm0-timer-pwm.html">ti,mspm0-timer-pwm</a></p></li>
+<li><p><a class="reference external" href="../../../../../zephyr/build/dts/api/bindings/timer/ti,mspm0-timer.html">ti,mspm0-timer</a></p></li>
 </ul>
 </section>
 <section id="zephyr-documentation">
 <h2>Zephyr Documentation<a class="headerlink" href="#zephyr-documentation" title="Link to this heading"></a></h2>
-<ul class="simple">
-<li><p><a class="reference external" href="../../../../../zephyr/hardware/peripherals/pwm.html">PWM Zephyr Documentation</a></p></li>
-</ul>
+<p><a class="reference external" href="../../../../../zephyr/hardware/peripherals/pwm.html">PWM Zephyr Documentation</a></p>
 </section>
 </section>
 
@@ -543,7 +532,7 @@ Requires a wire connecting the output pin to the capture pin on the board.</p></
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../pinctrl/index.html" class="btn btn-neutral float-left" title="Pin Control" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../rtc/index.html" class="btn btn-neutral float-right" title="RTC" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="am62l/ecap.html" class="btn btn-neutral float-right" title="eCAP" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
