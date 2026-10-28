@@ -40,8 +40,8 @@ opens the matching section of that page.
      - Board page
      - Hardware features
    * - ``lp_mspm33c321a``
-     - `LP-MSPM33C321A <../../../../zephyr/boards/ti/lp_mspm33c321a/doc/index.html>`__
-     - `Supported features <../../../../zephyr/boards/ti/lp_mspm33c321a/doc/index.html#supported-features>`__
+     - :ws-doc:`LP-MSPM33C321A <zephyr/boards/ti/lp_mspm33c321a/doc/index.html>`
+     - :ws-doc:`Supported features <zephyr/boards/ti/lp_mspm33c321a/doc/index.html#supported-features>`
 
 Resources
 *********

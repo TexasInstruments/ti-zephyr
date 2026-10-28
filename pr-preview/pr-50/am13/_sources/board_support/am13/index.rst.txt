@@ -40,8 +40,8 @@ opens the matching section of that page.
      - Board page
      - Hardware features
    * - ``lp_am13e230``
-     - `LP-AM13E230 <../../../../zephyr/boards/ti/lp_am13e230/doc/index.html>`__
-     - `Supported features <../../../../zephyr/boards/ti/lp_am13e230/doc/index.html#supported-features>`__
+     - :ws-doc:`LP-AM13E230 <zephyr/boards/ti/lp_am13e230/doc/index.html>`
+     - :ws-doc:`Supported features <zephyr/boards/ti/lp_am13e230/doc/index.html#supported-features>`
 
 Resources
 *********

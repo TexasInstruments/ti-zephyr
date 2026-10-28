@@ -151,8 +151,8 @@ from ``SYSCTL_TEMP_SENSE_CAL`` (``0x41C40170`` on G-series,
 References
 **********
 
-* `ADC API <../../../../zephyr/hardware/peripherals/adc.html>`_
-* `RTC API <../../../../zephyr/hardware/peripherals/rtc.html>`_
-* `Auxdisplay API <../../../../zephyr/hardware/peripherals/auxdisplay.html>`_
-* `GPIO API <../../../../zephyr/hardware/peripherals/gpio.html>`_
-* `Hardware Info API <../../../../zephyr/hardware/peripherals/hwinfo.html>`_
+* :ws-doc:`ADC API <zephyr/hardware/peripherals/adc.html>`
+* :ws-doc:`RTC API <zephyr/hardware/peripherals/rtc.html>`
+* :ws-doc:`Auxdisplay API <zephyr/hardware/peripherals/auxdisplay.html>`
+* :ws-doc:`GPIO API <zephyr/hardware/peripherals/gpio.html>`
+* :ws-doc:`Hardware Info API <zephyr/hardware/peripherals/hwinfo.html>`

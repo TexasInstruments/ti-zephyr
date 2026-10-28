@@ -261,4 +261,4 @@ find valid combinations.
 Zephyr Documentation
 ====================
 
-- `Pin Control Zephyr Documentation <../../../../../zephyr/hardware/pinctrl/index.html>`_
+- :ws-doc:`Pin Control Zephyr Documentation <zephyr/hardware/pinctrl/index.html>`
