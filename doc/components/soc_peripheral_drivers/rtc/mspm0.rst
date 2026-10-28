@@ -2,7 +2,7 @@ Overview
 ********
 
 The MSPM0 RTC 
-(`ti,mspm0-rtc <../../../../../zephyr/build/dts/api/bindings/rtc/ti,mspm0-rtc.html>`_)
+(:ws-doc:`ti,mspm0-rtc <zephyr/build/dts/api/bindings/rtc/ti,mspm0-rtc.html>`)
 is a hardware calendar peripheral clocked from a 32768 Hz source. The driver
 runs it in binary calendar mode and implements the standard Zephyr RTC API
 directly on the peripheral, with additional MSPM0-specific timer extensions.
@@ -58,7 +58,7 @@ Devicetree Bindings
 ===================
 
 The node properties are described in 
-`ti,mspm0-rtc <../../../../../zephyr/build/dts/api/bindings/rtc/ti,mspm0-rtc.html>`_
+:ws-doc:`ti,mspm0-rtc <zephyr/build/dts/api/bindings/rtc/ti,mspm0-rtc.html>`
 devicetree binding.
 
 Optional Kconfig

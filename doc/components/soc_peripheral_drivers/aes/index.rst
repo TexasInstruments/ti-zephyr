@@ -96,9 +96,9 @@ Devicetree Bindings
 ===================
 
 The node properties are described in
-`ti,mspm0-aes <../../../../../zephyr/build/dts/api/bindings/rtc/ti,mspm0-aes.html>`_
+:ws-doc:`ti,mspm0-aes <zephyr/build/dts/api/bindings/crypto/ti,mspm0-aes.html>`
 and
-`ti,mspm0-aes-adv <../../../../../zephyr/build/dts/api/bindings/rtc/ti,mspm0-aes-adv.html>`_
+:ws-doc:`ti,mspm0-aes-adv <zephyr/build/dts/api/bindings/crypto/ti,mspm0-aes-adv.html>`
 devicetree binding.
 
 Optional Kconfig
@@ -209,7 +209,7 @@ The ``struct cipher_ctx`` and ``struct cipher_pkt`` fields follow these rules:
 Samples
 *******
 
-- `Crypto Sample <../../../../../zephyr/samples/drivers/crypto/README.html>`_
+- :ws-doc:`Crypto Sample <zephyr/samples/drivers/crypto/README.html>`
 
   - Encrypts and decrypts known test vectors and logs ``Match`` or
     ``Mismatch`` for each mode.
@@ -220,4 +220,4 @@ Samples
 Zephyr Documentation
 ********************
 
-`Crypto Zephyr Documentation <../../../../../zephyr/services/crypto/index.html>`_
+:ws-doc:`Crypto Zephyr Documentation <zephyr/services/crypto/index.html>`

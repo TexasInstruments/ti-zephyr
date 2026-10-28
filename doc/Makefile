@@ -33,9 +33,9 @@ HTMLOUTDIR	   = ./html/$(SOC)
 #   TI_DOCS      auto (default) | always
 #                ti-zephyr repo, tracked per SoC
 # Needs GNU find (-printf).
-ZEPHYR_DIR        ?= ../../zephyr
+ZEPHYR_DIR        ?= $(or $(ZEPHYR_BASE),../../zephyr)
 ZEPHYR_HTML       ?= $(ZEPHYR_DIR)/doc/_build/html
-PUBLISH_DIR       ?= ../../docs
+PUBLISH_DIR       ?= $(ZEPHYR_DIR)/../docs
 ZEPHYR_DOCS       ?= auto
 # Zephyr's default adds -W, so any warning in the upstream docs fails the build.
 ZEPHYR_SPHINXOPTS ?= -j auto --keep-going -T

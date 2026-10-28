@@ -15,6 +15,13 @@ logger = sphinx_logging.getLogger(__name__)
 REPO_BASE = Path(__file__).resolve().parent.parent
 DOC_BASE  = Path(__file__).resolve().parent
 
+# Workspace folder holding ti-zephyr/, zephyr/ and docs/ (the published sites).
+# Taken from ZEPHYR_BASE when set, else the folder next to this repository.
+WORKSPACE_BASE = Path(
+    os.environ.get("ZEPHYR_BASE") or REPO_BASE.parent / "zephyr"
+).resolve().parent
+workspace_docs_dir = str(WORKSPACE_BASE / "docs")
+
 sys.path.insert(0, str(DOC_BASE / "_extensions"))
 
 # -- Project information -------------------------------------------------------
@@ -65,6 +72,7 @@ extensions = [
     "external_content",
     "sphinx.ext.autosectionlabel",
     "ti_ref",
+    "ws_link",
 ]
 
 source_suffix   = {".rst": "restructuredtext"}
