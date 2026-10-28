@@ -40,8 +40,8 @@ opens the matching section of that page.
      - Board page
      - Hardware features
    * - ``am62l_evm``
-     - `AM62L TMDS62LEVM <../../../../zephyr/boards/ti/am62l_evm/doc/index.html>`__
-     - `Supported features <../../../../zephyr/boards/ti/am62l_evm/doc/index.html#supported-features>`__
+     - :ws-doc:`AM62L TMDS62LEVM <zephyr/boards/ti/am62l_evm/doc/index.html>`
+     - :ws-doc:`Supported features <zephyr/boards/ti/am62l_evm/doc/index.html#supported-features>`
 
 Resources
 *********

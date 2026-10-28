@@ -2,7 +2,7 @@ Overview
 ********
 
 The AM62L RTC is a two-layer stack. The K3 wakeup-domain hardware peripheral
-(`ti,k3-rtc-counter <../../../../../zephyr/build/dts/api/bindings/counter/ti,k3-rtc-counter.html>`_)
+(:ws-doc:`ti,k3-rtc-counter <zephyr/build/dts/api/bindings/counter/ti,k3-rtc-counter.html>`)
 exposes a 48-bit, 32 kHz free-running second counter through the Zephyr counter
 API. A ``zephyr,rtc-counter`` child node wraps that counter and implements the
 standard Zephyr RTC API by storing a Unix-epoch offset on top of the raw
@@ -56,9 +56,9 @@ Devicetree Bindings
 
 The node properties are described in the devicetree bindings:
 
-- `ti,k3-rtc-counter <../../../../../zephyr/build/dts/api/bindings/counter/ti,k3-rtc-counter.html>`_
+- :ws-doc:`ti,k3-rtc-counter <zephyr/build/dts/api/bindings/counter/ti,k3-rtc-counter.html>`
   (hardware counter node)
-- `zephyr,rtc-counter <../../../../../zephyr/build/dts/api/bindings/rtc/zephyr,rtc-counter.html>`_
+- :ws-doc:`zephyr,rtc-counter <zephyr/build/dts/api/bindings/rtc/zephyr,rtc-counter.html>`
   (virtual RTC child node)
 
 Samples and Tests
@@ -67,12 +67,12 @@ Samples and Tests
 Samples
 =======
 
-- `RTC Sample <../../../../../zephyr/samples/drivers/rtc/README.html>`_
+- :ws-doc:`RTC Sample <zephyr/samples/drivers/rtc/README.html>`
 
   - Standard Zephyr RTC sample; works unchanged on ``am62l_evm``.
   - Uses the ``zephyr,rtc-counter`` wrapper.
 
-- `Counter Alarm Sample <../../../../../zephyr/samples/drivers/counter/alarm/README.html>`_
+- :ws-doc:`Counter Alarm Sample <zephyr/samples/drivers/counter/alarm/README.html>`
 
   - Sets counter alarms on the underlying ``ti,k3-rtc-counter`` device.
 

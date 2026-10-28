@@ -174,4 +174,4 @@ hardware with a controlled power-cycle between runs.
 Zephyr Documentation
 ====================
 
-- `Watchdog Zephyr Documentation <../../../../../zephyr/hardware/peripherals/watchdog.html>`_
+- :ws-doc:`Watchdog Zephyr Documentation <zephyr/hardware/peripherals/watchdog.html>`

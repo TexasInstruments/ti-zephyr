@@ -49,14 +49,14 @@ opens the matching section of that page.
      - Board page
      - Hardware features
    * - ``lp_mspm0g3507``
-     - `LP-MSPM0G3507 <../../../../zephyr/boards/ti/lp_mspm0g3507/doc/index.html>`__
-     - `Supported features <../../../../zephyr/boards/ti/lp_mspm0g3507/doc/index.html#supported-features>`__
+     - :ws-doc:`LP-MSPM0G3507 <zephyr/boards/ti/lp_mspm0g3507/doc/index.html>`
+     - :ws-doc:`Supported features <zephyr/boards/ti/lp_mspm0g3507/doc/index.html#supported-features>`
    * - ``lp_mspm0g3519``
-     - `LP-MSPM0G3519 <../../../../zephyr/boards/ti/lp_mspm0g3519/doc/index.html>`__
-     - `Supported features <../../../../zephyr/boards/ti/lp_mspm0g3519/doc/index.html#supported-features>`__
+     - :ws-doc:`LP-MSPM0G3519 <zephyr/boards/ti/lp_mspm0g3519/doc/index.html>`
+     - :ws-doc:`Supported features <zephyr/boards/ti/lp_mspm0g3519/doc/index.html#supported-features>`
    * - ``lp_mspm0l2228``
-     - `LP-MSPM0L2228 <../../../../zephyr/boards/ti/lp_mspm0l2228/doc/index.html>`__
-     - `Supported features <../../../../zephyr/boards/ti/lp_mspm0l2228/doc/index.html#supported-features>`__
+     - :ws-doc:`LP-MSPM0L2228 <zephyr/boards/ti/lp_mspm0l2228/doc/index.html>`
+     - :ws-doc:`Supported features <zephyr/boards/ti/lp_mspm0l2228/doc/index.html#supported-features>`
 
 Resources
 *********
