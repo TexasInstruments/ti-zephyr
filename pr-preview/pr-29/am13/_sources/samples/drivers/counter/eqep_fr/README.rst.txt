@@ -71,6 +71,6 @@ Sample Output
    eQEP clock 200000000 Hz; position top 999
    Signal: 100 Hz, 25% duty
    position  100, measured 100 Hz
-   position  300, measured 100 Hz
+   position  200, measured 100 Hz
    ...
    position    0, measured 100 Hz (counter wrapped)
