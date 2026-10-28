@@ -249,7 +249,7 @@ period.
 Samples
 =======
 
-- `Counter Alarm Sample <../../../../../zephyr/samples/drivers/counter/alarm/README.html>`_
+- :ws-doc:`Counter Alarm Sample <zephyr/samples/drivers/counter/alarm/README.html>`
   (passes on ``lp_mspm0g3507``, ``lp_mspm0g3519``, ``lp_mspm0l2228``,
   ``lp_mspm33c321a``, and ``lp_am13e230``)
 
@@ -264,4 +264,4 @@ Tests
 Zephyr Documentation
 ====================
 
-- `Counter Zephyr Documentation <../../../../../zephyr/hardware/peripherals/counter.html>`_
+- :ws-doc:`Counter Zephyr Documentation <zephyr/hardware/peripherals/counter.html>`
