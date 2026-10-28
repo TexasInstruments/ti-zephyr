@@ -1,7 +1,7 @@
 .. _ti-zephyr-samples:
 
-TI Zephyr Samples
-#################
+Samples
+########
 
 TI-specific samples built on top of the Zephyr RTOS, targeting TI development
 boards. Only the samples that apply to |soc_name| are listed.

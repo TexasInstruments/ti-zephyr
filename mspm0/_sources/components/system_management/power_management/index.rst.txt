@@ -330,12 +330,12 @@ MCU may still enter those modes when the peripheral is inactive or suspended.
 Zephyr Documentation
 --------------------
 
-* `Power Management Overview <../../../../../zephyr/services/pm/index.html>`_
-* `System Power Management <../../../../../zephyr/services/pm/system.html>`_
-* `Device Power Management <../../../../../zephyr/services/pm/device.html>`_
-* `Device Runtime Power Management <../../../../../zephyr/services/pm/device_runtime.html>`_
-* `System Timer Drivers <../../../../../zephyr/kernel/services/timing/clocks.html#timer-drivers>`_
-* `Pin Control <../../../../../zephyr/hardware/pinctrl/index.html>`_
-* `Device Runtime PM API <../../../../../zephyr/doxygen/html/group__subsys__pm__device__runtime.html>`_
-* `System Power Policy API <../../../../../zephyr/doxygen/html/group__subsys__pm__sys__policy.html>`_
-* `Kconfig Reference <../../../../../zephyr/kconfig.html>`_
+* :ws-doc:`Power Management Overview <zephyr/services/pm/index.html>`
+* :ws-doc:`System Power Management <zephyr/services/pm/system.html>`
+* :ws-doc:`Device Power Management <zephyr/services/pm/device.html>`
+* :ws-doc:`Device Runtime Power Management <zephyr/services/pm/device_runtime.html>`
+* :ws-doc:`System Timer Drivers <zephyr/kernel/services/timing/clocks.html#timer-drivers>`
+* :ws-doc:`Pin Control <zephyr/hardware/pinctrl/index.html>`
+* :ws-doc:`Device Runtime PM API <zephyr/doxygen/html/group__subsys__pm__device__runtime.html>`
+* :ws-doc:`System Power Policy API <zephyr/doxygen/html/group__subsys__pm__sys__policy.html>`
+* :ws-doc:`Kconfig Reference <zephyr/kconfig.html>`

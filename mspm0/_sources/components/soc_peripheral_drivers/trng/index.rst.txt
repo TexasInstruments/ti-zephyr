@@ -78,7 +78,7 @@ Devicetree Bindings
 ===================
 
 The node properties are described in
-`ti,mspm0-trng <../../../../../zephyr/build/dts/api/bindings/rtc/ti,mspm0-trng.html>`_
+:ws-doc:`ti,mspm0-trng <zephyr/build/dts/api/bindings/rng/ti,mspm0-trng.html>`
 devicetree binding.
 
 Optional Kconfig
@@ -146,4 +146,4 @@ Tests
 Zephyr Documentation
 ********************
 
-`Entropy Zephyr Documentation <../../../../../zephyr/hardware/peripherals/entropy.html>`_
+:ws-doc:`Entropy Zephyr Documentation <zephyr/hardware/peripherals/entropy.html>`

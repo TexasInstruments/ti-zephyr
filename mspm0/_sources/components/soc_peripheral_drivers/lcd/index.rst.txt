@@ -297,12 +297,12 @@ Samples
 In-tree
 -------
 
-- `Auxdisplay Digits Sample <../../../../../zephyr/samples/drivers/auxdisplay_digits/README.html>`_ —
+- :ws-doc:`Auxdisplay Digits Sample <zephyr/samples/drivers/auxdisplay_digits/README.html>` —
   scrolls digits and letters across the display using
   :c:func:`auxdisplay_write` with a moving window.  Listed as
   ``platform_allow: lp_mspm0l2228`` in ``sample.yaml``.  No board overlay
   required; the board DTS already enables the panel.
-- `Auxdisplay Sample <../../../../../zephyr/samples/drivers/auxdisplay/README.html>`_ —
+- :ws-doc:`Auxdisplay Sample <zephyr/samples/drivers/auxdisplay/README.html>` —
   basic write demonstration using the standard auxdisplay API.
 
 Applications (``applications/rtc_temp_lcd/``)
@@ -378,4 +378,4 @@ on hardware in addition to checking return codes.
 Zephyr Documentation
 ====================
 
-- `Auxdisplay Zephyr Documentation <../../../../../zephyr/hardware/peripherals/auxdisplay.html>`_
+- :ws-doc:`Auxdisplay Zephyr Documentation <zephyr/hardware/peripherals/auxdisplay.html>`
