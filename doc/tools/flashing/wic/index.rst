@@ -5,10 +5,6 @@
 WIC based flashing
 ##################
 
-.. note::
-
-   This page is a placeholder. More details will be added later.
-
 AM62L boots from an SD card that is written with a TI WIC image. The WIC image
 is written to the SD card with an etching tool; the application is then placed
 on the card's FAT partition.
