@@ -15,7 +15,7 @@ installation is required.
 Download
 ********
 
-Download the AM13 SDK installer from ``<download-location>``.
+Download the AM13 SDK installer from `AM13E2X-ZEPHYR-SDK page <https://www.ti.com/tool/download/AM13E2X-ZEPHYR-SDK>`__
 
 Install
 *******

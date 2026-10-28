@@ -1,0 +1,319 @@
+.. ti-socs: mspm0 mspm33 am13
+
+.. _ti-zephyr-component-can:
+
+CAN
+###
+
+
+Overview
+========
+
+.. important::
+
+   CAN FD is available on **MSPM0G** and **MSPM33** and **AM13E** devices.
+   MSPM0L devices (``lp_mspm0l2228``) have no CAN controller.
+
+The TI MSPM0G, MSPM33, and AM13E devices integrate a Bosch M_CAN IP
+(``ti,mspm0-canfd``) exposed through Zephyr's standard CAN API
+(``<zephyr/drivers/can.h>``).  The driver (``can_mspm0_canfd``) provides
+TI-specific glue — register access, Message RAM interface, MCANSS
+power/clock/reset sequencing, and ISR routing — and delegates all CAN
+protocol operations to the upstream Bosch M_CAN subsystem
+(``CONFIG_CAN_MCAN``).  Applications use the standard Zephyr CAN API
+identically across all supported boards.
+
+The ``zephyr,canbus`` chosen node is pre-configured in each board's
+devicetree, so applications can obtain the CAN device with
+``DEVICE_DT_GET(DT_CHOSEN(zephyr_canbus))`` without board-specific code.
+
+.. important::
+
+   Two-board external CAN bus communication (physical transceiver, bus
+   wiring, termination) has **not been validated** on any supported board.
+   The driver has been tested only in software loopback mode and with the
+   in-tree API test suite.  Before deploying in a multi-node CAN
+   application, validate bus communication with two boards connected through
+   a CAN transceiver.
+
+Features Supported
+==================
+
+- Classic CAN 2.0B: 11-bit standard and 29-bit extended frame IDs
+- CAN FD: up to 64-byte data payload (``CONFIG_CAN_FD_MODE``,
+  ``CAN_MODE_FD`` flag to :c:func:`can_set_mode`)
+- Transmit (:c:func:`can_send`) with optional TX-complete callback
+- Receive filtering: standard-ID and extended-ID hardware filters
+  (:c:func:`can_add_rx_filter`, :c:func:`can_remove_rx_filter`) with
+  per-filter RX callback
+- Operating modes:
+
+  - Normal (``CAN_MODE_NORMAL``)
+  - Loopback (``CAN_MODE_LOOPBACK``) — transmit frames are received locally
+    without going on the bus
+  - Listen-only (``CAN_MODE_LISTENONLY``) — receives all frames, transmits
+    nothing, does not acknowledge
+  - CAN FD (``CAN_MODE_FD``) — enables FD bit-rate switching (BRS) and up
+    to 64-byte payloads
+
+- Bus error state reporting: :c:enum:`CAN_STATE_ERROR_ACTIVE`,
+  :c:enum:`CAN_STATE_ERROR_WARNING`, :c:enum:`CAN_STATE_ERROR_PASSIVE`,
+  :c:enum:`CAN_STATE_BUS_OFF`, :c:enum:`CAN_STATE_STOPPED`
+- State change callback (:c:func:`can_set_state_change_callback`)
+- Bus-off recovery (:c:func:`can_recover`) when
+  ``CONFIG_CAN_MANUAL_RECOVERY_MODE`` is enabled
+- Bit timing configuration for both the arbitration phase
+  (:c:func:`can_set_timing`) and the CAN FD data phase
+  (:c:func:`can_set_timing_data`)
+- :c:func:`can_get_capabilities`, :c:func:`can_get_core_clock`,
+  :c:func:`can_get_max_filters`
+- Explicit lifecycle control: :c:func:`can_start` / :c:func:`can_stop`
+- Configurable CANCLK divider (÷1, ÷2, ÷4) via ``ti,divider`` devicetree
+  property
+
+Features NOT Supported
+======================
+
+The following ``can_mode_t`` flags are not implemented by the upstream Bosch
+M_CAN subsystem and are not reported by :c:func:`can_get_capabilities`:
+
+- ``CAN_MODE_ONE_SHOT`` — the ``can_mcan`` subsystem does not expose the
+  MCAN ``CCCR.DAR`` (disable automatic retransmission) bit
+- ``CAN_MODE_3_SAMPLES`` — triple-sampling is not exposed by ``can_mcan``
+
+Enabling the Driver
+===================
+
+The CAN node is already enabled in the board devicetree on all supported
+boards.  No overlay is required for basic use.
+
+.. note::
+
+   MSPM0G and MSPM33C each expose **two CANFD instances** in the SoC
+   devicetree (``canfd0`` and ``canfd1``).  Only ``canfd0`` is activated in
+   the board devicetree and set as ``zephyr,canbus``.  To use a second
+   independent CAN bus, enable ``canfd1`` in an application overlay and set
+   it as ``zephyr,canbus`` or access it directly with its node label.
+
+Enable the CAN subsystem in ``prj.conf``:
+
+.. code-block:: kconfig
+
+   CONFIG_CAN=y
+
+For CAN FD:
+
+.. code-block:: kconfig
+
+   CONFIG_CAN=y
+   CONFIG_CAN_FD_MODE=y
+
+For manual bus-off recovery:
+
+.. code-block:: kconfig
+
+   CONFIG_CAN=y
+   CONFIG_CAN_MANUAL_RECOVERY_MODE=y
+
+To enable on a custom board or in an application overlay:
+
+.. code-block:: devicetree
+
+   /* MSPM0G and MSPM33 — node label is canfd0 */
+   &canfd0 {
+           status = "okay";
+           pinctrl-0 = <&canfd0_cantx_pa12 &canfd0_canrx_pa13>;
+           pinctrl-names = "default";
+   };
+
+   /* AM13E — node label is mcan0 */
+   &mcan0 {
+           status = "okay";
+           pinctrl-0 = <&mcan0_tx_pa12 &mcan0_rx_pa11>;
+           pinctrl-names = "default";
+   };
+
+   / {
+           chosen {
+                   zephyr,canbus = &canfd0; /* or &mcan0 for AM13E */
+           };
+   };
+
+Devicetree Properties
+=====================
+
+The ``ti,mspm0-canfd`` binding inherits ``bosch,m_can-base.yaml``, which
+defines the Message RAM layout and bus timing properties used by the M_CAN
+subsystem.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 30 70
+
+   * - Property
+     - Description
+   * - ``ti,divider``
+     - CANCLK divider applied before the MCAN functional clock.  Valid values:
+       ``1`` (default), ``2``, ``4``.
+   * - ``bosch,mram-cfg``
+     - Message RAM layout as an 8-cell array:
+
+       .. code-block:: none
+
+          <offset std-filters ext-filters rx-fifo0 rx-fifo1 rx-buf tx-event-fifo tx-buf>
+
+       SoC default on MSPM33C: ``<0x0 20 8 3 3 0 3 3>``
+       (20 std filters, 8 ext filters, 3+3 RX FIFO entries, 3 TX buffers).
+       SoC default on MSPM0G: ``<0x0 20 8 6 0 0 3 3>``
+       (6 RX FIFO 0 entries, no RX FIFO 1).
+       Override in the board overlay to change the RAM allocation.
+   * - ``reg`` / ``reg-names``
+     - Three named register regions: ``ti_canfd`` (MCANSS wrapper registers),
+       ``m_can`` (Bosch MCAN core registers), ``message_ram`` (shared Message
+       RAM).  All required.
+   * - ``clocks``
+     - Reference to the clock controller providing CANCLK.  Required.
+   * - ``interrupts``
+     - Two interrupt lines (INT line 0 and INT line 1).  Required.
+   * - ``bosch,timestamp-counter-prescaler``
+     - Internal timestamp counter prescaler for ``CONFIG_CAN_RX_TIMESTAMP``.
+       Range 1–16; default 1 (one CAN bit time per timestamp tick).
+       Part of ``bosch,m_can-base.yaml``.
+   * - ``pinctrl-0``, ``pinctrl-names``
+     - Required.  Pin control configuration for CANTX and CANRX.
+
+Optional Kconfig
+================
+
+.. list-table::
+   :header-rows: 1
+   :widths: 35 65
+
+   * - Symbol
+     - Effect
+   * - ``CONFIG_CAN_FD_MODE``
+     - Enables CAN FD support.  Required to use ``CAN_MODE_FD`` and to
+       send or receive frames with up to 64-byte payloads.
+   * - ``CONFIG_CAN_MANUAL_RECOVERY_MODE``
+     - Enables :c:func:`can_recover`.  When set, the driver does not
+       automatically leave bus-off state; the application must call
+       :c:func:`can_recover` explicitly.  Without this option the MCAN
+       subsystem re-enters error-active automatically after 128 × 11
+       consecutive recessive bits.
+   * - ``CONFIG_CAN_STATS``
+     - Enables per-device bus error counters: stuff errors, form errors,
+       ACK errors, bit0/bit1 errors, CRC errors, and RX overruns.
+       Statistics are tracked in ``struct can_driver_data`` and are
+       accessible through the standard Zephyr CAN statistics API.
+   * - ``CONFIG_CAN_RX_TIMESTAMP``
+     - Attaches a hardware timestamp to each received frame.  The timestamp
+       value is placed in ``struct can_frame.timestamp``.  Resolution is
+       one CAN bit time by default (``bosch,timestamp-counter-prescaler``
+       controls the prescaler, range 1–16).
+
+Usage
+=====
+
+Basic CAN Transmit and Receive
+-------------------------------
+
+.. code-block:: c
+
+   #include <zephyr/device.h>
+   #include <zephyr/drivers/can.h>
+
+   static const struct device *const can_dev =
+           DEVICE_DT_GET(DT_CHOSEN(zephyr_canbus));
+
+   static void rx_cb(const struct device *dev, struct can_frame *frame,
+                     void *user_data)
+   {
+           /* process received frame */
+   }
+
+   /* Install an RX filter for standard ID 0x100 */
+   struct can_filter filter = {
+           .id    = 0x100,
+           .mask  = CAN_STD_ID_MASK,
+           .flags = 0,
+   };
+
+   int filter_id = can_add_rx_filter(can_dev, rx_cb, NULL, &filter);
+
+   can_start(can_dev);
+
+   /* Send a classic CAN frame */
+   struct can_frame frame = {
+           .id  = 0x123,
+           .dlc = 8,
+           .data = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 },
+   };
+
+   can_send(can_dev, &frame, K_MSEC(100), NULL, NULL);
+
+CAN FD Transmit
+---------------
+
+.. code-block:: c
+
+   /* Enable CAN FD mode before starting — required for FDF frames */
+   can_set_mode(can_dev, CAN_MODE_FD);
+   can_start(can_dev);
+
+   struct can_frame fd_frame = {
+           .id    = 0x123,
+           .flags = CAN_FRAME_FDF | CAN_FRAME_BRS,
+           .dlc   = can_bytes_to_dlc(8),
+           .data  = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 },
+   };
+
+   can_send(can_dev, &fd_frame, K_MSEC(100), NULL, NULL);
+
+Bus-Off Recovery
+----------------
+
+.. code-block:: c
+
+   /* With CONFIG_CAN_MANUAL_RECOVERY_MODE=y */
+   enum can_state state;
+   can_get_state(can_dev, &state, NULL);
+
+   if (state == CAN_STATE_BUS_OFF) {
+           can_recover(can_dev, K_MSEC(100));
+   }
+
+Samples
+=======
+
+- :ws-doc:`CAN Counter Sample <zephyr/samples/drivers/can/counter/README.html>` —
+  sends periodic CAN frames and counts received frames; uses
+  ``DT_CHOSEN(zephyr_canbus)``.  No board overlay required on supported
+  boards.
+- :ws-doc:`CAN Babbling Sample <zephyr/samples/drivers/can/babbling/README.html>` —
+  generates continuous CAN bus traffic to test bus load.
+- :ws-doc:`ISO-TP Sample <zephyr/samples/subsys/canbus/isotp/README.html>` —
+  demonstrates multi-frame ISO-TP message exchange over CAN; sends a
+  248-byte message and receives it back.  Uses ``DT_CHOSEN(zephyr_canbus)``.
+
+Tests
+=====
+
+- ``tests/drivers/can/api`` — exercises the full Zephyr CAN API: frame
+  transmit and receive, filter add/remove, mode switching, bus state
+  reporting, and bus-off recovery.  A board-specific configuration file
+  ``boards/lp_am13e230.conf`` is included for ``lp_am13e230``.
+  ``lp_mspm0g3507``, ``lp_mspm0g3519``, and ``lp_mspm33c321a`` use the
+  board defaults (no overlay required).
+- ``tests/drivers/can/timing`` — validates bit timing calculations and
+  sample-point accuracy across the supported bitrate range.
+- ``tests/subsys/canbus/isotp/conformance`` — ISO-TP (ISO 15765-2)
+  transport layer conformance: single-frame, first-frame, consecutive-frame
+  and flow-control message exchange.  Builds for MSPM0G and MSPM33.
+- ``tests/subsys/canbus/isotp/implementation`` — ISO-TP implementation
+  tests covering multi-frame segmentation, reassembly, and timeout
+  handling.  Builds for MSPM0G and MSPM33.
+
+Zephyr Documentation
+====================
+
+- :ws-doc:`CAN Zephyr Documentation <zephyr/hardware/peripherals/can/index.html>`
