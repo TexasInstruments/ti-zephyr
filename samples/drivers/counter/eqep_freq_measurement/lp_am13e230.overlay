@@ -1,0 +1,39 @@
+/*
+ * SPDX-FileCopyrightText: 2026 Texas Instruments Incorporated
+ *
+ * SPDX-License-Identifier: LicenseRef-TI-TFL
+ *
+ * PB11 (GPIO43) -> INPUTXBAR17 (ch 16) -> EQEP0A 
+ */
+
+#include <zephyr/dt-bindings/gpio/gpio.h>
+#include <zephyr/dt-bindings/mux/ti_am13e2_xbar_in.h>
+
+/ {
+	aliases {
+		eqep0 = &eqep0;
+	};
+
+	zephyr,user {
+		signal-gpios = <&gpiob 3 GPIO_ACTIVE_HIGH>;
+	};
+};
+
+&xbar1 {
+	status = "okay";
+};
+
+&gpio_pb11 {
+	input-enable;
+	bias-pull-down;
+};
+
+&eqep0 {
+	status = "okay";
+
+	pinctrl-0 = <&gpio_pb11>;
+	pinctrl-names = "default";
+
+	mux-states = <&xbar1 16 AM13E2_XBAR_IN_STATE(43, 1)>;
+	mux-state-names = "qepa";
+};

@@ -1,0 +1,25 @@
+sample:
+  name: EQEP Frequency Measurement
+  description: Measure frequency of GPIO generated pulse train
+    using EQEP.
+common:
+  tags:
+    - drivers
+    - counter
+  depends_on:
+    - counter
+    - gpio
+  harness: console
+  harness_config:
+    fixture: gpio_eqep_loopback
+    type: multi_line
+    ordered: true
+    regex:
+      - "TI EQEP frequency measurement sample"
+      - "eQEP clock ([0-9]+) Hz; position top ([0-9]+)"
+      - "Signal: ([0-9]+) Hz, ([0-9]+)% duty"
+      - "position\\s+([0-9]+), measured (99|100|101) Hz(.*)"
+tests:
+  sample.drivers.counter.eqep_freq_measurement:
+    platform_allow:
+      - lp_am13e230
