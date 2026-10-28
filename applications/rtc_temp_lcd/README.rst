@@ -80,11 +80,10 @@ Adding a new board requires a board overlay defining five aliases:
 Building and Running
 ********************
 
-.. zephyr-app-commands::
-   :zephyr-app: ti-zephyr/applications/rtc_temp_lcd
-   :board: lp_mspm0l2228
-   :goals: build flash
-   :compact:
+.. code-block:: console
+
+   west build -p always -b lp_mspm0l2228 ti-zephyr/applications/rtc_temp_lcd
+   west flash --openocd ../openocd/src/openocd --openocd-search ../openocd/tcl/
 
 Open a serial terminal at 115200 baud. Flash immediately after build
 for best RTC timestamp accuracy.
@@ -152,8 +151,8 @@ from ``SYSCTL_TEMP_SENSE_CAL`` (``0x41C40170`` on G-series,
 References
 **********
 
-* :ref:`adc_api`
-* :ref:`rtc_api`
-* :ref:`auxdisplay_api`
-* :ref:`gpio_api`
-* :ref:`hwinfo_api`
+* `ADC API <../../../../zephyr/hardware/peripherals/adc.html>`_
+* `RTC API <../../../../zephyr/hardware/peripherals/rtc.html>`_
+* `Auxdisplay API <../../../../zephyr/hardware/peripherals/auxdisplay.html>`_
+* `GPIO API <../../../../zephyr/hardware/peripherals/gpio.html>`_
+* `Hardware Info API <../../../../zephyr/hardware/peripherals/hwinfo.html>`_
