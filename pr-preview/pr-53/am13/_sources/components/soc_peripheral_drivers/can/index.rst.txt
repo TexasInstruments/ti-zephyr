@@ -285,13 +285,13 @@ Bus-Off Recovery
 Samples
 =======
 
-- `CAN Counter Sample <../../../../../zephyr/samples/drivers/can/counter/README.html>`_ —
+- :ws-doc:`CAN Counter Sample <zephyr/samples/drivers/can/counter/README.html>` —
   sends periodic CAN frames and counts received frames; uses
   ``DT_CHOSEN(zephyr_canbus)``.  No board overlay required on supported
   boards.
-- `CAN Babbling Sample <../../../../../zephyr/samples/drivers/can/babbling/README.html>`_ —
+- :ws-doc:`CAN Babbling Sample <zephyr/samples/drivers/can/babbling/README.html>` —
   generates continuous CAN bus traffic to test bus load.
-- `ISO-TP Sample <../../../../../zephyr/samples/subsys/canbus/isotp/README.html>`_ —
+- :ws-doc:`ISO-TP Sample <zephyr/samples/subsys/canbus/isotp/README.html>` —
   demonstrates multi-frame ISO-TP message exchange over CAN; sends a
   248-byte message and receives it back.  Uses ``DT_CHOSEN(zephyr_canbus)``.
 
@@ -316,4 +316,4 @@ Tests
 Zephyr Documentation
 ====================
 
-- `CAN Zephyr Documentation <../../../../../zephyr/hardware/peripherals/can/index.html>`_
+- :ws-doc:`CAN Zephyr Documentation <zephyr/hardware/peripherals/can/index.html>`

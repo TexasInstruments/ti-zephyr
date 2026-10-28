@@ -203,7 +203,7 @@ Samples
 In-tree
 -------
 
-- `Watchdog Sample <../../../../../zephyr/samples/drivers/watchdog/README.html>`_ —
+- :ws-doc:`Watchdog Sample <zephyr/samples/drivers/watchdog/README.html>` —
   basic feed loop using the ``watchdog0`` alias.  Board overlays for
   ``lp_mspm0g3507``, ``lp_mspm0g3519``, and ``lp_mspm0l2228`` are included
   (``samples/drivers/watchdog/boards/``).
@@ -237,4 +237,4 @@ Tests
 Zephyr Documentation
 ====================
 
-- `Watchdog Zephyr Documentation <../../../../../zephyr/hardware/peripherals/watchdog.html>`_
+- :ws-doc:`Watchdog Zephyr Documentation <zephyr/hardware/peripherals/watchdog.html>`

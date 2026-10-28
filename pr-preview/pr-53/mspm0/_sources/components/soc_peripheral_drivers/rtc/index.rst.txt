@@ -16,4 +16,4 @@ RTC
 Zephyr Documentation
 ********************
 
-`RTC Zephyr Documentation <../../../../../zephyr/hardware/peripherals/rtc.html>`_
+:ws-doc:`RTC Zephyr Documentation <zephyr/hardware/peripherals/rtc.html>`

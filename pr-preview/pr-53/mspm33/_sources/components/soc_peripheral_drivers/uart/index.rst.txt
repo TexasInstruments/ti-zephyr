@@ -201,7 +201,7 @@ Runtime Configuration Example
 Zephyr Documentation
 ====================
 
-`Zephyr UART Documentation <../../../../../zephyr/hardware/peripherals/uart.html>`_
+:ws-doc:`Zephyr UART Documentation <zephyr/hardware/peripherals/uart.html>`
 
 Samples and Tests
 *****************
@@ -209,7 +209,7 @@ Samples and Tests
 Samples
 =======
 
-- `UART Echo Sample <../../../../../zephyr/samples/drivers/uart/echo_bot/README.html>`_
+- :ws-doc:`UART Echo Sample <zephyr/samples/drivers/uart/echo_bot/README.html>`
 
 Tests
 =====
