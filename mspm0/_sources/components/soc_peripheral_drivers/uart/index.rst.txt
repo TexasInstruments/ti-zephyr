@@ -5,8 +5,6 @@
 UART
 ####
 
-.. rst-class:: ti-subtitle
-
 .. important::
 
    The UART driver supports both MSPM0 UART and UNICOMM UART variants:
@@ -21,6 +19,7 @@ Features Supported
 - Interrupt-driven API (enabled with ``CONFIG_UART_INTERRUPT_DRIVEN``)
 - Runtime configuration (enabled with ``CONFIG_UART_USE_RUNTIME_CONFIGURE``)
 - Hardware flow control (RTS/CTS)
+- Error reporting through :c:func:`uart_err_check` (break and framing errors)
 - Power management (device runtime PM and system PM)
 - Configurable RX/TX FIFO thresholds
 - Selectable clock source and divider
@@ -198,11 +197,6 @@ Runtime Configuration Example
    }
 
 
-Zephyr Documentation
-====================
-
-:ws-doc:`Zephyr UART Documentation <zephyr/hardware/peripherals/uart.html>`
-
 Samples and Tests
 *****************
 
@@ -217,3 +211,8 @@ Tests
 - ``uart_elementary`` - Validates basic UART driver functions.
 - ``uart_interrupt_api`` - Tests interrupt-driven API
 - ``uart_mix_fifo_poll`` - Validates that uart_poll_out call is resilient to being interrupted by another uart API call.
+
+Zephyr Documentation
+********************
+
+:ws-doc:`UART Zephyr Documentation <zephyr/hardware/peripherals/uart.html>`

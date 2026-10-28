@@ -1,7 +1,7 @@
 .. _ti-zephyr-soc-peripheral-drivers:
 
-SoC Peripheral Drivers
-######################
+Peripheral Drivers
+##################
 
 Drivers for the on-chip peripherals of |soc_name| devices.
 

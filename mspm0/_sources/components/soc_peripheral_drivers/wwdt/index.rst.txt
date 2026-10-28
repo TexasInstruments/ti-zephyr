@@ -208,7 +208,7 @@ In-tree
   ``lp_mspm0g3507``, ``lp_mspm0g3519``, and ``lp_mspm0l2228`` are included
   (``samples/drivers/watchdog/boards/``).
 
-TI-SDK (``samples/drivers/watchdog/``)
+TI-ZEPHYR (``samples/drivers/watchdog/``)
 --------------------------------------------
 
 - **watchdog_window** — demonstrates all three feed zones across two boots:

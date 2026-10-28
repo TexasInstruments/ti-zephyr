@@ -342,7 +342,7 @@ In-tree
   mode.  Board overlay for ``lp_mspm0g3507`` is included
   (``samples/drivers/pwm/capture/boards/lp_mspm0g3507.overlay``).
 
-TI-SDK (``samples/drivers/pwm/``)
+TI-ZEPHYR (``samples/drivers/pwm/``)
 ---------------------------------------
 
 - **pwm_center_align** — demonstrates ``CENTER_ALIGN`` mode on

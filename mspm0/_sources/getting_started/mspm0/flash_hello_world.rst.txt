@@ -2,12 +2,12 @@ Step 4: Flash Hello World Example
 #################################
 
 Flash the application built in the previous step. Run the command from the same
-``zephyr`` folder used for the build:
+``ti-zephyr`` folder used for the build:
 
 .. code-block:: shell
 
-   cd <sdk-install-dir>/zephyr
-   west flash --openocd ../openocd/src/openocd --openocd-search ../openocd/tcl/
+   cd <sdk-install-dir>/ti-zephyr
+   west flash
 
 Verify
 ******
