@@ -12,6 +12,7 @@ PWM
       :maxdepth: 1
 
       am62l/ecap
+      am62l/ehrpwm
 
 .. only:: mspm0 or mspm33
 
