@@ -16,8 +16,8 @@ SDK installation.
 Flash an application by running ``west flash`` from the ``zephyr`` folder and
 pointing it at the SDK's OpenOCD:
 
-.. code-block:: shell
+   .. code-block:: shell
 
-   west flash --openocd ../openocd/src/openocd --openocd-search ../openocd/tcl/
+      west flash --openocd <openocd-dir>/src/openocd --openocd-search <openocd-dir>/tcl
 
 See :doc:`/getting_started/index` for a complete build and flash walkthrough.
