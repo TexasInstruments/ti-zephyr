@@ -1,0 +1,64 @@
+<component>
+  <previews>
+    <preview width="80" height="320" style_bg_color="0xF0F4F6"/>
+  </previews>
+
+  <!-- Stands in the gap to the left of the appliance, starting below its
+       control panel and running to the screen edge. The track is a pill drawn
+       8px longer than the space it occupies, so the bottom radius falls past
+       the screen edge and clips square - rounded top, flat bottom.
+
+       Two layers of identical geometry: the bar is the sensed level
+       (subject_water_level), and a slider on top of it whose track and fill are
+       invisible leaves only its knob, drawn as a tick at the target
+       (subject_water_target). The knob sits on the edge a fill of that value
+       would have, so the water visibly rises to the tick. The slider is not
+       clickable: its bind_value is two-way and must never write the target.
+
+       The box is as wide as the tick, with the track inset 4px, because the
+       tick overhangs the track and overflow_visible does not take effect in
+       the preview runtime. It ends 1px short of the appliance image. -->
+  <styles>
+    <style name="style_box" width="14" height="180"
+           bg_opa="0" border_width="0" pad_all="0"/>
+    <!-- Geometry only, shared by the bar and the slider. Kept out of the
+         attributes: x/width/height there are local styles and remove_style_all
+         would wipe them. -->
+    <style name="style_lane" x="4" width="8" height="180"/>
+    <!-- 0xD5DBDF, not const_track: the canvas gradient runs 0xF0F4F6 -> 0xE9EEF1
+         and const_track sits inside that range, so the empty part vanished. -->
+    <style name="style_track"
+           bg_color="0xD5DBDF" bg_opa="100%"
+           radius="32767" border_width="0" pad_all="0"/>
+    <style name="style_fill"
+           bg_color="#const_accent" bg_opa="100%" radius="32767"/>
+    <!-- The knob starts as an 8x8 square, the track's width; the pads grow it
+         to 14px across (4 left, 2 right, to clear the appliance) and shrink it
+         to 2px tall. Primary ink reads on both the grey track and the blue fill. -->
+    <style name="style_tick"
+           bg_color="#const_text_primary" bg_opa="100%" radius="1"
+           border_width="0"
+           pad_left="4" pad_right="2" pad_top="-3" pad_bottom="-3"/>
+  </styles>
+
+  <view extends="lv_obj" scrollable="false" clickable="false">
+    <remove_style_all/>
+    <style name="style_box"/>
+
+    <lv_bar min_value="0" max_value="100" orientation="vertical"
+            bind_value="subject_water_level">
+      <remove_style_all/>
+      <style name="style_lane"/>
+      <style name="style_track"/>
+      <style name="style_fill" selector="indicator"/>
+    </lv_bar>
+
+    <lv_slider min_value="0" max_value="100"
+               orientation="vertical" bind_value="subject_water_target"
+               clickable="false">
+      <remove_style_all/>
+      <style name="style_lane"/>
+      <style name="style_tick" selector="knob"/>
+    </lv_slider>
+  </view>
+</component>

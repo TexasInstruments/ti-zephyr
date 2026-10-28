@@ -1,0 +1,160 @@
+<screen>
+	<view extends="lv_obj" width="#const_screen_w" height="#const_screen_h" scrollable="false">
+		<style name="style_screen_base" />
+		<subject_set_int_event subject="subject_state" value="#ref_state_idle" trigger="screen_loaded" />
+
+		<lv_obj width="#const_screen_w" height="#const_screen_h" x="0" y="0" scrollable="false" clickable="false">
+			<style name="style_frame_door_outer" />
+			<bind_flag_if_eq flag="hidden" subject="subject_door" ref_value="#ref_door_locked" />
+		</lv_obj>
+		<lv_obj width="468" height="308" x="6" y="6" scrollable="false" clickable="false">
+			<style name="style_frame_door_inner" />
+			<bind_flag_if_eq flag="hidden" subject="subject_door" ref_value="#ref_door_locked" />
+		</lv_obj>
+
+		<column x="#const_gutter" y="22" gap="0">
+			<lv_image src="img_logostrip" clickable="false" style_margin_bottom="3" style_margin_left="2" />
+			<label text="Bubble Wash">
+				<style name="style_heading" />
+				<style name="style_ink" />
+			</label>
+			<row gap="5" cross_align="center">
+				<label text="Cotton" bind_text="subject_program_name">
+					<style name="style_meta" />
+					<style name="style_ink" />
+					<bind_flag_if_lt flag="hidden" subject="subject_program" ref_value="#ref_prog_cotton" />
+				</label>
+				<label text=".">
+					<style name="style_meta" />
+					<style name="style_ink_3" />
+					<bind_flag_if_lt flag="hidden" subject="subject_program" ref_value="#ref_prog_cotton" />
+				</label>
+				<label text="1200" bind_text="subject_spin_rpm" bind_text-fmt="%d rpm">
+					<style name="style_meta" />
+					<style name="style_ink_2" />
+				</label>
+				<label text=".">
+					<style name="style_meta" />
+					<style name="style_ink_3" />
+				</label>
+				<label text="62" bind_text="subject_water_target" bind_text-fmt="%d%% water">
+					<style name="style_meta" />
+					<style name="style_ink_2" />
+				</label>
+			</row>
+		</column>
+
+		<column x="#const_col_home" y="108" gap="9">
+			<overline text="FABRIC" />
+			<row gap="6">
+				<btn_fabric icon="icon_prog_cotton" index="#ref_prog_cotton" />
+				<btn_fabric icon="icon_prog_eco" index="#ref_prog_eco" />
+				<btn_fabric icon="icon_prog_synth" index="#ref_prog_synth" />
+				<btn_fabric icon="icon_prog_quick" index="#ref_prog_quick" />
+			</row>
+		</column>
+
+		<lv_obj
+			x="#const_col_home"
+			y="205"
+			width="226"
+			height="content"
+			scrollable="false"
+			clickable="false"
+			style_bg_opa="0"
+			style_border_width="0"
+			style_shadow_width="0"
+			style_pad_all="0"
+			style_layout="flex"
+			style_flex_flow="row"
+			style_flex_main_place="space_between"
+			style_flex_cross_place="end"
+			style_flex_track_place="end"
+		>
+			<overline text="TEMPERATURE" />
+			<label text="Not set">
+				<style name="style_body_strong" />
+				<style name="style_ink_3" />
+				<bind_flag_if_not_eq flag="hidden" subject="subject_temp_idx" ref_value="0" />
+			</label>
+			<label text="40" bind_text="subject_temp_c" bind_text-fmt="%d°">
+				<style name="style_body_strong" />
+				<style name="style_ink" />
+				<bind_flag_if_eq flag="hidden" subject="subject_temp_idx" ref_value="0" />
+			</label>
+		</lv_obj>
+		<slider_temp x="#const_col_home" y="240" />
+
+		<water_level x="4" y="148" />
+
+		<lv_image src="img_machine" x="18" y="108" clickable="false" />
+
+		<drum x="15" y="137">
+			<bind_flag_if_not_eq flag="hidden" subject="subject_ready" ref_value="#ref_on" />
+		</drum>
+
+		<lv_button
+			x="54"
+			y="175"
+			width="125"
+			height="125"
+			style_bg_opa="0"
+			style_border_width="0"
+			style_shadow_width="0"
+			style_radius="32767"
+			style_pad_all="0"
+		>
+			<subject_toggle_event subject="subject_door" trigger="clicked" />
+		</lv_button>
+
+		<lv_obj
+			x="98"
+			y="214"
+			width="36"
+			height="36"
+			scrollable="false"
+			clickable="false"
+			style_radius="32767"
+			style_bg_color="#const_on_accent"
+			style_bg_opa="100%"
+			style_border_width="0"
+			style_pad_all="0"
+			style_layout="flex"
+			style_flex_flow="row"
+			style_flex_main_place="center"
+			style_flex_cross_place="center"
+			style_flex_track_place="center"
+		>
+			<bind_flag_if_eq flag="hidden" subject="subject_door" ref_value="#ref_door_locked" />
+			<lv_image src="icon_unlock" clickable="false">
+				<style name="style_icon_accent" />
+			</lv_image>
+		</lv_obj>
+
+		<lv_obj
+			x="#const_col_home"
+			y="0"
+			width="226"
+			height="#const_screen_h"
+			scrollable="false"
+			clickable="false"
+			style_bg_opa="0"
+			style_border_width="0"
+			style_shadow_width="0"
+			style_pad_all="0"
+		>
+			<key_hint text="START" y="30">
+				<bind_flag_if_not_eq flag="hidden" subject="subject_ready" ref_value="#ref_on" />
+				<subject_set_int_event subject="subject_state" value="#ref_state_running" trigger="clicked" />
+				<screen_create_event screen="cycle" trigger="clicked" />
+			</key_hint>
+			<key_blocked>
+				<bind_flag_if_eq flag="hidden" subject="subject_ready" ref_value="#ref_on" />
+			</key_blocked>
+		</lv_obj>
+
+		<btn_chip icon="icon_options" x="414" y="30">
+			<screen_create_event screen="setup" trigger="clicked" />
+		</btn_chip>
+	</view>
+</screen>

@@ -1,0 +1,170 @@
+<screen>
+	<view extends="lv_obj" width="#const_screen_w" height="#const_screen_h" scrollable="false">
+		<style name="style_screen_base" />
+
+		<!-- Arriving on this screen starts the wash - see custom/wash_sim.c. -->
+		<event_cb callback="wash_sim_screen_loaded_cb" trigger="screen_load_start" />
+
+		<nav_header title="Washing">
+			<bind_flag_if_eq flag="hidden" subject="subject_state" ref_value="#ref_state_complete" />
+		</nav_header>
+		<btn_back x="0" y="0">
+			<bind_flag_if_eq flag="hidden" subject="subject_state" ref_value="#ref_state_complete" />
+			<screen_create_event screen="home" trigger="clicked" />
+		</btn_back>
+
+		<!-- Same place as on home; the level sensor drives it via subject_water_level. -->
+		<water_level x="4" y="148" />
+
+		<lv_image src="img_machine" x="18" y="108" clickable="false" />
+		<drum name="hero_drum" x="15" y="137" />
+
+		<lv_button
+			x="54"
+			y="175"
+			width="125"
+			height="125"
+			style_bg_opa="0"
+			style_border_width="0"
+			style_shadow_width="0"
+			style_radius="32767"
+			style_pad_all="0"
+		>
+			<bind_flag_if_not_eq flag="hidden" subject="subject_state" ref_value="#ref_state_complete" />
+			<subject_set_int_event subject="subject_door" value="#ref_door_open" trigger="clicked" />
+			<subject_set_int_event subject="subject_state" value="#ref_state_idle" trigger="clicked" />
+			<screen_create_event screen="home" trigger="clicked" />
+		</lv_button>
+
+		<lv_obj
+			name="grp_running"
+			width="226"
+			height="150"
+			x="#const_col_home"
+			y="146"
+			scrollable="false"
+			clickable="false"
+			style_bg_opa="0"
+			style_border_width="0"
+			style_shadow_width="0"
+			style_pad_all="0"
+			style_pad_row="8"
+			style_layout="flex"
+			style_flex_flow="column"
+			style_flex_cross_place="center"
+			style_flex_track_place="center"
+		>
+			<bind_flag_if_eq flag="hidden" subject="subject_state" ref_value="#ref_state_complete" />
+
+			<row gap="7" cross_align="end">
+				<label text="2:15" bind_text="subject_time_left_str">
+					<style name="style_hero" />
+					<style name="style_ink" />
+				</label>
+				<label text="h" bind_text="subject_time_unit_str" style_translate_y="-8">
+					<style name="style_hero_unit" />
+					<style name="style_ink_2" />
+				</label>
+			</row>
+
+			<row gap="10" cross_align="center">
+				<chip text="Running" />
+				<label text="0" bind_text="subject_progress" bind_text-fmt="%d%%">
+					<style name="style_meta" />
+					<style name="style_ink_2" />
+				</label>
+			</row>
+		</lv_obj>
+
+		<card_phase w="445" x="17" y="57">
+			<bind_flag_if_eq flag="hidden" subject="subject_state" ref_value="#ref_state_complete" />
+		</card_phase>
+
+		<lv_image src="img_logostrip" x="202" y="20" clickable="false">
+			<bind_flag_if_not_eq flag="hidden" subject="subject_state" ref_value="#ref_state_complete" />
+		</lv_image>
+
+		<lv_obj
+			name="grp_complete"
+			width="226"
+			height="228"
+			x="#const_col_home"
+			y="60"
+			scrollable="false"
+			clickable="false"
+			style_bg_opa="0"
+			style_border_width="0"
+			style_shadow_width="0"
+			style_pad_all="0"
+			style_pad_top="44"
+			style_pad_row="22"
+			style_layout="flex"
+			style_flex_flow="column"
+			style_flex_cross_place="start"
+			style_flex_track_place="start"
+		>
+			<bind_flag_if_not_eq flag="hidden" subject="subject_state" ref_value="#ref_state_complete" />
+
+			<column gap="3" cross_align="start">
+				<label text="Cycle complete">
+					<style name="style_heading" />
+					<style name="style_ink" />
+				</label>
+				<label text="Open the door to unload">
+					<style name="style_body" />
+					<style name="style_ink_2" />
+				</label>
+			</column>
+
+			<column gap="4" cross_align="start">
+				<overline text="THIS WASH" />
+				<row gap="7" cross_align="center">
+					<label text="Cotton" bind_text="subject_program_name">
+						<style name="style_body_strong" />
+						<style name="style_ink" />
+						<bind_flag_if_lt flag="hidden" subject="subject_program" ref_value="#ref_prog_cotton" />
+					</label>
+					<label text="40" bind_text="subject_temp_c" bind_text-fmt="at %d°">
+						<style name="style_meta" />
+						<style name="style_ink_2" />
+						<bind_flag_if_lt flag="hidden" subject="subject_temp_c" ref_value="20" />
+					</label>
+				</row>
+				<row gap="7" cross_align="center">
+					<label text="2h 15m" bind_text="subject_duration_str">
+						<style name="style_body_strong" />
+						<style name="style_ink" />
+					</label>
+					<label text="1200" bind_text="subject_spin_rpm" bind_text-fmt="spun at %d rpm">
+						<style name="style_meta" />
+						<style name="style_ink_2" />
+					</label>
+				</row>
+			</column>
+		</lv_obj>
+
+		<lv_obj
+			x="#const_col_home"
+			y="0"
+			width="226"
+			height="#const_screen_h"
+			scrollable="false"
+			clickable="false"
+			style_bg_opa="0"
+			style_border_width="0"
+			style_shadow_width="0"
+			style_pad_all="0"
+		>
+			<key_hint
+				text="STOP"
+				hint="Long press"
+				hide_hint="false"
+				tone="style_key_danger"
+				tone_pressed="style_key_danger_pressed"
+			>
+				<bind_flag_if_eq flag="hidden" subject="subject_state" ref_value="#ref_state_complete" />
+				<subject_set_int_event subject="subject_state" value="#ref_state_complete" trigger="long_pressed" />
+			</key_hint>
+		</lv_obj>
+	</view>
+</screen>
