@@ -229,10 +229,10 @@ GPIO API.
 Samples
 =======
 
-- `Blinky Sample <../../../../../zephyr/samples/basic/blinky/README.html>`_ —
+- :ws-doc:`Blinky Sample <zephyr/samples/basic/blinky/README.html>` —
   toggles the ``led0`` alias using :c:func:`gpio_pin_toggle_dt`.  Works on
   all supported boards without any overlay.
-- `Button Sample <../../../../../zephyr/samples/basic/button/README.html>`_ —
+- :ws-doc:`Button Sample <zephyr/samples/basic/button/README.html>` —
   reads the ``sw0`` alias and mirrors its state to ``led0``.  Uses
   :c:func:`gpio_pin_interrupt_configure` with ``GPIO_INT_EDGE_TO_ACTIVE``.
   Works on all supported boards.
@@ -252,4 +252,4 @@ Tests
 Zephyr Documentation
 ====================
 
-- `GPIO Zephyr Documentation <../../../../../zephyr/hardware/peripherals/gpio.html>`_
+- :ws-doc:`GPIO Zephyr Documentation <zephyr/hardware/peripherals/gpio.html>`

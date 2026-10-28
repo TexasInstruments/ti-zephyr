@@ -15,5 +15,5 @@ Welcome to the **Zephyr SDK for** |soc_name| documentation.
    release_notes/*/index
    board_support/*/index
    components/index
-   samples_and_tests/index
+   samples_tests_and_applications/index
    tools/index

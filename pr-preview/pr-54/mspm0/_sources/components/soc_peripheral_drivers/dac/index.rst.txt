@@ -191,7 +191,7 @@ Samples and Tests
 Samples
 =======
 
-- `DAC Sample (Outputs Sawtooth Wave) <../../../../../zephyr/samples/drivers/dac/README.html#dac>`_
+- :ws-doc:`DAC Sample (Outputs Sawtooth Wave) <zephyr/samples/drivers/dac/README.html#dac>`
 
 Tests
 =====
@@ -202,4 +202,4 @@ Tests
 Zephyr Documentation
 ====================
 
-- `DAC Zephyr Documentation <../../../../../zephyr/hardware/peripherals/dac.html>`_
+- :ws-doc:`DAC Zephyr Documentation <zephyr/hardware/peripherals/dac.html>`

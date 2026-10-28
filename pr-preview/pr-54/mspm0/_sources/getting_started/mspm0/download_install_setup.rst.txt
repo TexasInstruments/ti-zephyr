@@ -26,5 +26,26 @@ Run the installer and follow its prompts. The SDK is installed to
 Setup
 *****
 
-Any additional files or settings required after installation will be listed
-here.
+Run the setup script once after the installation:
+
+.. code-block:: shell
+
+   cd <sdk-install-dir>
+   source setup_env.sh
+
+The script checks that the host packages are present (``git``, ``cmake``,
+``ninja-build``, ``gperf``, ``python3`` and ``python3-venv``; it prints the
+``sudo apt-get`` command to install any that are missing and exits, it does not
+install them itself), creates a Python virtual environment in
+``<sdk-install-dir>/.venv`` with ``west`` and the Python requirements of Zephyr
+(Python 3.12 or later is required), and prepares the bundled host tools.
+
+In every new terminal, activate the environment before building or flashing:
+
+.. code-block:: shell
+
+   source <sdk-install-dir>/.venv/bin/activate
+
+Activating the environment sets ``ZEPHYR_BASE`` and ``ZEPHYR_SDK_INSTALL_DIR``,
+so ``west`` finds the Zephyr tree and the toolchain in ``<sdk-install-dir>``.
+No global CMake registry entries are written.
