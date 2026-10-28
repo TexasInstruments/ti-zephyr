@@ -2,7 +2,8 @@ Step 3: Build Hello World Example
 #################################
 
 Build the Hello World sample (``ti-zephyr/samples/hello_world``) from the
-``zephyr`` folder of the SDK.
+``zephyr`` folder of the SDK, with the Python environment activated as
+described in the previous step.
 
 Replace ``<board>`` with one of ``lp_mspm0g3507``, ``lp_mspm0g3519`` or
 ``lp_mspm0l2228``:
