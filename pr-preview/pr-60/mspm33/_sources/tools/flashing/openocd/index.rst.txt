@@ -5,10 +5,6 @@
 OpenOCD
 #######
 
-.. note::
-
-   This page is a placeholder. More details will be added later.
-
 `OpenOCD <https://openocd.org>`_ is the open-source on-chip debugger that
 ``west flash`` uses to program |soc_name| boards. It is included in the Zephyr
 SDK installation.

@@ -2,11 +2,7 @@ Step 1: Download, Install and Setup the SDK and Tools
 #####################################################
 
 .. note::
-
-   This page is a placeholder. The download location and installation steps
-   will be added once the MSPM0 SDK installer is finalized.
-
-This guide covers Ubuntu version 24.04 LTS and later.
+   This guide covers Ubuntu version 24.04 LTS and later.
 
 The SDK installer places the Zephyr workspace, toolchain and flashing tools in
 <sdk-install-dir>. A few host packages must still be installed; see Setup below.
@@ -21,6 +17,29 @@ Install
 
 Run the installer and follow its prompts. The SDK is installed to
 ``<sdk-install-dir>``, which the following steps refer to.
+
+Once the installer is downloaded on the system, open the properties of the `.run` file and toggle the option for `Executable as Program` to `on`
+
+Run the installer and follow the below follow
+
+Opening Screen of the installer (Click Forward) 
+
+.. image:: ../../images/Install_Step_1.png
+
+Choose installation directory (by default it chooses <home>/ti/<SOC_SDK>) -
+
+.. image:: ../../images/Install_Step_2.png
+
+Wait for the Installation to complete -
+
+.. image:: ../../images/Install_Step_3.png
+
+Click finish -
+
+.. image:: ../../images/Install_Step_4.png
+
+**The SDK is installed**
+
 
 Setup
 *****
