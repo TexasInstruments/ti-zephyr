@@ -1,9 +1,10 @@
-.. zephyr:code-sample:: mspm0_adc_uart_pm
-   :name: MSPM0 ADC sampling with power management
-   :relevant-api: adc_interface pm_apis
+.. _mspm0_adc_uart_pm:
 
-   Sample an ADC input every three seconds while using system and device power
-   management on TI MSPM0 LaunchPads.
+MSPM0 ADC sampling with power management
+########################################
+
+Sample an ADC input every three seconds while using system and device power
+management on TI MSPM0 LaunchPads.
 
 Overview
 ********

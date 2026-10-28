@@ -27,7 +27,7 @@ Requirements
 
 A board with a ``ti,tidss`` display controller as the ``zephyr,display``
 chosen node, reporting ``PIXEL_FORMAT_ARGB_8888``. Two framebuffers are
-double-buffered on the heap; :kconfig:option:`CONFIG_HEAP_MEM_POOL_ADD_SIZE_SAMPLE`
+double-buffered on the heap; ``CONFIG_HEAP_MEM_POOL_ADD_SIZE_SAMPLE``
 must cover at least ``2 x width x height x 4`` bytes (the default, 16 MiB,
 covers up to 1920x1080).
 
