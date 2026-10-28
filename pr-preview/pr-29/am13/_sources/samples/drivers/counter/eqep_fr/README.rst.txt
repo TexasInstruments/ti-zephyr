@@ -18,8 +18,7 @@ and the change in position over each 1 second window is the measured
 frequency in hertz.
 
 The position counter runs from 0 to 999 and then restarts, so it wraps every
-few windows. The first window is discarded because it opens partway through a
-signal period. Later readings within 1 Hz of 100 Hz are in tolerance: the
+few windows. Readings within 1 Hz of 100 Hz are in tolerance: the
 software-timed edges can gain or lose one count per window. A reading outside
 that range is marked ``[out of tolerance]``.
 
@@ -69,8 +68,9 @@ Sample Output
 .. code-block:: console
 
    TI EQEP frequency measurement sample
-   Signal: 100 Hz, 25% duty; eQEP clock 200000000 Hz; position top 999
-   position  200, measured 100 Hz
+   eQEP clock 200000000 Hz; position top 999
+   Signal: 100 Hz, 25% duty
+   position  100, measured 100 Hz
    position  300, measured 100 Hz
    ...
    position    0, measured 100 Hz (counter wrapped)
