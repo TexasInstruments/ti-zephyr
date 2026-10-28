@@ -1,0 +1,384 @@
+<globals>
+	<api>
+	</api>
+
+	<consts>
+		<color name="const_text_primary" value="0x14181B" />
+		<color name="const_text_secondary" value="0x8B9197" />
+		<color name="const_text_tertiary" value="0xAEB4B9" />
+		<color name="const_text_overline" value="0x4E565C" />
+		<color name="const_surface_canvas" value="0xF0F4F6" />
+		<color name="const_surface_card" value="0xFBFBFC" />
+		<color name="const_border" value="0xE4E6EB" />
+		<color name="const_divider" value="0xEDEFF1" />
+		<color name="const_track" value="0xE4E7E9" />
+		<color name="const_on_accent" value="0xFFFFFF" />
+
+		<color name="const_accent" value="0x3488AF" />
+		<color name="const_accent_bright" value="0x5FB4D6" />
+		<color name="const_accent_pressed" value="0x27688A" />
+
+		<color name="const_danger" value="0xDC2626" />
+		<color name="const_danger_pressed" value="0xB91C1C" />
+
+		<color name="const_temp_20" value="0x3A6FA0" />
+		<color name="const_temp_90" value="0xB03A24" />
+
+		<color name="const_tint_accent" value="0xE3EEF6" />
+
+
+		<int name="const_radius_md" value="12" />
+		<int name="const_radius_lg" value="16" />
+
+		<px name="const_screen_w" value="480" />
+		<px name="const_screen_h" value="320" />
+		<px name="const_gutter" value="20" />
+		<px name="const_content_w" value="440" />
+
+		<px name="const_col_home" value="234" />
+
+		<px name="const_touch" value="58" />
+
+		<int name="ref_on" value="1" />
+
+		<int name="ref_state_idle" value="0" />
+		<int name="ref_state_running" value="1" />
+		<int name="ref_state_complete" value="3" />
+
+		<int name="ref_prog_cotton" value="0" />
+		<int name="ref_prog_eco" value="1" />
+		<int name="ref_prog_synth" value="2" />
+		<int name="ref_prog_quick" value="3" />
+
+		<int name="ref_phase_prewash" value="0" />
+		<int name="ref_phase_wash" value="1" />
+		<int name="ref_phase_rinse" value="2" />
+		<int name="ref_phase_spin" value="3" />
+
+		<int name="ref_door_open" value="0" />
+		<int name="ref_door_locked" value="1" />
+	</consts>
+
+	<fonts>
+		<!-- One font is one face at one size, so the ladder is the flash bill.
+		     Every text face carries ASCII plus 0xB0, the only non-ASCII glyph
+		     this UI prints; the two display faces carry only what their single
+		     caller can pass. -->
+		<bin
+			name="font_semibold_26"
+			size="26"
+			bpp="2"
+			as_file="false"
+			src_path="fonts/Gabarito-SemiBold.ttf"
+			range="0x20-0x7E, 0xB0"
+		/>
+		<bin
+			name="font_semibold_17"
+			size="17"
+			bpp="2"
+			as_file="false"
+			src_path="fonts/Gabarito-SemiBold.ttf"
+			range="0x20-0x7E, 0xB0"
+		/>
+
+		<bin
+			name="font_regular_15"
+			size="15"
+			bpp="2"
+			as_file="false"
+			src_path="fonts/Gabarito-Regular.ttf"
+			range="0x20-0x7E, 0xB0"
+		/>
+
+		<bin
+			name="font_medium_13"
+			size="13"
+			bpp="2"
+			as_file="false"
+			src_path="fonts/Gabarito-Medium.ttf"
+			range="0x20-0x7E, 0xB0"
+		/>
+
+		<!-- The remaining time: digits and a colon. -->
+		<bin
+			name="font_hero_76"
+			size="76"
+			bpp="2"
+			as_file="false"
+			src_path="fonts/Gabarito-Bold.ttf"
+			range="0x20,0x3A,0x30-0x39"
+		/>
+		<!-- Its unit, which is only ever "h" or "min". -->
+		<bin
+			name="font_medium_24"
+			size="24"
+			bpp="2"
+			as_file="false"
+			src_path="fonts/Gabarito-Medium.ttf"
+			range="0x20,0x68,0x69,0x6D,0x6E"
+		/>
+	</fonts>
+
+	<subjects>
+
+		<int
+			name="subject_program"
+			value="-1"
+			min_value="-1"
+			max_value="3"
+			help="Which fabric is selected: -1 none, 0 Cotton, 1 Eco 40, 2 Synthetics, 3 Quick 30 (#ref_prog_*). Written from XML by subject_set_int_event on the home fabric keys. Starts at -1 so the machine boots with nothing chosen and shows its own name; once a key is pressed it can never come back here, because the keys are radios and a radio has no off."
+		/>
+
+		<int
+			name="subject_temp_idx"
+			value="0"
+			min_value="0"
+			max_value="4"
+			help="Where the temperature slider is parked, 0..4 - a position, not a temperature. 0 is NOT SET and is where the machine boots; 1..4 are 20/40/60/90. The unset stop is a real detent rather than a special case, which is what lets a slider keep the precondition four pills had for free: the knob is always somewhere, so 'somewhere' has to include nowhere. Written from XML by slider_temp's two-way bind_value; custom/wash_logic.c maps it to subject_temp_c."
+		/>
+
+		<int
+			name="subject_temp_c"
+			value="0"
+			min_value="0"
+			max_value="90"
+			help="Wash temperature in whole degrees C. SOLE WRITER is custom/wash_logic.c, which projects subject_temp_idx through a table. Still rests at 0 for 'none selected' - the slider's leftmost detent is an explicit Not set stop, so the unselected state survived the move off four pills. Otherwise one of 20/40/60/90. Never write this from XML."
+		/>
+
+		<int
+			name="subject_spin_rpm"
+			value="1200"
+			min_value="400"
+			max_value="1400"
+			help="Spin speed. Written from XML by subject_increment_event on the setup stepper, step=200: 400/600/800/1000/1200/1400. Displayed on setup and again as a live readout on cycle, where it stands for the PWM the MSPM33 would be driving the motor with."
+		/>
+
+		<int
+			name="subject_water_target"
+			value="62"
+			min_value="0"
+			max_value="100"
+			help="Target water level as a percentage of drum volume. Written from XML by the setup slider's two-way bind_value. Separate from subject_adc_water, which is the sensed value on the service screen - target vs actual is the whole point of showing both."
+		/>
+
+		<int
+			name="subject_water_level"
+			value="48"
+			min_value="0"
+			max_value="100"
+			help="Sensed water level as a percentage of drum volume - the reading from the level sensor, NOT the setpoint. Firmware is the sole writer; nothing in XML writes it. The demo does not simulate it, so it stays at its default until firmware writes it. Drives the vertical water_level indicator beside the appliance, whose tick marks subject_water_target. subject_water_target is the separate thing the user asks for on the setup screen."
+		/>
+
+		<int
+			name="subject_opt_prewash"
+			value="0"
+			min_value="0"
+			max_value="1"
+			help="Prewash option. Written from XML by subject_toggle_event on the setup row. NOTE bind_checked is one-way and inert on its own; the switch asserts its look with bind_state_if_eq and writes back with subject_toggle_event - two halves pulling opposite ways."
+		/>
+		<int
+			name="subject_opt_rinse"
+			value="1"
+			min_value="0"
+			max_value="1"
+			help="Extra rinse option. Same two-half switch idiom as subject_opt_prewash."
+		/>
+		<int
+			name="subject_opt_delay"
+			value="0"
+			min_value="0"
+			max_value="1"
+			help="Delay start option. Same two-half switch idiom as subject_opt_prewash. When on, the setup screen shows an amber Pending chip - amber because the machine is fine and merely waiting, which is exactly what the design language reserves amber for."
+		/>
+
+		<int
+			name="subject_progress"
+			value="0"
+			min_value="0"
+			max_value="100"
+			help="Cycle progress, percent. THE DRIVER OF THE WHOLE DEMO. Written from XML by the drum arc's two-way bind_value: a visitor drags the ring and the hero numeral, the phase stepper, the water bar and the completion state all follow. There is no timer anywhere in this project - the person at the booth is the simulation."
+		/>
+
+		<int
+			name="subject_state"
+			value="1"
+			min_value="0"
+			max_value="3"
+			help="Machine state: 0 idle, 1 running, 2 paused, 3 complete (#ref_state_*). Written from XML by subject_set_int_event - Start on setup, Stop and Done on cycle. Gates the stacked sibling groups on the cycle screen, which is how the complete state lives on the running screen instead of costing a fifth one."
+		/>
+
+		<int
+			name="subject_door"
+			value="1"
+			min_value="0"
+			max_value="1"
+			help="Door lock state, standing in for the GPIO input on the reference design: 0 open, 1 locked (#ref_door_*). Written from XML by subject_toggle_event on the header chip and on the service I/O row, so a visitor can demonstrate the interlock by hand."
+		/>
+
+
+
+		<string
+			name="subject_time_left_str"
+			value="2:15"
+			help="Remaining time, NUMBER ONLY - '46' or '1:24'. SOLE WRITER is custom/wash_logic.c. It is a string rather than an int because bind_text-fmt understands only %d and %s and cannot compose a h:mm form. It carries no unit because the hero font is subset to digits and a colon: any letter in this string renders as a missing-glyph box. The unit is a separate label fed by subject_time_unit_str. Never write this from XML."
+		/>
+
+		<string
+			name="subject_time_unit_str"
+			value="h"
+			help="The unit beside the remaining time - 'min' below an hour, 'h' above it. SOLE WRITER is custom/wash_logic.c. Split from subject_time_left_str so that it can be set in a normal text face while the number keeps the digits-only hero face. Never write this from XML."
+		/>
+
+		<int
+			name="subject_phase"
+			value="0"
+			min_value="0"
+			max_value="3"
+			help="Current cycle phase, 0..3 (#ref_phase_*). SOLE WRITER is custom/wash_logic.c, which derives it from subject_progress. The DSL cannot do this itself: bind_* compares a subject against a literal only, and nothing in XML writes one subject as a consequence of another changing. Never write this from XML."
+		/>
+
+		<int
+			name="subject_ready"
+			value="0"
+			min_value="0"
+			max_value="1"
+			help="1 when a wash may start: a fabric is chosen, a temperature is chosen, and the door is shut. SOLE WRITER is custom/wash_logic.c. Gates the START key against the help line on the home screen. Never write this from XML."
+		/>
+
+		<string
+			name="subject_hint_str"
+			value="Select a fabric"
+			help="What is stopping the wash from starting, in the order the screen reads: fabric, then temperature, then the door. Empty when subject_ready is 1. SOLE WRITER is custom/wash_logic.c. Never write this from XML."
+		/>
+
+		<string
+			name="subject_duration_str"
+			value="2h 15m"
+			help="Total length of the selected programme, preformatted. SOLE WRITER is custom/wash_logic.c. Shown in the completion summary. Never write this from XML."
+		/>
+		<string
+			name="subject_program_name"
+			value="Cotton"
+			help="Display name of the selected program, shown as the setup heading and in the completion summary. SOLE WRITER is custom/wash_logic.c, which projects subject_program through a name table. Never write this from XML."
+		/>
+	</subjects>
+
+	<images>
+
+		<data name="icon_prog_cotton" src_path="images/icon_prog_cotton.png" color_format="rgb565a8" />
+		<data name="icon_prog_eco" src_path="images/icon_prog_eco.png" color_format="rgb565a8" />
+		<data name="icon_prog_synth" src_path="images/icon_prog_synth.png" color_format="rgb565a8" />
+		<data name="icon_prog_quick" src_path="images/icon_prog_quick.png" color_format="rgb565a8" />
+
+
+		<data name="icon_ph_pre" src_path="images/icon_ph_pre.png" color_format="rgb565a8" />
+		<data name="icon_ph_wash" src_path="images/icon_ph_wash.png" color_format="rgb565a8" />
+		<data name="icon_ph_rinse" src_path="images/icon_ph_rinse.png" color_format="rgb565a8" />
+		<data name="icon_ph_spin" src_path="images/icon_ph_spin.png" color_format="rgb565a8" />
+
+		<data name="icon_unlock" src_path="images/icon_unlock.png" color_format="rgb565a8" />
+
+		<data name="icon_back" src_path="images/icon_back.png" color_format="rgb565a8" />
+		<data name="icon_options" src_path="images/icon_options.png" color_format="rgb565a8" />
+
+
+		<data name="icon_opt_prewash" src_path="images/icon_opt_prewash.png" color_format="rgb565a8" />
+		<data name="icon_opt_rinse" src_path="images/icon_opt_rinse.png" color_format="rgb565a8" />
+		<data name="icon_opt_delay" src_path="images/icon_opt_delay.png" color_format="rgb565a8" />
+
+		<data name="img_machine"      src_path="images/machine.png"          color_format="rgb565a8" />
+
+		<data name="img_logostrip"    src_path="images/logostrip.png"        color_format="rgb565a8" />
+
+		<data name="img_door"         src_path="images/door.png"             color_format="rgb565a8" />
+		<data name="img_clothes"      src_path="images/load.png"             color_format="rgb565a8" />
+
+	</images>
+
+	<styles>
+		<style name="style_hero" text_font="font_hero_76" text_letter_space="-3" />
+		<style name="style_hero_unit" text_font="font_medium_24" text_letter_space="-1" />
+		<style name="style_heading" text_font="font_semibold_26" text_letter_space="-1" />
+		<style name="style_body_strong" text_font="font_semibold_17" />
+		<style name="style_key_legend" text_font="font_semibold_17" text_letter_space="2" />
+		<style name="style_body" text_font="font_regular_15" />
+		<style name="style_meta" text_font="font_regular_15" />
+		<style name="style_chip" text_font="font_medium_13" />
+		<style name="style_micro" text_font="font_medium_13" />
+
+		<style name="style_overline" text_font="font_medium_13" text_letter_space="1" />
+
+		<style name="style_key_hint" text_font="font_medium_13" />
+
+		<style name="style_ink" text_color="#const_text_primary" />
+		<style name="style_ink_2" text_color="#const_text_secondary" />
+		<style name="style_ink_3" text_color="#const_text_tertiary" />
+		<style name="style_ink_overline" text_color="#const_text_overline" />
+		<style name="style_ink_inv" text_color="#const_on_accent" />
+
+		<style name="style_icon_ink" image_recolor="#const_text_primary" image_recolor_opa="255" />
+		<style name="style_icon_2" image_recolor="#const_text_secondary" image_recolor_opa="255" />
+		<style name="style_icon_accent" image_recolor="#const_accent" image_recolor_opa="255" />
+		<style name="style_icon_3" image_recolor="#const_text_tertiary" image_recolor_opa="255" />
+		<style name="style_icon_inv" image_recolor="#const_on_accent" image_recolor_opa="255" />
+
+
+		<style
+			name="style_screen_base"
+			bg_color="#const_surface_canvas"
+			bg_opa="100%"
+			bg_grad_color="0xE9EEF1"
+			bg_grad_dir="ver"
+		/>
+
+		<style
+			name="style_card_surface"
+			bg_color="#const_surface_card"
+			bg_opa="100%"
+			border_color="#const_border"
+			border_width="1"
+			border_opa="100%"
+			radius="#const_radius_md"
+		/>
+
+		<style name="style_pill" radius="32767" />
+
+
+		<style name="style_frame_door_outer" bg_color="#const_accent" bg_opa="100%" radius="0" border_width="0" />
+		<style
+			name="style_frame_door_inner"
+			bg_color="#const_surface_canvas"
+			bg_opa="100%"
+			bg_grad_color="0xE9EEF1"
+			bg_grad_dir="ver"
+			radius="18"
+			border_width="0"
+		/>
+
+
+		<style name="style_chip_fill_accent" bg_color="#const_tint_accent" bg_opa="100%" />
+		<style name="style_chip_dot_accent" bg_color="#const_accent" bg_opa="100%" />
+		<style name="style_chip_text_accent" text_color="#const_accent" />
+
+
+		<style name="style_arc_track" arc_color="0xD5DBDF" arc_opa="100%" arc_width="12" arc_rounded="true" />
+		<style name="style_arc_ind" arc_color="#const_accent_bright" arc_opa="100%" arc_width="12" arc_rounded="true" />
+
+
+
+
+		<style name="style_btn_ghost_pressed" bg_color="#const_divider" />
+
+
+		<style name="style_card_selected" bg_color="#const_accent" bg_opa="100%" border_width="0" />
+		<style name="style_card_selected_pressed" bg_color="#const_accent_pressed" bg_opa="100%" border_width="0" />
+
+		<style name="style_card_selected_edge" border_color="#const_accent" border_opa="100%" />
+
+		<style name="style_key_accent"         bg_color="#const_accent"         bg_opa="100%" />
+		<style name="style_key_accent_pressed" bg_color="#const_accent_pressed" bg_opa="100%" />
+		<style name="style_key_danger"         bg_color="#const_danger"         bg_opa="100%" />
+		<style name="style_key_danger_pressed" bg_color="#const_danger_pressed" bg_opa="100%" />
+
+	</styles>
+</globals>
