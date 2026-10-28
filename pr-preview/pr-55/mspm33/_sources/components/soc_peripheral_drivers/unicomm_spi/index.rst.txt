@@ -5,42 +5,30 @@
 UNICOMM SPI
 ###########
 
-.. rst-class:: ti-subtitle
-
-`Zephyr SPI Documentation <https://docs.zephyrproject.org/latest/hardware/peripherals/spi.html>`_
-
 .. important::
 
    The UNICOMM SPI driver supports Texas Instruments microcontrollers ``am13e23019`` and ``mspm33c321a``.
 
-.. contents::
-   :depth: 1
-   :local:
-   :class: hidden-title
-
 Features Supported
 ******************
 
-- Controller (master) and peripheral (slave) mode operation
+- Controller and Peripheral mode operation
 - Motorola SPI frame format (3-wire and 4-wire)
 - TI frame format (SSI)
 - 8-bit data frame size
-- Configurable clock polarity (CPOL) and phase (CPHA) in Motorola mode
+- Configurable clock polarity (CPOL) and phase (CPHA)
 - Internal loopback mode for testing
-- Interrupt-driven operation with 16-byte TX/RX FIFOs
+- Interrupt-driven operation with TX/RX FIFOs (check TRM for FIFO depth)
 - Configurable TX/RX FIFO interrupt thresholds
 - Synchronous and asynchronous (callback-based) transfers
 - Runtime clock frequency configuration
-- GPIO chip-select management (controller mode)
+- GPIO based flexible chip-select management (controller mode)
 
 Features NOT Supported
 **********************
 
 - Data frame sizes other than 8-bit
-- Half-duplex mode with TI frame format
 - Hardware DMA support
-- Clock phase/polarity configuration in TI frame format
-- SPI clock frequencies above BUSCLK/2
 
 Usage
 *****
@@ -58,7 +46,7 @@ automatically once an enabled ``ti,unicomm-spi`` node is present.
 
 .. code-block:: devicetree
 
-   &ucspi0 {
+   &unicommX_spi {
        status = "okay";
        pinctrl-0 = <&ucspi0_pins>;
        pinctrl-names = "default";
@@ -78,54 +66,29 @@ Devicetree Properties
 
    * - Property
      - Description
-   * - ``compatible``
-     - Required. Must be ``"ti,unicomm-spi"``.
-   * - ``reg``
-     - Required. Base address and size of the UNICOMM SPI register block.
-   * - ``interrupts``
-     - Required. Interrupt specifier for the SPI IRQ.
-   * - ``clocks``
-     - Required. Clock specifier for the SPI bus clock (BUSCLK).
    * - ``tx-fifo-threshold``
      - TX FIFO interrupt threshold (0-5, default: 4). See `FIFO Threshold Encoding`_.
    * - ``rx-fifo-threshold``
      - RX FIFO interrupt threshold (0-5, default: 0). See `FIFO Threshold Encoding`_.
    * - ``fifo-depth``
-     - FIFO depth in bytes (default: 16).
+     - FIFO depth in bytes (default: 16). Pre-configured in devicetrees.
    * - ``cs-gpios``
      - GPIO chip-select pins for controller mode.
-   * - ``pinctrl-0``, ``pinctrl-names``
-     - Pin control configuration.
 
 .. _ti-zephyr-spi-unicomm-fifo-thresholds:
 
 FIFO Threshold Encoding
 -----------------------
 
-The TX and RX FIFO thresholds use hardware-defined encodings for a 16-entry FIFO.
+The TX and RX FIFO thresholds use hardware-defined encodings for a 16-entry FIFO. The ``tx-fifo-threshold``
+and ``rx-fifo-threshold`` properties accept the raw IFLS register values. Check TRM for supported values based
+on the FIFO depth for your device's UNICOMM peripheral.
 
-**TX Threshold (``tx-fifo-threshold``):**
-
-* 0 = Interrupt when >= 12 entries free (<= 4 remain)
-* 1 = Interrupt when >= 8 entries free (<= 8 remain, half-empty)
-* 2 = Interrupt when >= 4 entries free (<= 12 remain)
-* 3 = Interrupt when >= 2 entries free (<= 14 remain)
-* 4 = Interrupt when >= 1 entry free (<= 15 remain, almost full) [default]
-* 5 = Interrupt when FIFO empty (all entries moved to shift register)
-
-**RX Threshold (``rx-fifo-threshold``):**
-
-* 0 = Interrupt when >= 1 entry (not-empty, lowest latency) [default]
-* 1 = Interrupt when >= 4 entries
-* 2 = Interrupt when >= 8 entries (half-full)
-* 3 = Interrupt when >= 12 entries
-* 4 = Interrupt when >= 14 entries
-* 5 = Interrupt when FIFO full
 
 SPI Modes and Configuration
 ===========================
 
-Controller Mode (Master)
+Controller Mode
 ------------------------
 
 In controller mode, the UNICOMM SPI generates the serial clock and initiates
@@ -154,13 +117,13 @@ transactions.
 Supported controller mode configurations:
 
 * Motorola 4-wire (standard SPI with separate CS)
-* Motorola 3-wire (half-duplex, bidirectional data line)
-* TI frame format (SSI, full-duplex only)
+* Motorola 3-wire
+* TI frame format
 * CPOL/CPHA modes 0, 1, 2, 3 (Motorola format only)
 * MSB-first or LSB-first bit ordering
 * Clock frequencies up to BUSCLK/2
 
-Peripheral Mode (Slave)
+Peripheral Mode
 -----------------------
 
 In peripheral mode, the UNICOMM SPI responds to an external controller.
@@ -179,31 +142,6 @@ Supported peripheral mode configurations:
 * TI frame format
 * CPOL/CPHA configuration must match the controller
 * MSB-first or LSB-first bit ordering
-
-Using TI Frame Format
----------------------
-
-.. code-block:: c
-
-   struct spi_config spi_cfg = {
-       .frequency = 1000000,
-       .operation = SPI_WORD_SET(8) | SPI_TRANSFER_MSB | SPI_FRAME_FORMAT_TI,
-       .slave = 0,
-   };
-
-Asynchronous Transfers
-----------------------
-
-.. code-block:: c
-
-   void spi_callback(const struct device *dev, int result, void *userdata)
-   {
-       if (result != 0) {
-           LOG_ERR("SPI transfer failed: %d", result);
-       }
-   }
-
-   int ret = spi_transceive_async(spi_dev, &spi_cfg, &tx, &rx, spi_callback, NULL);
 
 Clock Configuration
 ===================
@@ -257,17 +195,20 @@ Samples and Tests
 Samples
 =======
 
-- `SPI Loopback Sample <https://docs.zephyrproject.org/latest/samples/drivers/spi/README.html>`_
+- `SPI Loopback Sample <../../../../../zephyr/samples/drivers/spi/README.html>`_
 
 Tests
 =====
 
-- ``spi_ti_unicomm_api`` - Calls and tests UNICOMM SPI APIs
-- ``spi_ti_unicomm_loopback`` - Loopback test with external connection
+- ``spi_loopback`` - Internal loopback test
 
 References
 ==========
 
-* `MSPM0 L-Series 32MHz Microcontrollers Technical Reference Manual <https://www.ti.com/lit/ug/slau873>`_
 * ``drivers/spi/spi_ti_unicomm.c``
 * ``dts/bindings/spi/ti,unicomm-spi.yaml``
+
+Zephyr Documentation
+====================
+
+`Zephyr SPI Documentation <../../../../../zephyr/hardware/peripherals/spi.html>`_

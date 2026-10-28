@@ -21,8 +21,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="UART" href="../uart/index.html" />
-    <link rel="prev" title="RTC" href="../rtc/index.html" /> 
+    <link rel="next" title="Window Watchdog" href="../wwdt/index.html" />
+    <link rel="prev" title="UART" href="../uart/index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -70,8 +70,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../pinctrl/index.html">Pin Control</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../pwm/index.html">PWM</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../rtc/index.html">RTC</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">UNICOMM SPI</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../uart/index.html">UART</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">UNICOMM SPI</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../wwdt/index.html">Window Watchdog</a></li>
 </ul>
 </li>
@@ -150,47 +150,35 @@
              
   <section id="unicomm-spi">
 <span id="ti-zephyr-component-spi-unicomm"></span><h1>UNICOMM SPI<a class="headerlink" href="#unicomm-spi" title="Link to this heading"></a></h1>
-<p class="ti-subtitle"><a class="reference external" href="https://docs.zephyrproject.org/latest/hardware/peripherals/spi.html">Zephyr SPI Documentation</a></p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
 <p>The UNICOMM SPI driver supports Texas Instruments microcontrollers <code class="docutils literal notranslate"><span class="pre">am13e23019</span></code> and <code class="docutils literal notranslate"><span class="pre">mspm33c321a</span></code>.</p>
 </div>
-<nav class="contents hidden-title local" id="contents">
-<ul class="simple">
-<li><p><a class="reference internal" href="#features-supported" id="id1">Features Supported</a></p></li>
-<li><p><a class="reference internal" href="#features-not-supported" id="id2">Features NOT Supported</a></p></li>
-<li><p><a class="reference internal" href="#usage" id="id3">Usage</a></p></li>
-<li><p><a class="reference internal" href="#samples-and-tests" id="id4">Samples and Tests</a></p></li>
-</ul>
-</nav>
 <section id="features-supported">
-<h2><a class="toc-backref" href="#id1" role="doc-backlink">Features Supported</a><a class="headerlink" href="#features-supported" title="Link to this heading"></a></h2>
+<h2>Features Supported<a class="headerlink" href="#features-supported" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>Controller (master) and peripheral (slave) mode operation</p></li>
+<li><p>Controller and Peripheral mode operation</p></li>
 <li><p>Motorola SPI frame format (3-wire and 4-wire)</p></li>
 <li><p>TI frame format (SSI)</p></li>
 <li><p>8-bit data frame size</p></li>
-<li><p>Configurable clock polarity (CPOL) and phase (CPHA) in Motorola mode</p></li>
+<li><p>Configurable clock polarity (CPOL) and phase (CPHA)</p></li>
 <li><p>Internal loopback mode for testing</p></li>
-<li><p>Interrupt-driven operation with 16-byte TX/RX FIFOs</p></li>
+<li><p>Interrupt-driven operation with TX/RX FIFOs (check TRM for FIFO depth)</p></li>
 <li><p>Configurable TX/RX FIFO interrupt thresholds</p></li>
 <li><p>Synchronous and asynchronous (callback-based) transfers</p></li>
 <li><p>Runtime clock frequency configuration</p></li>
-<li><p>GPIO chip-select management (controller mode)</p></li>
+<li><p>GPIO based flexible chip-select management (controller mode)</p></li>
 </ul>
 </section>
 <section id="features-not-supported">
-<h2><a class="toc-backref" href="#id2" role="doc-backlink">Features NOT Supported</a><a class="headerlink" href="#features-not-supported" title="Link to this heading"></a></h2>
+<h2>Features NOT Supported<a class="headerlink" href="#features-not-supported" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Data frame sizes other than 8-bit</p></li>
-<li><p>Half-duplex mode with TI frame format</p></li>
 <li><p>Hardware DMA support</p></li>
-<li><p>Clock phase/polarity configuration in TI frame format</p></li>
-<li><p>SPI clock frequencies above BUSCLK/2</p></li>
 </ul>
 </section>
 <section id="usage">
-<h2><a class="toc-backref" href="#id3" role="doc-backlink">Usage</a><a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
 <p>The driver implements Zephyr’s standard SPI API (<code class="docutils literal notranslate"><span class="pre">&lt;zephyr/drivers/spi.h&gt;</span></code>).
 Applications use <code class="xref c c-func docutils literal notranslate"><span class="pre">spi_transceive()</span></code> for synchronous transfers and
 <code class="xref c c-func docutils literal notranslate"><span class="pre">spi_transceive_async()</span></code> for asynchronous transfers.</p>
@@ -199,7 +187,7 @@ Applications use <code class="xref c c-func docutils literal notranslate"><span 
 <p>Enable the UNICOMM SPI node in the board devicetree (or an application overlay)
 and the SPI subsystem in <code class="docutils literal notranslate"><span class="pre">prj.conf</span></code>. <code class="docutils literal notranslate"><span class="pre">CONFIG_SPI_TI_UNICOMM</span></code> is selected
 automatically once an enabled <code class="docutils literal notranslate"><span class="pre">ti,unicomm-spi</span></code> node is present.</p>
-<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">ucspi0</span><span class="cm"> </span><span class="p">{</span>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">unicommX_spi</span><span class="cm"> </span><span class="p">{</span>
 <span class="w">    </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
 <span class="w">    </span><span class="n">pinctrl-0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">ucspi0_pins</span><span class="o">&gt;</span><span class="p">;</span>
 <span class="w">    </span><span class="n">pinctrl-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"default"</span><span class="p">;</span>
@@ -224,18 +212,6 @@ automatically once an enabled <code class="docutils literal notranslate"><span c
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">compatible</span></code></p></td>
-<td><p>Required. Must be <code class="docutils literal notranslate"><span class="pre">&quot;ti,unicomm-spi&quot;</span></code>.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">reg</span></code></p></td>
-<td><p>Required. Base address and size of the UNICOMM SPI register block.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">interrupts</span></code></p></td>
-<td><p>Required. Interrupt specifier for the SPI IRQ.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">clocks</span></code></p></td>
-<td><p>Required. Clock specifier for the SPI bus clock (BUSCLK).</p></td>
-</tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tx-fifo-threshold</span></code></p></td>
 <td><p>TX FIFO interrupt threshold (0-5, default: 4). See <a class="reference internal" href="#fifo-threshold-encoding">FIFO Threshold Encoding</a>.</p></td>
 </tr>
@@ -243,43 +219,24 @@ automatically once an enabled <code class="docutils literal notranslate"><span c
 <td><p>RX FIFO interrupt threshold (0-5, default: 0). See <a class="reference internal" href="#fifo-threshold-encoding">FIFO Threshold Encoding</a>.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fifo-depth</span></code></p></td>
-<td><p>FIFO depth in bytes (default: 16).</p></td>
+<td><p>FIFO depth in bytes (default: 16). Pre-configured in devicetrees.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cs-gpios</span></code></p></td>
 <td><p>GPIO chip-select pins for controller mode.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pinctrl-0</span></code>, <code class="docutils literal notranslate"><span class="pre">pinctrl-names</span></code></p></td>
-<td><p>Pin control configuration.</p></td>
 </tr>
 </tbody>
 </table>
 <section id="fifo-threshold-encoding">
 <span id="ti-zephyr-spi-unicomm-fifo-thresholds"></span><h4>FIFO Threshold Encoding<a class="headerlink" href="#fifo-threshold-encoding" title="Link to this heading"></a></h4>
-<p>The TX and RX FIFO thresholds use hardware-defined encodings for a 16-entry FIFO.</p>
-<p><strong>TX Threshold (``tx-fifo-threshold``):</strong></p>
-<ul class="simple">
-<li><p>0 = Interrupt when &gt;= 12 entries free (&lt;= 4 remain)</p></li>
-<li><p>1 = Interrupt when &gt;= 8 entries free (&lt;= 8 remain, half-empty)</p></li>
-<li><p>2 = Interrupt when &gt;= 4 entries free (&lt;= 12 remain)</p></li>
-<li><p>3 = Interrupt when &gt;= 2 entries free (&lt;= 14 remain)</p></li>
-<li><p>4 = Interrupt when &gt;= 1 entry free (&lt;= 15 remain, almost full) [default]</p></li>
-<li><p>5 = Interrupt when FIFO empty (all entries moved to shift register)</p></li>
-</ul>
-<p><strong>RX Threshold (``rx-fifo-threshold``):</strong></p>
-<ul class="simple">
-<li><p>0 = Interrupt when &gt;= 1 entry (not-empty, lowest latency) [default]</p></li>
-<li><p>1 = Interrupt when &gt;= 4 entries</p></li>
-<li><p>2 = Interrupt when &gt;= 8 entries (half-full)</p></li>
-<li><p>3 = Interrupt when &gt;= 12 entries</p></li>
-<li><p>4 = Interrupt when &gt;= 14 entries</p></li>
-<li><p>5 = Interrupt when FIFO full</p></li>
-</ul>
+<p>The TX and RX FIFO thresholds use hardware-defined encodings for a 16-entry FIFO. The <code class="docutils literal notranslate"><span class="pre">tx-fifo-threshold</span></code>
+and <code class="docutils literal notranslate"><span class="pre">rx-fifo-threshold</span></code> properties accept the raw IFLS register values. Check TRM for supported values based
+on the FIFO depth for your device’s UNICOMM peripheral.</p>
 </section>
 </section>
 <section id="spi-modes-and-configuration">
 <h3>SPI Modes and Configuration<a class="headerlink" href="#spi-modes-and-configuration" title="Link to this heading"></a></h3>
-<section id="controller-mode-master">
-<h4>Controller Mode (Master)<a class="headerlink" href="#controller-mode-master" title="Link to this heading"></a></h4>
+<section id="controller-mode">
+<h4>Controller Mode<a class="headerlink" href="#controller-mode" title="Link to this heading"></a></h4>
 <p>In controller mode, the UNICOMM SPI generates the serial clock and initiates
 transactions.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">spi_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEVICE_DT_GET</span><span class="p">(</span><span class="n">DT_NODELABEL</span><span class="p">(</span><span class="n">ucspi0</span><span class="p">));</span>
@@ -304,15 +261,15 @@ transactions.</p>
 <p>Supported controller mode configurations:</p>
 <ul class="simple">
 <li><p>Motorola 4-wire (standard SPI with separate CS)</p></li>
-<li><p>Motorola 3-wire (half-duplex, bidirectional data line)</p></li>
-<li><p>TI frame format (SSI, full-duplex only)</p></li>
+<li><p>Motorola 3-wire</p></li>
+<li><p>TI frame format</p></li>
 <li><p>CPOL/CPHA modes 0, 1, 2, 3 (Motorola format only)</p></li>
 <li><p>MSB-first or LSB-first bit ordering</p></li>
 <li><p>Clock frequencies up to BUSCLK/2</p></li>
 </ul>
 </section>
-<section id="peripheral-mode-slave">
-<h4>Peripheral Mode (Slave)<a class="headerlink" href="#peripheral-mode-slave" title="Link to this heading"></a></h4>
+<section id="peripheral-mode">
+<h4>Peripheral Mode<a class="headerlink" href="#peripheral-mode" title="Link to this heading"></a></h4>
 <p>In peripheral mode, the UNICOMM SPI responds to an external controller.</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">spi_config</span><span class="w"> </span><span class="n">spi_cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="p">.</span><span class="n">frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000000</span><span class="p">,</span>
@@ -328,29 +285,6 @@ transactions.</p>
 <li><p>CPOL/CPHA configuration must match the controller</p></li>
 <li><p>MSB-first or LSB-first bit ordering</p></li>
 </ul>
-</section>
-<section id="using-ti-frame-format">
-<h4>Using TI Frame Format<a class="headerlink" href="#using-ti-frame-format" title="Link to this heading"></a></h4>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">spi_config</span><span class="w"> </span><span class="n">spi_cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="p">.</span><span class="n">frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000000</span><span class="p">,</span>
-<span class="w">    </span><span class="p">.</span><span class="n">operation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SPI_WORD_SET</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">SPI_TRANSFER_MSB</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">SPI_FRAME_FORMAT_TI</span><span class="p">,</span>
-<span class="w">    </span><span class="p">.</span><span class="n">slave</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<span class="p">};</span>
-</pre></div>
-</div>
-</section>
-<section id="asynchronous-transfers">
-<h4>Asynchronous Transfers<a class="headerlink" href="#asynchronous-transfers" title="Link to this heading"></a></h4>
-<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">spi_callback</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">result</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">userdata</span><span class="p">)</span>
-<span class="p">{</span>
-<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">result</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">LOG_ERR</span><span class="p">(</span><span class="s">"SPI transfer failed: %d"</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-
-<span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spi_transceive_async</span><span class="p">(</span><span class="n">spi_dev</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">spi_cfg</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">tx</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rx</span><span class="p">,</span><span class="w"> </span><span class="n">spi_callback</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
-</pre></div>
-</div>
 </section>
 </section>
 <section id="clock-configuration">
@@ -396,27 +330,29 @@ controller or peripheral mode ISRs based on the current operating mode.</p>
 </section>
 </section>
 <section id="samples-and-tests">
-<h2><a class="toc-backref" href="#id4" role="doc-backlink">Samples and Tests</a><a class="headerlink" href="#samples-and-tests" title="Link to this heading"></a></h2>
+<h2>Samples and Tests<a class="headerlink" href="#samples-and-tests" title="Link to this heading"></a></h2>
 <section id="samples">
 <h3>Samples<a class="headerlink" href="#samples" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p><a class="reference external" href="https://docs.zephyrproject.org/latest/samples/drivers/spi/README.html">SPI Loopback Sample</a></p></li>
+<li><p><a class="reference external" href="../../../../../zephyr/samples/drivers/spi/README.html">SPI Loopback Sample</a></p></li>
 </ul>
 </section>
 <section id="tests">
 <h3>Tests<a class="headerlink" href="#tests" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">spi_ti_unicomm_api</span></code> - Calls and tests UNICOMM SPI APIs</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">spi_ti_unicomm_loopback</span></code> - Loopback test with external connection</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spi_loopback</span></code> - Internal loopback test</p></li>
 </ul>
 </section>
 <section id="references">
 <h3>References<a class="headerlink" href="#references" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p><a class="reference external" href="https://www.ti.com/lit/ug/slau873">MSPM0 L-Series 32MHz Microcontrollers Technical Reference Manual</a></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">drivers/spi/spi_ti_unicomm.c</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">dts/bindings/spi/ti,unicomm-spi.yaml</span></code></p></li>
 </ul>
+</section>
+<section id="zephyr-documentation">
+<h3>Zephyr Documentation<a class="headerlink" href="#zephyr-documentation" title="Link to this heading"></a></h3>
+<p><a class="reference external" href="../../../../../zephyr/hardware/peripherals/spi.html">Zephyr SPI Documentation</a></p>
 </section>
 </section>
 </section>
@@ -425,8 +361,8 @@ controller or peripheral mode ISRs based on the current operating mode.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../rtc/index.html" class="btn btn-neutral float-left" title="RTC" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../uart/index.html" class="btn btn-neutral float-right" title="UART" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../uart/index.html" class="btn btn-neutral float-left" title="UART" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../wwdt/index.html" class="btn btn-neutral float-right" title="Window Watchdog" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
