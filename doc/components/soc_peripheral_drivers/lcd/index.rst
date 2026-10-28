@@ -348,7 +348,7 @@ Applications (``applications/rtc_temp_lcd/``)
 Tests
 =====
 
-TI-SDK (``tests/drivers/auxdisplay/auxdisplay_mspm0/``)
+TI-ZEPHYR (``tests/drivers/auxdisplay/auxdisplay_mspm0/``)
 -------------------------------------------------------------
 
 A dedicated ztest suite exercises the full driver API on
