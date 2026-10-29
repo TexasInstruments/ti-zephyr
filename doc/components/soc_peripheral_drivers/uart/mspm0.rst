@@ -1,0 +1,206 @@
+.. important::
+
+   The UART driver supports both MSPM0 UART and UNICOMM UART variants:
+
+   - **MSPM0 UART**: ``lp_mspm0g3519``, ``lp_mspm0l2228``, ``lp_mspm0g3507``
+   - **UNICOMM UART**: ``lp_am13e230``, ``lp_mspm33c321a``
+
+Features Supported
+******************
+
+- Polling API
+- Interrupt-driven API (enabled with ``CONFIG_UART_INTERRUPT_DRIVEN``)
+- Runtime configuration (enabled with ``CONFIG_UART_USE_RUNTIME_CONFIGURE``)
+- Hardware flow control (RTS/CTS)
+- Error reporting through :c:func:`uart_err_check` (break and framing errors)
+- Power management (device runtime PM and system PM)
+- Configurable RX/TX FIFO thresholds
+- Selectable clock source and divider
+
+Features NOT Supported
+**********************
+
+- Asynchronous API
+
+Usage
+*****
+
+The driver implements Zephyr's standard UART API (``<zephyr/drivers/uart.h>``).
+Applications can use the polling API, interrupt-driven API, or runtime
+configuration API depending on the enabled Kconfig options.
+
+Enabling the Driver
+===================
+
+Enable the UART node in the board devicetree (or an application overlay) and
+the UART subsystem in ``prj.conf``. ``CONFIG_UART_MSPM0`` is selected
+automatically once an enabled ``ti,mspm0-uart`` node is present.
+
+.. code-block:: devicetree
+
+   &uart0 {
+           status = "okay";
+           current-speed = <115200>;
+           hw-flow-control;
+   };
+
+.. code-block:: kconfig
+
+   CONFIG_SERIAL=y
+   CONFIG_UART_INTERRUPT_DRIVEN=y # optional
+   CONFIG_UART_USE_RUNTIME_CONFIGURE=y # optional
+
+Devicetree Properties
+=====================
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 80
+
+   * - Property
+     - Description
+   * - ``current-speed``
+     - Default baud rate (required by Zephyr UART binding).
+   * - ``hw-flow-control``
+     - Enables hardware RTS/CTS flow control.
+   * - ``clk-div``
+     - Clock divider selection (1-8). Default: 1. The UART source clock is
+       divided by this value.
+   * - ``rx-fifo-threshold``
+     - RX FIFO interrupt threshold. See ``MSPM0_UART_RX_FIFO_LEVEL_*`` in
+       :file:`include/zephyr/dt-bindings/uart/mspm0_uart.h`.
+   * - ``tx-fifo-threshold``
+     - TX FIFO interrupt threshold. See ``MSPM0_UART_TX_FIFO_LEVEL_*`` in
+       :file:`include/zephyr/dt-bindings/uart/mspm0_uart.h`.
+   * - ``is-unicomm-uart``
+     - Boolean. Set to ``true`` for UNICOMM UART instances (AM13E/MSPM33C).
+       Automatically handles register offset and power management differences.
+
+Polling API Example
+===================
+
+.. code-block:: c
+
+   #include <zephyr/kernel.h>
+   #include <zephyr/device.h>
+   #include <zephyr/drivers/uart.h>
+
+   static const struct device *const uart_dev = DEVICE_DT_GET_ONE(ti_mspm0_uart);
+
+   int main(void)
+   {
+       uint8_t c;
+
+       if (!device_is_ready(uart_dev)) {
+           return -1;
+       }
+
+       /* Send a character */
+       uart_poll_out(uart_dev, 'H');
+
+       /* Receive a character */
+       while (uart_poll_in(uart_dev, &c) < 0) {
+           k_msleep(10);
+       }
+
+       return 0;
+   }
+
+Interrupt-Driven API Example
+============================
+
+.. note::
+
+   This example requires ``CONFIG_UART_INTERRUPT_DRIVEN=y``.
+
+.. code-block:: c
+
+   #include <zephyr/device.h>
+   #include <zephyr/drivers/uart.h>
+
+   static const struct device *const uart_dev = DEVICE_DT_GET_ONE(ti_mspm0_uart);
+
+   static void uart_cb(const struct device *dev, void *user_data)
+   {
+       uint8_t c;
+
+       uart_irq_update(dev);
+
+       if (uart_irq_rx_ready(dev)) {
+           while (uart_fifo_read(dev, &c, 1) == 1) {
+               /* Process received character */
+               uart_poll_out(dev, c); /* Echo back */
+           }
+       }
+   }
+
+   int main(void)
+   {
+       if (!device_is_ready(uart_dev)) {
+           return -1;
+       }
+
+       uart_irq_callback_user_data_set(uart_dev, uart_cb, NULL);
+       uart_irq_rx_enable(uart_dev);
+
+       return 0;
+   }
+
+Runtime Configuration Example
+=============================
+
+.. code-block:: c
+
+   #include <zephyr/kernel.h>
+   #include <zephyr/device.h>
+   #include <zephyr/drivers/uart.h>
+
+   static const struct device *const uart_dev = DEVICE_DT_GET_ONE(ti_mspm0_uart);
+
+   int main(void)
+   {
+       struct uart_config cfg;
+       int ret;
+
+       if (!device_is_ready(uart_dev)) {
+           return -1;
+       }
+
+       /* Get current configuration */
+       ret = uart_config_get(uart_dev, &cfg);
+       if (ret < 0) {
+           return ret;
+       }
+
+       /* Change baud rate and parity */
+       cfg.baudrate = 9600;
+       cfg.parity = UART_CFG_PARITY_NONE;
+
+       ret = uart_configure(uart_dev, &cfg);
+       if (ret < 0) {
+           return ret;
+       }
+
+       while (1) {
+           printk("Hello at 9600 baud!\r\n");
+           k_msleep(1000);
+       }
+
+       return 0;
+   }
+
+
+Samples and Tests
+*****************
+
+Samples
+=======
+
+- :ws-doc:`UART Echo Sample <zephyr/samples/drivers/uart/echo_bot/README.html>`
+
+Tests
+=====
+
+- ``uart_elementary`` - Validates basic UART driver functions.
+- ``uart_interrupt_api`` - Tests interrupt-driven API
+- ``uart_mix_fifo_poll`` - Validates that uart_poll_out call is resilient to being interrupted by another uart API call.
