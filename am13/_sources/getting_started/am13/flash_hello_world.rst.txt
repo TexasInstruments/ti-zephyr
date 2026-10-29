@@ -7,7 +7,7 @@ Flash the application built in the previous step. Run the command from the same
 .. code-block:: shell
 
    cd <sdk-install-dir>/ti-zephyr
-   west flash --openocd <openocd-dir>/src/openocd --openocd-search <openocd-dir>/tcl
+   west flash
 
 Verify
 ******

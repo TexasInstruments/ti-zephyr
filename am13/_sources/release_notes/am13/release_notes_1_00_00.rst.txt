@@ -92,5 +92,8 @@ Known Issues
        * ``test_disconnect`` asserts the pin is not an input after ``GPIO_DISCONNECTED``, but ``gpio_pin_is_input()`` returns 1.
        * Cause: the driver derives direction only from the output-enable bit, so a disconnected pin reads as an input.
      - GPIO
+   * - ZSOD-222
+     - A subset of twister tests fail with "Unknown Error". Same behavior on serial with standalone build+flash.
+     - Twister Testing
 
 
