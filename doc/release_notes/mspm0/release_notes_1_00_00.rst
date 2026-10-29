@@ -12,6 +12,8 @@ Device and Validation Information
 
 .. list-table::
    :header-rows: 1
+   :widths: 15 15 50 20
+   :class: force-wrap
 
    * - SOC
      - Supported CPUs
@@ -27,6 +29,8 @@ Features Added in This Release
 
 .. list-table::
    :header-rows: 1
+   :widths: 70 30
+   :class: force-wrap
 
    * - Feature
      - Module
@@ -58,6 +62,8 @@ Components Information
 
 .. list-table::
    :header-rows: 1
+   :widths: 30 20 50
+   :class: force-wrap
 
    * - Components
      - Version
@@ -71,6 +77,8 @@ Fixed Issues
 
 .. list-table::
    :header-rows: 1
+   :widths: 12 68 20
+   :class: force-wrap
 
    * - ID
      - Head Line
@@ -84,12 +92,15 @@ Known Issues
 
 .. list-table::
    :header-rows: 1
+   :widths: 12 68 20
+   :class: force-wrap
 
    * - ID
      - Head Line
      - Module
-   * - NA
-     - NA
-     - NA
+   * - ZSOD-224
+     - **drivers.gpio.get_direction fails**
 
-
+       * ``test_disconnect`` asserts the pin is not an input after ``GPIO_DISCONNECTED``, but ``gpio_pin_is_input()`` returns 1.
+       * Cause: the driver derives direction only from the output-enable bit, so a disconnected pin reads as an input.
+     - GPIO
