@@ -91,6 +91,6 @@ Known Issues
    * - ID
      - Head Line
      - Module
-   * - NA
-     - NA
-     - NA
+   * - ZSOD-221
+     - Watchdog test fails because board resets on a watchdog violation.
+     - Watchdog
