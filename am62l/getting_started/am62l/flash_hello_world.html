@@ -152,25 +152,64 @@
              
   <section id="step-4-flash-hello-world-example">
 <h1>Step 4: Flash Hello World Example<a class="headerlink" href="#step-4-flash-hello-world-example" title="Link to this heading"></a></h1>
-<p>AM62L runs the application from the SD card prepared in Step 2. Copy the build
-output from the <code class="docutils literal notranslate"><span class="pre">zephyr</span></code> folder used for the build to the first FAT partition
-of the SD card:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>&lt;sdk-install-dir&gt;/zephyr/build/zephyr/zephyr.bin<span class="w"> </span>&lt;sd-card-fat-partition&gt;/
+<p>AM62L runs the application from the SD card / USB-DFU prepared in Step 2.</p>
+<section id="generated-boot-files">
+<h2>Generated Boot Files<a class="headerlink" href="#generated-boot-files" title="Link to this heading"></a></h2>
+<p>A default build generates:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">build/zephyr/zephyr.bin     # Zephyr application binary</span>
+<span class="go">build/zephyr/tiboot3.bin    # Stage 1 bootloader (BL1 + TIFS + board configs)</span>
+<span class="go">build/zephyr/bl1.bin        # TF-A BL1 binary (intermediate)</span>
+<span class="go">build/zephyr/tispl.bin      # Stage 2 boot image (TF-A BL31 + Zephyr)</span>
+<span class="go">build/zephyr/bl31.bin       # TF-A BL31 binary (intermediate)</span>
 </pre></div>
 </div>
-<p>Insert the SD card into the AM62L EVM (<code class="docutils literal notranslate"><span class="pre">am62l_evm</span></code>).</p>
-<p>Power up the board and stop U-Boot at the prompt, then run:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>fatload<span class="w"> </span>mmc<span class="w"> </span><span class="m">1</span>:1<span class="w"> </span>0x82000000<span class="w"> </span>zephyr.bin<span class="p">;</span><span class="w"> </span>dcache<span class="w"> </span>flush<span class="p">;</span><span class="w"> </span>icache<span class="w"> </span>flush<span class="p">;</span><span class="w"> </span>dcache<span class="w"> </span>off<span class="p">;</span><span class="w"> </span>icache<span class="w"> </span>off<span class="p">;</span><span class="w"> </span>go<span class="w"> </span>0x82000000
+<section id="booting-from-sd-card">
+<h3>Booting from SD Card<a class="headerlink" href="#booting-from-sd-card" title="Link to this heading"></a></h3>
+<p>The AM62L EVM supports two boot methods: direct boot (no U-Boot) and U-Boot-based boot.</p>
+</section>
+</section>
+<section id="option-1-direct-boot-no-u-boot">
+<h2>Option 1: Direct Boot (No U-Boot)<a class="headerlink" href="#option-1-direct-boot-no-u-boot" title="Link to this heading"></a></h2>
+<p>This method boots Zephyr directly using only the generated boot images.</p>
+<p><strong>Preparation:</strong></p>
+<ol class="arabic">
+<li><p>Prepare an SD card with a FAT32 boot partition</p></li>
+<li><p>Copy the generated boot images to the SD card:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cp build/zephyr/tiboot3.bin /media/boot/</span>
+<span class="go">cp build/zephyr/tispl.bin /media/boot/</span>
+</pre></div>
+</div>
+</li>
+<li><p>Insert the SD card and power on the board</p></li>
+</ol>
+<p><strong>Boot Sequence:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Boot ROM → tiboot3.bin (BL1 + TIFS) → tispl.bin (TF-A + Zephyr)
+                                                        ↓
+                                                 Zephyr Running
+</pre></div>
+</div>
+<p>The boot ROM loads <code class="docutils literal notranslate"><span class="pre">tiboot3.bin</span></code>, which initializes the hardware and loads
+<code class="docutils literal notranslate"><span class="pre">tispl.bin</span></code> into DDR. The TF-A BL31 then starts the Zephyr application at
+0x82000000. No U-Boot is involved.</p>
+</section>
+<section id="option-2-u-boot-based-boot">
+<h2>Option 2: U-Boot-Based Boot<a class="headerlink" href="#option-2-u-boot-based-boot" title="Link to this heading"></a></h2>
+<p>Copy the compiled <code class="docutils literal notranslate"><span class="pre">zephyr.bin</span></code> to the first FAT partition of the SD card and
+plug the SD card into the board. Power it up and stop the u-boot execution at
+prompt.</p>
+<p>Use U-Boot to load and start zephyr.bin:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">fatload mmc 1:1 0x82000000 zephyr.bin; dcache flush; icache flush; dcache off; icache off; go 0x82000000</span>
 </pre></div>
 </div>
 <p>The Zephyr application should start running on the A53 core.</p>
 <section id="verify">
-<h2>Verify<a class="headerlink" href="#verify" title="Link to this heading"></a></h2>
+<h3>Verify<a class="headerlink" href="#verify" title="Link to this heading"></a></h3>
 <p>Open a serial terminal at 115200 8N1. Expected output:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*** Booting Zephyr OS build v4.4.0-ti ***</span>
 <span class="go">Hello World! &lt;board&gt;</span>
 </pre></div>
 </div>
+</section>
 </section>
 </section>
 
