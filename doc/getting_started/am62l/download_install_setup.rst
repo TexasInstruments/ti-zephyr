@@ -21,7 +21,7 @@ Run the installer and follow its prompts. The SDK is installed to
 
 Once the installer is downloaded on the system, open the properties of the `.run` file and toggle the option for `Executable as Program` to `on`
 
-Run the installer and follow the below follow
+Run the installer and follow the below instructions:
 
 Opening Screen of the installer (Click Forward) 
 
