@@ -34,7 +34,7 @@ Features Added in This Release
 
    * - Feature
      - Module
-   * - TIMERA,  TIMERG, TIMERB, I2C, SPI, WWDT, IWDT, RTC, COMP
+   * - TIMERA,  TIMERG, TIMERB, I2C, SPI, WWDT, IWDT, RTC, COMP, CRC
      - Peripheral Drivers
    * - DMA (Driver Only, No peripherals)
      - Peripheral Drivers
@@ -104,3 +104,9 @@ Known Issues
        * ``test_disconnect`` asserts the pin is not an input after ``GPIO_DISCONNECTED``, but ``gpio_pin_is_input()`` returns 1.
        * Cause: the driver derives direction only from the output-enable bit, so a disconnected pin reads as an input.
      - GPIO
+
+   * - ZSOD-223
+     - **drivers.spi.spi_loopback**
+
+       * SPI loopback test failures because of timeout assert in twister tests.
+     - SPI
