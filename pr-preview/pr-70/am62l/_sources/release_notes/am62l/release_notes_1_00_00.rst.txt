@@ -12,6 +12,8 @@ Device and Validation Information
 
 .. list-table::
    :header-rows: 1
+   :widths: 15 15 50 20
+   :class: force-wrap
 
    * - SOC
      - Supported CPUs
@@ -27,6 +29,8 @@ Features Added in This Release
 
 .. list-table::
    :header-rows: 1
+   :widths: 70 30
+   :class: force-wrap
 
    * - Feature
      - Module
@@ -48,6 +52,8 @@ Components Information
 
 .. list-table::
    :header-rows: 1
+   :widths: 30 20 50
+   :class: force-wrap
 
    * - Components
      - Version
@@ -64,6 +70,8 @@ Fixed Issues
 
 .. list-table::
    :header-rows: 1
+   :widths: 12 68 20
+   :class: force-wrap
 
    * - ID
      - Head Line
@@ -77,6 +85,8 @@ Known Issues
 
 .. list-table::
    :header-rows: 1
+   :widths: 12 68 20
+   :class: force-wrap
 
    * - ID
      - Head Line
