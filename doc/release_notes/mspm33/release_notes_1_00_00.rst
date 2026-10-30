@@ -104,3 +104,9 @@ Known Issues
        * The board resets and the test restarts at ``test_wdt_no_callback`` on every boot instead of advancing to the next stage.
        * Cause: test state held in noinit RAM is not preserved across the WWDT reset.
      - WWDT
+   * - ZSOD-226
+     - **tests.drivers.dma.chan_blen_transfer and tests.drivers.dma.loop_transfer fails**
+
+       * These tests fail because of improper platform_allow in tests.yaml
+       * Fix: `fc84130 <https://github.com/TexasInstruments/zephyr/commit/fc84130f3d6e7f21e2ae17a1adf9c6ee02337c8e>`__
+     - DMA
