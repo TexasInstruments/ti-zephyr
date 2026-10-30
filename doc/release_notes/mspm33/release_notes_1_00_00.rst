@@ -22,7 +22,7 @@ Device and Validation Information
    * - `MSPM33C <https://www.ti.com/product/MSPM33C321A>`__
      - M33
      - `LP-MSPM33C321A <https://www.ti.com/tool/LP-MSPM33C321A>`__
-     - Ubuntu 24.04
+     - Ubuntu 22.04
 
 Features Added in This Release
 ===============================
