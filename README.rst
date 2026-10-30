@@ -260,8 +260,16 @@ LicenseRef-TI-TFL License — see the `LICENSE file <LICENSE>`_.
 
 Documentation
 *******
+For building the documentation the prerequisites can be downloaded using the following command
+
+.. code-block:: shell
+
+ cd ~/zephyrproject (Base of zephyr directory)
+ source .venv/bin/activate
+ pip install -r ti-zephyr/doc/requirements.txt
 
 TI Zephyr SDK documentation can be build by running following commands. 
+
 .. code-block:: shell
 
  # Ubuntu
@@ -273,3 +281,8 @@ The following page contains the live documents for all the SOCs
 
 https://texasinstruments.github.io/ti-zephyr/
 
+**NOTE**: For any links added to the documentation from main zephyr documentation for release ensure that they are inline with the version of the release 
+
+For examples, in **zephyr-sdk 1.00.00**, we are using **zephyr v4.4.0**  
+Therefore, for example for DAC driver docs, the link used, from main zephyr documentation, will be:   
+**https://docs.zephyrproject.org/4.4.0/samples/drivers/dac/README.html**
