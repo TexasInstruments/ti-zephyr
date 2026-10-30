@@ -51,7 +51,7 @@ Features Added in This Release
    * - LVGL GUI based demo
      - Applications
 
-Components Information
+Components and Tools
 =========================================
 
 .. list-table::
@@ -62,9 +62,24 @@ Components Information
    * - Components
      - Version
      - Branch Info
-   * - Zephyr Kernel
+   * - Zephyr
      - `4.4.0 <https://docs.zephyrproject.org/latest/releases/release-notes-4.4.html>`__
-     - `v4.4.0-ti <https://github.com/TexasInstruments/zephyr/tree/v4.4.0-ti>`__
+     - `v4.4.0-ti <https://github.com/TexasInstruments/zephyr/tree/v4.4.0-ti-01.00.00.02>`__
+   * - ti-zephyr
+     - 4.4.0+
+     - `v4.4.0-ti <https://github.com/TexasInstruments/ti-zephyr/tree/v4.4.0-ti-01.00.00.02>`__
+   * - GCC (arm-zephyr-eabi)
+     - 14.3.0+
+     - `Zephyr SDK v1.0.1 <https://github.com/zephyrproject-rtos/sdk-ng/releases/tag/v1.0.1>`__
+   * - OpenOCD
+     - 0.12.0+
+     - `ti-openocd <https://github.com/TexasInstruments/ti-openocd/tree/v4.4.0-ti-01.00.00.02>`__
+   * - HAL_TI
+     - v4.4.0-ti-01.00.00.02
+     - `hal_ti <https://github.com/TexasInstruments/hal_ti/tree/v4.4.0-ti-01.00.00.02>`__
+   * - LVGL
+     - 9.5+
+     - `lvgl <https://github.com/zephyrproject-rtos/lvgl/>`__
 
 Fixed Issues
 ============
