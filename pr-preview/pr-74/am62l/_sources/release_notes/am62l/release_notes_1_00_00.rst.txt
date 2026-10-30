@@ -58,12 +58,24 @@ Components Information
    * - Components
      - Version
      - Branch Info
-   * - Zephyr Kernel
+   * - Zephyr
      - `4.4.0 <https://docs.zephyrproject.org/latest/releases/release-notes-4.4.html>`__
-     - `v4.4.0-ti <https://github.com/TexasInstruments/zephyr/tree/v4.4.0-ti>`__
+     - `v4.4.0-ti <https://github.com/TexasInstruments/zephyr/tree/v4.4.0-ti-01.00.00.02>`__
+   * - ti-zephyr
+     - 4.4.0+
+     - `v4.4.0-ti <https://github.com/TexasInstruments/ti-zephyr/tree/v4.4.0-ti-01.00.00.02>`__
+   * - GCC (aarch64-zephyr-elf)
+     - 14.3.0+
+     - `Zephyr SDK v1.0.1 <https://github.com/zephyrproject-rtos/sdk-ng/releases/tag/v1.0.1>`__
+   * - Trusted Firmware A
+     - 2.14.y
+     - `trusted-firmware-a <https://github.com/TexasInstruments/arm-trusted-firmware/tree/ti-tfa-2.14.y>`__
    * - TIFS Firmware
      - `12.01.02 <https://software-dl.ti.com/tisci/esd/12_01_02/release_notes/release_notes.html>`__
      - NA
+   * - LVGL
+     - 9.5+
+     - `lvgl <https://github.com/zephyrproject-rtos/lvgl/>`__
 
 Fixed Issues
 ============
