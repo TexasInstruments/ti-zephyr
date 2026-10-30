@@ -3,14 +3,21 @@
 Introduction
 ############
 
-Zephyr SDK is a west workspace based SDK that provides TI-specific samples and tests along with upstream
-`Zephyr RTOS <https://zephyrproject.org>`_.
+The TI Zephyr SDK provides a unified, comprehensive software platform designed to simplify development and accelerate time to market across TI's embedded processor portfolio.
+The SDK brings together everything developers need to get started, including:
+
+* **Zephyr RTOS v4.4.0 Support**: Integrated Zephyr source code with support for TI SoCs.
+* **Drivers & Samples**: A comprehensive collection of device drivers, standard samples, and extended TI-specific examples.
+* **Demos & Reference Designs**: Ready-to-use demo applications showcasing key device capabilities and reference implementations to accelerate product development.
+* **Development & Debug Tools**: Ready to use, integrated support for programming, flashing, and debugging TI devices using OpenOCD fork.
+
+While the specific SDK content may vary depending on individual device capabilities, all TI Zephyr SDK releases follow a consistent structure and development experience across TI's broad embedded processor portfolio.
 
 Block Diagram
 **************
 Given below is a block diagram of the SW modules in this SDK,
 
-.. image:: ../images/zephyr_sdk_block_diagram.png
+.. image:: ../images/zephyr_sdk_block_diagram.webp
 
 Software Components
 *******************
@@ -176,26 +183,28 @@ Licenses
 .. only:: mspm0
 
    The licensing information of this SDK, as well as any third-party components included which are made available under a number of other open-source licenses are enumerated as part of the manifest.
-   A complete manifest along with export control information is detailed `here <../../MSPM0-ZEPHYR-SDK_manifest.html>`_
+   A complete manifest along with export control information is detailed here. (`MANIFEST <../../MSPM0-ZEPHYR-SDK_manifest.html>`_)
 
 
 .. only:: mspm33
 
    The licensing information of this SDK, as well as any third-party components included which are made available under a number of other open-source licenses are enumerated as part of the manifest.
-   A complete manifest along with export control information is detailed `here <../../MSPM33-ZEPHYR-SDK_manifest.html>`_
+   A complete manifest along with export control information is detailed here. (`MANIFEST <../../MSPM33-ZEPHYR-SDK_manifest.html>`_)
 
 .. only:: am13
 
    The licensing information of this SDK, as well as any third-party components included which are made available under a number of other open-source licenses are enumerated as part of the manifest.
-   A complete manifest along with export control information is detailed `here <../../AM13E2X-ZEPHYR-SDK_manifest.html>`_
+   A complete manifest along with export control information is detailed here. (`MANIFEST <../../AM13E2X-ZEPHYR-SDK_manifest.html>`_)
 
 .. only:: am62l
 
    The licensing information of this SDK, as well as any third-party components included which are made available under a number of other open-source licenses are enumerated as part of the manifest.
-   A complete manifest along with export control information is detailed `here <../../AM62L-ZEPHYR-SDK_manifest.html>`_
+   A complete manifest along with export control information is detailed here. (`MANIFEST <../../AM62L-ZEPHYR-SDK_manifest.html>`_)
 
 Help and Support
 ****************
 
-For additional help and support, see
-https://e2e.ti.com/support/processors/f/processors-forum
+For additional help and support, see:
+
+* `TI E2E Forum <https://e2e.ti.com/support/processors/f/processors-forum>`__
+* `#ti channel on the Zephyr Discord <https://discord.com/channels/720317445772017664/944602701243744357>`__

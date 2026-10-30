@@ -161,7 +161,7 @@ yourself. Once the workspace is ready, continue with
 <a class="reference internal" href="build_hello_world.html"><span class="doc">Step 3: Build Hello World Example</span></a> and <a class="reference internal" href="flash_hello_world.html"><span class="doc">Step 4: Flash Hello World Example</span></a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This guide covers Ubuntu 22.04 LTS and later.</p>
+<p>This guide covers Ubuntu 22.04 LTS and later, other distributions may be supported.</p>
 </div>
 <section id="install-the-host-dependencies">
 <h2>Install the host dependencies<a class="headerlink" href="#install-the-host-dependencies" title="Link to this heading"></a></h2>
@@ -196,7 +196,7 @@ sudo<span class="w"> </span>apt<span class="w"> </span>upgrade
 <p>Install the packages with apt:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>--no-install-recommends<span class="w"> </span>git<span class="w"> </span>cmake<span class="w"> </span>ninja-build<span class="w"> </span>gperf<span class="w"> </span><span class="se">\</span>
 ccache<span class="w"> </span>dfu-util<span class="w"> </span>device-tree-compiler<span class="w"> </span>wget<span class="w"> </span>python3-dev<span class="w"> </span>python3-venv<span class="w"> </span>python3-tk<span class="w"> </span><span class="se">\</span>
-xz-utils<span class="w"> </span>file<span class="w"> </span>make<span class="w"> </span>gcc<span class="w"> </span>gcc-multilib<span class="w"> </span>g++-multilib<span class="w"> </span>libsdl2-dev<span class="w"> </span>libmagic1
+xz-utils<span class="w"> </span>file<span class="w"> </span>make<span class="w"> </span>gcc<span class="w"> </span>gcc-multilib<span class="w"> </span>g++-multilib<span class="w"> </span>libmagic1
 </pre></div>
 </div>
 <p>Check the installed versions against the table above:</p>
@@ -221,13 +221,14 @@ dtc<span class="w"> </span>--version
 </div>
 </li>
 <li><p>Create the workspace from the <code class="docutils literal notranslate"><span class="pre">ti-zephyr</span></code> manifest and fetch all modules.
-<code class="docutils literal notranslate"><span class="pre">v4.4.0-ti-01.00.00.02</span></code> is the release tag; use <code class="docutils literal notranslate"><span class="pre">main</span></code> for the latest
-development state:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>init<span class="w"> </span>-m<span class="w"> </span><span class="p">|</span>ti_repo_url<span class="p">|</span>.git<span class="w"> </span>--mr<span class="w"> </span>v4.4.0-ti-01.00.00.02<span class="w"> </span>~/zephyrproject
-<span class="nb">cd</span><span class="w"> </span>~/zephyrproject
-west<span class="w"> </span>update
-</pre></div>
+Use the following command to initialize the workspace.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">update</span> <span class="pre">--narrow</span> <span class="pre">-o=--depth=1</span></code> for a faster fetch.</p>
 </div>
+<pre class="literal-block">west init -m <a class="reference external" href="https://github.com/TexasInstruments/ti-zephyr">https://github.com/TexasInstruments/ti-zephyr</a>.git --mr v4.4.0-ti-01.00.00.02 ~/zephyrproject
+cd ~/zephyrproject
+west update</pre>
 </li>
 <li><p>Install the Python requirements of Zephyr:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>packages<span class="w"> </span>pip<span class="w"> </span>--install
@@ -261,8 +262,7 @@ dependencies and clone the OpenOCD sources:</p>
 <span class="nb">cd</span><span class="w"> </span>~/zephyrproject
 </pre></div>
 </div>
-<p>The MSPM33 support is in the TI fork of OpenOCD:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>-b<span class="w"> </span>ti-release<span class="w"> </span>https://github.com/TexasInstruments/ti-openocd<span class="w"> </span>openocd
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>-b<span class="w"> </span>ti-zephyr<span class="w"> </span>https://github.com/TexasInstruments/ti-openocd<span class="w"> </span>openocd
 </pre></div>
 </div>
 <p>Build and install it. <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">make</span> <span class="pre">install</span></code> puts OpenOCD on the <code class="docutils literal notranslate"><span class="pre">PATH</span></code>, so
