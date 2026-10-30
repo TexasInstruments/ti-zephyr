@@ -2,7 +2,7 @@ Step 1: Download, Install and Setup the SDK and Tools
 #####################################################
 
 .. note::
-   This guide covers Ubuntu version 24.04 LTS and later.
+   This guide covers Ubuntu version 22.04 LTS and later.
 
 The SDK installer places the Zephyr workspace and toolchain in
 <sdk-install-dir>. Host packages and the Python environment are set up as

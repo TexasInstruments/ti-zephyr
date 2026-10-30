@@ -2,7 +2,7 @@ Step 1: Download, Install and Setup the SDK and Tools
 #####################################################
 
 .. note::
-   This guide covers Ubuntu version 24.04 LTS and later.
+   This guide covers Ubuntu version 22.04 LTS and later.
 
 The SDK installer places the Zephyr workspace, toolchain and flashing tools in
 <sdk-install-dir>. A few host packages must still be installed; see Setup below.

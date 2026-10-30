@@ -22,7 +22,7 @@ Device and Validation Information
    * - `AM62L <https://www.ti.com/product/AM62L>`__
      - A53
      - `AM62L EVM <https://www.ti.com/tool/TMDS62LEVM>`__
-     - Ubuntu 24.04
+     - Ubuntu 22.04
 
 Features Added in This Release
 ===============================

@@ -22,7 +22,7 @@ Device and Validation Information
    * - `AM13E2X <https://www.ti.com/product/AM13E23019>`__
      - M33
      - `LP-AM13E230 <https://www.ti.com/tool/LP-AM13E230>`__
-     - Ubuntu 24.04
+     - Ubuntu 22.04
 
 Features Added in This Release
 ===============================
