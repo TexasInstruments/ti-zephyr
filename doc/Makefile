@@ -39,6 +39,7 @@ PUBLISH_DIR       ?= $(ZEPHYR_DIR)/../docs
 ZEPHYR_DOCS       ?= auto
 # Zephyr's default adds -W, so any warning in the upstream docs fails the build.
 ZEPHYR_SPHINXOPTS ?= -j auto --keep-going -T
+ZEPHYR_DOCS_OPTS  ?= HW_FEATURES_VENDOR_FILTER=ti SPHINXOPTS="$(ZEPHYR_SPHINXOPTS)"
 TI_DOCS           ?= auto
 TI_DIR             = ..
 ZEPHYR_STAMP       = $(BUILDBASE)/zephyr-docs.fingerprint
@@ -111,7 +112,7 @@ zephyr-html: $(if $(SOC),check-soc)
 ifeq ($(HAVE_ZEPHYR),1)
 ifneq ($(ZEPHYR_REBUILD),)
 	@echo "Zephyr changed or ZEPHYR_DOCS=always: building the main Zephyr docs"
-	$(MAKE) -C $(ZEPHYR_DIR)/doc html SPHINXOPTS="$(ZEPHYR_SPHINXOPTS)"
+	$(MAKE) -C $(ZEPHYR_DIR)/doc html $(ZEPHYR_DOCS_OPTS)
 	mkdir -p $(BUILDBASE)
 	echo '$(ZEPHYR_FP)' > $(ZEPHYR_STAMP)
 else
