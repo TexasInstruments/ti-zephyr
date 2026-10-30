@@ -110,3 +110,9 @@ Known Issues
 
        * SPI loopback test failures because of timeout assert in twister tests.
      - SPI
+   * - ZSOD-226
+     - **tests.drivers.dma.chan_blen_transfer and tests.drivers.dma.loop_transfer fails**
+
+       * These tests fail because of improper platform_allow in tests.yaml
+       * Fix: `fc84130 <https://github.com/TexasInstruments/zephyr/commit/fc84130f3d6e7f21e2ae17a1adf9c6ee02337c8e>`__
+     - DMA
