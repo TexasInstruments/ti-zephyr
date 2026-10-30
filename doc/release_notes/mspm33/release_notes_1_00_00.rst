@@ -34,10 +34,6 @@ Features Added in This Release
 
    * - Feature
      - Module
-   * - Zephyr SDK Baseport
-     - Core SDK
-   * - MSPM33C SoC support
-     - SDK
    * - GPIO, TIMERA, TIMERG, WWDT, IWDT, Clock (Sysctrl)
      - Peripheral Drivers
    * - Unicomm (I2C, UART, SPI), 
