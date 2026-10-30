@@ -10,7 +10,7 @@ Block Diagram
 **************
 Given below is a block diagram of the SW modules in this SDK,
 
-.. image:: ../images/zephyr_sdk_block_diagram.png
+.. image:: ../images/zephyr_sdk_block_diagram.webp
 
 Software Components
 *******************
