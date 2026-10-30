@@ -204,5 +204,7 @@ Licenses
 Help and Support
 ****************
 
-For additional help and support, see
-https://e2e.ti.com/support/processors/f/processors-forum
+For additional help and support, see:
+
+* `TI E2E Forum <https://e2e.ti.com/support/processors/f/processors-forum>`__
+* `#ti channel on the Zephyr Discord <https://discord.com/channels/720317445772017664/944602701243744357>`__
