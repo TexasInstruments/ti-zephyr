@@ -22,7 +22,7 @@ Device and Validation Information
    * - MSPM0G, MSPM0L
      - M0
      - `LP-MSPM0G3507 <https://www.ti.com/tool/LP-MSPM0G3507>`__ , `LP-MSPM0G3519 <https://www.ti.com/tool/LP-MSPM0G3519>`__ , `LP-MSPM0L2228 <https://www.ti.com/tool/LP-MSPM0L2228>`__
-     - Ubuntu 24.04
+     - Ubuntu 22.04
 
 Features Added in This Release
 ===============================
