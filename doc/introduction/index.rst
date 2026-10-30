@@ -183,23 +183,23 @@ Licenses
 .. only:: mspm0
 
    The licensing information of this SDK, as well as any third-party components included which are made available under a number of other open-source licenses are enumerated as part of the manifest.
-   A complete manifest along with export control information is detailed `here <../../MSPM0-ZEPHYR-SDK_manifest.html>`_
+   A complete manifest along with export control information is detailed here. (`MANIFEST <../../MSPM0-ZEPHYR-SDK_manifest.html>`_)
 
 
 .. only:: mspm33
 
    The licensing information of this SDK, as well as any third-party components included which are made available under a number of other open-source licenses are enumerated as part of the manifest.
-   A complete manifest along with export control information is detailed `here <../../MSPM33-ZEPHYR-SDK_manifest.html>`_
+   A complete manifest along with export control information is detailed here. (`MANIFEST <../../MSPM33-ZEPHYR-SDK_manifest.html>`_)
 
 .. only:: am13
 
    The licensing information of this SDK, as well as any third-party components included which are made available under a number of other open-source licenses are enumerated as part of the manifest.
-   A complete manifest along with export control information is detailed `here <../../AM13E2X-ZEPHYR-SDK_manifest.html>`_
+   A complete manifest along with export control information is detailed here. (`MANIFEST <../../AM13E2X-ZEPHYR-SDK_manifest.html>`_)
 
 .. only:: am62l
 
    The licensing information of this SDK, as well as any third-party components included which are made available under a number of other open-source licenses are enumerated as part of the manifest.
-   A complete manifest along with export control information is detailed `here <../../AM62L-ZEPHYR-SDK_manifest.html>`_
+   A complete manifest along with export control information is detailed here. (`MANIFEST <../../AM62L-ZEPHYR-SDK_manifest.html>`_)
 
 Help and Support
 ****************
