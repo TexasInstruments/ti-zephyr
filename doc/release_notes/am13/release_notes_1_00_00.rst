@@ -40,8 +40,6 @@ Features Added in This Release
      - Peripheral Drivers
    * - MCAN, XBAR, AES-ADV, CRC
      - Peripheral Drivers
-   * - Runtime PM for UART, I2C, SPI
-     - Power
    * - LVGL Demo
      - Applications
 
