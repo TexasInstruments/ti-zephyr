@@ -73,9 +73,10 @@ jobs:
       matrix:
         soc: ${{ fromJSON(needs.socs.outputs.matrix) }}
     steps:
-      - name: Checkout
+      - name: Checkout ti-zephyr
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
+          path: ti-zephyr
           persist-credentials: false
 
       - name: Set up Python
@@ -83,28 +84,49 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
-          cache-dependency-path: doc/requirements.txt
+          cache-dependency-path: ti-zephyr/doc/requirements.txt
+
+      - name: Install west
+        run: pip install west==1.5.0
+
+      # The workspace (ti-zephyr/, zephyr/, modules) is built from the checked
+      # out ti-zephyr, so the PR's own west.yml is used. doc/Makefile then
+      # finds ../../zephyr and publishes to <workspace>/docs/.
+      - name: Initialize west workspace
+        run: |
+          west init -l ti-zephyr
+          west update --narrow -o=--depth=1
+
+      - name: Install doc tools
+        env:
+          DOXYGEN_VERSION: 1.15.0
+          DOXYGEN_SHA256SUM: 0ec2e5b2c3cd82b7106d19cb42d8466450730b8cb7a9e85af712be38bf4523a1
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y graphviz librsvg2-bin
+          wget --no-verbose "https://github.com/doxygen/doxygen/releases/download/Release_${DOXYGEN_VERSION//./_}/doxygen-${DOXYGEN_VERSION}.linux.bin.tar.gz"
+          echo "${DOXYGEN_SHA256SUM}  doxygen-${DOXYGEN_VERSION}.linux.bin.tar.gz" | sha256sum -c
+          sudo tar xf "doxygen-${DOXYGEN_VERSION}.linux.bin.tar.gz" -C /opt
+          echo "/opt/doxygen-${DOXYGEN_VERSION}/bin" >> "$GITHUB_PATH"
 
       - name: Install doc requirements
-        run: pip install -r doc/requirements.txt
+        run: |
+          pip install -r zephyr/scripts/requirements-actions.txt --require-hashes
+          pip install -r zephyr/doc/requirements.txt --require-hashes
+          pip install -r ti-zephyr/doc/requirements.txt
 
       - name: Build HTML
-        run: make -C doc html SOC=${{ matrix.soc }} SPHINXOPTS="-W --keep-going"
+        run: make -C ti-zephyr/doc html SOC=${{ matrix.soc }} SPHINXOPTS="-W --keep-going"
 
+      # docs/ holds zephyr/ (identical in every leg), ti-zephyr/<soc>/ and the
+      # ti-zephyr/*-ZEPHYR-SDK_manifest.html files; the legs are merged in
+      # "assemble".
       - name: Upload HTML
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: html-${{ matrix.soc }}
-          path: doc/html/${{ matrix.soc }}
+          name: docs-${{ matrix.soc }}
+          path: docs
           if-no-files-found: error
-          retention-days: 7
-
-      - name: Upload manifest files
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: manifests
-          path: doc/html/*-ZEPHYR-SDK_manifest.html
-          if-no-files-found: ignore
           retention-days: 7
 
   assemble:
@@ -126,28 +148,9 @@ jobs:
       - name: Download HTML
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
-          pattern: html-*
-          path: site
-
-      - name: Download manifest files
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
-        with:
-          name: manifests
-          path: site
-
-      # download-artifact keeps each artifact's name as a subdirectory
-      # (site/html-mspm0/, ...) - rename to the bare SoC name (site/mspm0/).
-      - name: Flatten per-SoC directories
-        run: |
-          for d in site/html-*; do
-            mv "$d" "site/${d#site/html-}"
-          done
-
-      # Move manifest files to site root so relative links like ../../AM13E2X-ZEPHYR-SDK_manifest.html work
-      - name: Move manifests to site root
-        run: |
-          mv site/*-ZEPHYR-SDK_manifest.html . 2>/dev/null || true
-          mv ./*-ZEPHYR-SDK_manifest.html site/ 2>/dev/null || true
+          pattern: docs-*
+          merge-multiple: true
+          path: site/docs
 
       - name: Generate landing page
         run: python3 .github/workflows/generate_docs_index.py site doc/_static/ti_logo.png doc/socs.json
