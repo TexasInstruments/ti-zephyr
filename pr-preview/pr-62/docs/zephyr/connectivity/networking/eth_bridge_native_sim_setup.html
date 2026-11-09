@@ -1,0 +1,546 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ethernet bridge with native_sim board &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/connectivity/networking/eth_bridge_native_sim_setup.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Networking with QEMU and IEEE 802.15.4" href="qemu_802154_setup.html" />
+    <link rel="prev" title="Networking with multiple Zephyr instances" href="networking_with_multiple_instances.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Connectivity</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../canbus/index.html">Controller Area Network (CAN) Bus Protocols</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Networking</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="net-stack-architecture.html">Network Stack Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="net_config_guide.html">Network Configuration Guide</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="networking_with_host.html">Networking with the host system</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="native_sim_setup.html">Networking with native_sim board</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qemu_eth_setup.html">Networking with QEMU Ethernet</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qemu_setup.html">Networking with QEMU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="usbnet_setup.html">USB Device Networking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qemu_user_setup.html">Networking with QEMU User</a></li>
+<li class="toctree-l4"><a class="reference internal" href="networking_with_multiple_instances.html">Networking with multiple Zephyr instances</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Ethernet bridge with native_sim board</a></li>
+<li class="toctree-l4"><a class="reference internal" href="qemu_802154_setup.html">Networking with QEMU and IEEE 802.15.4</a></li>
+<li class="toctree-l4"><a class="reference internal" href="armfvp_user_networking_setup.html">Networking with Arm FVP User Mode</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="network_monitoring.html">Monitor Network Traffic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="network_tracing.html">Network Tracing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/index.html">Networking APIs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="conn_mgr/index.html">Connection Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dsa.html">Distributed Switch Architecture (DSA)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../lora_lorawan/index.html">LoRa and LoRaWAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usb/index.html">USB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modbus/index.html">Modbus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Connectivity</a> &raquo;</li>
+  
+     <li><a href="index.html">Networking</a> &raquo;</li>
+  
+     <li><a href="networking_with_host.html">Networking with the host system</a> &raquo;</li>
+  
+  <li>Ethernet bridge with native_sim board</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/connectivity/networking/eth_bridge_native_sim_setup.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27connectivity%2Fnetworking%2Feth_bridge_native_sim_setup%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Networking%2Carea%3A+Ethernet&env=-+Page%3A+connectivity%2Fnetworking%2Feth_bridge_native_sim_setup%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="ethernet-bridge-with-native-sim-board">
+<span id="networking-with-native-sim-eth-bridge"></span><h1>Ethernet bridge with native_sim board<a class="headerlink" href="#ethernet-bridge-with-native-sim-board" title="Link to this heading"></a></h1>
+<p>This document describes how to set up a bridged Ethernet network between a (Linux) host
+and a Zephyr application running in a <a class="reference internal" href="../../boards/native/native_sim/doc/index.html#native_sim"><span class="xref zephyr zephyr-board">native_sim</span></a> board.</p>
+<p>This setup is useful when testing the Ethernet bridging feature that can be enabled with
+<a class="reference internal" href="../../kconfig.html#CONFIG_NET_ETHERNET_BRIDGE" title="CONFIG_NET_ETHERNET_BRIDGE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_ETHERNET_BRIDGE</span></code></a> Kconfig option. In this setup, the net-tools
+configuration creates two host network interfaces <code class="docutils literal notranslate"><span class="pre">zeth0</span></code> and <code class="docutils literal notranslate"><span class="pre">zeth1</span></code> and connects them
+to Zephyr’s <a class="reference internal" href="../../boards/native/native_sim/doc/index.html#native_sim"><span class="xref zephyr zephyr-board">native_sim</span></a> application.</p>
+<p>First create the host interfaces. In this example two interfaces are created.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd $ZEPHYR_BASE/../tools/net-tools</span>
+<span class="go">./net-setup.sh -c zeth-multiface.conf -i zeth0 -t 2</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">-c</span></code> tells which configuration file to use, where <code class="docutils literal notranslate"><span class="pre">zeth-multiface.conf</span></code> is tailored
+for generating multiple network interfaces in the host.
+The <code class="docutils literal notranslate"><span class="pre">-i</span></code> option tells what is the first host interface name. The <code class="docutils literal notranslate"><span class="pre">-t</span></code> tells how
+many network interfaces to create.</p>
+<p>Example output of the host interfaces:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">zeth0: flags=4099&lt;UP,BROADCAST,MULTICAST&gt;  mtu 1500</span>
+<span class="go">       inet 192.0.2.2  netmask 255.255.255.255  broadcast 0.0.0.0</span>
+<span class="go">       inet6 2001:db8::2  prefixlen 128  scopeid 0x0&lt;global&gt;</span>
+<span class="go">       inet6 fe80::200:5eff:fe00:5300  prefixlen 64  scopeid 0x20&lt;link&gt;</span>
+<span class="go">       ether 00:00:5e:00:53:00  txqueuelen 1000  (Ethernet)</span>
+<span class="go">       RX packets 33  bytes 2408 (2.4 KB)</span>
+<span class="go">       RX errors 0  dropped 0  overruns 0  frame 0</span>
+<span class="go">       TX packets 49  bytes 4092 (4.0 KB)</span>
+<span class="go">       TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0</span>
+
+<span class="go">zeth1: flags=4099&lt;UP,BROADCAST,MULTICAST&gt;  mtu 1500</span>
+<span class="go">       inet 198.51.100.1  netmask 255.255.255.255  broadcast 0.0.0.0</span>
+<span class="go">       inet6 fe80::200:5eff:fe00:5301  prefixlen 64  scopeid 0x20&lt;link&gt;</span>
+<span class="go">       inet6 2001:db8:2::1  prefixlen 128  scopeid 0x0&lt;global&gt;</span>
+<span class="go">       ether 00:00:5e:00:53:01  txqueuelen 1000  (Ethernet)</span>
+<span class="go">       RX packets 21  bytes 1340 (1.3 KB)</span>
+<span class="go">       RX errors 0  dropped 0  overruns 0  frame 0</span>
+<span class="go">       TX packets 45  bytes 3916 (3.9 KB)</span>
+<span class="go">       TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0</span>
+</pre></div>
+</div>
+<p>Then create a sample and enable Ethernet bridging support. In this example we create
+<a class="reference internal" href="../../samples/net/sockets/echo_server/README.html#sockets-echo-server" title="Implement a UDP/TCP server that sends received packets back to the sender.">Echo server (advanced)</a> sample application.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west build -p -b native_sim -d ../build/echo-server \</span>
+<span class="go">   samples/net/sockets/echo_server -- \</span>
+<span class="go">   -DCONFIG_UART_NATIVE_PTY_AUTOATTACH_DEFAULT_CMD=&quot;\&quot;gnome-terminal -- screen %s\&quot;&quot; \</span>
+<span class="go">   -DCONFIG_NET_ETHERNET_BRIDGE=y \</span>
+<span class="go">   -DCONFIG_NET_ETHERNET_BRIDGE_SHELL=y \</span>
+<span class="go">   -DCONFIG_ETH_NATIVE_TAP_INTERFACE_COUNT=2 \</span>
+<span class="go">   -DCONFIG_NET_IF_MAX_IPV6_COUNT=2 \</span>
+<span class="go">   -DCONFIG_NET_IF_MAX_IPV4_COUNT=2</span>
+<span class="go">../build/echo-server/zephyr/zephyr.exe -attach_uart</span>
+</pre></div>
+</div>
+<p>This will create and run <a class="reference internal" href="../../samples/net/sockets/echo_server/README.html#sockets-echo-server" title="Implement a UDP/TCP server that sends received packets back to the sender.">Echo server (advanced)</a> with bridging enabled but
+not yet configured. To configure the bridging, you either need to use the bridge shell or call the
+bridging API directly from the application. We setup the bridging using the bridge shell like
+this:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">net bridge addif 1 3 2</span>
+<span class="go">net iface up 1</span>
+</pre></div>
+</div>
+<p>In the above example, the bridge interface index is 1, and interfaces 2 and 3 are
+Ethernet interfaces which are linked to interfaces <code class="docutils literal notranslate"><span class="pre">zeth0</span></code> and <code class="docutils literal notranslate"><span class="pre">zeth1</span></code> in the host side.</p>
+<p>The network interfaces look like this in Zephyr’s side:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">net iface</span>
+<span class="go">Hostname: zephyr</span>
+
+<span class="go">Interface bridge0 (0x8090ebc) (Virtual) [1]</span>
+<span class="go">==================================</span>
+<span class="go">Virtual name : &lt;enabled&gt;</span>
+<span class="go">No attached network interface.</span>
+<span class="go">Link addr : 3B:DB:31:0F:CC:B6</span>
+<span class="go">MTU       : 1500</span>
+<span class="go">Flags     : NO_AUTO_START</span>
+<span class="go">Device    : BRIDGE_0 (0x8088354)</span>
+<span class="go">Promiscuous mode : disabled</span>
+<span class="go">IPv6 not enabled for this interface.</span>
+<span class="go">IPv4 not enabled for this interface.</span>
+
+<span class="go">Interface eth0 (0x8090fcc) (Ethernet) [2]</span>
+<span class="go">===================================</span>
+<span class="go">Link addr : 02:00:5E:00:53:D2</span>
+<span class="go">MTU       : 1500</span>
+<span class="go">Flags     : AUTO_START,IPv4,IPv6</span>
+<span class="go">Device    : zeth0 (0x808837c)</span>
+<span class="go">Promiscuous mode : disabled</span>
+<span class="go">Ethernet capabilities supported:</span>
+<span class="go">        TXTIME</span>
+<span class="go">        Promiscuous mode</span>
+<span class="go">Ethernet PHY device: &lt;none&gt; (0)</span>
+<span class="go">IPv6 unicast addresses (max 3):</span>
+<span class="go">        fe80::5eff:fe00:53d2 autoconf preferred infinite</span>
+<span class="go">        2001:db8::1 manual preferred infinite</span>
+<span class="go">IPv6 multicast addresses (max 4):</span>
+<span class="go">        ff02::1</span>
+<span class="go">        ff02::1:ff00:53d2</span>
+<span class="go">        ff02::1:ff00:1</span>
+<span class="go">IPv6 prefixes (max 2):</span>
+<span class="go">        &lt;none&gt;</span>
+<span class="go">IPv6 hop limit           : 64</span>
+<span class="go">IPv6 base reachable time : 30000</span>
+<span class="go">IPv6 reachable time      : 18476</span>
+<span class="go">IPv6 retransmit timer    : 0</span>
+<span class="go">IPv4 unicast addresses (max 1):</span>
+<span class="go">        192.0.2.1/255.255.255.0 manual preferred infinite</span>
+<span class="go">IPv4 multicast addresses (max 2):</span>
+<span class="go">        224.0.0.1</span>
+<span class="go">IPv4 gateway : 0.0.0.0</span>
+
+<span class="go">Interface eth1 (0x80910dc) (Ethernet) [3]</span>
+<span class="go">===================================</span>
+<span class="go">Link addr : 02:00:5E:00:53:87</span>
+<span class="go">MTU       : 1500</span>
+<span class="go">Flags     : AUTO_START,IPv4,IPv6</span>
+<span class="go">Device    : zeth1 (0x8088368)</span>
+<span class="go">Promiscuous mode : disabled</span>
+<span class="go">Ethernet capabilities supported:</span>
+<span class="go">        TXTIME</span>
+<span class="go">        Promiscuous mode</span>
+<span class="go">Ethernet PHY device: &lt;none&gt; (0)</span>
+<span class="go">IPv6 unicast addresses (max 3):</span>
+<span class="go">        fe80::5eff:fe00:5387 autoconf preferred infinite</span>
+<span class="go">IPv6 multicast addresses (max 4):</span>
+<span class="go">        ff02::1</span>
+<span class="go">        ff02::1:ff00:5387</span>
+<span class="go">IPv6 prefixes (max 2):</span>
+<span class="go">        &lt;none&gt;</span>
+<span class="go">IPv6 hop limit           : 64</span>
+<span class="go">IPv6 base reachable time : 30000</span>
+<span class="go">IPv6 reachable time      : 25158</span>
+<span class="go">IPv6 retransmit timer    : 0</span>
+<span class="go">IPv4 unicast addresses (max 1):</span>
+<span class="go">        &lt;none&gt;</span>
+<span class="go">IPv4 multicast addresses (max 2):</span>
+<span class="go">        224.0.0.1</span>
+<span class="go">IPv4 gateway : 0.0.0.0</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">net</span> <span class="pre">bridge</span></code> command will show the current status of the bridging:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">net bridge</span>
+<span class="go">Bridge Status   Config   Interfaces</span>
+<span class="go">1      up       ok       2 3</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">addif</span></code> command adds Ethernet interfaces 2 and 3 to the bridge interface 1.
+After the <code class="docutils literal notranslate"><span class="pre">addif</span></code> command, the bridging is still disabled because the bridge interface
+is not up by default. The <code class="docutils literal notranslate"><span class="pre">net</span> <span class="pre">iface</span> <span class="pre">up</span></code> command will turn on bridging.</p>
+<p>If you have wireshark running in host side and monitoring <code class="docutils literal notranslate"><span class="pre">zeth0</span></code> and <code class="docutils literal notranslate"><span class="pre">zeth1</span></code>,
+you should see the same network traffic in both host interfaces.</p>
+<p>Note that interface index numbers are not fixed, the bridge and Ethernet interface index
+values might be different in your setup.</p>
+<p>The bridging can be disabled by taking the bridge interface down, and the Ethernet interfaces
+can be removed from the bridge using <code class="docutils literal notranslate"><span class="pre">delif</span></code> command.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">net iface down 1</span>
+<span class="go">net bridge delif 1 2 3</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

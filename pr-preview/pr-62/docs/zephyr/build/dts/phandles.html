@@ -1,0 +1,735 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phandles &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/build/dts/phandles.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="The /zephyr,user node" href="zephyr-user-node.html" />
+    <link rel="prev" title="Devicetree access from C/C++" href="api-usage.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Build and Configuration Systems</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../cmake/index.html">Build System (CMake)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Devicetree</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#devicetree-guide">Devicetree Guide</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="intro.html">Introduction to devicetree</a></li>
+<li class="toctree-l4"><a class="reference internal" href="design.html">Design goals</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bindings.html">Devicetree bindings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api-usage.html">Devicetree access from C/C++</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Phandles</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#getting-phandles">Getting phandles</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#using-phandles">Using phandles</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#phandle-array-properties">phandle-array properties</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#specifier-spaces">Specifier spaces</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#associating-properties-with-specifier-spaces">Associating properties with specifier spaces</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#naming-the-cells-in-a-specifier">Naming the cells in a specifier</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="zephyr-user-node.html">The <code class="docutils literal notranslate"><span class="pre">/zephyr,user</span></code> node</a></li>
+<li class="toctree-l4"><a class="reference internal" href="howtos.html">Devicetree HOWTOs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="troubleshooting.html">Troubleshooting devicetree</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dt-vs-kconfig.html">Devicetree versus Kconfig</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#devicetree-reference">Devicetree Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../kconfig/index.html">Configuration System (Kconfig)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../snippets/index.html">Snippets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../zephyr_cmake_package.html">Zephyr CMake Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sysbuild/index.html">Sysbuild (System build)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../version/index.html">Application version management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flashing/index.html">Flashing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signing/index.html">Signing Binaries</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Build and Configuration Systems</a> &raquo;</li>
+  
+     <li><a href="index.html">Devicetree</a> &raquo;</li>
+  
+  <li>Phandles</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/build/dts/phandles.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27build%2Fdts%2Fphandles%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Devicetree&env=-+Page%3A+build%2Fdts%2Fphandles%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="phandles">
+<span id="dt-phandles"></span><h1>Phandles<a class="headerlink" href="#phandles" title="Link to this heading"></a></h1>
+<p>The devicetree concept of a <em>phandle</em> is very similar to pointers in
+C. You can use phandles to refer to nodes in devicetree similarly to the way
+you can use pointers to refer to structures in C.</p>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#getting-phandles" id="id3">Getting phandles</a></p></li>
+<li><p><a class="reference internal" href="#using-phandles" id="id4">Using phandles</a></p>
+<ul>
+<li><p><a class="reference internal" href="#one-node-phandle-type" id="id5">One node: phandle type</a></p></li>
+<li><p><a class="reference internal" href="#zero-or-more-nodes-phandles-type" id="id6">Zero or more nodes: phandles type</a></p></li>
+<li><p><a class="reference internal" href="#zero-or-more-nodes-with-metadata-phandle-array-type" id="id7">Zero or more nodes with metadata: phandle-array type</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#phandle-array-properties" id="id8">phandle-array properties</a></p>
+<ul>
+<li><p><a class="reference internal" href="#high-level-description" id="id9">High level description</a></p></li>
+<li><p><a class="reference internal" href="#example-phandle-arrays-gpios" id="id10">Example phandle-arrays: GPIOs</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#specifier-spaces" id="id11">Specifier spaces</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id1" id="id12">High level description</a></p></li>
+<li><p><a class="reference internal" href="#example-specifier-space-gpio" id="id13">Example specifier space: gpio</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#associating-properties-with-specifier-spaces" id="id14">Associating properties with specifier spaces</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id2" id="id15">High level description</a></p></li>
+<li><p><a class="reference internal" href="#special-case-gpios-and-io-channels" id="id16">Special case: GPIOs and IO channels</a></p></li>
+<li><p><a class="reference internal" href="#manually-specifying-a-space" id="id17">Manually specifying a space</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#naming-the-cells-in-a-specifier" id="id18">Naming the cells in a specifier</a></p></li>
+<li><p><a class="reference internal" href="#see-also" id="id19">See also</a></p></li>
+</ul>
+</nav>
+<section id="getting-phandles">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Getting phandles</a><a class="headerlink" href="#getting-phandles" title="Link to this heading"></a></h2>
+<p>The usual way to get a phandle for a devicetree node is from one of its node
+labels. For example, with this devicetree:</p>
+<div class="highlight-DTS notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nl">lbl_a</span><span class="p">:</span><span class="w"> </span><span class="nf">node-1</span><span class="cm"> </span><span class="p">{};</span>
+<span class="w">        </span><span class="nl">lbl_b</span><span class="p">:</span><span class="w"> </span><span class="nl">lbl_c</span><span class="p">:</span><span class="w"> </span><span class="nf">node-2</span><span class="cm"> </span><span class="p">{};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>You can write the phandle for:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">/node-1</span></code> as <code class="docutils literal notranslate"><span class="pre">&amp;lbl_a</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">/node-2</span></code> as either <code class="docutils literal notranslate"><span class="pre">&amp;lbl_b</span></code> or <code class="docutils literal notranslate"><span class="pre">&amp;lbl_c</span></code></p></li>
+</ul>
+<p>Notice how the <code class="docutils literal notranslate"><span class="pre">&amp;nodelabel</span></code> devicetree syntax is similar to the “address of”
+C syntax.</p>
+</section>
+<section id="using-phandles">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Using phandles</a><a class="headerlink" href="#using-phandles" title="Link to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>“Type” in this section refers to one of the type names documented in
+<a class="reference internal" href="bindings-syntax.html#dt-bindings-properties"><span class="std std-ref">Properties</span></a> in the devicetree bindings documentation.</p>
+</div>
+<p>Here are the main ways you will use phandles.</p>
+<section id="one-node-phandle-type">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">One node: phandle type</a><a class="headerlink" href="#one-node-phandle-type" title="Link to this heading"></a></h3>
+<p>You can use phandles to refer to <code class="docutils literal notranslate"><span class="pre">node-b</span></code> from <code class="docutils literal notranslate"><span class="pre">node-a</span></code>, where <code class="docutils literal notranslate"><span class="pre">node-b</span></code>
+is related to <code class="docutils literal notranslate"><span class="pre">node-a</span></code> in some way.</p>
+<p>One common example is when <code class="docutils literal notranslate"><span class="pre">node-a</span></code> represents some hardware that
+generates an interrupt, and <code class="docutils literal notranslate"><span class="pre">node-b</span></code> represents the interrupt
+controller that receives the asserted interrupt. In this case, you could
+write:</p>
+<div class="highlight-DTS notranslate"><div class="highlight"><pre><span></span><span class="nl">node_b</span><span class="p">:</span><span class="w"> </span><span class="nf">node-b</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">interrupt-controller</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nf">node-a</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">interrupt-parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">node_b</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>This uses the standard <code class="docutils literal notranslate"><span class="pre">interrupt-parent</span></code> property defined in the
+devicetree specification to capture the relationship between the two nodes.</p>
+<p>These properties have type <code class="docutils literal notranslate"><span class="pre">phandle</span></code>.</p>
+</section>
+<section id="zero-or-more-nodes-phandles-type">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">Zero or more nodes: phandles type</a><a class="headerlink" href="#zero-or-more-nodes-phandles-type" title="Link to this heading"></a></h3>
+<p>You can use phandles to make an array of references to other nodes.</p>
+<p>One common example occurs in <a class="reference internal" href="../../hardware/pinctrl/index.html#pinctrl-guide"><span class="std std-ref">pin control</span></a>. Pin control
+properties like <code class="docutils literal notranslate"><span class="pre">pinctrl-0</span></code>, <code class="docutils literal notranslate"><span class="pre">pinctrl-1</span></code> etc. may contain multiple
+phandles, each of which “points” to a node containing information related to
+pin configuration for that hardware peripheral. Here’s an example of six
+phandles in a single property:</p>
+<div class="highlight-DTS notranslate"><div class="highlight"><pre><span></span><span class="n">pinctrl-0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">quadspi_clk_pe10</span><span class="w"> </span><span class="o">&amp;</span><span class="na">quadspi_ncs_pe11</span>
+<span class="w">             </span><span class="o">&amp;</span><span class="na">quadspi_bk1_io0_pe12</span><span class="w"> </span><span class="o">&amp;</span><span class="na">quadspi_bk1_io1_pe13</span>
+<span class="w">             </span><span class="o">&amp;</span><span class="na">quadspi_bk1_io2_pe14</span><span class="w"> </span><span class="o">&amp;</span><span class="na">quadspi_bk1_io3_pe15</span><span class="o">&gt;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>These properties have type <code class="docutils literal notranslate"><span class="pre">phandles</span></code>.</p>
+</section>
+<section id="zero-or-more-nodes-with-metadata-phandle-array-type">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">Zero or more nodes with metadata: phandle-array type</a><a class="headerlink" href="#zero-or-more-nodes-with-metadata-phandle-array-type" title="Link to this heading"></a></h3>
+<p>You can use phandles to refer to and configure one or more resources that are
+“owned” by some other node.</p>
+<p>This is the most complex case. There are examples and more details in the
+next section.</p>
+<p>These properties have type <code class="docutils literal notranslate"><span class="pre">phandle-array</span></code>.</p>
+</section>
+</section>
+<section id="phandle-array-properties">
+<span id="dt-phandle-arrays"></span><h2><a class="toc-backref" href="#id8" role="doc-backlink">phandle-array properties</a><a class="headerlink" href="#phandle-array-properties" title="Link to this heading"></a></h2>
+<p>These properties are commonly used to specify a resource that is owned by
+another node along with additional metadata about the resource.</p>
+<section id="high-level-description">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">High level description</a><a class="headerlink" href="#high-level-description" title="Link to this heading"></a></h3>
+<p>Usually, properties with this type are written like <code class="docutils literal notranslate"><span class="pre">phandle-array-prop</span></code> in
+this example:</p>
+<div class="highlight-dts notranslate"><div class="highlight"><pre><span></span><span class="nf">node</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">phandle</span><span class="o">-</span><span class="n">array-prop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">foo</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">bar</span><span class="w"> </span><span class="mi">3</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">baz</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>That is, the property’s value is written as a comma-separated sequence of
+“groups”, where each “group” is written inside of angle brackets (<code class="docutils literal notranslate"><span class="pre">&lt;</span> <span class="pre">...</span> <span class="pre">&gt;</span></code>).
+Each “group” starts with a phandle (<code class="docutils literal notranslate"><span class="pre">&amp;foo</span></code>, <code class="docutils literal notranslate"><span class="pre">&amp;bar</span></code>, <code class="docutils literal notranslate"><span class="pre">&amp;baz</span></code>). The values
+that follow the phandle in each “group” are called <em>specifiers</em>. There are
+three specifiers in the above example:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">2</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">3</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">4</span> <span class="pre">5</span></code></p></li>
+</ol>
+<p>The phandle in each “group” is used to “point” to the hardware that controls
+the resource you are interested in. The specifier describes the resource
+itself, along with any additional necessary metadata.</p>
+<p>The rest of this section describes a common example. Subsequent sections
+document more rules about how to use phandle-array properties in practice.</p>
+</section>
+<section id="example-phandle-arrays-gpios">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">Example phandle-arrays: GPIOs</a><a class="headerlink" href="#example-phandle-arrays-gpios" title="Link to this heading"></a></h3>
+<p>Perhaps the most common use case for phandle-array properties is specifying one
+or more GPIOs on your SoC that another chip on your board connects to. For that
+reason, we’ll focus on that use case here. However, there are <strong>many other use
+cases</strong> that are handled in devicetree with phandle-array properties.</p>
+<p>For example, consider an external chip with an interrupt pin that is connected
+to a GPIO on your SoC. You will typically need to provide that GPIO’s
+information (GPIO controller and pin number) to the <a class="reference internal" href="../../kernel/drivers/index.html#device-model-api"><span class="std std-ref">device driver</span></a> for that chip. You usually also need to provide other
+metadata about the GPIO, like whether it is active low or high, what kind of
+internal pull resistor within the SoC should be enabled in order to communicate
+with the device, etc., to the driver.</p>
+<p>In the devicetree, there will be a node that represents the GPIO controller
+that controls a group of pins. This reflects the way GPIO IP blocks are usually
+developed in hardware. Therefore, there is no single node in the devicetree
+that represents a GPIO pin, and you can’t use a single phandle to represent it.</p>
+<p>Instead, you would use a phandle-array property, like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>my-external-ic {
+        irq-gpios = &lt;&amp;gpioX pin flags&gt;;
+};
+</pre></div>
+</div>
+<p>In this example, <code class="docutils literal notranslate"><span class="pre">irq-gpios</span></code> is a phandle-array property with just one
+“group” in its value. <code class="docutils literal notranslate"><span class="pre">&amp;gpioX</span></code> is the phandle for the GPIO controller node
+that controls the pin. <code class="docutils literal notranslate"><span class="pre">pin</span></code> is the pin number (0, 1, 2, …). <code class="docutils literal notranslate"><span class="pre">flags</span></code> is a
+bit mask describing pin metadata (for example <code class="docutils literal notranslate"><span class="pre">(GPIO_ACTIVE_LOW</span> <span class="pre">|</span>
+<span class="pre">GPIO_PULL_UP)</span></code>); see <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/dt-bindings/gpio/gpio.h">include/zephyr/dt-bindings/gpio/gpio.h</a> for
+more details.</p>
+<p>The device driver handling the <code class="docutils literal notranslate"><span class="pre">my-external-ic</span></code> node can then use the
+<code class="docutils literal notranslate"><span class="pre">irq-gpios</span></code> property’s value to set up interrupt handling for the chip as it
+is used on your board. This lets you configure the device driver in devicetree,
+without changing the driver’s source code.</p>
+<p>Such properties can contain multiple values as well:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>my-other-external-ic {
+        handshake-gpios = &lt;&amp;gpioX pinX flagsX&gt;, &lt;&amp;gpioY pinY flagsY&gt;;
+};
+</pre></div>
+</div>
+<p>The above example specifies two pins:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pinX</span></code> on the GPIO controller with phandle <code class="docutils literal notranslate"><span class="pre">&amp;gpioX</span></code>, flags <code class="docutils literal notranslate"><span class="pre">flagsX</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pinY</span></code> on <code class="docutils literal notranslate"><span class="pre">&amp;gpioY</span></code>, flags <code class="docutils literal notranslate"><span class="pre">flagsY</span></code></p></li>
+</ul>
+<p>You may be wondering how the “pin and flags” convention is established and
+enforced. To answer this question, we’ll need to introduce a concept called
+specifier spaces before moving on to some information about devicetree
+bindings.</p>
+</section>
+</section>
+<section id="specifier-spaces">
+<span id="dt-specifier-spaces"></span><h2><a class="toc-backref" href="#id11" role="doc-backlink">Specifier spaces</a><a class="headerlink" href="#specifier-spaces" title="Link to this heading"></a></h2>
+<p><em>Specifier spaces</em> are a way to allow nodes to describe how you should
+use them in phandle-array properties.</p>
+<p>We’ll start with an abstract, high level description of how specifier spaces
+work in DTS files, before moving on to a concrete example and providing
+references to further reading for how this all works in practice using DTS
+files and bindings files.</p>
+<section id="id1">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">High level description</a><a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>As described above, a phandle-array property is a sequence of “groups” of
+phandles followed by some number of cells:</p>
+<div class="highlight-dts notranslate"><div class="highlight"><pre><span></span><span class="nf">node</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">phandle</span><span class="o">-</span><span class="n">array-prop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">foo</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">bar</span><span class="w"> </span><span class="mi">3</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The cells that follow each phandle are called a <em>specifier</em>. In this example,
+there are two specifiers:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">2</span></code>: two cells</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">3</span></code>: one cell</p></li>
+</ol>
+<p>Every phandle-array property has an associated <em>specifier space</em>. This sounds
+complex, but it’s really just a way to assign a meaning to the cells that
+follow each phandle in a hardware specific way. Every specifier space has a
+unique name. There are a few “standard” names for commonly used hardware, but
+you can create your own as well.</p>
+<p>Devicetree nodes encode the number of cells that must appear in a specifier, by
+name, using the <code class="docutils literal notranslate"><span class="pre">#SPACE_NAME-cells</span></code> property. For example, let’s assume that
+<code class="docutils literal notranslate"><span class="pre">phandle-array-prop</span></code>‘s specifier space is named <code class="docutils literal notranslate"><span class="pre">baz</span></code>. Then we would need
+the <code class="docutils literal notranslate"><span class="pre">foo</span></code> and <code class="docutils literal notranslate"><span class="pre">bar</span></code> nodes to have the following <code class="docutils literal notranslate"><span class="pre">#baz-cells</span></code> properties:</p>
+<div class="highlight-DTS notranslate"><div class="highlight"><pre><span></span><span class="nl">foo</span><span class="p">:</span><span class="w"> </span><span class="nf">node</span><span class="o">@</span><span class="mi">1000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">#</span><span class="n">baz-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nl">bar</span><span class="p">:</span><span class="w"> </span><span class="nf">node</span><span class="o">@</span><span class="mi">2000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">#</span><span class="n">baz-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Without the <code class="docutils literal notranslate"><span class="pre">#baz-cells</span></code> property, the devicetree tooling would not be able
+to validate the number of cells in each specifier in <code class="docutils literal notranslate"><span class="pre">phandle-array-prop</span></code>.</p>
+<p>This flexibility allows you to write down an array of hardware resources in a
+single devicetree property, even though the amount of metadata you need to
+describe each resource might be different for different nodes.</p>
+<p>A single node can also have different numbers of cells in different specifier
+spaces. For example, we might have:</p>
+<div class="highlight-DTS notranslate"><div class="highlight"><pre><span></span><span class="nl">foo</span><span class="p">:</span><span class="w"> </span><span class="nf">node</span><span class="o">@</span><span class="mi">1000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">#</span><span class="n">baz-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="o">#</span><span class="n">bob-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>With that, if <code class="docutils literal notranslate"><span class="pre">phandle-array-prop-2</span></code> has specifier space <code class="docutils literal notranslate"><span class="pre">bob</span></code>, we could
+write:</p>
+<div class="highlight-DTS notranslate"><div class="highlight"><pre><span></span><span class="nf">node</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">phandle</span><span class="o">-</span><span class="n">array-prop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">foo</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">bar</span><span class="w"> </span><span class="mi">3</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">phandle</span><span class="o">-</span><span class="n">array-prop-2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">foo</span><span class="w"> </span><span class="mi">4</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>This flexibility allows you to have a node that manages multiple different
+kinds of resources at the same time. The node describes the amount of metadata
+needed to describe each kind of resource (how many cells are needed in each
+case) using different <code class="docutils literal notranslate"><span class="pre">#SPACE_NAME-cells</span></code> properties.</p>
+</section>
+<section id="example-specifier-space-gpio">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">Example specifier space: gpio</a><a class="headerlink" href="#example-specifier-space-gpio" title="Link to this heading"></a></h3>
+<p>From the above example, you’re already familiar with how one specifier space
+works: in the “gpio” space, specifiers almost always have two cells:</p>
+<ol class="arabic simple">
+<li><p>a pin number</p></li>
+<li><p>a bit mask of flags related to the pin</p></li>
+</ol>
+<p>Therefore, almost all GPIO controller nodes you will see in practice will look
+like this:</p>
+<div class="highlight-DTS notranslate"><div class="highlight"><pre><span></span><span class="nl">gpioX</span><span class="p">:</span><span class="w"> </span><span class="nf">gpio-controller</span><span class="o">@</span><span class="mi">deadbeef</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">gpio-controller</span><span class="p">;</span>
+<span class="w">        </span><span class="o">#</span><span class="n">gpio-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="associating-properties-with-specifier-spaces">
+<h2><a class="toc-backref" href="#id14" role="doc-backlink">Associating properties with specifier spaces</a><a class="headerlink" href="#associating-properties-with-specifier-spaces" title="Link to this heading"></a></h2>
+<p>Above, we have described that:</p>
+<ul class="simple">
+<li><p>each phandle-array property has an associated specifier space</p></li>
+<li><p>specifier spaces are identified by name</p></li>
+<li><p>devicetree nodes use <code class="docutils literal notranslate"><span class="pre">#SPECIFIER_NAME-cells</span></code> properties to
+configure the number of cells which must appear in a specifier</p></li>
+</ul>
+<p>In this section, we explain how phandle-array properties get their specifier
+spaces.</p>
+<section id="id2">
+<h3><a class="toc-backref" href="#id15" role="doc-backlink">High level description</a><a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<p>In general, a <code class="docutils literal notranslate"><span class="pre">phandle-array</span></code> property named <code class="docutils literal notranslate"><span class="pre">foos</span></code> implicitly has
+specifier space <code class="docutils literal notranslate"><span class="pre">foo</span></code>. For example:</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">dmas</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">phandle-array</span>
+<span class="w">  </span><span class="nt">pwms</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">phandle-array</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">dmas</span></code> property’s specifier space is “dma”. The <code class="docutils literal notranslate"><span class="pre">pwms</span></code> property’s
+specifier space is <code class="docutils literal notranslate"><span class="pre">pwm</span></code>.</p>
+</section>
+<section id="special-case-gpios-and-io-channels">
+<h3><a class="toc-backref" href="#id16" role="doc-backlink">Special case: GPIOs and IO channels</a><a class="headerlink" href="#special-case-gpios-and-io-channels" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">*-gpios</span></code> and <code class="docutils literal notranslate"><span class="pre">*-io-channels</span></code> properties are special-cased so that e.g.
+<code class="docutils literal notranslate"><span class="pre">foo-gpios</span></code> and <code class="docutils literal notranslate"><span class="pre">bar-io-channels</span></code> resolve to <code class="docutils literal notranslate"><span class="pre">#gpio-cells</span></code> and
+<code class="docutils literal notranslate"><span class="pre">#io-channel-cells</span></code> respectively, rather than <code class="docutils literal notranslate"><span class="pre">#foo-gpio-cells</span></code> and
+<code class="docutils literal notranslate"><span class="pre">#bar-io-channel-cells</span></code>.</p>
+</section>
+<section id="manually-specifying-a-space">
+<h3><a class="toc-backref" href="#id17" role="doc-backlink">Manually specifying a space</a><a class="headerlink" href="#manually-specifying-a-space" title="Link to this heading"></a></h3>
+<p>You can manually specify the specifier space for any <code class="docutils literal notranslate"><span class="pre">phandle-array</span></code>
+property. See <a class="reference internal" href="bindings-syntax.html#dt-bindings-specifier-space"><span class="std std-ref">specifier-space</span></a>.</p>
+</section>
+</section>
+<section id="naming-the-cells-in-a-specifier">
+<h2><a class="toc-backref" href="#id18" role="doc-backlink">Naming the cells in a specifier</a><a class="headerlink" href="#naming-the-cells-in-a-specifier" title="Link to this heading"></a></h2>
+<p>You should name the cells in each specifier space your hardware supports when
+writing bindings. For details on how to do this, see <a class="reference internal" href="bindings-syntax.html#dt-bindings-cells"><span class="std std-ref">Specifier cell names (*-cells)</span></a>.</p>
+<p>This allows C code to query information about and retrieve the values of cells
+in a specifier by name using devicetree APIs like these:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../doxygen/html/group__devicetree-generic-prop.html#ga118b63fd22c20ef940ac2fa073c126ed" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_PHA_BY_IDX</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__devicetree-generic-prop.html#gae469615356a867c49416da15bdc44a26" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_PHA_BY_NAME</span></code></a></p></li>
+</ul>
+<p>This feature and these macros are used internally by numerous hardware-specific
+APIs. Here are a few examples:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../doxygen/html/group__devicetree-gpio.html#ga8f7d82567056266bab1603865f8b27af" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_GPIO_PIN_BY_IDX</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__devicetree-pwms.html#ga10a372e44c7e3feb551ca996c6ca5a8f" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_PWMS_CHANNEL_BY_IDX</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__devicetree-dmas.html#ga1b80ae7fee6bcc9aa2ad03435e70dd14" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_DMAS_CELL_BY_NAME</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__devicetree-io-channels.html#ga290c912d0a96ba65bb44341a783fac19" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_IO_CHANNELS_INPUT_BY_IDX</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__devicetree-clocks.html#gaca32bfb478ac92e6a760ad0761328d5a" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_CLOCKS_CELL_BY_NAME</span></code></a></p></li>
+</ul>
+</section>
+<section id="see-also">
+<h2><a class="toc-backref" href="#id19" role="doc-backlink">See also</a><a class="headerlink" href="#see-also" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="intro-syntax-structure.html#dt-writing-property-values"><span class="std std-ref">Writing property values</span></a>: how to write phandles in devicetree
+properties</p></li>
+<li><p><a class="reference internal" href="bindings-syntax.html#dt-bindings-properties"><span class="std std-ref">Properties</span></a>: how to write bindings for properties with
+phandle types (<code class="docutils literal notranslate"><span class="pre">phandle</span></code>, <code class="docutils literal notranslate"><span class="pre">phandles</span></code>, <code class="docutils literal notranslate"><span class="pre">phandle-array</span></code>)</p></li>
+<li><p><a class="reference internal" href="bindings-syntax.html#dt-bindings-specifier-space"><span class="std std-ref">specifier-space</span></a>: how to manually specify a phandle-array
+property’s specifier space</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

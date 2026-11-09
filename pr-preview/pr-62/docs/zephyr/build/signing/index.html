@@ -1,0 +1,457 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signing Binaries &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/build/signing/index.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Connectivity" href="../../connectivity/index.html" />
+    <link rel="prev" title="Flashing configuration" href="../flashing/configuration.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Build and Configuration Systems</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../cmake/index.html">Build System (CMake)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dts/index.html">Devicetree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../kconfig/index.html">Configuration System (Kconfig)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../snippets/index.html">Snippets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../zephyr_cmake_package.html">Zephyr CMake Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sysbuild/index.html">Sysbuild (System build)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../version/index.html">Application version management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flashing/index.html">Flashing</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Signing Binaries</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#mcuboot-imgtool">MCUboot / imgtool</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#extending-signing-externally">Extending signing externally</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Build and Configuration Systems</a> &raquo;</li>
+  
+  <li>Signing Binaries</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/build/signing/index.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27build%2Fsigning%2Findex%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Build+System&env=-+Page%3A+build%2Fsigning%2Findex%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="signing-binaries">
+<span id="build-signing"></span><h1>Signing Binaries<a class="headerlink" href="#signing-binaries" title="Link to this heading"></a></h1>
+<p>Binaries can be optionally signed as part of a build automatically using CMake code, there is
+also the ability to use <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">sign</span></code> to sign binaries too, this page describes the former, the
+latter is documented on <a class="reference internal" href="../../develop/west/sign.html#west-sign"><span class="std std-ref">Signing Binaries</span></a>.</p>
+<section id="mcuboot-imgtool">
+<h2>MCUboot / imgtool<a class="headerlink" href="#mcuboot-imgtool" title="Link to this heading"></a></h2>
+<p>The Zephyr build system has special support for signing binaries for use with the <a class="reference external" href="https://mcuboot.com/">MCUboot</a>
+bootloader using the <a class="reference external" href="https://pypi.org/project/imgtool/">imgtool</a> program provided by its developers. You can both build and sign
+this type of application binary in one step by setting some Kconfig options. If you do,
+<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code> will use the signed binaries.</p>
+<p>Here is an example workflow, which builds and flashes MCUboot, as well as the
+<a class="reference internal" href="../../samples/hello_world/README.html#hello_world" title="Print &quot;Hello World&quot; to the console.">Hello World</a> application for chain-loading by MCUboot. Run these commands
+from the <code class="file docutils literal notranslate"><span class="pre">zephyrproject</span></code> workspace you created in the <a class="reference internal" href="../../develop/getting_started/index.html#getting-started"><span class="std std-ref">Getting Started Guide</span></a>.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west build -b YOUR_BOARD zephyr/samples/hello_world --sysbuild -d build-hello-signed -- \</span>
+<span class="go">     -DSB_CONFIG_BOOTLOADER_MCUBOOT=y</span>
+
+<span class="go">west flash -d build-hello-signed</span>
+</pre></div>
+</div>
+<p>Notes on the above commands:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">YOUR_BOARD</span></code> should be changed to match your board</p></li>
+<li><p>The signing key value is the insecure default provided and used by MCUboot for development
+and testing</p></li>
+<li><p>You can change the <code class="docutils literal notranslate"><span class="pre">hello_world</span></code> application directory to any other application that can be
+loaded by MCUboot, such as the <a class="reference internal" href="../../samples/subsys/mgmt/mcumgr/smp_svr/README.html#smp-svr" title="Implement a Simple Management Protocol (SMP) server.">SMP server</a> sample.</p></li>
+</ul>
+<p>For more information on these and other related configuration options, see:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SB_CONFIG_BOOTLOADER_MCUBOOT</span></code>: build the application for loading by MCUboot</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SB_CONFIG_BOOT_SIGNATURE_KEY_FILE</span></code>: the key file to use when signing images. If you have
+your own key, change this appropriately</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MCUBOOT_EXTRA_IMGTOOL_ARGS" title="CONFIG_MCUBOOT_EXTRA_IMGTOOL_ARGS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUBOOT_EXTRA_IMGTOOL_ARGS</span></code></a>: optional additional command line arguments
+for <code class="docutils literal notranslate"><span class="pre">imgtool</span></code></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MCUBOOT_GENERATE_CONFIRMED_IMAGE" title="CONFIG_MCUBOOT_GENERATE_CONFIRMED_IMAGE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUBOOT_GENERATE_CONFIRMED_IMAGE</span></code></a>: also generate a confirmed image,
+which may be more useful for flashing in production environments than the OTA-able default image</p></li>
+<li><p>On Windows, if you get “Access denied” issues, the recommended fix is to run
+<code class="docutils literal notranslate"><span class="pre">pip3</span> <span class="pre">install</span> <span class="pre">imgtool</span></code>, then retry with a pristine build directory.</p></li>
+</ul>
+<p>If your <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code> <a class="reference internal" href="../../develop/west/build-flash-debug.html#west-runner"><span class="std std-ref">runner</span></a> uses an image format supported by imgtool, you
+should see something like this on your device’s serial console when you run
+<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span> <span class="pre">-d</span> <span class="pre">build-hello-signed</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>*** Booting Zephyr OS build zephyr-v2.3.0-2310-gcebac69c8ae1  ***
+[00:00:00.004,669] &lt;inf&gt; mcuboot: Starting bootloader
+[00:00:00.011,169] &lt;inf&gt; mcuboot: Primary image: magic=unset, swap_type=0x1, copy_done=0x3, image_ok=0x3
+[00:00:00.021,636] &lt;inf&gt; mcuboot: Boot source: none
+[00:00:00.027,374] &lt;inf&gt; mcuboot: Swap type: none
+[00:00:00.115,142] &lt;inf&gt; mcuboot: Bootloader chainload address offset: 0xc000
+[00:00:00.123,168] &lt;inf&gt; mcuboot: Jumping to the first image slot
+*** Booting Zephyr OS build zephyr-v2.3.0-2310-gcebac69c8ae1  ***
+Hello World! nrf52840dk_nrf52840
+</pre></div>
+</div>
+<p>Whether <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code> supports this feature depends on your runner. The <code class="docutils literal notranslate"><span class="pre">nrfjprog</span></code> and
+<code class="docutils literal notranslate"><span class="pre">pyocd</span></code> runners work with the above flow. If your runner does not support this flow and you
+would like it to, please send a patch or file an issue for adding support.</p>
+</section>
+<section id="extending-signing-externally">
+<span id="west-extending-signing"></span><h2>Extending signing externally<a class="headerlink" href="#extending-signing-externally" title="Link to this heading"></a></h2>
+<p>The signing script used when running <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code> can be extended or replaced to change features
+or introduce different signing mechanisms. By default with MCUboot enabled, signing is setup by
+the <code class="file docutils literal notranslate"><span class="pre">cmake/mcuboot.cmake</span></code> file in Zephyr which adds extra post build commands for generating
+the signed images. The file used for signing can be replaced from a sysbuild scope (if being used)
+or from a zephyr/zephyr module scope, the priority of which is:</p>
+<ul class="simple">
+<li><p>Sysbuild</p></li>
+<li><p>Zephyr property</p></li>
+<li><p>Default MCUboot script (if enabled)</p></li>
+</ul>
+<p>From sysbuild, <code class="docutils literal notranslate"><span class="pre">-D&lt;target&gt;_SIGNING_SCRIPT</span></code> can be used to set a signing script for a specific
+image or <code class="docutils literal notranslate"><span class="pre">-DSIGNING_SCRIPT</span></code> can be used to set a signing script for all images, for example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west build -b &lt;board&gt; &lt;application&gt; -DSIGNING_SCRIPT=&lt;file&gt;</span>
+</pre></div>
+</div>
+<p>The zephyr property method is achieved by adjusting the <code class="docutils literal notranslate"><span class="pre">SIGNING_SCRIPT</span></code> property on the
+<code class="docutils literal notranslate"><span class="pre">zephyr_property_target</span></code>, ideally from by a module by using:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">if</span><span class="p">(</span><span class="s">CONFIG_BOOTLOADER_MCUBOOT</span><span class="p">)</span>
+<span class="w">  </span><span class="nb">set_target_properties</span><span class="p">(</span><span class="s">zephyr_property_target</span><span class="w"> </span><span class="s">PROPERTIES</span><span class="w"> </span><span class="s">SIGNING_SCRIPT</span><span class="w"> </span><span class="o">${</span><span class="nv">CMAKE_CURRENT_LIST_DIR</span><span class="o">}</span><span class="s">/custom_signing.cmake</span><span class="p">)</span>
+<span class="nb">endif</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This will include the custom signing CMake file instead of the default Zephyr one when projects
+are built with MCUboot signing support enabled. The base Zephyr MCUboot signing file can be
+used as a reference for creating a new signing system or extending the default behaviour.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

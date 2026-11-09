@@ -1,0 +1,237 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="group__llext__loader__apis" kind="group">
+    <compoundname>llext_loader_apis</compoundname>
+    <title>ELF loader context</title>
+    <innerclass refid="structllext__buf__loader" prot="public">llext_buf_loader</innerclass>
+    <innerclass refid="structllext__fs__loader" prot="public">llext_fs_loader</innerclass>
+    <innerclass refid="structllext__loader" prot="public">llext_loader</innerclass>
+    <sectiondef kind="enum">
+      <memberdef kind="enum" id="group__llext__loader__apis_1ga8e04f364aef19cf45843cc97cc702f24" prot="public" static="no" strong="no">
+        <type></type>
+        <name>llext_storage_type</name>
+        <enumvalue id="group__llext__loader__apis_1gga8e04f364aef19cf45843cc97cc702f24a256d7c93a7232505368ab49713d756e6" prot="public">
+          <name>LLEXT_STORAGE_TEMPORARY</name>
+          <briefdescription>
+<para>ELF data is only available during <ref refid="group__llext__apis_1ga0a4c3db30bc3ec7aa8a9b0e076af7157" kindref="member">llext_load()</ref>; even if the loader supports directly accessing the memory via llext_peek(), the buffer contents will be discarded afterwards. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>LLEXT will allocate copies of all required data into its heap. </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__llext__loader__apis_1gga8e04f364aef19cf45843cc97cc702f24ade339a696a5d3b0c1b3ff5ad0d73f8a0" prot="public">
+          <name>LLEXT_STORAGE_PERSISTENT</name>
+          <briefdescription>
+<para>ELF data is stored in a <emphasis>read-only</emphasis> buffer that is guaranteed to be always accessible for as long as the extension is loaded. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>LLEXT may directly reuse constant data from the buffer, but may still allocate copies if relocations need to be applied. </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__llext__loader__apis_1gga8e04f364aef19cf45843cc97cc702f24ad588662b67dcd79213b43dc1ed78b52b" prot="public">
+          <name>LLEXT_STORAGE_WRITABLE</name>
+          <briefdescription>
+<para>ELF data is stored in a <emphasis>writable</emphasis> memory buffer that is guaranteed to be always accessible for as long as the extension is loaded. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>LLEXT may freely modify and reuse data in the buffer; so, after the extension is unloaded, the contents should be re-initialized before a subsequent <ref refid="group__llext__apis_1ga0a4c3db30bc3ec7aa8a9b0e076af7157" kindref="member">llext_load()</ref> call. </para>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+<para>Storage type for the ELF data to be loaded. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This enum defines the storage type of the ELF data that will be loaded. The storage type determines which memory optimizations can be tried by the LLEXT subsystem during the load process.</para>
+<para><simplesect kind="note"><para>Even with the most permissive option, LLEXT might still have to copy ELF data into a separate memory region to comply with other restrictions, such as hardware memory protection and/or alignment rules. Sections such as BSS that have no space in the file will also be allocated in the LLEXT heap. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/llext/loader.h" line="48" column="1" bodyfile="zephyr/llext/loader.h" bodystart="48" bodyend="71"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="group__llext__loader__apis_1ga9ca06c7c3e57f5284ce44c62f5cc2c02" prot="public" static="no">
+        <name>LLEXT_BUF_LOADER</name>
+        <param><defname>_buf</defname></param>
+        <param><defname>_buf_len</defname></param>
+        <initializer>        Z_LLEXT_BUF_LOADER(_buf, _buf_len,                                                         \
+                           <ref refid="group__sys-util_1ga111fe4e9d63758262fc6810a782cb32a" kindref="member">IS_ENABLED</ref>(CONFIG_LLEXT_STORAGE_WRITABLE) ?                             \
+                                <ref refid="group__llext__loader__apis_1gga8e04f364aef19cf45843cc97cc702f24ad588662b67dcd79213b43dc1ed78b52b" kindref="member">LLEXT_STORAGE_WRITABLE</ref> : <ref refid="group__llext__loader__apis_1gga8e04f364aef19cf45843cc97cc702f24ade339a696a5d3b0c1b3ff5ad0d73f8a0" kindref="member">LLEXT_STORAGE_PERSISTENT</ref>)</initializer>
+        <briefdescription>
+<para>Initializer for an <ref refid="structllext__buf__loader" kindref="compound">llext_buf_loader</ref> structure. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The storage type for the provided buffer depends on the value of the <computeroutput>CONFIG_LLEXT_STORAGE_WRITABLE</computeroutput> option: if it is defined, the buffer is assumed to be writable; otherwise it is assumed to be persistent.</para>
+<para>Consider using one of the alternative macros instead.</para>
+<para><simplesect kind="see"><para><ref refid="group__llext__loader__apis_1ga8485b4dfecbd2eff3e21b5958d5e8699" kindref="member">LLEXT_TEMPORARY_BUF_LOADER</ref> </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="group__llext__loader__apis_1ga2c2214bcf1506f1209476619e42114b3" kindref="member">LLEXT_PERSISTENT_BUF_LOADER</ref> </para>
+</simplesect>
+<simplesect kind="see"><para><ref refid="group__llext__loader__apis_1gac726727897e02bca0bf5d32f4c66be55" kindref="member">LLEXT_WRITABLE_BUF_LOADER</ref></para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>_buf</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Buffer containing the ELF binary </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>_buf_len</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Buffer length in bytes </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/llext/buf_loader.h" line="76" column="9" bodyfile="zephyr/llext/buf_loader.h" bodystart="76" bodyend="79"/>
+      </memberdef>
+      <memberdef kind="define" id="group__llext__loader__apis_1ga8485b4dfecbd2eff3e21b5958d5e8699" prot="public" static="no">
+        <name>LLEXT_TEMPORARY_BUF_LOADER</name>
+        <param><defname>_buf</defname></param>
+        <param><defname>_buf_len</defname></param>
+        <initializer>        Z_LLEXT_BUF_LOADER(_buf, _buf_len, <ref refid="group__llext__loader__apis_1gga8e04f364aef19cf45843cc97cc702f24a256d7c93a7232505368ab49713d756e6" kindref="member">LLEXT_STORAGE_TEMPORARY</ref>)</initializer>
+        <briefdescription>
+<para>Initialize an <ref refid="structllext__buf__loader" kindref="compound">llext_buf_loader</ref> structure for a temporary buffer. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>ELF data from the specified buffer can only be used during <ref refid="group__llext__apis_1ga0a4c3db30bc3ec7aa8a9b0e076af7157" kindref="member">llext_load()</ref>. The LLEXT subsystem will copy all necessary data to internal buffers at load time.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>_buf</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Buffer containing the ELF binary </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>_buf_len</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Buffer length in bytes </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/llext/buf_loader.h" line="91" column="9" bodyfile="zephyr/llext/buf_loader.h" bodystart="91" bodyend="92"/>
+      </memberdef>
+      <memberdef kind="define" id="group__llext__loader__apis_1ga2c2214bcf1506f1209476619e42114b3" prot="public" static="no">
+        <name>LLEXT_PERSISTENT_BUF_LOADER</name>
+        <param><defname>_buf</defname></param>
+        <param><defname>_buf_len</defname></param>
+        <initializer>        Z_LLEXT_BUF_LOADER(_buf, _buf_len, <ref refid="group__llext__loader__apis_1gga8e04f364aef19cf45843cc97cc702f24ade339a696a5d3b0c1b3ff5ad0d73f8a0" kindref="member">LLEXT_STORAGE_PERSISTENT</ref>)</initializer>
+        <briefdescription>
+<para>Initialize an <ref refid="structllext__buf__loader" kindref="compound">llext_buf_loader</ref> structure for a persistent, read-only buffer. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>ELF data from the specified buffer is guaranteed to be accessible for as long as the extension is loaded. The LLEXT subsystem may directly access the ELF data, as long as no modification is required during loading.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>_buf</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Buffer containing the ELF binary </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>_buf_len</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Buffer length in bytes </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/llext/buf_loader.h" line="104" column="9" bodyfile="zephyr/llext/buf_loader.h" bodystart="104" bodyend="105"/>
+      </memberdef>
+      <memberdef kind="define" id="group__llext__loader__apis_1gac726727897e02bca0bf5d32f4c66be55" prot="public" static="no">
+        <name>LLEXT_WRITABLE_BUF_LOADER</name>
+        <param><defname>_buf</defname></param>
+        <param><defname>_buf_len</defname></param>
+        <initializer>        Z_LLEXT_BUF_LOADER(_buf, _buf_len, <ref refid="group__llext__loader__apis_1gga8e04f364aef19cf45843cc97cc702f24ad588662b67dcd79213b43dc1ed78b52b" kindref="member">LLEXT_STORAGE_WRITABLE</ref>)</initializer>
+        <briefdescription>
+<para>Initialize an <ref refid="structllext__buf__loader" kindref="compound">llext_buf_loader</ref> structure for a persistent, writable buffer. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>ELF data from the specified buffer is guaranteed to be accessible for as long as the extension is loaded. The LLEXT subsystem may directly access and modify the ELF data.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>_buf</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Buffer containing the ELF binary </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>_buf_len</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Buffer length in bytes </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/llext/buf_loader.h" line="117" column="9" bodyfile="zephyr/llext/buf_loader.h" bodystart="117" bodyend="118"/>
+      </memberdef>
+      <memberdef kind="define" id="group__llext__loader__apis_1ga25a394fb7f7f93cfe3ab92d8ed4a6bff" prot="public" static="no">
+        <name>LLEXT_FS_LOADER</name>
+        <param><defname>_filename</defname></param>
+        <initializer>        {                                                                                          \
+                .loader =                                                                          \
+                        {                                                                          \
+                                .prepare = llext_fs_prepare,                                       \
+                                .read = llext_fs_read,                                             \
+                                .seek = llext_fs_seek,                                             \
+                                .peek = <ref refid="iar__missing__defs_8h_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>,                                                      \
+                                .finalize = llext_fs_finalize,                                     \
+                                .storage = <ref refid="group__llext__loader__apis_1gga8e04f364aef19cf45843cc97cc702f24a256d7c93a7232505368ab49713d756e6" kindref="member">LLEXT_STORAGE_TEMPORARY</ref>,                                \
+                        },                                                                         \
+                .is_open = <ref refid="stdbool_8h_1a65e9886d74aaee76545e83dd09011727" kindref="member">false</ref>,                                                                  \
+                .name = (_filename),                                                               \
+        }</initializer>
+        <briefdescription>
+<para>Initializer for an <ref refid="structllext__fs__loader" kindref="compound">llext_fs_loader</ref> structure. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>_filename</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Absolute path to the extension file. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/llext/fs_loader.h" line="51" column="9" bodyfile="zephyr/llext/fs_loader.h" bodystart="51" bodyend="64"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

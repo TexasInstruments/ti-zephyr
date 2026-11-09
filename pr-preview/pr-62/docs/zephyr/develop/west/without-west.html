@@ -1,0 +1,503 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Using Zephyr without west &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/develop/west/without-west.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Testing" href="../test/index.html" />
+    <link rel="prev" title="History and Motivation" href="why.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developing with Zephyr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/index.html">Getting Started Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beyond-GSG.html">Beyond the Getting Started Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env_vars.html">Environment Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../application/index.html">Application Development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debug/index.html">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/index.html">API Status and Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../languages/index.html">Language Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optimizations/index.html">Optimizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flash_debug/index.html">Flashing and Hardware Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html">Modules (External projects)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">West (Zephyr’s meta-tool)</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="install.html">Installing west</a></li>
+<li class="toctree-l3"><a class="reference internal" href="release-notes.html">West Release Notes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html">Troubleshooting West</a></li>
+<li class="toctree-l3"><a class="reference internal" href="basics.html">Basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="built-in.html">Built-in commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workspaces.html">Workspaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest.html">West Manifests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="config.html">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="alias.html">West aliases</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extensions.html">Extensions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="build-flash-debug.html">Building, Flashing and Debugging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sign.html">Signing Binaries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="zephyr-cmds.html">Additional Zephyr extension commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="why.html">History and Motivation</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Using Zephyr without west</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#getting-the-source">Getting the Source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#building-applications">Building applications</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#flashing-and-debugging">Flashing and Debugging</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../test/index.html">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sca/index.html">Static Code Analysis (SCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains/index.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/index.html">Tools and IDEs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Developing with Zephyr</a> &raquo;</li>
+  
+     <li><a href="index.html">West (Zephyr’s meta-tool)</a> &raquo;</li>
+  
+  <li>Using Zephyr without west</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/develop/west/without-west.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27develop%2Fwest%2Fwithout-west%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Documentation%2Carea%3A+West&env=-+Page%3A+develop%2Fwest%2Fwithout-west%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="using-zephyr-without-west">
+<span id="no-west"></span><h1>Using Zephyr without west<a class="headerlink" href="#using-zephyr-without-west" title="Link to this heading"></a></h1>
+<p>This page provides information on using Zephyr without west. This is
+not recommended for beginners due to the extra effort involved. In
+particular, you will have to do work “by hand” to replace these
+features:</p>
+<ul class="simple">
+<li><p>cloning the additional source code repositories used by Zephyr in
+addition to the main zephyr repository, and keeping them up to date</p></li>
+<li><p>specifying the locations of these repositories to the Zephyr build
+system</p></li>
+<li><p>flashing and debugging without understanding detailed usage of the
+relevant host tools</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you have previously installed west and want to stop using it,
+uninstall it first:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip3 uninstall west</span>
+</pre></div>
+</div>
+<p>Otherwise, Zephyr’s build system will find it and may try to use
+it.</p>
+</div>
+<section id="getting-the-source">
+<h2>Getting the Source<a class="headerlink" href="#getting-the-source" title="Link to this heading"></a></h2>
+<p>In addition to downloading the zephyr source code repository itself,
+you will need to manually clone the additional projects listed in the
+<a class="reference internal" href="../../glossary.html#term-west-manifest"><span class="xref std std-term">west manifest</span></a> file inside that repository.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">mkdir zephyrproject</span>
+<span class="go">cd zephyrproject</span>
+<span class="go">git clone https://github.com/zephyrproject-rtos/zephyr</span>
+<span class="gp"># </span>clone<span class="w"> </span>additional<span class="w"> </span>repositories<span class="w"> </span>listed<span class="w"> </span><span class="k">in</span><span class="w"> </span>zephyr/west.yml,
+<span class="gp"># </span>and<span class="w"> </span>check<span class="w"> </span>out<span class="w"> </span>the<span class="w"> </span>specified<span class="w"> </span>revisions<span class="w"> </span>as<span class="w"> </span>well.
+</pre></div>
+</div>
+<p>As you pull changes in the zephyr repository, you will also need to
+maintain those additional repositories, adding new ones as necessary
+and keeping existing ones up to date at the latest revisions.</p>
+</section>
+<section id="building-applications">
+<h2>Building applications<a class="headerlink" href="#building-applications" title="Link to this heading"></a></h2>
+<p>You can build a Zephyr application using CMake and Ninja (or make) directly
+without west installed if you specify any modules manually.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>-Bbuild<span class="w"> </span>-GNinja<span class="w"> </span>-DZEPHYR_MODULES<span class="o">=</span>module1<span class="p">;</span>module2<span class="p">;</span>...<span class="w"> </span>samples/hello_world
+ninja<span class="w"> </span>-Cbuild
+</pre></div>
+</div>
+<p>When building with west installed, the Zephyr build system will use it to set
+<a class="reference internal" href="../application/index.html#important-build-vars"><span class="std std-ref">ZEPHYR_MODULES</span></a>.</p>
+<p>If you don’t have west installed and your application does not need any of
+these repositories, the build will still work.</p>
+<p>If you don’t have west installed and your application <em>does</em> need one
+of these repositories, you must set <strong class="makevar">ZEPHYR_MODULES</strong>
+yourself as shown above.</p>
+<p>See <a class="reference internal" href="../modules.html#modules"><span class="std std-ref">Modules (External projects)</span></a> for more details.</p>
+<p>Similarly, if your application requires binary blobs and you are not using
+west, you will need to download and place those blobs in the right places
+instead of using <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">blobs</span></code>. See <a class="reference internal" href="../../contribute/bin_blobs.html#bin-blobs"><span class="std std-ref">Binary Blobs</span></a> for more details.</p>
+</section>
+<section id="flashing-and-debugging">
+<h2>Flashing and Debugging<a class="headerlink" href="#flashing-and-debugging" title="Link to this heading"></a></h2>
+<p>Running build system targets like <code class="docutils literal notranslate"><span class="pre">ninja</span> <span class="pre">flash</span></code>, <code class="docutils literal notranslate"><span class="pre">ninja</span> <span class="pre">debug</span></code>,
+etc. is just a call to the corresponding <a class="reference internal" href="build-flash-debug.html#west-build-flash-debug"><span class="std std-ref">west command</span></a>. For example, <code class="docutils literal notranslate"><span class="pre">ninja</span> <span class="pre">flash</span></code> calls <code class="docutils literal notranslate"><span class="pre">west</span>
+<span class="pre">flash</span></code><a class="footnote-reference brackets" href="#wbninja" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>. If you don’t have west installed on your system, running
+those targets will fail. You can of course still flash and debug using
+any <a class="reference internal" href="../flash_debug/host-tools.html#flash-debug-host-tools"><span class="std std-ref">Flash &amp; Debug Host Tools</span></a> which work for your board (and which those
+west commands wrap).</p>
+<p>If you want to use these build system targets but do not want to
+install west on your system using <code class="docutils literal notranslate"><span class="pre">pip</span></code>, it is possible to do so
+by manually creating a <a class="reference internal" href="../../glossary.html#term-west-workspace"><span class="xref std std-term">west workspace</span></a>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span><span class="nb">cd</span><span class="w"> </span>into<span class="w"> </span>zephyrproject<span class="w"> </span><span class="k">if</span><span class="w"> </span>not<span class="w"> </span>already<span class="w"> </span>there
+<span class="go">git clone https://github.com/zephyrproject-rtos/west.git .west/west</span>
+</pre></div>
+</div>
+<p>Then create a file <code class="file docutils literal notranslate"><span class="pre">.west/config</span></code> with the following contents:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[manifest]
+path = zephyr
+
+[zephyr]
+base = zephyr
+</pre></div>
+</div>
+<p>After that, and in order for <code class="docutils literal notranslate"><span class="pre">ninja</span></code> to be able to invoke <code class="docutils literal notranslate"><span class="pre">west</span></code>
+to flash and debug, you must specify the west directory. This can be
+done by setting the environment variable <code class="docutils literal notranslate"><span class="pre">WEST_DIR</span></code> to point to
+<code class="file docutils literal notranslate"><span class="pre">zephyrproject/.west/west</span></code> before running CMake to set up a
+build directory.</p>
+<p class="rubric">Footnotes</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="wbninja" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> invokes <code class="docutils literal notranslate"><span class="pre">ninja</span></code>, among other
+tools. There’s no recursive invocation of either <code class="docutils literal notranslate"><span class="pre">west</span></code> or
+<code class="docutils literal notranslate"><span class="pre">ninja</span></code> involved by default, however, as <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> does not
+invoke <code class="docutils literal notranslate"><span class="pre">ninja</span> <span class="pre">flash</span></code>, <code class="docutils literal notranslate"><span class="pre">debug</span></code>, etc. The one exception is if you
+specifically run one of these build system targets with a command
+line like <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span> <span class="pre">-t</span> <span class="pre">flash</span></code>. In that case, west is run twice:
+once for <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code>, and in a subprocess, again for <code class="docutils literal notranslate"><span class="pre">west</span>
+<span class="pre">flash</span></code>. Even in this case, <code class="docutils literal notranslate"><span class="pre">ninja</span></code> is only run once, as <code class="docutils literal notranslate"><span class="pre">ninja</span>
+<span class="pre">flash</span></code>. This is because these build system targets depend on an
+up to date build of the Zephyr application, so it’s compiled before
+<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code> is run.</p>
+</aside>
+</aside>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1428 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="group__display__interface" kind="group">
+    <compoundname>display_interface</compoundname>
+    <title>Display</title>
+    <innerfile refid="drivers_2display_8h">display.h</innerfile>
+    <innerfile refid="ac057tc1_8h">ac057tc1.h</innerfile>
+    <innerfile refid="panel_8h">panel.h</innerfile>
+    <innerclass refid="structdisplay__palette__color" prot="public">display_palette_color</innerclass>
+    <innerclass refid="structdisplay__capabilities" prot="public">display_capabilities</innerclass>
+    <innerclass refid="structdisplay__buffer__descriptor" prot="public">display_buffer_descriptor</innerclass>
+    <innerclass refid="structdisplay__event__data" prot="public">display_event_data</innerclass>
+    <innergroup refid="group__devicetree-display">Devicetree Display API</innergroup>
+    <innergroup refid="group__monochrome__character__framebuffer">Monochrome Character Framebuffer</innergroup>
+    <innergroup refid="group__mipi__interface">MIPI Display interface</innergroup>
+    <innergroup refid="group__display__interface__ext">Device-specific Display API extensions</innergroup>
+    <innergroup refid="group__display__interface__backend">Display Driver Backend API</innergroup>
+    <innergroup refid="group__ac057tc1__display__interface">AC057TC1 display controller</innergroup>
+    <innergroup refid="group__mipi__dbi__interface">MIPI-DBI</innergroup>
+    <innergroup refid="group__mipi__dsi__interface">MIPI-DSI</innergroup>
+    <innergroup refid="group__display__panel__dt">Display panel devicetree bindings</innergroup>
+    <sectiondef kind="enum">
+      <memberdef kind="enum" id="group__display__interface_1gac346bc56771052a8fe919c3ec23d7c9c" prot="public" static="no" strong="no">
+        <type></type>
+        <name>display_pixel_format</name>
+        <enumvalue id="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9cac99044ebc0258de7ab8f4ef46edeb44a" prot="public">
+          <name>PIXEL_FORMAT_RGB_888</name>
+          <initializer>= BIT(0)</initializer>
+          <briefdescription>
+<para>24-bit RGB format with 8 bits per component. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>Below shows how data are organized in memory.</para>
+<para><programlisting filename=".unparsed"><codeline><highlight class="normal"><sp/><sp/>Byte<sp/>0<sp/><sp/><sp/>Byte<sp/>1<sp/><sp/><sp/>Byte<sp/>2</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>7......0<sp/>15.....8<sp/>23....16</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Bbbbbbbb<sp/>Gggggggg<sp/>Rrrrrrrr<sp/>|<sp/>...</highlight></codeline>
+</programlisting> 24-bit RGB </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9cabb19ccb2fad2d8f809819dd0a94b1d9c" prot="public">
+          <name>PIXEL_FORMAT_MONO01</name>
+          <initializer>= BIT(1)</initializer>
+          <briefdescription>
+<para>1-bit monochrome format with 1 bit per pixel, thus each byte represent 8 pixels Two variants, with black being either represented by 0 or 1 </para>
+          </briefdescription>
+          <detaileddescription>
+<para>Below shows how data are organized in memory.</para>
+<para><programlisting filename=".unparsed"><codeline><highlight class="normal"><sp/><sp/>Byte<sp/>0<sp/><sp/><sp/>|<sp/>Byte<sp/>1<sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>7......0<sp/><sp/><sp/>7......0</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>MMMMMMMM<sp/>|<sp/>MMMMMMMM<sp/>|<sp/>...</highlight></codeline>
+</programlisting> Monochrome (0=Black 1=White) </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca4ab51591eb10fe72365f703d70bc7b6c" prot="public">
+          <name>PIXEL_FORMAT_MONO10</name>
+          <initializer>= BIT(2)</initializer>
+          <briefdescription>
+<para>Monochrome (1=Black 0=White). </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca90eeb0d7507e2872774d0026eb100ee9" prot="public">
+          <name>PIXEL_FORMAT_ARGB_8888</name>
+          <initializer>= BIT(3)</initializer>
+          <briefdescription>
+<para>32-bit RGB format with 8 bits per component and 8 bits for alpha. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>Below shows how data are organized in memory.</para>
+<para><programlisting filename=".unparsed"><codeline><highlight class="normal"><sp/><sp/>Byte<sp/>0<sp/><sp/><sp/>Byte<sp/>1<sp/><sp/><sp/>Byte<sp/>2<sp/><sp/><sp/>Byte<sp/>3</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>7......0<sp/>15.....8<sp/>23....16<sp/>31....24</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Bbbbbbbb<sp/>Gggggggg<sp/>Rrrrrrrr<sp/>Aaaaaaaa<sp/>|<sp/>...</highlight></codeline>
+</programlisting> 32-bit ARGB </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9cac0ae1813354b024a4806f5012c5c4e16" prot="public">
+          <name>PIXEL_FORMAT_RGB_565</name>
+          <initializer>= BIT(4)</initializer>
+          <briefdescription>
+<para>16-bit RGB format packed into two bytes: 5 red bits [15:11], 6 green bits [10:5], 5 blue bits [4:0]. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>Below shows how data are organized in memory.</para>
+<para><programlisting filename=".unparsed"><codeline><highlight class="normal"><sp/><sp/>Byte<sp/>0<sp/><sp/><sp/>Byte<sp/>1<sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>7......0<sp/>15.....8</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>gggBbbbb<sp/>RrrrrGgg<sp/>|<sp/>...</highlight></codeline>
+</programlisting> </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca0d12a0b6fd3df29b0a607eedf7671809" prot="public">
+          <name>PIXEL_FORMAT_RGB_565X</name>
+          <initializer>= BIT(5)</initializer>
+          <briefdescription>
+<para>16-bit RGB format packed into two bytes. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>Byte swapped version of the PIXEL_FORMAT_RGB_565 format.</para>
+<para><programlisting filename=".unparsed"><codeline><highlight class="normal"><sp/><sp/>7......0<sp/>15.....8</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>RrrrrGgg<sp/>gggBbbbb<sp/>|<sp/>...</highlight></codeline>
+</programlisting> </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca14f33dfec4a630f5be50622a535434df" prot="public">
+          <name>PIXEL_FORMAT_L_8</name>
+          <initializer>= BIT(6)</initializer>
+          <briefdescription>
+<para>8-bit Greyscale format </para>
+          </briefdescription>
+          <detaileddescription>
+<para>Below shows how data are organized in memory.</para>
+<para><programlisting filename=".unparsed"><codeline><highlight class="normal"><sp/><sp/>Byte<sp/>0<sp/><sp/><sp/>|<sp/>Byte<sp/>1<sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>7......0<sp/><sp/><sp/>7......0</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Gggggggg<sp/>|<sp/>Gggggggg<sp/>|<sp/>...</highlight></codeline>
+</programlisting> 8-bit Grayscale/Luminance, equivalent to GRAY, GREY, GRAY8, Y8, R8, etc... </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca92f4901daf73e26c4290e656e7afeb2f" prot="public">
+          <name>PIXEL_FORMAT_AL_88</name>
+          <initializer>= BIT(7)</initializer>
+          <briefdescription>
+<para>16-bit Greyscale format with 8-bit luminance and 8-bit for alpha </para>
+          </briefdescription>
+          <detaileddescription>
+<para>Below shows how data are organized in memory.</para>
+<para><programlisting filename=".unparsed"><codeline><highlight class="normal"><sp/><sp/>Byte<sp/>0<sp/><sp/><sp/><sp/>Byte<sp/>1<sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>7......0<sp/><sp/>15.....8</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Gggggggg<sp/><sp/>Aaaaaaaa<sp/>|<sp/>...</highlight></codeline>
+</programlisting> 8-bit Grayscale/Luminance with alpha </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca20bb97558d4acdf225a157c40d9058ab" prot="public">
+          <name>PIXEL_FORMAT_XRGB_8888</name>
+          <initializer>= BIT(8)</initializer>
+          <briefdescription>
+<para>32-bit RGB format with 8 bits per component and 8 bits unused. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>Below shows how data are organized in memory.</para>
+<para><programlisting filename=".unparsed"><codeline><highlight class="normal"><sp/><sp/>Byte<sp/>0<sp/><sp/><sp/>Byte<sp/>1<sp/><sp/><sp/>Byte<sp/>2<sp/><sp/><sp/>Byte<sp/>3</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>7......0<sp/>15.....8<sp/>23....16<sp/>31....24</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Bbbbbbbb<sp/>Gggggggg<sp/>Rrrrrrrr<sp/>Xxxxxxxx<sp/>|<sp/>...</highlight></codeline>
+</programlisting> 32-bit XRGB </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca4625a834a26894db2da3547635a6e172" prot="public">
+          <name>PIXEL_FORMAT_BGR_888</name>
+          <initializer>= BIT(9)</initializer>
+          <briefdescription>
+<para>24-bit BGR format with 8 bits per component. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>Below shows how data are organized in memory.</para>
+<para><programlisting filename=".unparsed"><codeline><highlight class="normal"><sp/><sp/>Byte<sp/>0<sp/><sp/><sp/>Byte<sp/>1<sp/><sp/><sp/>Byte<sp/>2</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>7......0<sp/>15.....8<sp/>23....16</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Rrrrrrrr<sp/>Gggggggg<sp/>Bbbbbbbb<sp/>|<sp/>...</highlight></codeline>
+</programlisting> 24-bit BGR </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca049f2930dfd1efadfb17a113ba0d879d" prot="public">
+          <name>PIXEL_FORMAT_ABGR_8888</name>
+          <initializer>= BIT(10)</initializer>
+          <briefdescription>
+<para>32-bit BGR format with 8 bits per component and 8 bits for alpha. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>Below shows how data are organized in memory.</para>
+<para><programlisting filename=".unparsed"><codeline><highlight class="normal"><sp/><sp/>Byte<sp/>0<sp/><sp/><sp/>Byte<sp/>1<sp/><sp/><sp/>Byte<sp/>2<sp/><sp/><sp/>Byte<sp/>3</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>7......0<sp/>15.....8<sp/>23....16<sp/>31....24</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Rrrrrrrr<sp/>Gggggggg<sp/>Bbbbbbbb<sp/>Aaaaaaaa<sp/>|<sp/>...</highlight></codeline>
+</programlisting> 32-bit ABGR </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca9de42e120e50119c2df1c503ed2e7a28" prot="public">
+          <name>PIXEL_FORMAT_RGBA_8888</name>
+          <initializer>= BIT(11)</initializer>
+          <briefdescription>
+<para>32-bit RGB format with 8 bits per component and 8 bits for alpha. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>Below shows how data are organized in memory.</para>
+<para><programlisting filename=".unparsed"><codeline><highlight class="normal"><sp/><sp/>Byte<sp/>0<sp/><sp/><sp/>Byte<sp/>1<sp/><sp/><sp/>Byte<sp/>2<sp/><sp/><sp/>Byte<sp/>3</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>7......0<sp/>15.....8<sp/>23....16<sp/>31....24</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Aaaaaaaa<sp/>Bbbbbbbb<sp/>Gggggggg<sp/>Rrrrrrrr<sp/>|<sp/>...</highlight></codeline>
+</programlisting> 32-bit RGBA </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca142784152249100847b0e5c6d656191c" prot="public">
+          <name>PIXEL_FORMAT_BGRA_8888</name>
+          <initializer>= BIT(12)</initializer>
+          <briefdescription>
+<para>32-bit BGR format with 8 bits per component and 8 bits for alpha. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>Below shows how data are organized in memory.</para>
+<para><programlisting filename=".unparsed"><codeline><highlight class="normal"><sp/><sp/>Byte<sp/>0<sp/><sp/><sp/>Byte<sp/>1<sp/><sp/><sp/>Byte<sp/>2<sp/><sp/><sp/>Byte<sp/>3</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>7......0<sp/>15.....8<sp/>23....16<sp/>31....24</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Aaaaaaaa<sp/>Rrrrrrrr<sp/>Gggggggg<sp/>Bbbbbbbb<sp/>|<sp/>...</highlight></codeline>
+</programlisting> 32-bit BGRA </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9cacaed33ee4be17042d45cf238ac49df6a" prot="public">
+          <name>PIXEL_FORMAT_I_4</name>
+          <initializer>= BIT(13)</initializer>
+          <briefdescription>
+<para>4-bit indexed color format with 2 pixels packed per byte. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>Below shows how data are organized in memory.</para>
+<para><programlisting filename=".unparsed"><codeline><highlight class="normal"><sp/><sp/>Byte<sp/>0<sp/><sp/><sp/>|<sp/>Byte<sp/>1<sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>7......0<sp/><sp/><sp/>7......0</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>IiiiJjjj<sp/>|<sp/>KkkkLlll<sp/>|<sp/>...</highlight></codeline>
+</programlisting></para>
+<para>The high nibble stores the left pixel and the low nibble stores the right pixel. Palette semantics are display-specific. Packed 4-bit indexed color </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca015155116919cac3eff289764e9574d8" prot="public">
+          <name>PIXEL_FORMAT_L_4</name>
+          <initializer>= BIT(14)</initializer>
+          <briefdescription>
+<para>4-bit greyscale format with 2 pixels packed per byte. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>Below shows how data are organized in memory.</para>
+<para><programlisting filename=".unparsed"><codeline><highlight class="normal"><sp/><sp/>Byte<sp/>0<sp/><sp/><sp/>|<sp/>Byte<sp/>1<sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>7......0<sp/><sp/><sp/>7......0</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>GgggHhhh<sp/>|<sp/>IiiiJjjj<sp/>|<sp/>...</highlight></codeline>
+</programlisting></para>
+<para>The high nibble stores the left pixel and the low nibble stores the right pixel. Packed 4-bit Grayscale/Luminance </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca5c905dcfaca35e58c14513f2e3a61091" prot="public">
+          <name>PIXEL_FORMAT_YUYV</name>
+          <initializer>= BIT(15)</initializer>
+          <briefdescription>
+<para>Packed YUV 4:2:2 format, two pixels per four bytes. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>Each pixel carries its own luminance and the two share a pair of chrominance samples, so the format costs sixteen bits per pixel.</para>
+<para>Below shows how data are organized in memory.</para>
+<para><programlisting filename=".unparsed"><codeline><highlight class="normal"><sp/><sp/>Byte<sp/>0<sp/><sp/><sp/>|<sp/>Byte<sp/>1<sp/><sp/><sp/>|<sp/>Byte<sp/>2<sp/><sp/><sp/>|<sp/>Byte<sp/>3<sp/><sp/><sp/>|</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/>7......0<sp/><sp/><sp/>7......0<sp/><sp/><sp/>7......0<sp/><sp/><sp/>7......0</highlight></codeline>
+<codeline><highlight class="normal">|<sp/>Yyyyyyyy<sp/>|<sp/>Uuuuuuuu<sp/>|<sp/>Yyyyyyyy<sp/>|<sp/>Vvvvvvvv<sp/>|<sp/>...</highlight></codeline>
+</programlisting></para>
+<para>Byte 0 is the luminance of the left pixel and byte 2 that of the right one. A display advertising this format converts to RGB itself, which is what makes it worth writing pictures out in. </para>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+<para>Display pixel formats. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Display pixel format enumeration.</para>
+<para>In case a pixel format consists out of multiple bytes the byte order is big endian. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/drivers/display.h" line="49" column="1" bodyfile="zephyr/drivers/display.h" bodystart="49" bodyend="269"/>
+      </memberdef>
+      <memberdef kind="enum" id="group__display__interface_1ga23030b6c27446c4579103fe38e821341" prot="public" static="no" strong="no">
+        <type></type>
+        <name>display_screen_info</name>
+        <enumvalue id="group__display__interface_1gga23030b6c27446c4579103fe38e821341ade1ec91a372b3b2208ebf5729184b804" prot="public">
+          <name>SCREEN_INFO_MONO_VTILED</name>
+          <initializer>= BIT(0)</initializer>
+          <briefdescription>
+<para>If selected, one octet represents 8 pixels ordered vertically, otherwise ordered horizontally. </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1gga23030b6c27446c4579103fe38e821341ade5bb2006e547450bac0edaa2a8b9c7d" prot="public">
+          <name>SCREEN_INFO_MONO_MSB_FIRST</name>
+          <initializer>= BIT(1)</initializer>
+          <briefdescription>
+<para>If selected, the MSB represents the first pixel, otherwise MSB represents the last pixel. </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1gga23030b6c27446c4579103fe38e821341ac65e80206de09cb63e871ce18deefb85" prot="public">
+          <name>SCREEN_INFO_EPD</name>
+          <initializer>= BIT(2)</initializer>
+          <briefdescription>
+<para>Electrophoretic Display. </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1gga23030b6c27446c4579103fe38e821341ad22c69026d0b4573aaebe0b3ef274842" prot="public">
+          <name>SCREEN_INFO_DOUBLE_BUFFER</name>
+          <initializer>= BIT(3)</initializer>
+          <briefdescription>
+<para>Screen has two alternating ram buffers. </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1gga23030b6c27446c4579103fe38e821341a1c51db66639919571af38bbc91eb28c1" prot="public">
+          <name>SCREEN_INFO_X_ALIGNMENT_WIDTH</name>
+          <initializer>= BIT(4)</initializer>
+          <briefdescription>
+<para>Screen has x alignment constrained to width. </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+<para>Display screen information. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/drivers/display.h" line="299" column="1" bodyfile="zephyr/drivers/display.h" bodystart="299" bodyend="322"/>
+      </memberdef>
+      <memberdef kind="enum" id="group__display__interface_1gac59b091a3ed39431ab97a5f19fdc4855" prot="public" static="no" strong="no">
+        <type></type>
+        <name>display_orientation</name>
+        <enumvalue id="group__display__interface_1ggac59b091a3ed39431ab97a5f19fdc4855adb3975e2caf6c28374e20a5e0ac26ed2" prot="public">
+          <name>DISPLAY_ORIENTATION_NORMAL</name>
+          <briefdescription>
+<para>No rotation. </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1ggac59b091a3ed39431ab97a5f19fdc4855a632483591b572c0945df3f65cb4e52bc" prot="public">
+          <name>DISPLAY_ORIENTATION_ROTATED_90</name>
+          <briefdescription>
+<para>Rotated 90 degrees clockwise. </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1ggac59b091a3ed39431ab97a5f19fdc4855a7f71ba80f09d5b17f7cdfa7456ed0e29" prot="public">
+          <name>DISPLAY_ORIENTATION_ROTATED_180</name>
+          <briefdescription>
+<para>Rotated 180 degrees clockwise. </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1ggac59b091a3ed39431ab97a5f19fdc4855af81128a85915f41c22bc0581f51455b4" prot="public">
+          <name>DISPLAY_ORIENTATION_ROTATED_270</name>
+          <briefdescription>
+<para>Rotated 270 degrees clockwise. </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+<para>Enumeration with possible display orientation. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/drivers/display.h" line="327" column="1" bodyfile="zephyr/drivers/display.h" bodystart="327" bodyend="332"/>
+      </memberdef>
+      <memberdef kind="enum" id="group__display__interface_1ga0042f460c729a5b11ed59f4aac609212" prot="public" static="no" strong="no">
+        <type></type>
+        <name>display_event</name>
+        <enumvalue id="group__display__interface_1gga0042f460c729a5b11ed59f4aac609212a4aecf6d165ca2ec432297cc5664c24a6" prot="public">
+          <name>DISPLAY_EVENT_LINE_INT</name>
+          <initializer>= BIT(0)</initializer>
+          <briefdescription>
+<para>Fired when controller reaches a configured scanline. </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1gga0042f460c729a5b11ed59f4aac609212acb5772017ec3e4d6677fee78295a379c" prot="public">
+          <name>DISPLAY_EVENT_VSYNC</name>
+          <initializer>= BIT(1)</initializer>
+          <briefdescription>
+<para>Fired at vertical sync / start of new frame. </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1gga0042f460c729a5b11ed59f4aac609212abd4e3c24f05c2484137855349d6cf794" prot="public">
+          <name>DISPLAY_EVENT_FRAME_DONE</name>
+          <initializer>= BIT(2)</initializer>
+          <briefdescription>
+<para>Fired when a frame transfer to the panel or frame buffer update completes. </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1gga0042f460c729a5b11ed59f4aac609212a456bc992ffdf5604828b7280f94dd649" prot="public">
+          <name>DISPLAY_EVENT_FIFO_UNDERFLOW</name>
+          <initializer>= BIT(3)</initializer>
+          <briefdescription>
+<para>Fired when a FIFO underflow occurs. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>Checked in some UI frameworks such as Qt Ultralite </para>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+<para>Display event types. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/drivers/display.h" line="402" column="1" bodyfile="zephyr/drivers/display.h" bodystart="402" bodyend="413"/>
+      </memberdef>
+      <memberdef kind="enum" id="group__display__interface_1ga5c3bcf15b62c66c1677e51a10451efe5" prot="public" static="no" strong="no">
+        <type></type>
+        <name>display_event_result</name>
+        <enumvalue id="group__display__interface_1gga5c3bcf15b62c66c1677e51a10451efe5abc630229e82e4e5d7ef50ec4c8e6aff7" prot="public">
+          <name>DISPLAY_EVENT_RESULT_CONTINUE</name>
+          <initializer>= 0</initializer>
+          <briefdescription>
+<para>Let the driver execute its default handling. </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__display__interface_1gga5c3bcf15b62c66c1677e51a10451efe5ad79be33d4e885b6745feebebc3636dfc" prot="public">
+          <name>DISPLAY_EVENT_RESULT_HANDLED</name>
+          <initializer>= 1</initializer>
+          <briefdescription>
+<para>The callback handled the event and the driver should skip its default processing for that event. </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+<para>Display event callback return flags. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/drivers/display.h" line="416" column="1" bodyfile="zephyr/drivers/display.h" bodystart="416" bodyend="423"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="group__display__interface_1gadca2fe10ecb27b5e82309bbab5e886ee" prot="public" static="no">
+        <type>enum <ref refid="group__display__interface_1ga5c3bcf15b62c66c1677e51a10451efe5" kindref="member">display_event_result</ref>(*</type>
+        <definition>typedef enum display_event_result(* display_event_cb_t) (const struct device *dev, uint32_t evt, const struct display_event_data *data, void *user_data)</definition>
+        <argsstring>)(const struct device *dev, uint32_t evt, const struct display_event_data *data, void *user_data)</argsstring>
+        <name>display_event_cb_t</name>
+        <briefdescription>
+<para>Called either in ISR context (if arg in_isr=true at register time, see <ref refid="group__display__interface_1ga99b7e7da6b85bee97398a8a9b161c777" kindref="member">display_register_event_cb</ref> ) or in thread context (if in_isr=false, driver will schedule work to call it). </para>
+        </briefdescription>
+        <detaileddescription>
+<para>When called from ISR context the callback must be extremely fast and must not call blocking APIs or sleep.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>dev</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to device structure </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>evt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>&apos;enum <ref refid="group__display__interface_1ga0042f460c729a5b11ed59f4aac609212" kindref="member">display_event</ref>&apos; bit of event to handle </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Driver data passed to callback </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>user_data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>User data passed by driver to callback</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>An &apos;enum <ref refid="group__display__interface_1ga5c3bcf15b62c66c1677e51a10451efe5" kindref="member">display_event_result</ref>&apos; flag, see its description for details. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/drivers/display.h" line="1" column="0" bodyfile="zephyr/drivers/display.h" bodystart="440" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="group__display__interface_1ga3a5114b4537039fc4d3258678b82cd18" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int display_write</definition>
+        <argsstring>(const struct device *dev, const uint16_t x, const uint16_t y, const struct display_buffer_descriptor *desc, const void *buf)</argsstring>
+        <name>display_write</name>
+        <param>
+          <type>const struct <ref refid="structdevice" kindref="compound">device</ref> *</type>
+          <declname>dev</declname>
+        </param>
+        <param>
+          <type>const <ref refid="stdint_8h_1a5debae8b2a1ec20a6694c0c443ee399e" kindref="member">uint16_t</ref></type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>const <ref refid="stdint_8h_1a5debae8b2a1ec20a6694c0c443ee399e" kindref="member">uint16_t</ref></type>
+          <declname>y</declname>
+        </param>
+        <param>
+          <type>const struct <ref refid="structdisplay__buffer__descriptor" kindref="compound">display_buffer_descriptor</ref> *</type>
+          <declname>desc</declname>
+        </param>
+        <param>
+          <type>const void *</type>
+          <declname>buf</declname>
+        </param>
+        <briefdescription>
+<para>Write data to display. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>dev</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to device structure </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>x Coordinate of the upper left corner where to write the buffer </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>y Coordinate of the upper left corner where to write the buffer </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>desc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to a structure describing the buffer layout </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>buf</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to buffer array</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success else negative errno code. </para>
+</simplesect>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>-EINVAL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Invalid descriptor/rectangle/buffer </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-ENOTSUP</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Update mode unsupported (e.g., partial write) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EAGAIN</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Device busy/not started (driver-specific transient) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EIO</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Transfer/programming failure </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-ENOMEM</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Insufficient memory/resources </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/drivers/display.h" line="622" column="19" bodyfile="zephyr/drivers/display.h" bodystart="622" bodyend="628"/>
+      </memberdef>
+      <memberdef kind="function" id="group__display__interface_1ga3f497776520b0eac16b8aea80ccbbcfc" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int display_read</definition>
+        <argsstring>(const struct device *dev, const uint16_t x, const uint16_t y, const struct display_buffer_descriptor *desc, void *buf)</argsstring>
+        <name>display_read</name>
+        <param>
+          <type>const struct <ref refid="structdevice" kindref="compound">device</ref> *</type>
+          <declname>dev</declname>
+        </param>
+        <param>
+          <type>const <ref refid="stdint_8h_1a5debae8b2a1ec20a6694c0c443ee399e" kindref="member">uint16_t</ref></type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>const <ref refid="stdint_8h_1a5debae8b2a1ec20a6694c0c443ee399e" kindref="member">uint16_t</ref></type>
+          <declname>y</declname>
+        </param>
+        <param>
+          <type>const struct <ref refid="structdisplay__buffer__descriptor" kindref="compound">display_buffer_descriptor</ref> *</type>
+          <declname>desc</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>buf</declname>
+        </param>
+        <briefdescription>
+<para>Read data from display. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>dev</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to device structure </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>x</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>x Coordinate of the upper left corner where to read from </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>y</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>y Coordinate of the upper left corner where to read from </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>desc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to a structure describing the buffer layout </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>buf</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to buffer array</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success else negative errno code. </para>
+</simplesect>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>-ENOSYS</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Not implemented. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EINVAL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Invalid descriptor/rectangle/buffer. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EAGAIN</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Device busy/not started (driver-specific transient). </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EIO</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Transfer/programming failure. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/drivers/display.h" line="645" column="19" bodyfile="zephyr/drivers/display.h" bodystart="645" bodyend="657"/>
+      </memberdef>
+      <memberdef kind="function" id="group__display__interface_1ga62a6cd9e338aa07f789de60e64d3b3c4" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int display_clear</definition>
+        <argsstring>(const struct device *dev)</argsstring>
+        <name>display_clear</name>
+        <param>
+          <type>const struct <ref refid="structdevice" kindref="compound">device</ref> *</type>
+          <declname>dev</declname>
+        </param>
+        <briefdescription>
+<para>Clear the screen of the display device. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>dev</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to device structure</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success else negative errno code. </para>
+</simplesect>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>-ENOSYS</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Not implemented. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/drivers/display.h" line="667" column="19" bodyfile="zephyr/drivers/display.h" bodystart="667" bodyend="676"/>
+      </memberdef>
+      <memberdef kind="function" id="group__display__interface_1ga4b66d380e46909caaa7317857f84a9e8" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void *</type>
+        <definition>static void * display_get_framebuffer</definition>
+        <argsstring>(const struct device *dev)</argsstring>
+        <name>display_get_framebuffer</name>
+        <param>
+          <type>const struct <ref refid="structdevice" kindref="compound">device</ref> *</type>
+          <declname>dev</declname>
+        </param>
+        <briefdescription>
+<para>Get pointer to framebuffer for direct access. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>dev</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to device structure</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Pointer to frame buffer or NULL if direct framebuffer access is not supported </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/drivers/display.h" line="687" column="20" bodyfile="zephyr/drivers/display.h" bodystart="687" bodyend="696"/>
+      </memberdef>
+      <memberdef kind="function" id="group__display__interface_1gac6ad1f33067165e4c3bf7c0c345bb4e4" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int display_blanking_on</definition>
+        <argsstring>(const struct device *dev)</argsstring>
+        <name>display_blanking_on</name>
+        <param>
+          <type>const struct <ref refid="structdevice" kindref="compound">device</ref> *</type>
+          <declname>dev</declname>
+        </param>
+        <briefdescription>
+<para>Turn display blanking on. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function blanks the complete display. The content of the frame buffer will be retained while blanking is enabled and the frame buffer will be accessible for read and write operations.</para>
+<para>In case backlight control is supported by the driver the backlight is turned off. The backlight configuration is retained and accessible for configuration.</para>
+<para>In case the driver supports display blanking the initial state of the driver would be the same as if this function was called.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>dev</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to device structure</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success else negative errno code. </para>
+</simplesect>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>-ENOSYS</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Not implemented. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-ENODEV</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Dependent device not ready </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/drivers/display.h" line="718" column="19" bodyfile="zephyr/drivers/display.h" bodystart="718" bodyend="727"/>
+      </memberdef>
+      <memberdef kind="function" id="group__display__interface_1ga4d9e288891a6bde679c3aa00b9913e1d" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int display_blanking_off</definition>
+        <argsstring>(const struct device *dev)</argsstring>
+        <name>display_blanking_off</name>
+        <param>
+          <type>const struct <ref refid="structdevice" kindref="compound">device</ref> *</type>
+          <declname>dev</declname>
+        </param>
+        <briefdescription>
+<para>Turn display blanking off. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Restore the frame buffer content to the display. In case backlight control is supported by the driver the backlight configuration is restored.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>dev</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to device structure</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success else negative errno code. </para>
+</simplesect>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>-ENOSYS</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Not implemented. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-ENODEV</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Dependent device not ready </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/drivers/display.h" line="742" column="19" bodyfile="zephyr/drivers/display.h" bodystart="742" bodyend="751"/>
+      </memberdef>
+      <memberdef kind="function" id="group__display__interface_1gad5cdeb245d17c8d680a5843b3cce1f8c" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int display_set_brightness</definition>
+        <argsstring>(const struct device *dev, uint8_t brightness)</argsstring>
+        <name>display_set_brightness</name>
+        <param>
+          <type>const struct <ref refid="structdevice" kindref="compound">device</ref> *</type>
+          <declname>dev</declname>
+        </param>
+        <param>
+          <type><ref refid="stdint_8h_1a3cb4a16b0e8d6af0af86d4fd6ba5fd9d" kindref="member">uint8_t</ref></type>
+          <declname>brightness</declname>
+        </param>
+        <briefdescription>
+<para>Set the brightness of the display. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Set the brightness of the display in steps of 1/256, where 255 is full brightness and 0 is minimal.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>dev</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to device structure </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>brightness</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Brightness in steps of 1/256</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success else negative errno code. </para>
+</simplesect>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>-ENOSYS</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Not implemented. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-ENODEV</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Dependent device not ready </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/drivers/display.h" line="766" column="19" bodyfile="zephyr/drivers/display.h" bodystart="766" bodyend="776"/>
+      </memberdef>
+      <memberdef kind="function" id="group__display__interface_1ga855c72f72238b25f23e95e50546e2f27" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int display_set_contrast</definition>
+        <argsstring>(const struct device *dev, uint8_t contrast)</argsstring>
+        <name>display_set_contrast</name>
+        <param>
+          <type>const struct <ref refid="structdevice" kindref="compound">device</ref> *</type>
+          <declname>dev</declname>
+        </param>
+        <param>
+          <type><ref refid="stdint_8h_1a3cb4a16b0e8d6af0af86d4fd6ba5fd9d" kindref="member">uint8_t</ref></type>
+          <declname>contrast</declname>
+        </param>
+        <briefdescription>
+<para>Set the contrast of the display. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Set the contrast of the display in steps of 1/256, where 255 is maximum difference and 0 is minimal.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>dev</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to device structure </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>contrast</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Contrast in steps of 1/256</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success else negative errno code. </para>
+</simplesect>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>-ENOSYS</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Not implemented. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/drivers/display.h" line="790" column="19" bodyfile="zephyr/drivers/display.h" bodystart="790" bodyend="799"/>
+      </memberdef>
+      <memberdef kind="function" id="group__display__interface_1ga6a13e42773be13b141ebd8f047f8db50" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void display_get_capabilities</definition>
+        <argsstring>(const struct device *dev, struct display_capabilities *capabilities)</argsstring>
+        <name>display_get_capabilities</name>
+        <param>
+          <type>const struct <ref refid="structdevice" kindref="compound">device</ref> *</type>
+          <declname>dev</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structdisplay__capabilities" kindref="compound">display_capabilities</ref> *</type>
+          <declname>capabilities</declname>
+        </param>
+        <briefdescription>
+<para>Get display capabilities. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>dev</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to device structure </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>capabilities</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to capabilities structure to populate </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/drivers/display.h" line="807" column="20" bodyfile="zephyr/drivers/display.h" bodystart="807" bodyend="814"/>
+      </memberdef>
+      <memberdef kind="function" id="group__display__interface_1ga7ede828663090760c2558a231d9f2150" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int display_set_pixel_format</definition>
+        <argsstring>(const struct device *dev, const enum display_pixel_format pixel_format)</argsstring>
+        <name>display_set_pixel_format</name>
+        <param>
+          <type>const struct <ref refid="structdevice" kindref="compound">device</ref> *</type>
+          <declname>dev</declname>
+        </param>
+        <param>
+          <type>const enum <ref refid="group__display__interface_1gac346bc56771052a8fe919c3ec23d7c9c" kindref="member">display_pixel_format</ref></type>
+          <declname>pixel_format</declname>
+        </param>
+        <briefdescription>
+<para>Set pixel format used by the display. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>dev</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to device structure </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>pixel_format</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pixel format to be used by display</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success else negative errno code. </para>
+</simplesect>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>-ENOSYS</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Not implemented. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-ENOTSUP</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Unsupported format. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-ENOMEM</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Backing framebuffer too small or realloc failure. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EWOULDBLOCK</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Invalid state (running display). </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EIO</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Reconfig failure. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/drivers/display.h" line="830" column="1" bodyfile="zephyr/drivers/display.h" bodystart="830" bodyend="840"/>
+      </memberdef>
+      <memberdef kind="function" id="group__display__interface_1ga4e0a4dc2e434144874af014b8e7c4394" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int display_set_orientation</definition>
+        <argsstring>(const struct device *dev, const enum display_orientation orientation)</argsstring>
+        <name>display_set_orientation</name>
+        <param>
+          <type>const struct <ref refid="structdevice" kindref="compound">device</ref> *</type>
+          <declname>dev</declname>
+        </param>
+        <param>
+          <type>const enum <ref refid="group__display__interface_1gac59b091a3ed39431ab97a5f19fdc4855" kindref="member">display_orientation</ref></type>
+          <declname>orientation</declname>
+        </param>
+        <briefdescription>
+<para>Set display orientation. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>dev</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to device structure </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>orientation</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Orientation to be used by display</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success else negative errno code. </para>
+</simplesect>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>-ENOSYS</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Not implemented. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-ENOTSUP</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Unsupported orientation. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-ENODEV</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Dependent device not ready </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/drivers/display.h" line="853" column="19" bodyfile="zephyr/drivers/display.h" bodystart="853" bodyend="864"/>
+      </memberdef>
+      <memberdef kind="function" id="group__display__interface_1ga99b7e7da6b85bee97398a8a9b161c777" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int display_register_event_cb</definition>
+        <argsstring>(const struct device *dev, display_event_cb_t cb, void *user_data, uint32_t event_mask, bool in_isr, uint32_t *out_reg_handle)</argsstring>
+        <name>display_register_event_cb</name>
+        <param>
+          <type>const struct <ref refid="structdevice" kindref="compound">device</ref> *</type>
+          <declname>dev</declname>
+        </param>
+        <param>
+          <type><ref refid="group__display__interface_1gadca2fe10ecb27b5e82309bbab5e886ee" kindref="member">display_event_cb_t</ref></type>
+          <declname>cb</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>user_data</declname>
+        </param>
+        <param>
+          <type><ref refid="stdint_8h_1a0a8582351ac627ee8bde2973c825e47f" kindref="member">uint32_t</ref></type>
+          <declname>event_mask</declname>
+        </param>
+        <param>
+          <type><ref refid="stdbool_8h_1abb452686968e48b67397da5f97445f5b" kindref="member">bool</ref></type>
+          <declname>in_isr</declname>
+        </param>
+        <param>
+          <type><ref refid="stdint_8h_1a0a8582351ac627ee8bde2973c825e47f" kindref="member">uint32_t</ref> *</type>
+          <declname>out_reg_handle</declname>
+        </param>
+        <briefdescription>
+<para>Register event callback for a display device. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>dev</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to device structure </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cb</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>User callback function pointer, see <ref refid="group__display__interface_1gadca2fe10ecb27b5e82309bbab5e886ee" kindref="member">display_event_cb_t</ref> description </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>user_data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>User data to be passed by driver to event callback </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>event_mask</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Mask of &apos;enum <ref refid="group__display__interface_1ga0042f460c729a5b11ed59f4aac609212" kindref="member">display_event</ref>&apos; events upon which the callback will be called </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>in_isr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>If true, callback will be invoked in ISR context (shall be fast, non-blocking). If false, callback will be invoked in thread/workqueue context. A driver is allowed to implement just one of the invocation contexts.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>out_reg_handle</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Lets the caller prove ownership of the registration, and allows for safe unregistration</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para>Thread-context delivery should be preferred for non-critical work; keep ISR fast and optionally only set flags and schedule work, avoid scheduler APIs, mutexes, prints.</para>
+</simplesect>
+<simplesect kind="return"><para>0 and a non-zero out_reg_handle value on success, otherwise a negative errno code. </para>
+</simplesect>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>-EBUSY</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A callback is already registered. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-ENOTSUP</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The requested callback invocation context is not supported. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-ENOSYS</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Not implemented. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EINVAL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Invalid argument. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/drivers/display.h" line="890" column="19" bodyfile="zephyr/drivers/display.h" bodystart="890" bodyend="913"/>
+      </memberdef>
+      <memberdef kind="function" id="group__display__interface_1gaa4e433439206bc426db363c64882a395" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int display_unregister_event_cb</definition>
+        <argsstring>(const struct device *dev, uint32_t reg_handle)</argsstring>
+        <name>display_unregister_event_cb</name>
+        <param>
+          <type>const struct <ref refid="structdevice" kindref="compound">device</ref> *</type>
+          <declname>dev</declname>
+        </param>
+        <param>
+          <type><ref refid="stdint_8h_1a0a8582351ac627ee8bde2973c825e47f" kindref="member">uint32_t</ref></type>
+          <declname>reg_handle</declname>
+        </param>
+        <briefdescription>
+<para>Unregister event callback for a display device. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>dev</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to device structure </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>reg_handle</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Handle used to register the callback.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success, otherwise a negative errno code. </para>
+</simplesect>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>-EINVAL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>If &apos;reg_handle == 0&apos;. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EPERM</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Not the owner, or already unregistered. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-ENOSYS</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>If it, or register_event_cb, is not implemented. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/drivers/display.h" line="926" column="19" bodyfile="zephyr/drivers/display.h" bodystart="926" bodyend="939"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="group__display__interface_1ga3b305be04da5921ca4087498627dc061" prot="public" static="no">
+        <name>DISPLAY_BITS_PER_PIXEL</name>
+        <param><defname>fmt</defname></param>
+        <initializer>        ((((fmt &amp; <ref refid="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9cac99044ebc0258de7ab8f4ef46edeb44a" kindref="member">PIXEL_FORMAT_RGB_888</ref>) &gt;&gt; 0) * 24U) +                          \
+        (((fmt &amp; <ref refid="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9cabb19ccb2fad2d8f809819dd0a94b1d9c" kindref="member">PIXEL_FORMAT_MONO01</ref>) &gt;&gt; 1) * 1U) +                             \
+        (((fmt &amp; <ref refid="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca4ab51591eb10fe72365f703d70bc7b6c" kindref="member">PIXEL_FORMAT_MONO10</ref>) &gt;&gt; 2) * 1U) +                             \
+        (((fmt &amp; <ref refid="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca90eeb0d7507e2872774d0026eb100ee9" kindref="member">PIXEL_FORMAT_ARGB_8888</ref>) &gt;&gt; 3) * 32U) +                         \
+        (((fmt &amp; <ref refid="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9cac0ae1813354b024a4806f5012c5c4e16" kindref="member">PIXEL_FORMAT_RGB_565</ref>) &gt;&gt; 4) * 16U) +                           \
+        (((fmt &amp; <ref refid="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca0d12a0b6fd3df29b0a607eedf7671809" kindref="member">PIXEL_FORMAT_RGB_565X</ref>) &gt;&gt; 5) * 16U) +                          \
+        (((fmt &amp; <ref refid="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca14f33dfec4a630f5be50622a535434df" kindref="member">PIXEL_FORMAT_L_8</ref>) &gt;&gt; 6) * 8U) +                                \
+        (((fmt &amp; <ref refid="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca92f4901daf73e26c4290e656e7afeb2f" kindref="member">PIXEL_FORMAT_AL_88</ref>) &gt;&gt; 7) * 16U) +                             \
+        (((fmt &amp; <ref refid="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca20bb97558d4acdf225a157c40d9058ab" kindref="member">PIXEL_FORMAT_XRGB_8888</ref>) &gt;&gt; 8) * 32U) +                         \
+        (((fmt &amp; <ref refid="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca4625a834a26894db2da3547635a6e172" kindref="member">PIXEL_FORMAT_BGR_888</ref>) &gt;&gt; 9) * 24U) +                           \
+        (((fmt &amp; <ref refid="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca049f2930dfd1efadfb17a113ba0d879d" kindref="member">PIXEL_FORMAT_ABGR_8888</ref>) &gt;&gt; 10) * 32U) +                        \
+        (((fmt &amp; <ref refid="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca9de42e120e50119c2df1c503ed2e7a28" kindref="member">PIXEL_FORMAT_RGBA_8888</ref>) &gt;&gt; 11) * 32U) +                        \
+        (((fmt &amp; <ref refid="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca142784152249100847b0e5c6d656191c" kindref="member">PIXEL_FORMAT_BGRA_8888</ref>) &gt;&gt; 12) * 32U) +                        \
+        (((fmt &amp; <ref refid="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9cacaed33ee4be17042d45cf238ac49df6a" kindref="member">PIXEL_FORMAT_I_4</ref>) &gt;&gt; 13) * 4U) +                               \
+        (((fmt &amp; <ref refid="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca015155116919cac3eff289764e9574d8" kindref="member">PIXEL_FORMAT_L_4</ref>) &gt;&gt; 14) * 4U) +                               \
+        (((fmt &amp; <ref refid="group__display__interface_1ggac346bc56771052a8fe919c3ec23d7c9ca5c905dcfaca35e58c14513f2e3a61091" kindref="member">PIXEL_FORMAT_YUYV</ref>) &gt;&gt; 15) * 16U))</initializer>
+        <briefdescription>
+<para>Bits required per pixel for display format. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This macro expands to the number of bits required for a given display format. It can be used to allocate a framebuffer based on a given display format type </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/drivers/display.h" line="278" column="9" bodyfile="zephyr/drivers/display.h" bodystart="278" bodyend="294"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Interfaces for display controllers. </para>
+    </briefdescription>
+    <detaileddescription>
+<para><simplesect kind="since"><para>1.14 </para>
+</simplesect>
+<simplesect kind="version"><para>0.10.0 </para>
+</simplesect>
+</para>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

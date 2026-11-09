@@ -1,0 +1,924 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Devicetree HOWTOs &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/build/dts/howtos.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Troubleshooting devicetree" href="troubleshooting.html" />
+    <link rel="prev" title="The /zephyr,user node" href="zephyr-user-node.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Build and Configuration Systems</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../cmake/index.html">Build System (CMake)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Devicetree</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#devicetree-guide">Devicetree Guide</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="intro.html">Introduction to devicetree</a></li>
+<li class="toctree-l4"><a class="reference internal" href="design.html">Design goals</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bindings.html">Devicetree bindings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api-usage.html">Devicetree access from C/C++</a></li>
+<li class="toctree-l4"><a class="reference internal" href="phandles.html">Phandles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="zephyr-user-node.html">The <code class="docutils literal notranslate"><span class="pre">/zephyr,user</span></code> node</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Devicetree HOWTOs</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#get-your-devicetree-and-generated-header">Get your devicetree and generated header</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#get-a-struct-device-from-a-devicetree-node">Get a struct device from a devicetree node</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#find-a-devicetree-binding">Find a devicetree binding</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#set-devicetree-overlays">Set devicetree overlays</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#use-devicetree-overlays">Use devicetree overlays</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#write-device-drivers-using-devicetree-apis">Write device drivers using devicetree APIs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#device-drivers-that-depend-on-other-devices">Device drivers that depend on other devices</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#applications-that-depend-on-board-specific-devices">Applications that depend on board-specific devices</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="troubleshooting.html">Troubleshooting devicetree</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dt-vs-kconfig.html">Devicetree versus Kconfig</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#devicetree-reference">Devicetree Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../kconfig/index.html">Configuration System (Kconfig)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../snippets/index.html">Snippets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../zephyr_cmake_package.html">Zephyr CMake Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sysbuild/index.html">Sysbuild (System build)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../version/index.html">Application version management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flashing/index.html">Flashing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signing/index.html">Signing Binaries</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Build and Configuration Systems</a> &raquo;</li>
+  
+     <li><a href="index.html">Devicetree</a> &raquo;</li>
+  
+  <li>Devicetree HOWTOs</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/build/dts/howtos.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27build%2Fdts%2Fhowtos%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Devicetree&env=-+Page%3A+build%2Fdts%2Fhowtos%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="devicetree-howtos">
+<span id="dt-howtos"></span><h1>Devicetree HOWTOs<a class="headerlink" href="#devicetree-howtos" title="Link to this heading"></a></h1>
+<p>This page has step-by-step advice for getting things done with devicetree.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>See <a class="reference internal" href="troubleshooting.html#dt-trouble"><span class="std std-ref">Troubleshooting devicetree</span></a> for troubleshooting advice.</p>
+</div>
+<section id="get-your-devicetree-and-generated-header">
+<span id="get-devicetree-outputs"></span><h2>Get your devicetree and generated header<a class="headerlink" href="#get-your-devicetree-and-generated-header" title="Link to this heading"></a></h2>
+<p>A board’s devicetree (<a class="reference internal" href="intro-input-output.html#devicetree-in-out-files"><span class="std std-ref">BOARD.dts</span></a>) pulls in
+common node definitions via <code class="docutils literal notranslate"><span class="pre">#include</span></code> preprocessor directives. This at least
+includes the SoC’s <code class="docutils literal notranslate"><span class="pre">.dtsi</span></code>. One way to figure out the devicetree’s contents
+is by opening these files, e.g. by looking in
+<code class="docutils literal notranslate"><span class="pre">dts/&lt;ARCH&gt;/&lt;vendor&gt;/&lt;soc&gt;.dtsi</span></code>, but this can be time consuming.</p>
+<p>If you just want to see the “final” devicetree for your board, build an
+application and open the <code class="file docutils literal notranslate"><span class="pre">zephyr.dts</span></code> file in the build directory.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can build <a class="reference internal" href="../../samples/hello_world/README.html#hello_world" title="Print &quot;Hello World&quot; to the console.">Hello World</a> to see the “base” devicetree for your board
+without any additional changes from <a class="reference internal" href="intro-input-output.html#dt-input-files"><span class="std std-ref">overlay files</span></a>.</p>
+</div>
+<p>For example, using the <a class="reference internal" href="../../boards/qemu/cortex_m3/doc/index.html#qemu_cortex_m3">QEMU Emulation for ARM Cortex-M3</a> board to build
+<a class="reference internal" href="../../samples/hello_world/README.html#hello_world" title="Print &quot;Hello World&quot; to the console.">Hello World</a>:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># --cmake-only here just forces CMake to run, skipping the</span>
+<span class="c1"># build process to save time.</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>qemu_cortex_m3<span class="w"> </span>samples/hello_world<span class="w"> </span>--cmake-only
+</pre></div>
+</div>
+<p>You can change <code class="docutils literal notranslate"><span class="pre">qemu_cortex_m3</span></code> to match your board.</p>
+<p>CMake prints the input and output file locations like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>-- Found BOARD.dts: .../zephyr/boards/arm/qemu_cortex_m3/qemu_cortex_m3.dts
+-- Generated zephyr.dts: .../zephyr/build/zephyr/zephyr.dts
+-- Generated devicetree_generated.h: .../zephyr/build/zephyr/include/generated/zephyr/devicetree_generated.h
+</pre></div>
+</div>
+<p>The <code class="file docutils literal notranslate"><span class="pre">zephyr.dts</span></code> file is the final devicetree in DTS format.</p>
+<p>The <code class="file docutils literal notranslate"><span class="pre">devicetree_generated.h</span></code> file is the corresponding generated header.</p>
+<p>See <a class="reference internal" href="intro-input-output.html#devicetree-in-out-files"><span class="std std-ref">Input and output files</span></a> for details about these files.</p>
+</section>
+<section id="get-a-struct-device-from-a-devicetree-node">
+<span id="dt-get-device"></span><h2>Get a struct device from a devicetree node<a class="headerlink" href="#get-a-struct-device-from-a-devicetree-node" title="Link to this heading"></a></h2>
+<p>When writing Zephyr applications, you’ll often want to get a driver-level
+<a class="reference internal" href="../../kernel/drivers/index.html#device-model-api"><span class="std std-ref">struct device</span></a> corresponding to a devicetree node.</p>
+<p>For example, with this devicetree fragment, you might want the struct device
+for <code class="docutils literal notranslate"><span class="pre">serial&#64;40002000</span></code>:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nf">soc</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nl">serial0</span><span class="p">:</span><span class="w"> </span><span class="nf">serial</span><span class="o">@</span><span class="mi">40002000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">current-speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">115200</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                        </span><span class="cm">/* ... */</span>
+<span class="w">                </span><span class="p">};</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="nf">aliases</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">my-serial</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">serial0</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="nf">chosen</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">zephyr</span><span class="p">,</span><span class="n">console</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">serial0</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Start by making a <a class="reference internal" href="api-usage.html#dt-node-identifiers"><span class="std std-ref">node identifier</span></a> for the device
+you are interested in. There are different ways to do this; pick whichever one
+works best for your requirements. Here are some examples:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Option 1: by node label */</span>
+<span class="cp">#define MY_SERIAL DT_NODELABEL(serial0)</span>
+
+<span class="cm">/* Option 2: by alias */</span>
+<span class="cp">#define MY_SERIAL DT_ALIAS(my_serial)</span>
+
+<span class="cm">/* Option 3: by chosen node */</span>
+<span class="cp">#define MY_SERIAL DT_CHOSEN(zephyr_console)</span>
+
+<span class="cm">/* Option 4: by path */</span>
+<span class="cp">#define MY_SERIAL DT_PATH(soc, serial_40002000)</span>
+</pre></div>
+</div>
+<p>Once you have a node identifier there are two ways to proceed. One way to get a
+device is to use <a class="reference internal" href="../../doxygen/html/group__device__model.html#ga9a65996ce21f43acb7db061e23b48ec7" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DEVICE_DT_GET</span></code></a>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="k">const</span><span class="w"> </span><span class="n">uart_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEVICE_DT_GET</span><span class="p">(</span><span class="n">MY_SERIAL</span><span class="p">);</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">device_is_ready</span><span class="p">(</span><span class="n">uart_dev</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* Not ready, do not use */</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="n">ENODEV</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>There are variants of <a class="reference internal" href="../../doxygen/html/group__device__model.html#ga9a65996ce21f43acb7db061e23b48ec7" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DEVICE_DT_GET</span></code></a> such as
+<a class="reference internal" href="../../doxygen/html/group__device__model.html#ga6ce1dbfda6847ca6c3858712e9b41989" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DEVICE_DT_GET_OR_NULL</span></code></a>, <a class="reference internal" href="../../doxygen/html/group__device__model.html#ga39c760429534ef9ae77f3d996987cd2b" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DEVICE_DT_GET_ONE</span></code></a> or
+<a class="reference internal" href="../../doxygen/html/group__device__model.html#gaadf3ffb63df544eb3de356ab2c5e9e3c" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DEVICE_DT_GET_ANY</span></code></a>. This idiom fetches the device pointer at
+build-time, which means there is no runtime penalty. This method is useful if
+you want to store the device pointer as configuration data. But because the
+device may not be initialized, or may have failed to initialize, you must verify
+that the device is ready to be used before passing it to any API functions.
+(This check is done for you by <a class="reference internal" href="../../doxygen/html/group__device__model.html#ga15386ca9ab38f3e30183c18f604fa835" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">device_get_binding()</span></code></a>.)</p>
+<p>In some situations the device cannot be known at build-time, e.g., if it depends
+on user input like in a shell application. In this case you can get the
+<code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code> by combining <a class="reference internal" href="../../doxygen/html/group__device__model.html#ga15386ca9ab38f3e30183c18f604fa835" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">device_get_binding()</span></code></a> with the device
+name:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">dev_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="cm">/* TODO: insert device name from user */</span><span class="p">;</span>
+<span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">uart_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">device_get_binding</span><span class="p">(</span><span class="n">dev_name</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>You can then use <code class="docutils literal notranslate"><span class="pre">uart_dev</span></code> with <a class="reference internal" href="../../hardware/peripherals/uart.html#uart-api"><span class="std std-ref">Universal Asynchronous Receiver-Transmitter (UART)</span></a> API functions like
+<a class="reference internal" href="../../doxygen/html/group__uart__interface.html#gaa0b75777b879af10543f7e8f463ff9a2" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">uart_configure()</span></code></a>. Similar code will work for other device types; just
+make sure you use the correct API for the device.</p>
+<p>If you’re having trouble, see <a class="reference internal" href="troubleshooting.html#dt-trouble"><span class="std std-ref">Troubleshooting devicetree</span></a>. The first thing to check is
+that the node has <code class="docutils literal notranslate"><span class="pre">status</span> <span class="pre">=</span> <span class="pre">&quot;okay&quot;</span></code>, like this:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define MY_SERIAL DT_NODELABEL(my_serial)</span>
+
+<span class="cp">#if DT_NODE_HAS_STATUS(MY_SERIAL, okay)</span>
+<span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="k">const</span><span class="w"> </span><span class="n">uart_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEVICE_DT_GET</span><span class="p">(</span><span class="n">MY_SERIAL</span><span class="p">);</span>
+<span class="cp">#else</span>
+<span class="cp">#error &quot;Node is disabled&quot;</span>
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+<p>If you see the <code class="docutils literal notranslate"><span class="pre">#error</span></code> output, make sure to enable the node in your
+devicetree. In some situations your code will compile but it will fail to link
+with a message similar to:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>...undefined reference to `__device_dts_ord_N&#39;
+collect2: error: ld returned 1 exit status
+</pre></div>
+</div>
+<p>This likely means there’s a Kconfig issue preventing the device driver from
+being built, resulting in a reference that does not exist. If your code compiles
+successfully, the last thing to check is if the device is ready, like this:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">device_is_ready</span><span class="p">(</span><span class="n">uart_dev</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="n">printk</span><span class="p">(</span><span class="s">&quot;Device not ready</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If you find that the device is not ready, it likely means that the device’s
+initialization function failed. Enabling logging or debugging driver code may
+help in such situations. Note that you can also use <a class="reference internal" href="../../doxygen/html/group__device__model.html#ga15386ca9ab38f3e30183c18f604fa835" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">device_get_binding()</span></code></a>
+to obtain a reference at runtime. If it returns <code class="docutils literal notranslate"><span class="pre">NULL</span></code> it can either mean that
+device’s driver failed to initialize or that it does not exist.</p>
+</section>
+<section id="find-a-devicetree-binding">
+<span id="dts-find-binding"></span><h2>Find a devicetree binding<a class="headerlink" href="#find-a-devicetree-binding" title="Link to this heading"></a></h2>
+<p><a class="reference internal" href="bindings.html#dt-bindings"><span class="std std-ref">Devicetree bindings</span></a> are YAML files which declare what you can do with the nodes
+they describe, so it’s critical to be able to find them for the nodes you are
+using.</p>
+<p>If you don’t have them already, <a class="reference internal" href="#get-devicetree-outputs"><span class="std std-ref">Get your devicetree and generated header</span></a>. To find a node’s
+binding, open the generated header file, which starts with a list of nodes in a
+block comment:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * [...]</span>
+<span class="cm"> * Nodes in dependency order (ordinal and path):</span>
+<span class="cm"> *   0   /</span>
+<span class="cm"> *   1   /aliases</span>
+<span class="cm"> *   2   /chosen</span>
+<span class="cm"> *   3   /flash@0</span>
+<span class="cm"> *   4   /memory@20000000</span>
+<span class="cm"> *          (etc.)</span>
+<span class="cm"> * [...]</span>
+<span class="cm"> */</span>
+</pre></div>
+</div>
+<p>Make note of the path to the node you want to find, like <code class="docutils literal notranslate"><span class="pre">/flash&#64;0</span></code>. Search
+for the node’s output in the file, which starts with something like this if the
+node has a matching binding:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * Devicetree node:</span>
+<span class="cm"> *   /flash@0</span>
+<span class="cm"> *</span>
+<span class="cm"> * Binding (compatible = soc-nv-flash):</span>
+<span class="cm"> *   $ZEPHYR_BASE/dts/bindings/mtd/soc-nv-flash.yaml</span>
+<span class="cm"> * [...]</span>
+<span class="cm"> */</span>
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="troubleshooting.html#missing-dt-binding"><span class="std std-ref">Check for missing bindings</span></a> for troubleshooting.</p>
+</section>
+<section id="set-devicetree-overlays">
+<span id="id1"></span><h2>Set devicetree overlays<a class="headerlink" href="#set-devicetree-overlays" title="Link to this heading"></a></h2>
+<p>Devicetree overlays are explained in <a class="reference internal" href="intro.html#devicetree-intro"><span class="std std-ref">Introduction to devicetree</span></a>. The CMake
+variable <strong class="makevar">DTC_OVERLAY_FILE</strong> contains a space- or semicolon-separated
+list of overlay files to use. If <strong class="makevar">DTC_OVERLAY_FILE</strong> specifies multiple
+files, they are included in that order by the C preprocessor.  A file in a
+Zephyr module can be referred to by escaping the Zephyr module dir variable
+like <code class="docutils literal notranslate"><span class="pre">\${ZEPHYR_&lt;module&gt;_MODULE_DIR}/&lt;path-to&gt;/dts.overlay</span></code>
+when setting the DTC_OVERLAY_FILE variable.</p>
+<p>You can set <strong class="makevar">DTC_OVERLAY_FILE</strong> to contain exactly the files you want
+to use. Here is an <a class="reference internal" href="../../develop/west/build-flash-debug.html#west-building-dtc-overlay-file"><span class="std std-ref">example</span></a> using
+<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code>.</p>
+<p>If you don’t set <strong class="makevar">DTC_OVERLAY_FILE</strong>, the build system will follow
+these steps, looking for files in your application configuration directory to
+use as devicetree overlays:</p>
+<ol class="arabic simple">
+<li><p>If the file <code class="file docutils literal notranslate"><span class="pre">socs/&lt;SOC&gt;_&lt;BOARD_QUALIFIERS&gt;.overlay</span></code> exists, it will be used.</p></li>
+<li><p>If the file <code class="file docutils literal notranslate"><span class="pre">boards/&lt;BOARD&gt;.overlay</span></code> exists, it will be used in addition to the above.</p></li>
+<li><p>If the current board has <a class="reference internal" href="../../hardware/porting/board_porting.html#porting-board-revisions"><span class="std std-ref">multiple revisions</span></a>
+and <code class="file docutils literal notranslate"><span class="pre">boards/&lt;BOARD&gt;_&lt;revision&gt;.overlay</span></code> exists, it will be used in addition to the above.</p></li>
+<li><p>If one or more files have been found in the previous steps, the build system
+stops looking and just uses those files.</p></li>
+<li><p>Otherwise, if <code class="file docutils literal notranslate"><span class="pre">&lt;BOARD&gt;.overlay</span></code> exists, it will be used, and the build
+system will stop looking for more files.</p></li>
+<li><p>Otherwise, if <code class="file docutils literal notranslate"><span class="pre">app.overlay</span></code> exists, it will be used.</p></li>
+</ol>
+<p>Extra devicetree overlays may be provided using <code class="docutils literal notranslate"><span class="pre">EXTRA_DTC_OVERLAY_FILE</span></code> which
+will still allow the build system to automatically use devicetree overlays
+described in the above steps.</p>
+<p>The build system appends overlays specified in <code class="docutils literal notranslate"><span class="pre">EXTRA_DTC_OVERLAY_FILE</span></code>
+to the overlays in <code class="docutils literal notranslate"><span class="pre">DTC_OVERLAY_FILE</span></code> when processing devicetree overlays.
+This means that changes made via <code class="docutils literal notranslate"><span class="pre">EXTRA_DTC_OVERLAY_FILE</span></code> have higher
+precedence than those made via <code class="docutils literal notranslate"><span class="pre">DTC_OVERLAY_FILE</span></code>.</p>
+<p>All configuration files will be taken from the application’s configuration
+directory except for files with an absolute path that are given with the
+<code class="docutils literal notranslate"><span class="pre">DTC_OVERLAY_FILE</span></code> or <code class="docutils literal notranslate"><span class="pre">EXTRA_DTC_OVERLAY_FILE</span></code> argument.</p>
+<p>See <a class="reference internal" href="../../develop/application/index.html#application-configuration-directory"><span class="std std-ref">Application Configuration Directory</span></a>
+on how the application configuration directory is defined.</p>
+<p>Using <a class="reference internal" href="../../hardware/porting/shields.html#shields"><span class="std std-ref">Shields</span></a> will also add devicetree overlay files.</p>
+<p>The <strong class="makevar">DTC_OVERLAY_FILE</strong> value is stored in the CMake cache and used
+in successive builds.</p>
+<p>The <a class="reference internal" href="../index.html#build-overview"><span class="std std-ref">build system</span></a> prints all the devicetree overlays it
+finds in the configuration phase, like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>-- Found devicetree overlay: .../some/file.overlay
+</pre></div>
+</div>
+</section>
+<section id="use-devicetree-overlays">
+<span id="use-dt-overlays"></span><h2>Use devicetree overlays<a class="headerlink" href="#use-devicetree-overlays" title="Link to this heading"></a></h2>
+<p>See <a class="reference internal" href="#set-devicetree-overlays"><span class="std std-ref">Set devicetree overlays</span></a> for how to add an overlay to the build.</p>
+<p>Overlays can override node property values in multiple ways.
+For example, if your BOARD.dts contains this node:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nf">soc</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nl">serial0</span><span class="p">:</span><span class="w"> </span><span class="nf">serial</span><span class="o">@</span><span class="mi">40002000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">current-speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">115200</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                        </span><span class="cm">/* ... */</span>
+<span class="w">                </span><span class="p">};</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>These are equivalent ways to override the <code class="docutils literal notranslate"><span class="pre">current-speed</span></code> value in an
+overlay:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/* Option 1 */
+&amp;serial0 {
+     current-speed = &lt;9600&gt;;
+};
+
+/* Option 2 */
+&amp;{/soc/serial@40002000} {
+     current-speed = &lt;9600&gt;;
+};
+</pre></div>
+</div>
+<p>We’ll use the <code class="docutils literal notranslate"><span class="pre">&amp;serial0</span></code> style for the rest of these examples.</p>
+<p>You can add aliases to your devicetree using overlays: an alias is just a
+property of the <code class="docutils literal notranslate"><span class="pre">/aliases</span></code> node. For example:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="nf">aliases</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">             </span><span class="n">my-serial</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">serial0</span><span class="p">;</span>
+<span class="w">     </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Chosen nodes work the same way. For example:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="nf">chosen</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">             </span><span class="n">zephyr</span><span class="p">,</span><span class="n">console</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">serial0</span><span class="p">;</span>
+<span class="w">     </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>To delete a property (in addition to deleting properties in general, this is
+how to set a boolean property to false if it’s true in BOARD.dts):</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">serial0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="cp">/delete-property/</span><span class="cm"> </span><span class="cp">some-unwanted-property</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>You can add subnodes using overlays. For example, to configure a SPI or I2C
+child device on an existing bus node, do something like this:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cm">/* SPI device example */</span>
+<span class="o">&amp;</span><span class="nf">spi1</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="nl">my_spi_device</span><span class="p">:</span><span class="w"> </span><span class="nf">temp-sensor</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">             </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;...&quot;</span><span class="p">;</span>
+<span class="w">             </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;TEMP_SENSOR_0&quot;</span><span class="p">;</span>
+<span class="w">             </span><span class="cm">/* reg is the chip select number, if needed;</span>
+<span class="cm">              * If present, it must match the node&#39;s unit address. */</span>
+<span class="w">             </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">             </span><span class="cm">/* Configure other SPI device properties as needed.</span>
+<span class="cm">              * Find your device&#39;s DT binding for details. */</span>
+<span class="w">             </span><span class="n">spi-max-frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">DT_FREQ_M</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">     </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="cm">/* I2C device example */</span>
+<span class="o">&amp;</span><span class="nf">i2c2</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="nl">my_i2c_device</span><span class="p">:</span><span class="w"> </span><span class="nf">touchscreen</span><span class="o">@</span><span class="mi">76</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">             </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;...&quot;</span><span class="p">;</span>
+<span class="w">             </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;TOUCHSCREEN&quot;</span><span class="p">;</span>
+<span class="w">             </span><span class="cm">/* reg is the I2C device address.</span>
+<span class="cm">              * It must match the node&#39;s unit address. */</span>
+<span class="w">             </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">76</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">             </span><span class="cm">/* Configure other I2C device properties as needed.</span>
+<span class="cm">              * Find your device&#39;s DT binding for details. */</span>
+<span class="w">     </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Other bus devices can be configured similarly:</p>
+<ul class="simple">
+<li><p>create the device as a subnode of the parent bus</p></li>
+<li><p>set its properties according to its binding</p></li>
+</ul>
+<p>Assuming you have a suitable device driver associated with the
+<code class="docutils literal notranslate"><span class="pre">my_spi_device</span></code> and <code class="docutils literal notranslate"><span class="pre">my_i2c_device</span></code> compatibles, you should now be able to
+enable the driver via Kconfig and <a class="reference internal" href="#dt-get-device"><span class="std std-ref">get the struct device</span></a>
+for your newly added bus node, then use it with that driver API.</p>
+</section>
+<section id="write-device-drivers-using-devicetree-apis">
+<span id="dt-create-devices"></span><h2>Write device drivers using devicetree APIs<a class="headerlink" href="#write-device-drivers-using-devicetree-apis" title="Link to this heading"></a></h2>
+<p>“Devicetree-aware” <a class="reference internal" href="../../kernel/drivers/index.html#device-model-api"><span class="std std-ref">device drivers</span></a> should create a
+<code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code> for each <code class="docutils literal notranslate"><span class="pre">status</span> <span class="pre">=</span> <span class="pre">&quot;okay&quot;</span></code> devicetree node with a
+particular <a class="reference internal" href="intro-syntax-structure.html#dt-important-props"><span class="std std-ref">compatible</span></a> (or related set of
+compatibles) supported by the driver.</p>
+<p>Writing a devicetree-aware driver begins by defining a <a class="reference internal" href="bindings.html#dt-bindings"><span class="std std-ref">devicetree binding</span></a> for the devices supported by the driver. Use existing bindings
+from similar drivers as a starting point. A skeletal binding to get started
+needs nothing more than this:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;Human-readable description of your binding&gt;</span>
+<span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;foo-company,bar-device&quot;</span>
+<span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">base.yaml</span>
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="#dts-find-binding"><span class="std std-ref">Find a devicetree binding</span></a> for more advice on locating existing bindings.</p>
+<p>After writing your binding, your driver C file can then use the devicetree API
+to find <code class="docutils literal notranslate"><span class="pre">status</span> <span class="pre">=</span> <span class="pre">&quot;okay&quot;</span></code> nodes with the desired compatible, and instantiate
+a <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code> for each one. There are two options for instantiating each
+<code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code>: using instance numbers, and using node labels.</p>
+<p>In either case:</p>
+<ul class="simple">
+<li><p>Each <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code>‘s name should be set to its devicetree node’s
+<code class="docutils literal notranslate"><span class="pre">label</span></code> property. This allows the driver’s users to <a class="reference internal" href="#dt-get-device"><span class="std std-ref">Get a struct device from a devicetree node</span></a> in
+the usual way.</p></li>
+<li><p>Each device’s initial configuration should use values from devicetree
+properties whenever practical. This allows users to configure the driver
+using <a class="reference internal" href="#use-dt-overlays"><span class="std std-ref">devicetree overlays</span></a>.</p></li>
+</ul>
+<p>Examples for how to do this follow. They assume you’ve already implemented the
+device-specific configuration and data structures and API functions, like this:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* my_driver.c */</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/drivers/some_api.h&gt;</span>
+
+<span class="cm">/* Define data (RAM) and configuration (ROM) structures: */</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">my_dev_data</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="cm">/* per-device values to store in RAM */</span>
+<span class="p">};</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">my_dev_cfg</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">freq</span><span class="p">;</span><span class="w"> </span><span class="cm">/* Just an example: initial clock frequency in Hz */</span>
+<span class="w">     </span><span class="cm">/* other configuration to store in ROM */</span>
+<span class="p">};</span>
+
+<span class="cm">/* Implement driver API functions (drivers/some_api.h callbacks): */</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">my_driver_api_func1</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="o">*</span><span class="n">foo</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">}</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">my_driver_api_func2</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">bar</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">}</span>
+<span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">some_api</span><span class="w"> </span><span class="n">my_api_funcs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="p">.</span><span class="n">func1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_driver_api_func1</span><span class="p">,</span>
+<span class="w">     </span><span class="p">.</span><span class="n">func2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_driver_api_func2</span><span class="p">,</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<section id="option-1-create-devices-using-instance-numbers">
+<span id="dt-create-devices-inst"></span><h3>Option 1: create devices using instance numbers<a class="headerlink" href="#option-1-create-devices-using-instance-numbers" title="Link to this heading"></a></h3>
+<p>Use this option, which uses <a class="reference internal" href="api/api.html#devicetree-inst-apis"><span class="std std-ref">Instance-based APIs</span></a>, if possible. However,
+they only work when devicetree nodes for your driver’s <code class="docutils literal notranslate"><span class="pre">compatible</span></code> are all
+equivalent, and you do not need to be able to distinguish between them.</p>
+<p>To use instance-based APIs, begin by defining <code class="docutils literal notranslate"><span class="pre">DT_DRV_COMPAT</span></code> to the
+lowercase-and-underscores version of the compatible that the device driver
+supports. For example, if your driver’s compatible is <code class="docutils literal notranslate"><span class="pre">&quot;vnd,my-device&quot;</span></code> in
+devicetree, you would define <code class="docutils literal notranslate"><span class="pre">DT_DRV_COMPAT</span></code> to <code class="docutils literal notranslate"><span class="pre">vnd_my_device</span></code> in your
+driver C file:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * Put this near the top of the file. After the includes is a good place.</span>
+<span class="cm"> * (Note that you can therefore run &quot;git grep DT_DRV_COMPAT drivers&quot; in</span>
+<span class="cm"> * the zephyr Git repository to look for example drivers using this style).</span>
+<span class="cm"> */</span>
+<span class="cp">#define DT_DRV_COMPAT vnd_my_device</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>As shown, the DT_DRV_COMPAT macro should have neither quotes nor special
+characters. Remove quotes and convert special characters to underscores
+when creating <code class="docutils literal notranslate"><span class="pre">DT_DRV_COMPAT</span></code> from the compatible property.</p>
+</div>
+<p>Finally, define an instantiation macro, which creates each <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code>
+using instance numbers. Do this after defining <code class="docutils literal notranslate"><span class="pre">my_api_funcs</span></code>.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * This instantiation macro is named &quot;CREATE_MY_DEVICE&quot;.</span>
+<span class="cm"> * Its &quot;inst&quot; argument is an arbitrary instance number.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Put this near the end of the file, e.g. after defining &quot;my_api_funcs&quot;.</span>
+<span class="cm"> */</span>
+<span class="cp">#define CREATE_MY_DEVICE(inst)                                       \</span>
+<span class="cp">     static struct my_dev_data my_data_##inst = {                    \</span>
+<span class="cp">             </span><span class="cm">/* initialize RAM values as needed, e.g.: */</span><span class="cp">            \</span>
+<span class="cp">             .freq = DT_INST_PROP(inst, clock_frequency),            \</span>
+<span class="cp">     };                                                              \</span>
+<span class="cp">     static const struct my_dev_cfg my_cfg_##inst = {                \</span>
+<span class="cp">             </span><span class="cm">/* initialize ROM values as needed. */</span><span class="cp">                  \</span>
+<span class="cp">     };                                                              \</span>
+<span class="cp">     DEVICE_DT_INST_DEFINE(inst,                                     \</span>
+<span class="cp">                           my_dev_init_function,                     \</span>
+<span class="cp">                           NULL,                                     \</span>
+<span class="cp">                           &amp;my_data_##inst,                          \</span>
+<span class="cp">                           &amp;my_cfg_##inst,                           \</span>
+<span class="cp">                           MY_DEV_INIT_LEVEL, MY_DEV_INIT_PRIORITY,  \</span>
+<span class="cp">                           &amp;my_api_funcs);</span>
+</pre></div>
+</div>
+<p>Notice the use of APIs like <a class="reference internal" href="../../doxygen/html/group__devicetree-inst.html#ga9dce2e631b2a94804e8f2bcc76c6eff8" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_INST_PROP</span></code></a> and
+<a class="reference internal" href="../../doxygen/html/group__device__model.html#gada5ba4aca9e0662ccebb2232c7256419" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DEVICE_DT_INST_DEFINE</span></code></a> to access devicetree node data. These
+APIs retrieve data from the devicetree for instance number <code class="docutils literal notranslate"><span class="pre">inst</span></code> of
+the node with compatible determined by <code class="docutils literal notranslate"><span class="pre">DT_DRV_COMPAT</span></code>.</p>
+<p>Finally, pass the instantiation macro to <a class="reference internal" href="../../doxygen/html/group__devicetree-inst.html#gaeac7ed0f4a6820a6e5d7dadb6d62d6e7" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_INST_FOREACH_STATUS_OKAY</span></code></a>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Call the device creation macro for each instance: */</span>
+<span class="n">DT_INST_FOREACH_STATUS_OKAY</span><span class="p">(</span><span class="n">CREATE_MY_DEVICE</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">DT_INST_FOREACH_STATUS_OKAY</span></code> expands to code which calls
+<code class="docutils literal notranslate"><span class="pre">CREATE_MY_DEVICE</span></code> once for each enabled node with the compatible determined
+by <code class="docutils literal notranslate"><span class="pre">DT_DRV_COMPAT</span></code>. It does not append a semicolon to the end of the
+expansion of <code class="docutils literal notranslate"><span class="pre">CREATE_MY_DEVICE</span></code>, so the macro’s expansion must end in a
+semicolon or function definition to support multiple devices.</p>
+</section>
+<section id="option-2-create-devices-using-node-labels">
+<h3>Option 2: create devices using node labels<a class="headerlink" href="#option-2-create-devices-using-node-labels" title="Link to this heading"></a></h3>
+<p>Some device drivers cannot use instance numbers. One example is an SoC
+peripheral driver which relies on vendor HAL APIs specialized for individual IP
+blocks to implement Zephyr driver callbacks. Cases like this should use
+<a class="reference internal" href="../../doxygen/html/group__devicetree-generic-id.html#gab7d23294a6bf7fd44a98b48ec47d8a79" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_NODELABEL</span></code></a> to refer to individual nodes in the devicetree
+representing the supported peripherals on the SoC. The devicetree.h
+<a class="reference internal" href="api/api.html#devicetree-generic-apis"><span class="std std-ref">Generic APIs</span></a> can then be used to access node data.</p>
+<p>For this to work, your <a class="reference internal" href="intro-input-output.html#dt-input-files"><span class="std std-ref">SoC’s dtsi file</span></a> must define node
+labels like <code class="docutils literal notranslate"><span class="pre">mydevice0</span></code>, <code class="docutils literal notranslate"><span class="pre">mydevice1</span></code>, etc. appropriately for the IP blocks
+your driver supports. The resulting devicetree usually looks something like
+this:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nf">soc</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nl">mydevice0</span><span class="p">:</span><span class="w"> </span><span class="nf">dev</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;vnd,my-device&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="p">};</span>
+<span class="w">                </span><span class="nl">mydevice1</span><span class="p">:</span><span class="w"> </span><span class="nf">dev</span><span class="o">@</span><span class="mi">1</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;vnd,my-device&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="p">};</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The driver can use the <code class="docutils literal notranslate"><span class="pre">mydevice0</span></code> and <code class="docutils literal notranslate"><span class="pre">mydevice1</span></code> node labels in the
+devicetree to operate on specific device nodes:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * This is a convenience macro for creating a node identifier for</span>
+<span class="cm"> * the relevant devices. An example use is MYDEV(0) to refer to</span>
+<span class="cm"> * the node with label &quot;mydevice0&quot;.</span>
+<span class="cm"> */</span>
+<span class="cp">#define MYDEV(idx) DT_NODELABEL(mydevice ## idx)</span>
+
+<span class="cm">/*</span>
+<span class="cm"> * Define your instantiation macro; &quot;idx&quot; is a number like 0 for mydevice0</span>
+<span class="cm"> * or 1 for mydevice1. It uses MYDEV() to create the node label from the</span>
+<span class="cm"> * index.</span>
+<span class="cm"> */</span>
+<span class="cp">#define CREATE_MY_DEVICE(idx)                                        \</span>
+<span class="cp">     static struct my_dev_data my_data_##idx = {                     \</span>
+<span class="cp">             </span><span class="cm">/* initialize RAM values as needed, e.g.: */</span><span class="cp">            \</span>
+<span class="cp">             .freq = DT_PROP(MYDEV(idx), clock_frequency),           \</span>
+<span class="cp">     };                                                              \</span>
+<span class="cp">     static const struct my_dev_cfg my_cfg_##idx = { </span><span class="cm">/* ... */</span><span class="cp"> };    \</span>
+<span class="cp">     DEVICE_DT_DEFINE(MYDEV(idx),                                    \</span>
+<span class="cp">                     my_dev_init_function,                           \</span>
+<span class="cp">                     NULL,                                           \</span>
+<span class="cp">                     &amp;my_data_##idx,                                 \</span>
+<span class="cp">                     &amp;my_cfg_##idx,                                  \</span>
+<span class="cp">                     MY_DEV_INIT_LEVEL, MY_DEV_INIT_PRIORITY,        \</span>
+<span class="cp">                     &amp;my_api_funcs)</span>
+</pre></div>
+</div>
+<p>Notice the use of APIs like <a class="reference internal" href="../../doxygen/html/group__devicetree-generic-prop.html#ga8e1fd9ebacd85d2013df027d041d506b" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_PROP</span></code></a> and
+<a class="reference internal" href="../../doxygen/html/group__device__model.html#gac49e26fbe91a14307d5ea08d41561dd1" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DEVICE_DT_DEFINE</span></code></a> to access devicetree node data.</p>
+<p>Finally, manually detect each enabled devicetree node and use
+<code class="docutils literal notranslate"><span class="pre">CREATE_MY_DEVICE</span></code> to instantiate each <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#if DT_NODE_HAS_STATUS(DT_NODELABEL(mydevice0), okay)</span>
+<span class="n">CREATE_MY_DEVICE</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="cp">#endif</span>
+
+<span class="cp">#if DT_NODE_HAS_STATUS(DT_NODELABEL(mydevice1), okay)</span>
+<span class="n">CREATE_MY_DEVICE</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+<p>Since this style does not use <code class="docutils literal notranslate"><span class="pre">DT_INST_FOREACH_STATUS_OKAY()</span></code>, the driver
+author is responsible for calling <code class="docutils literal notranslate"><span class="pre">CREATE_MY_DEVICE()</span></code> for every possible
+node, e.g. using knowledge about the peripherals available on supported SoCs.</p>
+</section>
+</section>
+<section id="device-drivers-that-depend-on-other-devices">
+<span id="dt-drivers-that-depend"></span><h2>Device drivers that depend on other devices<a class="headerlink" href="#device-drivers-that-depend-on-other-devices" title="Link to this heading"></a></h2>
+<p>At times, one <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code> depends on another <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code> and
+requires a pointer to it. For example, a sensor device might need a pointer to
+its SPI bus controller device. Some advice:</p>
+<ul class="simple">
+<li><p>Write your devicetree binding in a way that permits use of
+<a class="reference internal" href="api/api.html#devicetree-hw-api"><span class="std std-ref">Hardware specific APIs</span></a> from devicetree.h if possible.</p></li>
+<li><p>In particular, for bus devices, your driver’s binding should include a
+file like <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/dts/bindings/spi/spi-device.yaml">dts/bindings/spi/spi-device.yaml</a> which provides
+common definitions for devices addressable via a specific bus. This enables
+use of APIs like <a class="reference internal" href="../../doxygen/html/group__devicetree-generic-bus.html#ga1082d31ac2dafdf9e085d4c23f2169dc" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_BUS</span></code></a> to obtain a node identifier for the bus
+node. You can then <a class="reference internal" href="#dt-get-device"><span class="std std-ref">Get a struct device from a devicetree node</span></a> for the bus in the usual way.</p></li>
+</ul>
+<p>Search existing bindings and device drivers for examples.</p>
+</section>
+<section id="applications-that-depend-on-board-specific-devices">
+<span id="dt-apps-that-depend"></span><h2>Applications that depend on board-specific devices<a class="headerlink" href="#applications-that-depend-on-board-specific-devices" title="Link to this heading"></a></h2>
+<p>One way to allow application code to run unmodified on multiple boards is by
+supporting a devicetree alias to specify the hardware specific portions, as is
+done in the <a class="reference internal" href="../../samples/basic/blinky/README.html#blinky" title="Blink an LED forever using the GPIO API.">Blinky</a> sample. The application can then be configured in
+<a class="reference internal" href="intro-input-output.html#devicetree-in-out-files"><span class="std std-ref">BOARD.dts</span></a> files or via <a class="reference internal" href="#use-dt-overlays"><span class="std std-ref">devicetree
+overlays</span></a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

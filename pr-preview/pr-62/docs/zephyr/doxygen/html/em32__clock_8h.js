@@ -1,0 +1,26 @@
+var em32__clock_8h =
+[
+    [ "EM32_AHB_CLK_DIV1", "em32__clock_8h.html#afe036ec350b68a43d0ea5df2f29c1b53", null ],
+    [ "EM32_AHB_CLK_DIV128", "em32__clock_8h.html#afefed589690cf404b2200989e90c347a", null ],
+    [ "EM32_AHB_CLK_DIV16", "em32__clock_8h.html#a89c685c007e7faebf6d73b7acb0329a7", null ],
+    [ "EM32_AHB_CLK_DIV2", "em32__clock_8h.html#a1048f4a2c812ed24024cd0116e994e14", null ],
+    [ "EM32_AHB_CLK_DIV32", "em32__clock_8h.html#afaf8dbffb6ab1a672c072c9fe217e55e", null ],
+    [ "EM32_AHB_CLK_DIV4", "em32__clock_8h.html#a1cd25bcaa99e608355c1f3cfe4aad6d8", null ],
+    [ "EM32_AHB_CLK_DIV64", "em32__clock_8h.html#acea44789e4c55dac593fc4dd3f48b7b1", null ],
+    [ "EM32_AHB_CLK_DIV8", "em32__clock_8h.html#a94700567d318009744670ce76c7b8bc0", null ],
+    [ "EM32_CLK_FREQ_IRCHIGH112", "em32__clock_8h.html#a5cefa2b9c95964c49830afe747f90c5d", null ],
+    [ "EM32_CLK_FREQ_IRCHIGH128", "em32__clock_8h.html#a2d92f97ac52bac07dbd98602f0add2c8", null ],
+    [ "EM32_CLK_FREQ_IRCHIGH64", "em32__clock_8h.html#a1b7f42555119fa35bdb3812a8ab87069", null ],
+    [ "EM32_CLK_FREQ_IRCHIGH80", "em32__clock_8h.html#a4ad2ea3e0d23d59ba291542840a6e9c8", null ],
+    [ "EM32_CLK_FREQ_IRCHIGH96", "em32__clock_8h.html#aeaa711194d9344b8581f3f557ab06ce9", null ],
+    [ "EM32_CLK_FREQ_IRCHIGH96Q", "em32__clock_8h.html#a7916838b44bcc73e1522ce78522875df", null ],
+    [ "EM32_CLK_FREQ_IRCLOW12", "em32__clock_8h.html#aa61f31f59f433724405f1abe626fc10d", null ],
+    [ "EM32_CLK_FREQ_IRCLOW16", "em32__clock_8h.html#a9127ae22840bb7d43c2a9cb421d8a107", null ],
+    [ "EM32_CLK_FREQ_IRCLOW20", "em32__clock_8h.html#a6e95b871abcfddab9012d6f0bd354a5f", null ],
+    [ "EM32_CLK_FREQ_IRCLOW24", "em32__clock_8h.html#a2f739c59c57380cba89fb02dd3ba4ee5", null ],
+    [ "EM32_CLK_FREQ_IRCLOW28", "em32__clock_8h.html#a13c2c176b4e26987bf83731c190e2edb", null ],
+    [ "EM32_CLK_FREQ_IRCLOW32", "em32__clock_8h.html#a965e0260d2b649a1377820f99dfd2920", null ],
+    [ "EM32_CLK_SRC_EXTERNAL1", "em32__clock_8h.html#a2cdf141c8589b2169dcc793c592574ea", null ],
+    [ "EM32_CLK_SRC_IRCHIGH", "em32__clock_8h.html#a36f0c5db407df31eb247cc4537e35d33", null ],
+    [ "EM32_CLK_SRC_IRCLOW", "em32__clock_8h.html#a3375983ae9b65eb3aa155386558836fc", null ]
+];

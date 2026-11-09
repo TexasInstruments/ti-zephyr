@@ -1,0 +1,28 @@
+var usb__hub_8h =
+[
+    [ "USB_HCFS_C_HUB_LOCAL_POWER", "usb__hub_8h.html#a997b8615c74e9aa88f8e273b6a3a61fc", null ],
+    [ "USB_HCFS_C_HUB_OVER_CURRENT", "usb__hub_8h.html#a0b1a392fe6a9e5932158c1cdca43f4bf", null ],
+    [ "USB_HCFS_C_PORT_CONNECTION", "usb__hub_8h.html#a75e8cf42cfd77add9f306a20fe6bb14f", null ],
+    [ "USB_HCFS_C_PORT_ENABLE", "usb__hub_8h.html#a71f79a0dbf15b792ffd93305145de316", null ],
+    [ "USB_HCFS_C_PORT_OVER_CURRENT", "usb__hub_8h.html#aa3273e27d90c343899c4cb1f722c2878", null ],
+    [ "USB_HCFS_C_PORT_RESET", "usb__hub_8h.html#ad53ce209e4472d86b6643c7d391b7f24", null ],
+    [ "USB_HCFS_C_PORT_SUSPEND", "usb__hub_8h.html#a84c40b25ec588b86131300a4dbc765bd", null ],
+    [ "USB_HCFS_PORT_CONNECTION", "usb__hub_8h.html#ad2d66d4f6f517ea0d3dd76da62742552", null ],
+    [ "USB_HCFS_PORT_ENABLE", "usb__hub_8h.html#a5c8ba71161b59bae12afb5dde7728808", null ],
+    [ "USB_HCFS_PORT_INDICATOR", "usb__hub_8h.html#a2e049932c995b1fe489c38ed0cf09049", null ],
+    [ "USB_HCFS_PORT_LOW_SPEED", "usb__hub_8h.html#ab3dc8ec69e15379c606e7e58980617ca", null ],
+    [ "USB_HCFS_PORT_OVER_CURRENT", "usb__hub_8h.html#ae1c71c8da58b67ed5f12f640827b9d77", null ],
+    [ "USB_HCFS_PORT_POWER", "usb__hub_8h.html#a1fe915a2e5569480f4fc24e69f24228c", null ],
+    [ "USB_HCFS_PORT_RESET", "usb__hub_8h.html#ae4fd5c849765661c61b4212f0bfe495e", null ],
+    [ "USB_HCFS_PORT_SUSPEND", "usb__hub_8h.html#a8cd0227e68d424b758e13f470d838868", null ],
+    [ "USB_HCFS_PORT_TEST", "usb__hub_8h.html#a94a24ef58ab59d399a0dfa0f0903dfb0", null ],
+    [ "USB_HCREQ_CLEAR_FEATURE", "usb__hub_8h.html#a3fc30c26205b41f2ca3abeef815917fa", null ],
+    [ "USB_HCREQ_CLEAR_TT_BUFFER", "usb__hub_8h.html#a479c4d6fe6691d3cda5d4ba6f868cb2f", null ],
+    [ "USB_HCREQ_GET_DESCRIPTOR", "usb__hub_8h.html#a5c13eb60a311c0bf7c1f5e9fa1f66f2b", null ],
+    [ "USB_HCREQ_GET_STATUS", "usb__hub_8h.html#a91ad2acf2c5316d20738f4d65d68ee14", null ],
+    [ "USB_HCREQ_GET_TT_STATE", "usb__hub_8h.html#a4cafe5c744f8e73e1477791c1b64d650", null ],
+    [ "USB_HCREQ_RESET_TT", "usb__hub_8h.html#a09990d8d948aef82115489f60a83250b", null ],
+    [ "USB_HCREQ_SET_DESCRIPTOR", "usb__hub_8h.html#af632ce62b30de5103c799171d08b0f08", null ],
+    [ "USB_HCREQ_SET_FEATURE", "usb__hub_8h.html#a7b4f58864afb11d881929e81aa4843bd", null ],
+    [ "USB_HCREQ_STOP_TT", "usb__hub_8h.html#aacc155cfc273b57e73d2893d1693bfd1", null ]
+];

@@ -1,0 +1,540 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactive Kconfig interfaces &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/build/kconfig/menuconfig.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Tracing values to their source" href="tracing.html" />
+    <link rel="prev" title="Configuration System (Kconfig)" href="index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Build and Configuration Systems</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../cmake/index.html">Build System (CMake)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dts/index.html">Devicetree</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Configuration System (Kconfig)</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Interactive Kconfig interfaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tracing.html">Tracing values to their source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="setting.html">Setting Kconfig configuration values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tips.html">Kconfig - Tips and Best Practices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="preprocessor-functions.html">Custom Kconfig Preprocessor Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extensions.html">Kconfig extensions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../snippets/index.html">Snippets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../zephyr_cmake_package.html">Zephyr CMake Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sysbuild/index.html">Sysbuild (System build)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../version/index.html">Application version management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flashing/index.html">Flashing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signing/index.html">Signing Binaries</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Build and Configuration Systems</a> &raquo;</li>
+  
+     <li><a href="index.html">Configuration System (Kconfig)</a> &raquo;</li>
+  
+  <li>Interactive Kconfig interfaces</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/build/kconfig/menuconfig.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27build%2Fkconfig%2Fmenuconfig%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Build+System%2Carea%3A+Kconfig&env=-+Page%3A+build%2Fkconfig%2Fmenuconfig%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="interactive-kconfig-interfaces">
+<span id="menuconfig"></span><h1>Interactive Kconfig interfaces<a class="headerlink" href="#interactive-kconfig-interfaces" title="Link to this heading"></a></h1>
+<p>There are two interactive configuration interfaces available for exploring the
+available Kconfig options and making temporary changes: <code class="docutils literal notranslate"><span class="pre">menuconfig</span></code> and
+<code class="docutils literal notranslate"><span class="pre">guiconfig</span></code>. <code class="docutils literal notranslate"><span class="pre">menuconfig</span></code> is a curses-based interface that runs in the
+terminal, while <code class="docutils literal notranslate"><span class="pre">guiconfig</span></code> is a graphical configuration interface.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The configuration can also be changed by editing <code class="file docutils literal notranslate"><span class="pre">zephyr/.config</span></code> in
+the application build directory by hand. Using one of the configuration
+interfaces is often handier, as they correctly handle dependencies between
+configuration symbols.</p>
+<p>If you try to enable a symbol with unsatisfied dependencies in
+<code class="file docutils literal notranslate"><span class="pre">zephyr/.config</span></code>, the assignment will be ignored and overwritten when
+re-configuring.</p>
+</div>
+<p>To make a setting permanent, you should set it in a <code class="file docutils literal notranslate"><span class="pre">*.conf</span></code> file, as
+described in <a class="reference internal" href="setting.html#setting-configuration-values"><span class="std std-ref">Setting Kconfig configuration values</span></a>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Saving a minimal configuration file (with e.g. <kbd class="kbd docutils literal notranslate">D</kbd> in menuconfig) and
+inspecting it can be handy when making settings permanent. The minimal
+configuration file only lists symbols that differ from their default value.</p>
+</div>
+<p>To run one of the configuration interfaces, do this:</p>
+<ol class="arabic">
+<li><p>Build your application as usual using either <code class="docutils literal notranslate"><span class="pre">west</span></code> or <code class="docutils literal notranslate"><span class="pre">cmake</span></code>:</p>
+<p>Using west:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>&lt;board&gt;
+</pre></div>
+</div>
+<p>Using CMake and ninja:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+cmake<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>&lt;board&gt;<span class="w"> </span>..
+ninja
+</pre></div>
+</div>
+</li>
+<li><p>To run the terminal-based <code class="docutils literal notranslate"><span class="pre">menuconfig</span></code> interface, use either of these
+commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>menuconfig
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ninja<span class="w"> </span>menuconfig
+</pre></div>
+</div>
+<p>To run the graphical <code class="docutils literal notranslate"><span class="pre">guiconfig</span></code>, use either of these commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>guiconfig
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ninja<span class="w"> </span>guiconfig
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you get an import error for <code class="docutils literal notranslate"><span class="pre">tkinter</span></code> when trying to run
+<code class="docutils literal notranslate"><span class="pre">guiconfig</span></code>, you are missing required packages. See
+<a class="reference internal" href="../../develop/getting_started/installation_linux.html#installation-linux"><span class="std std-ref">Install Linux Host Dependencies</span></a>. The package you need is usually called
+something like <code class="docutils literal notranslate"><span class="pre">python3-tk</span></code>/<code class="docutils literal notranslate"><span class="pre">python3-tkinter</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">tkinter</span></code> is not included by default in many Python installations,
+despite being part of the standard library.</p>
+</div>
+<p>The two interfaces are shown below:</p>
+<figure class="align-default">
+<img alt="menuconfig interface" src="../../_images/menuconfig.png" />
+</figure>
+<figure class="align-default">
+<img alt="guiconfig interface" src="../../_images/guiconfig.png" />
+</figure>
+<p><code class="docutils literal notranslate"><span class="pre">guiconfig</span></code> always shows the help text and other information related to
+the currently selected item in the bottom window pane. In the terminal
+interface, press <kbd class="kbd docutils literal notranslate">?</kbd> to view the same information.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you prefer to work in the <code class="docutils literal notranslate"><span class="pre">guiconfig</span></code> interface, then it’s a good
+idea to check any changes to Kconfig files you make in <em>single-menu
+mode</em>, which is toggled via a checkbox at the top. Unlike full-tree
+mode, single-menu mode will distinguish between symbols defined with
+<code class="docutils literal notranslate"><span class="pre">config</span></code> and symbols defined with <code class="docutils literal notranslate"><span class="pre">menuconfig</span></code>, showing you what
+things would look like in the <code class="docutils literal notranslate"><span class="pre">menuconfig</span></code> interface.</p>
+</div>
+</li>
+<li><p>Change configuration values in the <code class="docutils literal notranslate"><span class="pre">menuconfig</span></code> interface as follows:</p>
+<ul>
+<li><p>Navigate the menu with the arrow keys. Common <a class="reference external" href="https://www.vim.org">Vim</a> key bindings are supported as well.</p></li>
+<li><p>Use <kbd class="kbd docutils literal notranslate">Space</kbd> and <kbd class="kbd docutils literal notranslate">Enter</kbd> to enter menus and toggle values. Menus
+appear with <code class="docutils literal notranslate"><span class="pre">---&gt;</span></code> next to them. Press <kbd class="kbd docutils literal notranslate">ESC</kbd> to return to the
+parent menu.</p>
+<p>Boolean configuration options are shown with <span class="guilabel">[ ]</span> brackets,
+while numeric and string-valued configuration symbols are shown with
+<span class="guilabel">( )</span> brackets. Symbol values that can’t be changed are shown as
+<span class="guilabel">- -</span> or <span class="guilabel">-*-</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can also press <kbd class="kbd docutils literal notranslate">Y</kbd> or <kbd class="kbd docutils literal notranslate">N</kbd> to set a boolean configuration
+symbol to the corresponding value.</p>
+</div>
+</li>
+<li><p>Press <kbd class="kbd docutils literal notranslate">?</kbd> to display information about the currently selected symbol,
+including its help text. Press <kbd class="kbd docutils literal notranslate">ESC</kbd> or <kbd class="kbd docutils literal notranslate">Q</kbd> to return from the
+information display to the menu.</p></li>
+</ul>
+<p>In the <code class="docutils literal notranslate"><span class="pre">guiconfig</span></code> interface, either click on the image next to the symbol
+to change its value, or double-click on the row with the symbol (this only
+works if the symbol has no children, as double-clicking a symbol with
+children open/closes its menu instead).</p>
+<p><code class="docutils literal notranslate"><span class="pre">guiconfig</span></code> also supports keyboard controls, which are similar to
+<code class="docutils literal notranslate"><span class="pre">menuconfig</span></code>.</p>
+</li>
+<li><p>Pressing <kbd class="kbd docutils literal notranslate">Q</kbd> in the <code class="docutils literal notranslate"><span class="pre">menuconfig</span></code> interface will bring up the
+save-and-quit dialog (if there are changes to save):</p>
+<figure class="align-default">
+<img alt="Save and Quit Dialog" src="../../_images/menuconfig-quit.png" />
+</figure>
+<p>Press <kbd class="kbd docutils literal notranslate">Y</kbd> to save the kernel configuration options to the default
+filename (<code class="file docutils literal notranslate"><span class="pre">zephyr/.config</span></code>). You will typically save to the default
+filename unless you are experimenting with different configurations.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">guiconfig</span></code> interface will also prompt for saving the configuration on
+exit if it has been modified.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The configuration file used during the build is always
+<code class="file docutils literal notranslate"><span class="pre">zephyr/.config</span></code>. If you have another saved configuration that you
+want to build with, copy it to <code class="file docutils literal notranslate"><span class="pre">zephyr/.config</span></code>. Make sure to back
+up your original configuration file.</p>
+<p>Also note that filenames starting with <code class="docutils literal notranslate"><span class="pre">.</span></code> are not listed by <code class="docutils literal notranslate"><span class="pre">ls</span></code> by
+default on Linux and macOS. Use the <code class="docutils literal notranslate"><span class="pre">-a</span></code> flag to see them.</p>
+</div>
+</li>
+</ol>
+<p>Finding a symbol in the menu tree and navigating to it can be tedious. To jump
+directly to a symbol, press the <kbd class="kbd docutils literal notranslate">/</kbd> key (this also works in
+<code class="docutils literal notranslate"><span class="pre">guiconfig</span></code>). This brings up the following dialog, where you can search for
+symbols by name and jump to them. In <code class="docutils literal notranslate"><span class="pre">guiconfig</span></code>, you can also change symbol
+values directly within the dialog.</p>
+<figure class="align-default">
+<img alt="menuconfig jump-to dialog" src="../../_images/menuconfig-jump-to.png" />
+</figure>
+<figure class="align-default">
+<img alt="guiconfig jump-to dialog" src="../../_images/guiconfig-jump-to.png" />
+</figure>
+<p>If you jump to a symbol that isn’t currently visible (e.g., due to having
+unsatisfied dependencies), then <em>show-all mode</em> will be enabled. In show-all
+mode, all symbols are displayed, including currently invisible symbols. To turn
+off show-all mode, press <kbd class="kbd docutils literal notranslate">A</kbd> in <code class="docutils literal notranslate"><span class="pre">menuconfig</span></code> or <kbd class="kbd docutils literal notranslate">Ctrl</kbd>-<kbd class="kbd docutils literal notranslate">A</kbd> in
+<code class="docutils literal notranslate"><span class="pre">guiconfig</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Show-all mode can’t be turned off if there are no visible items in the
+current menu.</p>
+</div>
+<p>To figure out why a symbol you jumped to isn’t visible, inspect its
+dependencies, either by pressing <kbd class="kbd docutils literal notranslate">?</kbd> in <code class="docutils literal notranslate"><span class="pre">menuconfig</span></code> or in the
+information pane at the bottom in <code class="docutils literal notranslate"><span class="pre">guiconfig</span></code>. If you discover that the
+symbol depends on another symbol that isn’t enabled, you can jump to that
+symbol in turn to see if it can be enabled.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">menuconfig</span></code>, you can press <kbd class="kbd docutils literal notranslate">Ctrl</kbd>-<kbd class="kbd docutils literal notranslate">F</kbd> to view the help of the
+currently selected item in the jump-to dialog without leaving the dialog.</p>
+</div>
+<p>For more information on <code class="docutils literal notranslate"><span class="pre">menuconfig</span></code> and <code class="docutils literal notranslate"><span class="pre">guiconfig</span></code>, see the Python
+docstrings at the top of <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/scripts/kconfig/menuconfig.py">menuconfig.py</a> and <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/scripts/kconfig/guiconfig.py">guiconfig.py</a>.</p>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

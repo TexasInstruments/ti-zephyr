@@ -1,0 +1,780 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Device Firmware Update (DFU) &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/connectivity/bluetooth/api/mesh/dfu.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Firmware Update Server" href="dfu_srv.html" />
+    <link rel="prev" title="BLOB Flash" href="blob_flash.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">Connectivity</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">Bluetooth</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../features.html">Supported features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-qual.html">Qualification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-arch.html">Stack Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-le-host.html">LE Host</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../audio/bluetooth-le-audio-arch.html">LE Audio Stack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../audio/bluetooth-le-audio-arch.html#le-audio-resources">LE Audio resources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-ctlr-arch.html">LE Controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-dev.html">Application Development</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">API</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../index.html#bluetooth-classic-host-and-profiles">Bluetooth Classic Host and profiles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index.html#bluetooth-le-audio">Bluetooth LE Audio</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index.html#bluetooth-le-host">Bluetooth LE Host</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html#bluetooth-mesh">Bluetooth Mesh</a><ul class="current">
+<li class="toctree-l5 current"><a class="reference internal" href="../mesh.html">Bluetooth Mesh Profile</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../index.html#core-host-and-drivers">Core Host and drivers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../index.html#other">Other</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-tools.html">Tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-shell.html">Shell</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../canbus/index.html">Controller Area Network (CAN) Bus Protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../networking/index.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lora_lorawan/index.html">LoRa and LoRaWAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usb/index.html">USB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modbus/index.html">Modbus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">Connectivity</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Bluetooth</a> &raquo;</li>
+  
+     <li><a href="../index.html">API</a> &raquo;</li>
+  
+     <li><a href="../mesh.html">Bluetooth Mesh Profile</a> &raquo;</li>
+  
+     <li><a href="models.html">Mesh models</a> &raquo;</li>
+  
+  <li>Device Firmware Update (DFU)</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/connectivity/bluetooth/api/mesh/dfu.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27connectivity%2Fbluetooth%2Fapi%2Fmesh%2Fdfu%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Bluetooth+Mesh%2Carea%3A+Bluetooth&env=-+Page%3A+connectivity%2Fbluetooth%2Fapi%2Fmesh%2Fdfu%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="device-firmware-update-dfu">
+<span id="bluetooth-mesh-dfu"></span><h1>Device Firmware Update (DFU)<a class="headerlink" href="#device-firmware-update-dfu" title="Link to this heading"></a></h1>
+<p>Bluetooth Mesh supports the distribution of firmware images across a mesh network. The Bluetooth
+mesh DFU subsystem implements the Bluetooth Mesh Device Firmware Update Model specification version
+1.0.</p>
+<p>Bluetooth Mesh DFU implements a distribution mechanism for firmware images, and does not put any
+restrictions on the size, format or usage of the images. The primary design goal of the subsystem is
+to provide the qualifiable parts of the Bluetooth Mesh DFU specification, and leave the usage,
+firmware validation and deployment to the application.</p>
+<p>The DFU specification is implemented in the Zephyr Bluetooth Mesh DFU subsystem as three separate
+models:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="dfu_srv.html">Firmware Update Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfu_cli.html">Firmware Update Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfd_srv.html">Firmware Distribution Server</a></li>
+</ul>
+</div>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<section id="dfu-roles">
+<h3>DFU roles<a class="headerlink" href="#dfu-roles" title="Link to this heading"></a></h3>
+<p>The Bluetooth Mesh DFU subsystem defines three different roles the mesh nodes have to assume in the
+distribution of firmware images:</p>
+<dl class="simple">
+<dt>Target node</dt><dd><p>Target node is the receiver and user of the transferred firmware images. All its functionality is
+implemented by the <a class="reference internal" href="dfu_srv.html#bluetooth-mesh-dfu-srv"><span class="std std-ref">Firmware Update Server</span></a> model. A transfer may be targeting any number of
+Target nodes, and they will all be updated concurrently.</p>
+</dd>
+<dt>Distributor</dt><dd><p>The Distributor role serves two purposes in the DFU process. First, it’s acting as the Target
+node in the Upload Firmware procedure, then it distributes the uploaded image to other Target
+nodes as the Distributor. The Distributor does not select the parameters of the transfer, but
+relies on an Initiator to give it a list of Target nodes and transfer parameters. The Distributor
+functionality is implemented in two models, <a class="reference internal" href="dfd_srv.html#bluetooth-mesh-dfd-srv"><span class="std std-ref">Firmware Distribution Server</span></a> and
+<a class="reference internal" href="dfu_cli.html#bluetooth-mesh-dfu-cli"><span class="std std-ref">Firmware Update Client</span></a>. The <a class="reference internal" href="dfd_srv.html#bluetooth-mesh-dfd-srv"><span class="std std-ref">Firmware Distribution Server</span></a> is responsible for communicating
+with the Initiator, and the <a class="reference internal" href="dfu_cli.html#bluetooth-mesh-dfu-cli"><span class="std std-ref">Firmware Update Client</span></a> is responsible for distributing the
+image to the Target nodes.</p>
+</dd>
+<dt>Initiator</dt><dd><p>The Initiator role is typically implemented by the same device that implements the Bluetooth Mesh
+<a class="reference internal" href="provisioning.html#bluetooth-mesh-provisioning"><span class="std std-ref">Provisioner</span></a> and <a class="reference internal" href="cfg_cli.html#bluetooth-mesh-models-cfg-cli"><span class="std std-ref">Configurator</span></a> roles. The Initiator needs a full overview of the potential
+Target nodes and their firmware, and will control (and initiate) all firmware updates. The
+Initiator role is not implemented in the Zephyr Bluetooth Mesh DFU subsystem.</p>
+</dd>
+</dl>
+<figure class="align-center" id="id1">
+<img alt="Graphic overview of the DFU roles mesh nodes can have during the process of image distribution" src="../../../../_images/dfu_roles_mesh.svg" />
+<figcaption>
+<p><span class="caption-text">DFU roles and the associated Bluetooth Mesh models</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Bluetooth Mesh applications may combine the DFU roles in any way they’d like, and even take on
+multiple instances of the same role by instantiating the models on separate elements. For instance,
+the Distributor and Initiator role can be combined by instantiating the
+<a class="reference internal" href="dfu_cli.html#bluetooth-mesh-dfu-cli"><span class="std std-ref">Firmware Update Client</span></a> on the Initiator node and calling its API directly.</p>
+<p>It’s also possible to combine the Initiator and Distributor devices into a single device, and
+replace the Firmware Distribution Server model with a proprietary mechanism that will access the
+Firmware Update Client model directly, e.g. over a serial protocol.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All DFU models instantiate one or more <a class="reference internal" href="blob.html#bluetooth-mesh-blob"><span class="std std-ref">BLOB Transfer models</span></a>, and may need to be spread over
+multiple elements for certain role combinations.</p>
+</div>
+</section>
+<section id="stages">
+<h3>Stages<a class="headerlink" href="#stages" title="Link to this heading"></a></h3>
+<p>The Bluetooth Mesh DFU process is designed to act in three stages:</p>
+<dl class="simple">
+<dt>Upload stage</dt><dd><p>First, the image is uploaded to a Distributor in a mesh network by an external entity, such as a
+phone or gateway (the Initiator). During the Upload stage, the Initiator transfers the firmware
+image and all its metadata to the Distributor node inside the mesh network. The Distributor
+stores the firmware image and its metadata persistently, and awaits further instructions from the
+Initiator. The time required to complete the upload process depends on the size of the image.
+After the upload completes, the Initiator can disconnect from the network during the much more
+time-consuming Distribution stage. Once the firmware has been uploaded to the Distributor, the
+Initiator may trigger the Distribution stage at any time.</p>
+</dd>
+<dt>Firmware Capability Check stage (optional)</dt><dd><p>Before starting the Distribution stage, the Initiator may optionally check if Target nodes can
+accept the new firmware. Nodes that do not respond, or respond that they can’t receive the new
+firmware, are excluded from the firmware distribution process.</p>
+</dd>
+<dt>Distribution stage</dt><dd><p>Before the firmware image can be distributed, the Initiator transfers the list of Target nodes
+and their designated firmware image index to the Distributor. Next, it tells the Distributor to
+start the firmware distributon process, which runs in the background while the Initiator and the
+mesh network perform other duties. Once the firmware image has been transferred to the Target
+nodes, the Distributor may ask them to apply the firmware image immediately and report back with
+their status and new firmware IDs.</p>
+</dd>
+</dl>
+</section>
+<section id="firmware-images">
+<h3>Firmware images<a class="headerlink" href="#firmware-images" title="Link to this heading"></a></h3>
+<p>All updatable parts of a mesh node’s firmware should be represented as a firmware image. Each Target
+node holds a list of firmware images, each of which should be independently updatable and
+identifiable.</p>
+<p>Firmware images are represented as a BLOB (the firmware itself) with the following additional
+information attached to it:</p>
+<dl>
+<dt>Firmware ID</dt><dd><p>The firmware ID is used to identify a firmware image. The Initiator node may ask the Target nodes
+for a list of its current firmware IDs to determine whether a newer version of the firmware is
+available. The format of the firmware ID is vendor specific, but generally, it should include
+enough information for an Initiator node with knowledge of the format to determine the type of
+image as well as its version. The firmware ID is optional, and its max length is determined by
+<a class="reference internal" href="../../../../kconfig.html#CONFIG_BT_MESH_DFU_FWID_MAXLEN" title="CONFIG_BT_MESH_DFU_FWID_MAXLEN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_MESH_DFU_FWID_MAXLEN</span></code></a>.</p>
+</dd>
+<dt>Firmware metadata</dt><dd><p>The firmware metadata is used by the Target node to determine whether it should accept an
+incoming firmware update, and what the effect of the update would be. The metadata format is
+vendor specific, and should contain all information the Target node needs to verify the image, as
+well as any preparation the Target node has to make before the image is applied. Typical metadata
+information can be image signatures, changes to the node’s Composition Data and the format of the
+BLOB. The Target node may perform a metadata check before accepting incoming transfers to
+determine whether the transfer should be started. The firmware metadata can be discarded by the
+Target node after the metadata check, as other nodes will never request the metadata from the
+Target node. The firmware metadata is optional, and its maximum length is determined by
+<a class="reference internal" href="../../../../kconfig.html#CONFIG_BT_MESH_DFU_METADATA_MAXLEN" title="CONFIG_BT_MESH_DFU_METADATA_MAXLEN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_MESH_DFU_METADATA_MAXLEN</span></code></a>.</p>
+<p>The Bluetooth Mesh DFU subsystem in Zephyr provides its own metadata format
+(<a class="reference internal" href="../../../../doxygen/html/structbt__mesh__dfu__metadata.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">bt_mesh_dfu_metadata</span></code></a>) together with a set of related functions that can be used by
+an end product. The support for it is enabled using the
+<a class="reference internal" href="../../../../kconfig.html#CONFIG_BT_MESH_DFU_METADATA" title="CONFIG_BT_MESH_DFU_METADATA"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_MESH_DFU_METADATA</span></code></a> option. The format of the metadata is presented in
+the table below.</p>
+</dd>
+</dl>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Size (Bytes)</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>New firmware version</p></td>
+<td><p>8 B</p></td>
+<td><p>1 B: Major version
+1 B: Minor version
+2 B: Revision
+4 B: Build number</p></td>
+</tr>
+<tr class="row-odd"><td><p>New firmware size</p></td>
+<td><p>3 B</p></td>
+<td><p>Size in bytes for a new firmware</p></td>
+</tr>
+<tr class="row-even"><td><p>New firmware core type</p></td>
+<td><p>1 B</p></td>
+<td><p>Bit field:
+Bit 0: Application core
+Bit 1: Network core
+Bit 2: Applications specific BLOB.
+Other bits: RFU</p></td>
+</tr>
+<tr class="row-odd"><td><p>Hash of incoming
+composition data</p></td>
+<td><p>4 B
+(Optional)</p></td>
+<td><p>Lower 4 octets of AES-CMAC
+(app-specific-key, composition data).
+This field is present, if Bit 0 is set
+in the New firmware core type field.</p></td>
+</tr>
+<tr class="row-even"><td><p>New number of elements</p></td>
+<td><p>2 B
+(Optional)</p></td>
+<td><p>Number of elements on the node
+after firmware is applied.
+This field is present, if Bit 0 is set
+in the New firmware core type field.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Application-specific
+data for new firmware</p></td>
+<td><p>&lt;variable&gt;
+(Optional)</p></td>
+<td><p>Application-specific data to allow
+application to execute some
+vendor-specific behaviors using
+this data before it can respond
+with a status message.</p></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<div><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The AES-CMAC algorithm serves as a hashing function with a fixed key and is not used for
+encryption in Bluetooth Mesh DFU metadata. The resulting hash is not secure since the key is
+known.</p>
+</div>
+</div></blockquote>
+<dl>
+<dt>Firmware URI</dt><dd><p>The firmware URI gives the Initiator information about where firmware updates for the image can
+be found. The URI points to an online resource the Initiator can interact with to get new
+versions of the firmware. This allows Initiators to perform updates for any node in the mesh
+network by interacting with the web server pointed to in the URI. The URI must point to a
+resource using the <code class="docutils literal notranslate"><span class="pre">http</span></code> or <code class="docutils literal notranslate"><span class="pre">https</span></code> schemes, and the targeted web server must behave
+according to the Firmware Check Over HTTPS procedure defined by the specification. The firmware
+URI is optional, and its max length is determined by
+<a class="reference internal" href="../../../../kconfig.html#CONFIG_BT_MESH_DFU_URI_MAXLEN" title="CONFIG_BT_MESH_DFU_URI_MAXLEN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_MESH_DFU_URI_MAXLEN</span></code></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The out-of-band distribution mechanism is not supported.</p>
+</div>
+</dd>
+</dl>
+<section id="firmware-effect">
+<span id="bluetooth-mesh-dfu-firmware-effect"></span><h4>Firmware effect<a class="headerlink" href="#firmware-effect" title="Link to this heading"></a></h4>
+<p>A new image may have the Composition Data Page 0 different from the one allocated on a Target node.
+This may have an effect on the provisioning data of the node and how the Distributor finalizes the
+DFU. Depending on the availability of the Remote Provisioning Server model on the old and new image,
+the device may either boot up unprovisioned after applying the new firmware or require to be
+re-provisioned. The complete list of available options is defined in <a class="reference internal" href="../../../../doxygen/html/group__bt__mesh__dfu.html#gae7d7ef4ed1e65e5f8e1641a9c00bb7e8" title=""><code class="xref c c-enum docutils literal notranslate"><span class="pre">bt_mesh_dfu_effect</span></code></a>:</p>
+<dl class="simple">
+<dt><a class="reference internal" href="../../../../doxygen/html/group__bt__mesh__dfu.html#ggae7d7ef4ed1e65e5f8e1641a9c00bb7e8af8fba9033b663ce141c099b48128b22e" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">BT_MESH_DFU_EFFECT_NONE</span></code></a></dt><dd><p>The device stays provisioned after the new firmware is programmed. This effect is chosen if the
+composition data of the new firmware doesn’t change.</p>
+</dd>
+<dt><a class="reference internal" href="../../../../doxygen/html/group__bt__mesh__dfu.html#ggae7d7ef4ed1e65e5f8e1641a9c00bb7e8a399d11f493d538d6d11a6aee927015dc" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">BT_MESH_DFU_EFFECT_COMP_CHANGE_NO_RPR</span></code></a></dt><dd><p>This effect is chosen when the composition data changes and the device doesn’t support the remote
+provisioning. The new composition data takes place only after re-provisioning.</p>
+</dd>
+<dt><a class="reference internal" href="../../../../doxygen/html/group__bt__mesh__dfu.html#ggae7d7ef4ed1e65e5f8e1641a9c00bb7e8a049447eb32bcc0b1b18d5ae908de30b8" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">BT_MESH_DFU_EFFECT_COMP_CHANGE</span></code></a></dt><dd><p>This effect is chosen when the composition data changes and the device supports the remote
+provisioning. In this case, the device stays provisioned and the new composition data takes place
+after re-provisioning using the Remote Provisioning models.</p>
+</dd>
+<dt><a class="reference internal" href="../../../../doxygen/html/group__bt__mesh__dfu.html#ggae7d7ef4ed1e65e5f8e1641a9c00bb7e8a11e843036db6bcae565c07ace00c9211" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">BT_MESH_DFU_EFFECT_UNPROV</span></code></a></dt><dd><p>This effect is chosen if the composition data in the new firmware changes, the device does not
+support the remote provisioning, and the new composition data takes effect after applying the
+firmware. The effect can also be chosen, if it is necessary to unprovision the device for
+application-specific reasons.</p>
+</dd>
+</dl>
+<p>When the Target node receives the Firmware Update Firmware Metadata Check message, the Firmware
+Update Server model calls the <a class="reference internal" href="../../../../doxygen/html/structbt__mesh__dfu__srv__cb.html#afbde918804e66160ffa176c206540027" title=""><code class="xref c c-member docutils literal notranslate"><span class="pre">bt_mesh_dfu_srv_cb.check</span></code></a> callback, the application can
+then process the metadata and provide the effect value. If the effect is
+<a class="reference internal" href="../../../../doxygen/html/group__bt__mesh__dfu.html#ggae7d7ef4ed1e65e5f8e1641a9c00bb7e8a049447eb32bcc0b1b18d5ae908de30b8" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">BT_MESH_DFU_EFFECT_COMP_CHANGE</span></code></a>, the application must call functions
+<a class="reference internal" href="../../../../doxygen/html/group__bt__mesh__access.html#ga8575f680e77d86d6c85cac27985b9f3c" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_mesh_comp_change_prepare()</span></code></a> and <a class="reference internal" href="../../../../doxygen/html/group__bt__mesh__access.html#ga26ac86bdd32d27e0091735d98670687a" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_mesh_models_metadata_change_prepare()</span></code></a> to
+prepare the Composition Data Page and Models Metadata Page contents before applying the new
+firmware image. See <a class="reference internal" href="dfu_srv.html#bluetooth-mesh-dfu-srv-comp-data-and-models-metadata"><span class="std std-ref">Composition Data and Models Metadata</span></a> for more
+information.</p>
+</section>
+</section>
+</section>
+<section id="dfu-procedures">
+<h2>DFU procedures<a class="headerlink" href="#dfu-procedures" title="Link to this heading"></a></h2>
+<p>The DFU protocol is implemented as a set of procedures that must be performed in a certain order.</p>
+<p>The Initiator controls the Upload stage of the DFU protocol, and all Distributor side handling of
+the upload subprocedures is implemented in the <a class="reference internal" href="dfd_srv.html#bluetooth-mesh-dfd-srv"><span class="std std-ref">Firmware Distribution Server</span></a>.</p>
+<p>The Distribution stage is controlled by the Distributor, as implemented by the
+<a class="reference internal" href="dfu_cli.html#bluetooth-mesh-dfu-cli"><span class="std std-ref">Firmware Update Client</span></a>. The Target node implements all handling of these procedures in the
+<a class="reference internal" href="dfu_srv.html#bluetooth-mesh-dfu-srv"><span class="std std-ref">Firmware Update Server</span></a>, and notifies the application through a set of callbacks.</p>
+<figure class="align-center" id="id2">
+<img alt="Overview of DFU stages and procedures" src="../../../../_images/dfu_stages_procedures_mesh.svg" />
+<figcaption>
+<p><span class="caption-text">DFU stages and procedures as seen from the Distributor</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<section id="uploading-the-firmware">
+<h3>Uploading the firmware<a class="headerlink" href="#uploading-the-firmware" title="Link to this heading"></a></h3>
+<p>The Upload Firmware procedure uses the <a class="reference internal" href="blob.html#bluetooth-mesh-blob"><span class="std std-ref">BLOB Transfer models</span></a> to transfer the firmware image
+from the Initiator to the Distributor. The Upload Firmware procedure works in two steps:</p>
+<ol class="arabic simple">
+<li><p>The Initiator generates a BLOB ID, and sends it to the Distributor’s Firmware Distribution Server
+along with the firmware information and other input parameters of the BLOB transfer. The Firmware
+Distribution Server stores the information, and prepares its BLOB Transfer Server for the
+incoming transfer before it responds with a status message to the Initiator.</p></li>
+<li><p>The Initiator’s BLOB Transfer Client model transfers the firmware image to the Distributor’s BLOB
+Transfer Server, which stores the image in a predetermined flash partition.</p></li>
+</ol>
+<p>When the BLOB transfer finishes, the firmware image is ready for distribution. The Initiator may
+upload several firmware images to the Distributor, and ask it to distribute them in any order or at
+any time. Additional procedures are available for querying and deleting firmware images from the
+Distributor.</p>
+<p>The following Distributor’s capabilities related to firmware images can be configured using the
+configuration options:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_BT_MESH_DFU_SLOT_CNT" title="CONFIG_BT_MESH_DFU_SLOT_CNT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_MESH_DFU_SLOT_CNT</span></code></a>: Amount of image slots available on the device.</p></li>
+<li><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_BT_MESH_DFD_SRV_SLOT_MAX_SIZE" title="CONFIG_BT_MESH_DFD_SRV_SLOT_MAX_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_MESH_DFD_SRV_SLOT_MAX_SIZE</span></code></a>: Maximum allowed size for each image.</p></li>
+<li><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_BT_MESH_DFD_SRV_SLOT_SPACE" title="CONFIG_BT_MESH_DFD_SRV_SLOT_SPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_MESH_DFD_SRV_SLOT_SPACE</span></code></a>: Available space for all images.</p></li>
+</ul>
+</section>
+<section id="populating-the-distributor-s-receivers-list">
+<h3>Populating the Distributor’s receivers list<a class="headerlink" href="#populating-the-distributor-s-receivers-list" title="Link to this heading"></a></h3>
+<p>Before the Distributor can start distributing the firmware image, it needs a list of Target nodes to
+send the image to. The Initiator gets the full list of Target nodes either by querying the potential
+targets directly, or through some external authority. The Initiator uses this information to
+populate the Distributor’s receivers list with the address and relevant firmware image index of each
+Target node. The Initiator may send one or more Firmware Distribution Receivers Add messages to
+build the Distributor’s receivers list, and a Firmware Distribution Receivers Delete All message to
+clear it.</p>
+<p>The maximum number of receivers that can be added to the Distributor is configured through the
+<a class="reference internal" href="../../../../kconfig.html#CONFIG_BT_MESH_DFD_SRV_TARGETS_MAX" title="CONFIG_BT_MESH_DFD_SRV_TARGETS_MAX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_MESH_DFD_SRV_TARGETS_MAX</span></code></a> configuration option.</p>
+</section>
+<section id="initiating-the-distribution">
+<h3>Initiating the distribution<a class="headerlink" href="#initiating-the-distribution" title="Link to this heading"></a></h3>
+<p>Once the Distributor has stored a firmware image and received a list of Target nodes, the Initiator
+may initiate the distribution procedure. The BLOB transfer parameters for the distribution are
+passed to the Distributor along with an update policy. The update policy decides whether the
+Distributor should request that the firmware is applied on the Target nodes or not. The Distributor
+stores the transfer parameters and starts distributing the firmware image to its list of Target
+nodes.</p>
+<section id="firmware-distribution">
+<h4>Firmware distribution<a class="headerlink" href="#firmware-distribution" title="Link to this heading"></a></h4>
+<p>The Distributor’s Firmware Update Client model uses its BLOB Transfer Client model’s broadcast
+subsystem to communicate with all Target nodes. The firmware distribution is performed with the
+following steps:</p>
+<ol class="arabic simple">
+<li><p>The Distributor’s Firmware Update Client model generates a BLOB ID and sends it to each Target
+node’s Firmware Update Server model, along with the other BLOB transfer parameters, the Target
+node firmware image index and the firmware image metadata. Each Target node performs a metadata
+check and prepares their BLOB Transfer Server model for the transfer, before sending a status
+response to the Firmware Update Client, indicating if the firmware update will have any effect on
+the Bluetooth Mesh state of the node.</p></li>
+<li><p>The Distributor’s BLOB Transfer Client model transfers the firmware image to all Target nodes.</p></li>
+<li><p>Once the BLOB transfer has been received, the Target nodes’ applications verify that the firmware
+is valid by performing checks such as signature verification or image checksums against the image
+metadata.</p></li>
+<li><p>The Distributor’s Firmware Update Client model queries all Target nodes to ensure that they’ve
+all verified the firmware image.</p></li>
+</ol>
+<p>If the distribution procedure completed with at least one Target node reporting that the image has
+been received and verified, the distribution procedure is considered successful.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The firmware distribution procedure only fails if <em>all</em> Target nodes are lost. It is up to the
+Initiator to request a list of failed Target nodes from the Distributor and initiate additional
+attempts to update the lost Target nodes after the current attempt is finished.</p>
+</div>
+</section>
+<section id="suspending-the-distribution">
+<h4>Suspending the distribution<a class="headerlink" href="#suspending-the-distribution" title="Link to this heading"></a></h4>
+<p>The Initiator can also request the Distributor to suspend the firmware distribution. In this case,
+the Distributor will stop sending any messages to Target nodes. When the firmware distribution is
+resumed, the Distributor will continue sending the firmware from the last successfully transferred
+block.</p>
+</section>
+</section>
+<section id="applying-the-firmware-image">
+<h3>Applying the firmware image<a class="headerlink" href="#applying-the-firmware-image" title="Link to this heading"></a></h3>
+<p>If the Initiator requested it, the Distributor can initiate the Apply Firmware on Target Node
+procedure on all Target nodes that successfully received and verified the firmware image. The Apply
+Firmware on Target Node procedure takes no parameters, and to avoid ambiguity, it should be
+performed before a new transfer is initiated. The Apply Firmware on Target Node procedure consists
+of the following steps:</p>
+<ol class="arabic simple">
+<li><p>The Distributor’s Firmware Update Client model instructs all Target nodes that have verified the
+firmware image to apply it. The Target nodes’ Firmware Update Server models respond with a status
+message before calling their application’s <code class="docutils literal notranslate"><span class="pre">apply</span></code> callback.</p></li>
+<li><p>The Target node’s application performs any preparations needed before applying the transfer, such
+as storing a snapshot of the Composition Data or clearing its configuration.</p></li>
+<li><p>The Target node’s application swaps the current firmware with the new image and updates its
+firmware image list with the new firmware ID.</p></li>
+<li><p>The Distributor’s Firmware Update Client model requests the full list of firmware images from
+each Target node, and scans through the list to make sure that the new firmware ID has replaced
+the old.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>During the metadata check in the distribution procedure, the Target node may have reported that
+it will become unprovisioned after the firmware image is applied. In this case, the Distributor’s
+Firmware Update Client model will send a request for the full firmware image list, and expect no
+response.</p>
+</div>
+</section>
+<section id="cancelling-the-distribution">
+<h3>Cancelling the distribution<a class="headerlink" href="#cancelling-the-distribution" title="Link to this heading"></a></h3>
+<p>The firmware distribution can be cancelled at any time by the Initiator. In this case, the
+Distributor starts the cancelling procedure by sending a cancelling message to all Target nodes. The
+Distributor waits for the response from all Target nodes. Once all Target nodes have replied, or the
+request has timed out, the distribution procedure is cancelled. After this the distribution
+procedure can be started again from the <code class="docutils literal notranslate"><span class="pre">Firmware</span> <span class="pre">distribution</span></code> section.</p>
+</section>
+</section>
+<section id="api-reference">
+<h2>API reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<p>This section lists the types common to the Device Firmware Update mesh models.</p>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../../doxygen/html/group__bt__mesh__dfd.html" title=""><span class="pre">Firmware</span> <span class="pre">Distribution</span> <span class="pre">models</span></a></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../../doxygen/html/group__bt__mesh__dfu.html" title=""><span class="pre">Bluetooth</span> <span class="pre">Mesh</span> <span class="pre">Device</span> <span class="pre">Firmware</span> <span class="pre">Update</span></a></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../../doxygen/html/group__bt__mesh__dfu__metadata.html" title=""><span class="pre">Bluetooth</span> <span class="pre">Mesh</span> <span class="pre">Device</span> <span class="pre">Firmware</span> <span class="pre">Update</span> <span class="pre">(DFU)</span> <span class="pre">metadata</span></a></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

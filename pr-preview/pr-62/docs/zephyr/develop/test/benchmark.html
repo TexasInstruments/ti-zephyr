@@ -1,0 +1,587 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Benchmarking Framework &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/develop/test/benchmark.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Test Runner (Twister)" href="twister.html" />
+    <link rel="prev" title="Test Framework" href="ztest.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developing with Zephyr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/index.html">Getting Started Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beyond-GSG.html">Beyond the Getting Started Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env_vars.html">Environment Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../application/index.html">Application Development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debug/index.html">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/index.html">API Status and Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../languages/index.html">Language Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optimizations/index.html">Optimizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flash_debug/index.html">Flashing and Hardware Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html">Modules (External projects)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../west/index.html">West (Zephyr’s meta-tool)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Testing</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ztest.html">Test Framework</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Benchmarking Framework</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usage">Usage</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#standard-benchmarks">Standard Benchmarks</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#timed-benchmarks">Timed Benchmarks</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#understanding-results">Understanding Results</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#standard-benchmarking-results">Standard Benchmarking Results</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#timed-benchmarking-results">Timed Benchmarking Results</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#benchmark-output-options">Benchmark Output Options</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#important-considerations">Important Considerations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="twister.html">Test Runner (Twister)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="twister_statuses.html">Twister Status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="twister/twister_blackbox.html">Twister blackbox tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytest.html">Integration with pytest test framework</a></li>
+<li class="toctree-l3"><a class="reference internal" href="coverage.html">Generating coverage reports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bsim.html">BabbleSim</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../sca/index.html">Static Code Analysis (SCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains/index.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/index.html">Tools and IDEs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Developing with Zephyr</a> &raquo;</li>
+  
+     <li><a href="index.html">Testing</a> &raquo;</li>
+  
+  <li>Benchmarking Framework</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/develop/test/benchmark.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27develop%2Ftest%2Fbenchmark%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Testsuite&env=-+Page%3A+develop%2Ftest%2Fbenchmark%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="benchmarking-framework">
+<span id="ztest-benchmarking"></span><h1>Benchmarking Framework<a class="headerlink" href="#benchmarking-framework" title="Link to this heading"></a></h1>
+<p>The Zephyr benchmarking framework provides cycle-accurate performance
+measurements. It automates data collection and statistical calculation, offering
+a standardized way to evaluate execution metrics across the Zephyr ecosystem.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>This framework helps identify regressions and optimize critical paths by
+providing:</p>
+<ul class="simple">
+<li><p><strong>Standardized API</strong>: Macros that align with existing <code class="docutils literal notranslate"><span class="pre">ztest</span></code> conventions.</p></li>
+<li><p><strong>Statistical Analysis</strong>: Calculations of Mean, Standard Deviation, Standard
+Error, and Min/Max values.</p></li>
+<li><p><strong>Overhead Compensation</strong>: Inclusion of a control test to account for the
+benchmarking frameworks own execution time.</p></li>
+</ul>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<p>To use the benchmarking framework, you must enable the following Kconfig
+options:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_ZTEST</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_ZTEST_BENCHMARK</span><span class="o">=</span><span class="s">y</span>
+</pre></div>
+</div>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<p>A benchmark suite is defined similarly to the normal ztest testsuite by first
+defining the suite with <code class="docutils literal notranslate"><span class="pre">ZTEST_BENCHMARK_SUITE</span></code> and then adding individual
+benchmark tests to the suite using either <code class="docutils literal notranslate"><span class="pre">ZTEST_BENCHMARK</span></code> or <code class="docutils literal notranslate"><span class="pre">ZTEST_BENCHMARK_TIMED</span></code> macros.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/ztest.h&gt;</span>
+
+<span class="n">ZTEST_BENCHMARK_SUITE</span><span class="p">(</span><span class="o">&lt;</span><span class="n">test</span><span class="w"> </span><span class="n">suite</span><span class="w"> </span><span class="n">name</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">setup_fn</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">teardown_fn</span><span class="o">&gt;</span><span class="p">);</span>
+</pre></div>
+</div>
+<section id="standard-benchmarks">
+<h3>Standard Benchmarks<a class="headerlink" href="#standard-benchmarks" title="Link to this heading"></a></h3>
+<p>Standard benchmarks are sample-based, meaning they execute the test a specified number
+of times and measure the total cycles taken. This is useful for benchmarking critical paths where
+you want to understand the raw CPU performance in terms of cycles. It provides insights into the
+efficiency of the code and helps identify bottlenecks in terms of CPU usage.
+This benchmarking method is suitable for code that has consistent execution times and is not heavily
+influenced by external factors such as I/O operations or context switches.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/ztest.h&gt;</span>
+
+<span class="n">ZTEST_BENCHMARK_SUITE</span><span class="p">(</span><span class="o">&lt;</span><span class="n">suite</span><span class="w"> </span><span class="n">name</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+
+<span class="n">ZTEST_BENCHMARK</span><span class="p">(</span><span class="o">&lt;</span><span class="n">suite</span><span class="w"> </span><span class="n">name</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">benchmark</span><span class="w"> </span><span class="n">name</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">number</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">samples</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="cm">/* Code to benchmark */</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>A standard benchmark follows a flow where the setup function is called before each sample, the test
+function is executed for the specified number of samples, and the teardown function is called after
+each sample.</p>
+</section>
+<section id="timed-benchmarks">
+<h3>Timed Benchmarks<a class="headerlink" href="#timed-benchmarks" title="Link to this heading"></a></h3>
+<p>Timed benchmarks in contrast to the standard benchmarks measures execution time of the code
+instead of cycles. This is useful for benchmarking code that may have variable execution
+times or when you want to measure the actual time taken rather than just CPU cycles of a critical
+path. It provides a broader view of performance characteristics, especially for code that involves
+I/O operations, context switches, or other factors that can influence execution time beyond raw CPU
+performance.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ZTEST_BENCHMARK_TIMED</span><span class="p">(</span><span class="o">&lt;</span><span class="n">suite</span><span class="w"> </span><span class="n">name</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">benchmark</span><span class="w"> </span><span class="n">name</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">time</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">milliseconds</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">      </span><span class="cm">/* Code to benchmark */</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Unlike standard benchmarks that favor isolation, Timed Benchmarks executes setup and teardown
+functions only once allowing the test function to run hot within a dedicated time window.
+This will give a more realistic measurements as it includes the overhead of the system as it would
+be in a real-world scenario, such as interrupts, context switches, and other background tasks.</p>
+</section>
+</section>
+<section id="understanding-results">
+<h2>Understanding Results<a class="headerlink" href="#understanding-results" title="Link to this heading"></a></h2>
+<section id="standard-benchmarking-results">
+<h3>Standard Benchmarking Results<a class="headerlink" href="#standard-benchmarking-results" title="Link to this heading"></a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&lt;suite name&gt; ###############################################</span>
+<span class="go">&lt;benchmark name&gt; ===========================================</span>
+<span class="go">   Sample size:&lt;number of samples&gt;, total cycles: &lt;total amount of cycles&gt;</span>
+<span class="go">   Mean(u): &lt;mean cycles per sample&gt;</span>
+<span class="go">   Standard deviation(s): &lt;cycles&gt;</span>
+<span class="go">   Standard Error(SE): &lt;cycles&gt;</span>
+<span class="go">   Min: &lt;cycles&gt; (run #&lt;sample number&gt;)</span>
+<span class="go">   Max: &lt;cycles&gt; (run #&lt;sample number&gt;)</span>
+</pre></div>
+</div>
+<section id="statistical-metrics">
+<h4>Statistical Metrics<a class="headerlink" href="#statistical-metrics" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Mean (u)</strong>: The average number of cycles taken per sample. It provides a
+central value representing the expected cost of execution.</p></li>
+<li><p><strong>Standard Deviation (s)</strong>: Measures the amount of variation or fluctuation of
+the execution cost from the mean. A low standard deviation indicates that the
+behavior is deterministic and consistent.</p></li>
+<li><p><strong>Standard Error (SE)</strong>: Estimates how far the sample mean is likely to be
+from the “true” mean of the system. It provides insight into the statistical
+reliability of the test. A lower SE indicates higher confidence in the
+result.</p></li>
+<li><p><strong>Min/Max</strong>: The minimum and maximum cycle counts observed, along with which
+sample they occurred on.</p></li>
+</ul>
+<p>Plainly speaking, lower values are better for all metrics.
+Lower mean, min, and max values indicates better raw performance.
+Lower standard deviation and standard error values indicate more consistent and
+therefore reliable performance.</p>
+</section>
+</section>
+<section id="timed-benchmarking-results">
+<h3>Timed Benchmarking Results<a class="headerlink" href="#timed-benchmarking-results" title="Link to this heading"></a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&lt;benchmark name&gt; ===============================================</span>
+<span class="go">   Samples: &lt;Number of samples executed during the benchmark&gt;</span>
+<span class="go">   Total Time: &lt;Gross execution time&gt;</span>
+<span class="go">   Work Time: &lt;Net execution time&gt; ns (Net)</span>
+<span class="go">   Ops/Sec: &lt;average operations per second&gt;</span>
+<span class="go">   Cycles/Op: &lt;average cycles per operation&gt;</span>
+</pre></div>
+</div>
+<section id="id1">
+<h4>Statistical Metrics<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong>Total Time</strong>: The total time taken for all samples of the benchmark, including overhead.</p></li>
+<li><p><strong>Work Time</strong>: The total time taken for the code under test, excluding the overhead of the
+benchmarking framework itself. This provides a more accurate measure of the actual performance of
+the code being benchmarked.</p></li>
+<li><p><strong>Ops/Sec</strong>: The number of operations (samples) that can be performed per second, calculated by
+dividing the number of samples by the net work time (in seconds). This metric is particularly
+useful for understanding the throughput of the code being benchmarked.</p></li>
+<li><p><strong>Cycles/Op</strong>: The average number of CPU cycles taken per operation, calculated by dividing the
+net number of cycles by the number of samples. This metric provides insight into the
+efficiency of the code in terms of CPU usage.</p></li>
+</ul>
+<p>In general higher values for Ops/Sec are better as it indicates higher throughput, just as lower
+values for Cycles/Op are better. As the Cycles/Op and Ops/Sec metrics are derived from the same
+underlying data, they are reflecting the same performance characteristics from different
+perspectives. A high Ops/Sec should correspond to a low Cycles/Op, and vice versa.</p>
+</section>
+</section>
+<section id="benchmark-output-options">
+<h3>Benchmark Output Options<a class="headerlink" href="#benchmark-output-options" title="Link to this heading"></a></h3>
+<p>The benchmarking framework provides several options for outputting results of benchmarking data. By
+default, results are printed in a verbose human-readable format that is easy to understand and
+interpret.
+Alternatively, you can enable the <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_BENCHMARK_OUTPUT_CSV" title="CONFIG_ZTEST_BENCHMARK_OUTPUT_CSV"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_BENCHMARK_OUTPUT_CSV</span></code></a> Kconfig option
+to output results in a CSV format that can be easily imported by scripts for further analysis.
+The CSV output includes all the same metrics as the verbose output, but in a
+format that is more conducive to automated analysis and reporting.</p>
+<p>The standard benchmark csv output format is as follows:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">S,&lt;suite name&gt;,&lt;benchmark name&gt;,&lt;sample size&gt;,&lt;total cycles&gt;,&lt;mean&gt;,&lt;stddev&gt;,&lt;stderr&gt;,&lt;min&gt;,&lt;min sample&gt;,&lt;max&gt;,&lt;max sample&gt;</span>
+</pre></div>
+</div>
+<p>The timed benchmark csv output format is as follows:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">T,&lt;suite name&gt;,&lt;benchmark name&gt;,&lt;samples&gt;,&lt;total time&gt;,&lt;work time&gt;,&lt;ops/sec&gt;,&lt;cycles/op&gt;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="important-considerations">
+<h2>Important Considerations<a class="headerlink" href="#important-considerations" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Noise</strong>: Benchmarking is inherently sensitive to system noise. To obtain as
+accurate results as possible, disable unnecessary background tasks and
+interrupts that may interfere with timing.</p></li>
+<li><p><strong>Cache Warming</strong>: The first sample of a benchmark may often be slower
+due to cache misses and this can skew results slightly on small sample sizes,
+choose a sufficiently large number of samples to mitigate this effect.</p></li>
+<li><p><strong>Use setup/teardown functions</strong>: It is <em>highly</em> encouraged to utilize the
+setup and teardown functions to isolate the code under test as much as
+possible. Excessive setup/teardown code in the benchmark code can introduce
+noise and skew results <em>significantly</em> for small critical paths.</p></li>
+</ul>
+</section>
+<section id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__ztest__benchmark.html" title=""><span class="pre">Zephyr</span> <span class="pre">Benchmarking</span> <span class="pre">Framework</span></a></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

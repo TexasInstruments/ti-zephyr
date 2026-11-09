@@ -1,0 +1,6 @@
+var group__ICM42686__ACCEL__POWER__MODES =
+[
+    [ "ICM42686_DT_ACCEL_LN", "group__ICM42686__ACCEL__POWER__MODES.html#gadfd468cfac2f4c603c91fce87364bc8d", null ],
+    [ "ICM42686_DT_ACCEL_LP", "group__ICM42686__ACCEL__POWER__MODES.html#ga4f65f2e1487071d5a2c671236e79b548", null ],
+    [ "ICM42686_DT_ACCEL_OFF", "group__ICM42686__ACCEL__POWER__MODES.html#gaab2358d3812334977177bc43ff85c649", null ]
+];

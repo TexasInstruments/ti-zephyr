@@ -1,0 +1,1267 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tracing &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/services/tracing/index.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Resource Management" href="../resource_management/index.html" />
+    <link rel="prev" title="Multi-domain logging using ARM Coresight STM" href="../logging/cs_stm.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">OS Services</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../binary_descriptors/index.html">Binary Descriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../console.html">Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cpu_freq/index.html">CPU Frequency Scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cpu_load/index.html">CPU Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../crc/index.html">CRC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../crypto/index.html">Cryptography</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debugging/index.html">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">Device Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dsp/index.html">Digital Signal Processing (DSP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../formatted_output.html">Formatted Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../input/index.html">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../instrumentation/index.html">Instrumentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ipc/index.html">Interprocessor Communication (IPC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../jwt/index.html">JSON Web Token (JWT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../llext/index.html">Linkable Loadable Extensions (LLEXT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../logging/index.html">Logging</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tracing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#named-trace-events">Named Trace Events</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#serialization-formats">Serialization Formats</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#common-trace-format-ctf-support">Common Trace Format (CTF) Support</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#a-generic-interface">A Generic Interface</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ctf-top-layer-example">CTF Top-Layer Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#tracing-tools">Tracing Tools</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#percepio-tracealyzer-support">Percepio Tracealyzer Support</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#percepio-tracerecorder-and-stream-ports">Percepio TraceRecorder and Stream Ports</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#tracealyzer-snapshot-tracing-ring-buffer">Tracealyzer Snapshot Tracing (Ring Buffer)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#tracealyzer-streaming-with-segger-rtt">Tracealyzer Streaming with SEGGER RTT</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#tracealyzer-streaming-with-arm-itm">Tracealyzer Streaming with Arm ITM</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#tracealyzer-streaming-from-qemu-semihost">Tracealyzer Streaming from QEMU (Semihost)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#recorder-start-mode">Recorder Start Mode</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#custom-stream-ports-for-tracealyzer">Custom Stream Ports for Tracealyzer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#learning-more">Learning More</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#percepio-view-for-zephyr">Percepio View for Zephyr</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#segger-systemview-support">SEGGER SystemView Support</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tracecompass">TraceCompass</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#user-defined-tracing">User-Defined Tracing</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#transport-backends">Transport Backends</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-tracing">Using Tracing</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#using-ram-backend">Using RAM backend</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#future-lttng-inspiration">Future LTTng Inspiration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#i-o-taxonomy">I/O Taxonomy</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#object-tracking">Object tracking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api">API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#common">Common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#threads">Threads</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#work-queues">Work Queues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#poll">Poll</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#semaphore">Semaphore</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mutex">Mutex</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#condition-variables">Condition Variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#queues">Queues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fifo">FIFO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lifo">LIFO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stacks">Stacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#message-queues">Message Queues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mailbox">Mailbox</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pipes">Pipes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#heaps">Heaps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#memory-slabs">Memory Slabs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#timers">Timers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Object tracking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#syscalls">Syscalls</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#network-tracing">Network tracing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#network-socket-tracing">Network socket tracing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../resource_management/index.html">Resource Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mem_mgmt/index.html">Memory Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../net_buf/index.html">Network Buffers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modem/index.html">Modem modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notify.html">Asynchronous Notifications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pm/index.html">Power Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">OS Abstraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../poweroff.html">Power off</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../profiling/index.html">Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../shell/index.html">Shell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../serialization/index.html">Serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../smf/index.html">State Machine Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sensing/index.html">Sensing Subsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../task_wdt/index.html">Task Watchdog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tfm/index.html">Trusted Firmware-M (TF-M)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../uuid/index.html">UUID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rtio/index.html">Real Time I/O (RTIO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../zbus/index.html">Zephyr bus (zbus)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">OS Services</a> &raquo;</li>
+  
+  <li>Tracing</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/services/tracing/index.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27services%2Ftracing%2Findex%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+tracing&env=-+Page%3A+services%2Ftracing%2Findex%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="tracing">
+<span id="id1"></span><h1>Tracing<a class="headerlink" href="#tracing" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The tracing feature provides hooks that permits you to collect data from
+your application and allows <a class="reference internal" href="#tools"><span class="std std-ref">Tracing Tools</span></a> running on a host to visualize the inner-working of
+the kernel and various subsystems.</p>
+<p>Every system has application-specific events to trace out.  Historically,
+that has implied:</p>
+<ol class="arabic simple">
+<li><p>Determining the application-specific payload,</p></li>
+<li><p>Choosing suitable serialization-format,</p></li>
+<li><p>Writing the on-target serialization code,</p></li>
+<li><p>Deciding on and writing the I/O transport mechanics,</p></li>
+<li><p>Writing the PC-side deserializer/parser,</p></li>
+<li><p>Writing custom ad-hoc tools for filtering and presentation.</p></li>
+</ol>
+<p>An application can use one of the existing formats or define a custom format by
+overriding the macros declared in <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/tracing/tracing.h">include/zephyr/tracing/tracing.h</a>.</p>
+<p>Different formats, transports and host tools are available and supported in
+Zephyr.</p>
+<p>In fact, I/O varies greatly from system to system.  Therefore, it is
+instructive to create a taxonomy for I/O types when we must ensure the
+interface between payload/format (Top Layer) and the transport mechanics
+(bottom Layer) is generic and efficient enough to model these. See the
+<em>I/O taxonomy</em> section below.</p>
+</section>
+<section id="named-trace-events">
+<h2>Named Trace Events<a class="headerlink" href="#named-trace-events" title="Link to this heading"></a></h2>
+<p>Although the user can extend any of the supported serialization formats
+to enable additional tracing functions (or provide their own backend), zephyr
+also provides one generic named tracing function for convenience purposes,
+as well as to demonstrate how tracing frameworks could be extended.</p>
+<p>Users can generate a custom trace event by calling
+<a class="reference internal" href="../../doxygen/html/group__subsys__tracing__apis__named.html#ga205bc648bdf0152f8652f04f15cf48af" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_trace_named_event()</span></code></a>, which takes an event name as well as two
+arbitrary 4 byte arguments. Tracing backends may truncate the provided event
+name if it is too long for the serialization format they support.</p>
+</section>
+<section id="serialization-formats">
+<h2>Serialization Formats<a class="headerlink" href="#serialization-formats" title="Link to this heading"></a></h2>
+<section id="common-trace-format-ctf-support">
+<span id="ctf"></span><h3>Common Trace Format (CTF) Support<a class="headerlink" href="#common-trace-format-ctf-support" title="Link to this heading"></a></h3>
+<p>Common Trace Format, CTF, is an open format and language to describe trace
+formats. This enables tool reuse, of which line-textual (babeltrace) and
+graphical (TraceCompass) variants already exist.</p>
+<p>CTF should look familiar to C programmers but adds stronger typing.
+See <a class="reference external" href="https://diamon.org/ctf/">CTF - A Flexible, High-performance Binary Trace Format</a>.</p>
+<p>CTF allows us to formally describe application specific payload and the
+serialization format, which enables common infrastructure for host tools
+and parsers and tools for filtering and presentation.</p>
+<section id="a-generic-interface">
+<h4>A Generic Interface<a class="headerlink" href="#a-generic-interface" title="Link to this heading"></a></h4>
+<p>In CTF, an event is serialized to a packet containing one or more fields.
+As seen from <em>I/O taxonomy</em> section below, a bottom layer may:</p>
+<ul class="simple">
+<li><p>perform actions at transaction-start (e.g. mutex-lock),</p></li>
+<li><p>process each field in some way (e.g. sync-push emit, concat, enqueue to
+thread-bound FIFO),</p></li>
+<li><p>perform actions at transaction-stop (e.g. mutex-release, emit of concat
+buffer).</p></li>
+</ul>
+</section>
+<section id="ctf-top-layer-example">
+<h4>CTF Top-Layer Example<a class="headerlink" href="#ctf-top-layer-example" title="Link to this heading"></a></h4>
+<p>The CTF_EVENT macro will serialize each argument to a field:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/* Example for illustration */
+static inline void ctf_top_foo(uint32_t thread_id, ctf_bounded_string_t name)
+{
+  CTF_EVENT(
+    CTF_LITERAL(uint8_t, 42),
+    thread_id,
+    name,
+    &quot;hello, I was emitted from function: &quot;,
+    __func__  /* __func__ is standard since C99 */
+  );
+}
+</pre></div>
+</div>
+<p>How to serialize and emit fields as well as handling alignment, can be done
+internally and statically at compile-time in the bottom-layer.</p>
+<p>The CTF top layer is enabled using the configuration option
+<a class="reference internal" href="../../kconfig.html#CONFIG_TRACING_CTF" title="CONFIG_TRACING_CTF"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TRACING_CTF</span></code></a> and can be used with the different transport
+backends both in synchronous and asynchronous modes.</p>
+</section>
+</section>
+</section>
+<section id="tracing-tools">
+<span id="tools"></span><h2>Tracing Tools<a class="headerlink" href="#tracing-tools" title="Link to this heading"></a></h2>
+<p>Zephyr includes support for several popular tracing tools, presented below in alphabetical order.</p>
+<section id="percepio-tracealyzer-support">
+<h3>Percepio Tracealyzer Support<a class="headerlink" href="#percepio-tracealyzer-support" title="Link to this heading"></a></h3>
+<p>Zephyr includes support for <a class="reference external" href="https://percepio.com/tracealyzer">Percepio Tracealyzer</a> that offers trace visualization for
+simplified analysis, report generation and other analysis features. Tracealyzer allows for trace
+streaming over various interfaces and also snapshot tracing, where the events are kept in a RAM
+buffer.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../_images/percepio_tracealyzer.png"><img alt="Percepio Tracealyzer" src="../../_images/percepio_tracealyzer.png" style="width: 80%;" />
+</a>
+</figure>
+<p>Zephyr kernel events are captured automatically when Tracealyzer tracing is enabled.
+Tracealyzer also provides extensive support for application logging, where you call the tracing
+library from your application code. This lets you visualize kernel events and application events
+together, for example as data plots or state diagrams on logged variables.
+Learn more in the Tracealyzer User Manual provided with the application.</p>
+<section id="percepio-tracerecorder-and-stream-ports">
+<h4>Percepio TraceRecorder and Stream Ports<a class="headerlink" href="#percepio-tracerecorder-and-stream-ports" title="Link to this heading"></a></h4>
+<p>The tracing library for Tracealyzer (TraceRecorder) is included in the Zephyr manifest and
+provided under the same license (Apache 2.0). This is enabled by adding the following
+configuration options in your prj.conf:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_TRACING</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRACERECORDER</span><span class="o">=</span><span class="s">y</span>
+</pre></div>
+</div>
+<p>Or using menuconfig:</p>
+<ul class="simple">
+<li><p>Enable <span class="menuselection">Subsystems and OS Services ‣ Tracing Support</span></p></li>
+<li><p>Under <span class="menuselection">Subsystems and OS Services ‣ Tracing Support ‣ Tracing Format</span>, select
+<span class="guilabel">Percepio Tracealyzer</span></p></li>
+</ul>
+<p>Some additional settings are needed to configure TraceRecorder. The most important configuration
+is to select the right “stream port”. This specifies how to output the trace data.
+As of July 2024, the following stream ports are available in the Zephyr configuration system:</p>
+<ul class="simple">
+<li><p><strong>Ring Buffer</strong>: The trace data is kept in a circular RAM buffer.</p></li>
+<li><p><strong>RTT</strong>: Trace streaming via Segger RTT on J-Link debug probes.</p></li>
+<li><p><strong>ITM</strong>: Trace streaming via the ITM function on Arm Cortex-M devices.</p></li>
+<li><p><strong>Semihost</strong>: For tracing on QEMU. Streams the trace data to a host file.</p></li>
+</ul>
+<p>Select the stream port in menuconfig under
+<span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ Stream Port</span>.</p>
+<p>Or simply add one of the following options in your prj.conf:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_RINGBUFFER</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_RTT</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_ITM</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_ZEPHYR_SEMIHOST</span><span class="o">=</span><span class="s">y</span>
+</pre></div>
+</div>
+<p>Make sure to only include ONE of these configuration options.</p>
+<p>The stream port modules have individual configuration options. In menuconfig these are found
+under <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ (Stream Port) Config</span>.
+The most important options for each stream port are described below.</p>
+</section>
+<section id="tracealyzer-snapshot-tracing-ring-buffer">
+<h4>Tracealyzer Snapshot Tracing (Ring Buffer)<a class="headerlink" href="#tracealyzer-snapshot-tracing-ring-buffer" title="Link to this heading"></a></h4>
+<p>The “Ring Buffer” stream port keeps the trace data in a RAM buffer on the device.
+By default, this is a circular buffer, meaning that it always contains the most recent data.
+This is used to dump “snapshots” of the trace data, e.g. by using the debugger. This usually only
+allows for short traces, unless you have megabytes of RAM to spare, so it is not suitable for
+profiling. However, it can be quite useful for debugging in combination with breakpoints.
+For example, if you set a breakpoint in an error handler, a snapshot trace can show the sequence
+of events leading up to the error. Snapshot tracing is also easy to begin with, since it doesn’t
+depend on any particular debug probe or other development tool.</p>
+<p>To use the Ring Buffer option, make sure to have the following configuration options in your
+prj.cnf:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_TRACING</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRACERECORDER</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_START_MODE_START</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_RINGBUFFER</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_RINGBUFFER_SIZE</span><span class="o">=</span><span class="s">&lt;size in bytes&gt;</span>
+</pre></div>
+</div>
+<p>Or if using menuconfig:</p>
+<ul class="simple">
+<li><p>Enable <span class="menuselection">Subsystems and OS Services ‣ Tracing Support</span></p></li>
+<li><p>Under <span class="menuselection">Subsystems and OS Services ‣ Tracing Support ‣ Tracing Format</span>, select
+<span class="guilabel">Percepio Tracealyzer</span></p></li>
+<li><p>Under <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ Recorder Start Mode</span>, select
+<span class="guilabel">Start</span></p></li>
+<li><p>Under <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ Stream Port</span>, select
+<span class="guilabel">Ring Buffer</span></p></li>
+<li><p>Under <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ Ring Buffer Config ‣ Buffer Size</span>,
+set the buffer size in bytes.</p></li>
+</ul>
+<p>The default buffer size can be reduced if you are tight on RAM, or increased if you have RAM to
+spare and want longer traces. You may also optimize the Tracing Configuration settings to get
+longer traces by filtering out less important events.
+In menuconfig, see
+<span class="menuselection">Subsystems and OS Services ‣ Tracing Support ‣ Tracing Configuration</span>.</p>
+<p>To view the trace data, the easiest way is to start your debugger (west debug) and run the
+following GDB command:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>dump binary value trace.bin *RecorderDataPtr
+</pre></div>
+</div>
+<p>The resulting file is typically found in the root of the build folder, unless a different path is
+specified. Open this file in Tracealyzer by selecting <span class="menuselection">File ‣ Open ‣ Open File</span>.</p>
+</section>
+<section id="tracealyzer-streaming-with-segger-rtt">
+<h4>Tracealyzer Streaming with SEGGER RTT<a class="headerlink" href="#tracealyzer-streaming-with-segger-rtt" title="Link to this heading"></a></h4>
+<p>Tracealyzer has built-in support for SEGGER RTT to receive trace data using a J-Link probe.
+This allows for recording very long traces. To configure Zephyr for RTT streaming to Tracealyzer,
+add the following configuration options in your prj.cnf:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_TRACING</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRACERECORDER</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_START_MODE_START_FROM_HOST</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_RTT</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_RTT_UP_BUFFER_SIZE</span><span class="o">=</span><span class="s">&lt;size in bytes&gt;</span>
+</pre></div>
+</div>
+<p>Or if using menuconfig:</p>
+<ul class="simple">
+<li><p>Enable <span class="menuselection">Subsystems and OS Services ‣ Tracing Support</span></p></li>
+<li><p>Under <span class="menuselection">Subsystems and OS Services ‣ Tracing Support ‣ Tracing Format</span>, select
+<span class="guilabel">Percepio Tracealyzer</span></p></li>
+<li><p>Under <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ Recorder Start Mode</span>, select
+<span class="guilabel">Start From Host</span></p></li>
+<li><p>Under <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ Stream Port</span>, select
+<span class="guilabel">RTT</span></p></li>
+<li><p>Under <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ RTT Config</span>, set the size of the
+RTT “up” buffer in bytes.</p></li>
+</ul>
+<p>The setting <span class="guilabel">RTT buffer size up</span> sets the size of the RTT transmission buffer. This is important
+for throughput. By default this buffer is quite large, 5000 bytes, to give decent performance
+also on onboard J-Link debuggers (they are not as fast as the stand-alone probes).
+If you are tight on RAM, you may consider reducing this setting. If using a regular J-Link probe
+it is often sufficient with a much smaller buffer, e.g. 1 KB or less.</p>
+<p>Learn more about RTT streaming in the Tracealyzer User Manual.
+See Creating and Loading Traces -&gt; Percepio TraceRecorder -&gt; Using TraceRecorder v4.6 or later -&gt;
+Stream ports (or search for RTT).</p>
+</section>
+<section id="tracealyzer-streaming-with-arm-itm">
+<h4>Tracealyzer Streaming with Arm ITM<a class="headerlink" href="#tracealyzer-streaming-with-arm-itm" title="Link to this heading"></a></h4>
+<p>This stream port is for Arm Cortex-M devices featuring the ITM unit. It is recommended to use a
+fast debug probe that allows for SWO speeds of 10 MHz or higher. To use this stream port,
+apply the following configuration options:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_TRACING</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRACERECORDER</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_START_MODE_START</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_ITM</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_ITM_PORT</span><span class="o">=</span><span class="s">1</span>
+</pre></div>
+</div>
+<p>Or if using menuconfig:</p>
+<ul class="simple">
+<li><p>Enable <span class="menuselection">Subsystems and OS Services ‣ Tracing Support</span></p></li>
+<li><p>Under <span class="menuselection">Subsystems and OS Services ‣ Tracing Support ‣ Tracing Format</span>, select
+<span class="guilabel">Percepio Tracealyzer</span></p></li>
+<li><p>Under <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ Recorder Start Mode</span>, select
+<span class="guilabel">Start</span></p></li>
+<li><p>Under <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ Stream Port</span>, select
+<span class="guilabel">ITM</span></p></li>
+<li><p>Under <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ ITM Config</span>, set the ITM port to
+1.</p></li>
+</ul>
+<p>The main setting for the ITM stream port is the ITM port (0-31). A dedicated channel is needed
+for Tracealyzer. Port 0 is usually reserved for printf logging, so channel 1 is used by default.</p>
+<p>The option <span class="guilabel">Use internal buffer</span> should typically remain disabled. It buffers the data in RAM
+before transmission and defers the data transmission to the periodic TzCtrl thread.</p>
+<p>The host-side setup depends on what debug probe you are using. Learn more in the Tracealyzer
+User Manual.
+See <span class="menuselection">Creating and Loading Traces ‣ Percepio TraceRecorder ‣ Using TraceRecorder v4.6 or later ‣ Stream ports (or search for ITM)</span>.</p>
+</section>
+<section id="tracealyzer-streaming-from-qemu-semihost">
+<h4>Tracealyzer Streaming from QEMU (Semihost)<a class="headerlink" href="#tracealyzer-streaming-from-qemu-semihost" title="Link to this heading"></a></h4>
+<p>This stream port is designed for Zephyr tracing in QEMU. This can be an easy way to get started
+with tracing and try out streaming trace without needing a fast debug probe. The data is streamed
+to a host file using semihosting. To use this option, apply the following configuration options:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_SEMIHOST</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_TRACING</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRACERECORDER</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_START_MODE_START</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_ZEPHYR_SEMIHOST</span><span class="o">=</span><span class="s">y</span>
+</pre></div>
+</div>
+<p>Using menuconfig</p>
+<ul class="simple">
+<li><p>Enable <span class="menuselection">General Architecture Options ‣ Semihosting support for Arm and RISC-V targets</span></p></li>
+<li><p>Enable <span class="menuselection">Subsystems and OS Services ‣ Tracing Support</span></p></li>
+<li><p>Under <span class="menuselection">Subsystems and OS Services ‣ Tracing Support ‣ Tracing Format</span>, select
+<span class="guilabel">Percepio Tracealyzer</span></p></li>
+<li><p>Under <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ Recorder Start Mode</span>, select
+<span class="guilabel">Start</span></p></li>
+<li><p>Under <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ Stream Port</span>, select
+<span class="guilabel">Semihost</span></p></li>
+</ul>
+<p>By default, the resulting trace file is found in <code class="file docutils literal notranslate"><span class="pre">./trace.psf</span></code> in the root of the build folder,
+unless a different path is specified. Open this file in <a class="reference external" href="https://percepio.com/tracealyzer">Percepio Tracealyzer</a> by selecting
+<span class="menuselection">File ‣ Open ‣ Open File</span>.</p>
+</section>
+<section id="recorder-start-mode">
+<h4>Recorder Start Mode<a class="headerlink" href="#recorder-start-mode" title="Link to this heading"></a></h4>
+<p>You may have noticed the <span class="guilabel">Recorder Start Mode</span> option in the Tracealyzer examples above.
+This decides when the tracing starts. With the option <span class="guilabel">Start</span>, the tracing begins directly
+at startup, once the TraceRecorder library has been initialized. This is recommended when using the
+Ring Buffer and Semihost stream ports.</p>
+<p>For streaming via RTT or ITM you may also use <span class="guilabel">Start From Host</span> or
+<span class="guilabel">Start Await Host</span>. Both listens for start commands from the Tracealyzer application. The
+latter option, <span class="guilabel">Start Await Host</span>, causes the TraceRecorder initialization to block until
+the start command is received from the Tracealyzer application.</p>
+</section>
+<section id="custom-stream-ports-for-tracealyzer">
+<h4>Custom Stream Ports for Tracealyzer<a class="headerlink" href="#custom-stream-ports-for-tracealyzer" title="Link to this heading"></a></h4>
+<p>The stream ports are small modules within TraceRecorder that define what functions to call to
+output the trace data and (optionally) how to read start/stop commands from Tracealyzer.
+It is fairly easy to make custom stream ports to implement your own data transport and
+Tracealyzer can receive trace streams over various interfaces, including files, sockets,
+COM ports, named pipes and more. Note that additional stream port modules are available in the
+TraceRecorder repo (e.g. lwIP), although they might require modifications to work with Zephyr.</p>
+</section>
+<section id="learning-more">
+<h4>Learning More<a class="headerlink" href="#learning-more" title="Link to this heading"></a></h4>
+<p>Learn more about how to get started in the <a class="reference external" href="https://percepio.com/tracealyzer/gettingstarted/">Tracealyzer Getting Started Guides</a>.</p>
+</section>
+</section>
+<section id="percepio-view-for-zephyr">
+<h3>Percepio View for Zephyr<a class="headerlink" href="#percepio-view-for-zephyr" title="Link to this heading"></a></h3>
+<p>Percepio View is a free-of-charge tracing tool based on <a class="reference external" href="https://percepio.com/tracealyzer">Percepio Tracealyzer</a>, intended for
+debugging and verification of Zephyr applications.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../_images/percepio_view.webp"><img alt="Percepio View" src="../../_images/percepio_view.webp" style="width: 80%;" />
+</a>
+</figure>
+<p>Percepio View can be used side-by-side with a traditional debugger and complements your debugger
+by visualising the real-time execution of threads, ISRs, syscalls and your own “User Events”.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../_images/percepio_view_user_event.webp"><img alt="Percepio View User Events" src="../../_images/percepio_view_user_event.webp" style="width: 80%;" />
+</a>
+</figure>
+<p>To learn more about Percepio View, how to get started and upgrade options, check out
+<a class="reference external" href="https://traceviewer.io/get-view/?target=zephyr">Percepio’s product page</a>.</p>
+<p>Percepio View provides snapshot tracing, meaning the data is stored to a ring-buffer in target RAM
+and is saved to host using the regular debugger connection.
+For trace streaming support, Percepio offers (paid-for) upgrades to Percepio Profile or
+Percepio Tracealyzer. No modifications of the Zephyr source code are needed, only enabling the
+TraceRecorder library in Kconfig. Percepio View runs on Windows and Linux hosts.</p>
+</section>
+<section id="segger-systemview-support">
+<h3>SEGGER SystemView Support<a class="headerlink" href="#segger-systemview-support" title="Link to this heading"></a></h3>
+<p>Zephyr provides built-in support for <a class="reference external" href="https://www.segger.com/products/development-tools/systemview/">SEGGER SystemView</a> that can be enabled in
+any application for platforms that have the required hardware support.</p>
+<p>The payload and format used with SystemView is custom to the application and
+relies on RTT as a transport. Newer versions of SystemView support other
+transports, for example UART or using snapshot mode (both still not
+supported in Zephyr).</p>
+<p>To enable tracing support with <a class="reference external" href="https://www.segger.com/products/development-tools/systemview/">SEGGER SystemView</a> add the
+<a class="reference internal" href="../../snippets/rtt-tracing/README.html#snippet-rtt-tracing"><span class="std std-ref">SystemView RTT Tracing Snippet (rtt-tracing)</span></a> to your build command:</p>
+<blockquote>
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>&lt;board&gt;<span class="w"> </span>-S<span class="w"> </span>rtt-tracing<span class="w"> </span>samples/synchronization
+</pre></div>
+</div>
+</div></blockquote>
+<p>SystemView can also be used for post-mortem tracing, which can be enabled with
+<a class="reference internal" href="../../kconfig.html#CONFIG_SEGGER_SYSVIEW_POST_MORTEM_MODE" title="CONFIG_SEGGER_SYSVIEW_POST_MORTEM_MODE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SEGGER_SYSVIEW_POST_MORTEM_MODE</span></code></a>. In this mode, a debugger can
+be attached after the system has crashed using <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">attach</span></code> after which the
+latest data from the internal RAM buffer can be loaded into SystemView.</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../_images/segger_systemview.png"><img alt="SEGGER SystemView" src="../../_images/segger_systemview.png" style="width: 80%;" />
+</a>
+</figure>
+<p>Recent versions of <a class="reference external" href="https://www.segger.com/products/development-tools/systemview/">SEGGER SystemView</a> come with an API translation table for
+Zephyr which is incomplete and does not match the current level of support
+available in Zephyr. To use the latest Zephyr API description table, copy the
+file available in the tree to your local configuration directory to override the
+builtin table:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># On Linux and MacOS
+cp $ZEPHYR_BASE/subsys/tracing/sysview/SYSVIEW_Zephyr.txt ~/.config/SEGGER/
+</pre></div>
+</div>
+</section>
+<section id="tracecompass">
+<h3>TraceCompass<a class="headerlink" href="#tracecompass" title="Link to this heading"></a></h3>
+<p>TraceCompass is an open source tool that visualizes CTF events such as thread
+scheduling and interrupts, and is helpful to find unintended interactions and
+resource conflicts on complex systems.</p>
+<p>See also the presentation by Ericsson,
+<a class="reference external" href="https://wiki.eclipse.org/images/0/0e/TechTalkOnlineDemoFeb2017_v1.pdf">Advanced Trouble-shooting Of Real-time Systems</a>.</p>
+</section>
+<section id="user-defined-tracing">
+<h3>User-Defined Tracing<a class="headerlink" href="#user-defined-tracing" title="Link to this heading"></a></h3>
+<p>This tracing format allows the user to define functions to perform any work desired
+when a task is switched in or out, when an interrupt is entered or exited, and when the cpu
+is idle.</p>
+<p>Examples include:
+- simple toggling of GPIO for external scope tracing while minimizing extra cpu load
+- generating/outputting trace data in a non-standard or proprietary format that can
+not be supported by the other tracing systems</p>
+<p>The following functions can be defined by the user:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">sys_trace_thread_create_user</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_thread</span><span class="w"> </span><span class="o">*</span><span class="kr">thread</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">sys_trace_thread_abort_user</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_thread</span><span class="w"> </span><span class="o">*</span><span class="kr">thread</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">sys_trace_thread_suspend_user</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_thread</span><span class="w"> </span><span class="o">*</span><span class="kr">thread</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">sys_trace_thread_resume_user</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_thread</span><span class="w"> </span><span class="o">*</span><span class="kr">thread</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">sys_trace_thread_name_set_user</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_thread</span><span class="w"> </span><span class="o">*</span><span class="kr">thread</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">sys_trace_thread_switched_in_user</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_thread</span><span class="w"> </span><span class="o">*</span><span class="kr">thread</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">sys_trace_thread_switched_out_user</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_thread</span><span class="w"> </span><span class="o">*</span><span class="kr">thread</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">sys_trace_thread_info_user</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_thread</span><span class="w"> </span><span class="o">*</span><span class="kr">thread</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">sys_trace_thread_sched_ready_user</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_thread</span><span class="w"> </span><span class="o">*</span><span class="kr">thread</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">sys_trace_thread_pend_user</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_thread</span><span class="w"> </span><span class="o">*</span><span class="kr">thread</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">sys_trace_thread_priority_set_user</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_thread</span><span class="w"> </span><span class="o">*</span><span class="kr">thread</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">prio</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">sys_trace_isr_enter_user</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">nested_interrupts</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">sys_trace_isr_exit_user</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">nested_interrupts</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">sys_trace_idle_user</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Enable this format with the <a class="reference internal" href="../../kconfig.html#CONFIG_TRACING_USER" title="CONFIG_TRACING_USER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TRACING_USER</span></code></a> option.</p>
+</section>
+</section>
+<section id="transport-backends">
+<h2>Transport Backends<a class="headerlink" href="#transport-backends" title="Link to this heading"></a></h2>
+<p>The following backends are currently supported:</p>
+<ul class="simple">
+<li><p>UART</p></li>
+<li><p>USB</p></li>
+<li><p>File (Using the native port with POSIX architecture based targets)</p></li>
+<li><p>RTT (With SystemView)</p></li>
+<li><p>RAM (buffer to be retrieved by a debugger)</p></li>
+</ul>
+</section>
+<section id="using-tracing">
+<h2>Using Tracing<a class="headerlink" href="#using-tracing" title="Link to this heading"></a></h2>
+<p>The sample <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/samples/subsys/tracing">samples/subsys/tracing</a> demonstrates tracing with
+different formats and backends.</p>
+<p>To get started, the simplest way is to use the CTF format with the
+<a class="reference internal" href="../../boards/native/native_sim/doc/index.html#native_sim"><span class="xref zephyr zephyr-board">native_sim</span></a> port, build the sample as follows:</p>
+<p>Using west:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>native_sim<span class="w"> </span>samples/subsys/tracing<span class="w"> </span>--<span class="w"> </span>-DCONF_FILE<span class="o">=</span>prj_native_ctf.conf
+</pre></div>
+</div>
+<p>Using CMake and ninja:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+<span class="c1"># Use cmake to configure a Ninja-based buildsystem:</span>
+cmake<span class="w"> </span>-Bbuild<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>native_sim<span class="w"> </span>-DCONF_FILE<span class="o">=</span>prj_native_ctf.conf<span class="w"> </span>samples/subsys/tracing
+
+<span class="c1"># Now run the build tool on the generated build system:</span>
+ninja<span class="w"> </span>-Cbuild
+</pre></div>
+</div>
+<p>You can then run the resulting binary with the option <code class="docutils literal notranslate"><span class="pre">-trace-file</span></code> to generate
+the tracing data:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>mkdir data
+cp $ZEPHYR_BASE/subsys/tracing/ctf/tsdl/metadata data/
+./build/zephyr/zephyr.exe -trace-file=data/channel0_0
+</pre></div>
+</div>
+<p>The resulting CTF output can be visualized using babeltrace or TraceCompass
+by pointing the tool to the <code class="docutils literal notranslate"><span class="pre">data</span></code> directory with the metadata and trace files.</p>
+<section id="using-ram-backend">
+<h3>Using RAM backend<a class="headerlink" href="#using-ram-backend" title="Link to this heading"></a></h3>
+<p>For devices that do not have available I/O for tracing such as USB or UART but have
+enough RAM to collect trace data, the ram backend can be enabled with configuration
+<a class="reference internal" href="../../kconfig.html#CONFIG_TRACING_BACKEND_RAM" title="CONFIG_TRACING_BACKEND_RAM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TRACING_BACKEND_RAM</span></code></a>.
+Adjust <a class="reference internal" href="../../kconfig.html#CONFIG_RAM_TRACING_BUFFER_SIZE" title="CONFIG_RAM_TRACING_BUFFER_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_RAM_TRACING_BUFFER_SIZE</span></code></a> to be able to record enough traces for your needs.
+Then thanks to a runtime debugger such as gdb this buffer can be fetched from the target
+to an host computer:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(gdb) dump binary memory data/channel0_0 &lt;ram_tracing_start&gt; &lt;ram_tracing_end&gt;
+</pre></div>
+</div>
+<p>The resulting channel0_0 file have to be placed in a directory with the <code class="docutils literal notranslate"><span class="pre">metadata</span></code>
+file like the other backend.</p>
+</section>
+</section>
+<section id="future-lttng-inspiration">
+<h2>Future LTTng Inspiration<a class="headerlink" href="#future-lttng-inspiration" title="Link to this heading"></a></h2>
+<p>Currently, the top-layer provided here is quite simple and bare-bones,
+and needlessly copied from Zephyr’s Segger SystemView debug module.</p>
+<p>For an OS like Zephyr, it would make sense to draw inspiration from
+Linux’s LTTng and change the top-layer to serialize to the same format.
+Doing this would enable direct reuse of TraceCompass’ canned analyses
+for Linux.  Alternatively, LTTng-analyses in TraceCompass could be
+customized to Zephyr.  It is ongoing work to enable TraceCompass
+visibility of Zephyr in a target-agnostic and open source way.</p>
+<section id="i-o-taxonomy">
+<h3>I/O Taxonomy<a class="headerlink" href="#i-o-taxonomy" title="Link to this heading"></a></h3>
+<ul>
+<li><p>Atomic Push/Produce/Write/Enqueue:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>synchronous:</dt><dd><p>means data-transmission has completed with the return of the
+call.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>asynchronous:</dt><dd><p>means data-transmission is pending or ongoing with the return
+of the call. Usually, interrupts/callbacks/signals or polling
+is used to determine completion.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>buffered:</dt><dd><p>means data-transmissions are copied and grouped together to
+form a larger ones. Usually for amortizing overhead (burst
+dequeue) or jitter-mitigation (steady dequeue).</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="simple">
+<dt>Examples:</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>sync  unbuffered</dt><dd><p>E.g. PIO via GPIOs having steady stream, no extra FIFO memory needed.
+Low jitter but may be less efficient (can’t amortize the overhead of
+writing).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>sync  buffered</dt><dd><p>E.g. <code class="docutils literal notranslate"><span class="pre">fwrite()</span></code> or enqueuing into FIFO.
+Blockingly burst the FIFO when its buffer-waterlevel exceeds threshold.
+Jitter due to bursts may lead to missed deadlines.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>async unbuffered</dt><dd><p>E.g. DMA, or zero-copying in shared memory.
+Be careful of data hazards, race conditions, etc!</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>async buffered</dt><dd><p>E.g. enqueuing into FIFO.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Atomic Pull/Consume/Read/Dequeue:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>synchronous:</dt><dd><p>means data-reception has completed with the return of the call.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>asynchronous:</dt><dd><p>means data-reception is pending or ongoing with the return of
+the call. Usually, interrupts/callbacks/signals or polling is
+used to determine completion.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>buffered:</dt><dd><p>means data is copied-in in larger chunks than request-size.
+Usually for amortizing wait-time.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="simple">
+<dt>Examples:</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>sync  unbuffered</dt><dd><p>E.g. Blocking read-call, <code class="docutils literal notranslate"><span class="pre">fread()</span></code> or SPI-read, zero-copying in shared
+memory.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>sync  buffered</dt><dd><p>E.g. Blocking read-call with caching applied.
+Makes sense if read pattern exhibits spatial locality.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>async unbuffered</dt><dd><p>E.g. zero-copying in shared memory.
+Be careful of data hazards, race conditions, etc!</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>async buffered</dt><dd><p>E.g. <code class="docutils literal notranslate"><span class="pre">aio_read()</span></code> or DMA.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Unfortunately, I/O may not be atomic and may, therefore, require locking.
+Locking may not be needed if multiple independent channels are available.</p>
+<blockquote>
+<div><ul>
+<li><dl>
+<dt>The system has non-atomic write and one shared channel</dt><dd><p>E.g. UART. Locking required.</p>
+<p><code class="docutils literal notranslate"><span class="pre">lock();</span> <span class="pre">emit(a);</span> <span class="pre">emit(b);</span> <span class="pre">emit(c);</span> <span class="pre">release();</span></code></p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>The system has non-atomic write but many channels</dt><dd><p>E.g. Multi-UART. Lock-free if the bottom-layer maps each Zephyr
+thread+ISR to its own channel, thus alleviating races as each
+thread is sequentially consistent with itself.</p>
+<p><code class="docutils literal notranslate"><span class="pre">emit(a,thread_id);</span> <span class="pre">emit(b,thread_id);</span> <span class="pre">emit(c,thread_id);</span></code></p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>The system has atomic write     but one shared channel</dt><dd><p>E.g. <code class="docutils literal notranslate"><span class="pre">native_sim</span></code> or board with DMA. May or may not need locking.</p>
+<p><code class="docutils literal notranslate"><span class="pre">emit(a</span> <span class="pre">##</span> <span class="pre">b</span> <span class="pre">##</span> <span class="pre">c);</span> <span class="pre">/*</span> <span class="pre">Concat</span> <span class="pre">to</span> <span class="pre">buffer</span> <span class="pre">*/</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">lock();</span> <span class="pre">emit(a);</span> <span class="pre">emit(b);</span> <span class="pre">emit(c);</span> <span class="pre">release();</span> <span class="pre">/*</span> <span class="pre">No</span> <span class="pre">extra</span> <span class="pre">mem</span> <span class="pre">*/</span></code></p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>The system has atomic write     and many channels</dt><dd><p>E.g. native_sim or board with multi-channel DMA. Lock-free.</p>
+<p><code class="docutils literal notranslate"><span class="pre">emit(a</span> <span class="pre">##</span> <span class="pre">b</span> <span class="pre">##</span> <span class="pre">c,</span> <span class="pre">thread_id);</span></code></p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<section id="object-tracking">
+<h2>Object tracking<a class="headerlink" href="#object-tracking" title="Link to this heading"></a></h2>
+<p>The kernel can also maintain lists of objects that can be used to track
+their usage. Currently, the following lists can be enabled:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct k_timer *_track_list_k_timer;
+struct k_mem_slab *_track_list_k_mem_slab;
+struct k_sem *_track_list_k_sem;
+struct k_mutex *_track_list_k_mutex;
+struct k_stack *_track_list_k_stack;
+struct k_msgq *_track_list_k_msgq;
+struct k_mbox *_track_list_k_mbox;
+struct k_pipe *_track_list_k_pipe;
+struct k_queue *_track_list_k_queue;
+struct k_event *_track_list_k_event;
+</pre></div>
+</div>
+<p>Those global variables are the head of each list - they can be traversed
+with the help of macro <code class="docutils literal notranslate"><span class="pre">SYS_PORT_TRACK_NEXT</span></code>. For instance, to traverse
+all initialized mutexes, one can write:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>struct k_mutex *cur = _track_list_k_mutex;
+while (cur != NULL) {
+  /* Do something */
+
+  cur = SYS_PORT_TRACK_NEXT(cur);
+}
+</pre></div>
+</div>
+<p>To enable object tracking, enable <a class="reference internal" href="../../kconfig.html#CONFIG_TRACING_OBJECT_TRACKING" title="CONFIG_TRACING_OBJECT_TRACKING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TRACING_OBJECT_TRACKING</span></code></a>.
+Note that each list can be enabled or disabled via their tracing
+configuration. For example, to disable tracking of semaphores, one can
+disable <a class="reference internal" href="../../kconfig.html#CONFIG_TRACING_SEMAPHORE" title="CONFIG_TRACING_SEMAPHORE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TRACING_SEMAPHORE</span></code></a>.</p>
+<p>Object tracking is behind tracing configuration as it currently leverages
+tracing infrastructure to perform the tracking.</p>
+</section>
+<section id="api">
+<h2>API<a class="headerlink" href="#api" title="Link to this heading"></a></h2>
+<section id="common">
+<h3>Common<a class="headerlink" href="#common" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__subsys__tracing__apis.html" title=""><span class="pre">Tracing</span> <span class="pre">hooks</span></a></dt>
+</dl>
+
+</section>
+<section id="threads">
+<h3>Threads<a class="headerlink" href="#threads" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__subsys__tracing__apis__thread.html" title=""><span class="pre">Thread</span></a></dt>
+</dl>
+
+</section>
+<section id="work-queues">
+<h3>Work Queues<a class="headerlink" href="#work-queues" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__subsys__tracing__apis__work.html" title=""><span class="pre">Work</span> <span class="pre">item</span></a></dt>
+</dl>
+
+</section>
+<section id="poll">
+<h3>Poll<a class="headerlink" href="#poll" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__subsys__tracing__apis__poll.html" title=""><span class="pre">Polling</span></a></dt>
+</dl>
+
+</section>
+<section id="semaphore">
+<h3>Semaphore<a class="headerlink" href="#semaphore" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__subsys__tracing__apis__sem.html" title=""><span class="pre">Semaphore</span></a></dt>
+</dl>
+
+</section>
+<section id="mutex">
+<h3>Mutex<a class="headerlink" href="#mutex" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__subsys__tracing__apis__mutex.html" title=""><span class="pre">Mutex</span></a></dt>
+</dl>
+
+</section>
+<section id="condition-variables">
+<h3>Condition Variables<a class="headerlink" href="#condition-variables" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__subsys__tracing__apis__condvar.html" title=""><span class="pre">Conditional</span> <span class="pre">variable</span></a></dt>
+</dl>
+
+</section>
+<section id="queues">
+<h3>Queues<a class="headerlink" href="#queues" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__subsys__tracing__apis__queue.html" title=""><span class="pre">Queue</span></a></dt>
+</dl>
+
+</section>
+<section id="fifo">
+<h3>FIFO<a class="headerlink" href="#fifo" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__subsys__tracing__apis__fifo.html" title=""><span class="pre">FIFO</span></a></dt>
+</dl>
+
+</section>
+<section id="lifo">
+<h3>LIFO<a class="headerlink" href="#lifo" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__subsys__tracing__apis__lifo.html" title=""><span class="pre">LIFO</span></a></dt>
+</dl>
+
+</section>
+<section id="stacks">
+<h3>Stacks<a class="headerlink" href="#stacks" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__subsys__tracing__apis__stack.html" title=""><span class="pre">Stack</span></a></dt>
+</dl>
+
+</section>
+<section id="message-queues">
+<h3>Message Queues<a class="headerlink" href="#message-queues" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__subsys__tracing__apis__msgq.html" title=""><span class="pre">Message</span> <span class="pre">queue</span></a></dt>
+</dl>
+
+</section>
+<section id="mailbox">
+<h3>Mailbox<a class="headerlink" href="#mailbox" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__subsys__tracing__apis__mbox.html" title=""><span class="pre">Mailbox</span></a></dt>
+</dl>
+
+</section>
+<section id="pipes">
+<h3>Pipes<a class="headerlink" href="#pipes" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__subsys__tracing__apis__pipe.html" title=""><span class="pre">Pipe</span></a></dt>
+</dl>
+
+</section>
+<section id="heaps">
+<h3>Heaps<a class="headerlink" href="#heaps" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__subsys__tracing__apis__heap.html" title=""><span class="pre">Heap</span></a></dt>
+</dl>
+
+</section>
+<section id="memory-slabs">
+<h3>Memory Slabs<a class="headerlink" href="#memory-slabs" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__subsys__tracing__apis__mslab.html" title=""><span class="pre">Memory</span> <span class="pre">slab</span></a></dt>
+</dl>
+
+</section>
+<section id="timers">
+<h3>Timers<a class="headerlink" href="#timers" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__subsys__tracing__apis__timer.html" title=""><span class="pre">Timer</span></a></dt>
+</dl>
+
+</section>
+<section id="id2">
+<h3>Object tracking<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__subsys__tracing__object__tracking.html" title=""><span class="pre">Object</span> <span class="pre">tracking</span></a></dt>
+</dl>
+
+</section>
+<section id="syscalls">
+<h3>Syscalls<a class="headerlink" href="#syscalls" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__subsys__tracing__apis__syscall.html" title=""><span class="pre">Syscall</span> <span class="pre">Tracing</span></a></dt>
+</dl>
+
+</section>
+<section id="network-tracing">
+<h3>Network tracing<a class="headerlink" href="#network-tracing" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__subsys__tracing__apis__net.html" title=""><span class="pre">Network</span></a></dt>
+</dl>
+
+</section>
+<section id="network-socket-tracing">
+<h3>Network socket tracing<a class="headerlink" href="#network-socket-tracing" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__subsys__tracing__apis__socket.html" title=""><span class="pre">Network</span> <span class="pre">socket</span></a></dt>
+</dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

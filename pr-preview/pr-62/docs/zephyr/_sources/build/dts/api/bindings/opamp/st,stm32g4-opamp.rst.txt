@@ -1,0 +1,861 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: st,stm32g4-opamp
+.. _dtbinding_st_stm32g4_opamp:
+
+st,stm32g4-opamp
+################
+
+.. sidebar:: Overview
+
+   :Name: ``st,stm32g4-opamp``
+   :Vendor: :ref:`STMicroelectronics <dt_vendor_st>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=st,stm32g4-opamp>` using
+               this compatible
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   STM32G4 OPAMP (Operational Amplifier)
+
+   One OPAMP has two inputs and one output. The three I/Os can be connected
+   to the external pins, enabling any type of external interconnection.
+   An OPAMP can be configured internally:
+     - standalone amplifier (external gain setting mode)
+     - follower
+     - non-inverting amplifier with gains ranging from 2 to 64
+     - inverting amplifier with gains ranging from -1 to -63
+
+   The positive input (INP) can be connected to the internal DAC.
+   The output (VOUT) can be connected to the internal ADC.
+
+   Main features:
+     - Rail-to-rail input voltage range
+     - Low input bias current
+     - Low input offset voltage
+     - High frequency gain bandwidth
+     - High-speed mode to achieve a better slew rate
+     - Self calibration support for better offset voltage adjustment
+       of the input NMOS and PMOS transistors
+
+   Minimal DTS examples for OPAMP2:
+
+     - Standalone amplifier (external gain):
+       ```
+       &opamp2 {
+         pinctrl-0 = <&opamp2_vinm_pa5 &opamp2_vinp_pa7 &opamp2_vout_pa6>;
+         pinctrl-names = "default";
+         functional-mode = "standalone";
+         inp = "VINP0";
+         status = "okay";
+       };
+       ```
+       NOTES: Following points regarding standalone mode are to be considered:
+         - inm is tied to VINM0 independently of the value provided in DTS
+
+     - Follower (voltage buffer):
+       ```
+       &opamp2 {
+         pinctrl-0 = <&opamp2_vout_pa6>;
+         pinctrl-names = "default";
+         functional-mode = "follower";
+         inp = "DAC";
+         status = "okay";
+       };
+       ```
+
+     - Non-inverting PGA (gain 2..64):
+       ```
+       &opamp2 {
+         pinctrl-0 = <&opamp2_vinp_pb14 &opamp2_vout_pa6>;
+         pinctrl-names = "default";
+         functional-mode = "non_inverting";
+         inp = "VINP1";
+         status = "okay";
+       };
+       ```
+
+     - Inverting PGA (gain -1..-63):
+       ```
+       &opamp2 {
+         pinctrl-0 = <&opamp2_vinm_pc5 &opamp2_vinp_pb0
+                      &opamp2_vout_pa6>;
+         pinctrl-names = "default";
+         functional-mode = "inverting";
+         inp = "VINP2"; /* shall be routed to external bias voltage */
+         inm = "VINM0"; /* VINM0 is only allowed choice */
+         status = "okay";
+       };
+       ```
+
+   Timer-controlled input MUX (non-inverting PGA):
+     - Switch between VINP0 and VINP3 on TIM1_CH6 trigger.
+     ```
+     &opamp2 {
+       pinctrl-0 = <&opamp2_vinm_pa5 &opamp2_vinm_pc5
+                    &opamp2_vinp_pa7 &opamp2_vout_pa6>;
+       pinctrl-names = "default";
+       functional-mode = "standalone";
+       st,inputs-mux-mode = "TIM1_CH6";
+       inp = "VINP0", "VINP3";
+       status = "okay";
+     };
+     ```
+
+   Usage with an ADC:
+     ```
+     / {
+         zephyr,user {
+           opamp = <&opamp2>;
+         };
+       };
+
+       &adc2 {
+         st,adc-clock-source = "SYNC";
+         st,adc-prescaler = <4>;
+         status = "okay";
+
+         #address-cells = <1>;
+         #size-cells = <0>;
+
+         channel@3 {
+           reg = <3>;
+           zephyr,gain = "ADC_GAIN_1";
+           zephyr,reference = "ADC_REF_INTERNAL";
+           zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+           zephyr,resolution = <12>;
+           zephyr,vref-mv = <3300>;
+         };
+       };
+
+       &opamp2 {
+         pinctrl-0 = <&opamp2_vinm_pa5 &opamp2_vinp_pa7>;
+         pinctrl-names = "default";
+         functional-mode = "non_inverting";
+         inm = "VINM0";
+         inp = "VINP0";
+         io-channels = <&adc2 3>;
+         status = "okay";
+       };
+       ```
+     NOTE: ADC can be read from the code with usual ADC API.
+
+   NOTE: It is highly recommended to take a look at RM0440 Rev 9 and AN5306
+         for more details about STM32G4 OPAMP features and usage.
+
+   References:
+     - AN5306:
+       https://www.st.com/resource/en/application_note/an5306-operational-amplifier-opamp-usage-in-stm32g4-series-stmicroelectronics.pdf
+     - RM0440 Rev 9:
+       https://www.st.com/content/ccc/resource/technical/document/reference_manual/group0/7c/b0/25/29/1b/a2/42/b2/DM00355726/files/DM00355726.pdf/jcr:content/translations/en.DM00355726.pdf
+
+Properties
+**********
+
+.. tabs::
+
+   .. group-tab:: Node specific properties
+
+      Properties not inherited from the base binding file.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``st,power-mode``
+           - ``string``
+           - .. code-block:: none
+
+                OPAMP power mode has impact on slew-rate:
+                  - NORMAL - slew-rate 6.5 V/µs with low power consumption.
+                  - HIGHSPEED - slew-rate 45 V/µs with higher power consumption.
+                source: https://www.st.com/resource/en/product_training/STM32G4-Analog-OPAMP_OPAMP.pdf
+
+
+
+             Default value: ``NORMAL``
+
+             Legal values: ``NORMAL``, ``HIGHSPEED``
+
+         * - ``st,lock-enable``
+           - ``boolean``
+           - .. code-block:: none
+
+                Lock the OPAMP configuration after it has been configured by the driver.
+                Resetting the lock mode can only be done by a system reset.
+                If not set, the OPAMP configuration will be unlocked by default.
+                The lock property is used to prevent accidental changes to the OPAMP
+                configuration after it has been set.
+                NOTES:
+                  - In st,inputs-mux-mode the timer mux register will be locked too
+
+
+
+         * - ``st,enable-self-calibration``
+           - ``boolean``
+           - .. code-block:: none
+
+                Enable self-calibration mode.
+                If not set, the self-calibration mode will be disabled by default.
+                The self-calibration mode is used to calibrate the OPAMP for optimal
+                performance.
+                NOTES:
+                  - This step will be executed at OPAMP initialization
+
+
+
+         * - ``inp``
+           - ``string-array``
+           - .. code-block:: none
+
+                Non-Inverting input selection.
+                Please refer to RM0440 Rev 9, Table 204. pp. 777/2140 for more details.
+                NOTES:
+                  - Selecting st,inputs-mux-mode expects secondary input entry too
+
+
+
+             This property is **required**.
+
+             Legal values: ``VINP0``, ``VINP1``, ``VINP2``, ``VINP3``, ``DAC``
+
+         * - ``inm``
+           - ``string-array``
+           - .. code-block:: none
+
+                Inverting input selection.
+                Please refer to RM0440 Rev 9, Table 204. pp. 777/2140 for more details.
+                NOTES:
+                  - In case st,inputs-mux-mode is selected:
+                    * In standalone mode muxed between VINM0 and VINM1 (VM_SEL = '00' or '01')
+                    * In inverting/non_inverting (VM_SEL = '10') or follower (VM_SEL = '11') mode
+                      muxed between resistor feedback and VOUT.
+                      Basically, multiplexing happens between PGA and follower modes.
+                      ATTENTION: No VINM0/VINM1 multiplexing happens here!
+                  - The values in the array shall be ordered (e.g. VINM0, VINM1)
+
+
+
+             Legal values: ``VINM0``, ``VINM1``
+
+         * - ``st,inm-filtering``
+           - ``string``
+           - .. code-block:: none
+
+                Inverting input filtering selection.
+                Please refer to RM0440 Rev 9 pp. 783-784/2140 for more details.
+                NOTES:
+                  - Only applicable in inverting/non_inverting PGA modes
+
+
+
+             Default value: ``NONE``
+
+             Legal values: ``NONE``, ``VINM0``, ``VINM1``
+
+         * - ``st,inputs-mux-mode``
+           - ``string``
+           - .. code-block:: none
+
+                Timer controlled multiplexer mode.
+                The selection of the OPAMP inverting and non inverting inputs can be done automatically. In
+                this case, the switch from one input to another is done automatically. This automatic switch
+                is triggered by the TIM1 CC6 or TIM8 CC6 or TIM20 CC6 output arriving on the OPAMP
+                input multiplexers.
+                This is useful for dual motor control with a need to measure the currents on the 3 phases
+                simultaneously on a first motor and then on the second motor.
+                Please refer to RM0440 Rev 9, 25.3.8 Timer controlled Multiplexer mode, pp. 786/2140
+
+
+
+             Default value: ``DISABLE``
+
+             Legal values: ``DISABLE``, ``TIM1_CH6``, ``TIM8_CH6``, ``TIM20_CH6``
+
+         * - ``st,pmos-trimming-value``
+           - ``int``
+           - .. code-block:: none
+
+                OPAMP PMOS transistor offset trimming value.
+                The value will be applied directly to TRIMOFFSETP[4:0] (Bits 23:19 in OPAMPx_CST register).
+                If value is present and self-calibration is enabled, this value will overwrite values
+                calculated during self-calibration.
+                Please refer to RM0440 Rev 9, pp. 789/2140 for more details.
+                NOTE: Acceptable range is 0x00 to 0x1f.
+
+
+
+         * - ``st,nmos-trimming-value``
+           - ``int``
+           - .. code-block:: none
+
+                OPAMP NMOS transistor offset trimming value.
+                The value will be applied directly to TRIMOFFSETN[4:0] (Bits 28:24 in OPAMPx_CST register).
+                If value is present and self-calibration is enabled, this value will overwrite values
+                calculated during self-calibration.
+                Please refer to RM0440 Rev 9, pp. 789/2140 for more details.
+                NOTE: Acceptable range is 0x00 to 0x1f.
+
+
+
+         * - ``pinctrl-0``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the first state. Content is specific to the
+                selected pin controller driver implementation.
+
+
+
+             This property is **required**.
+
+         * - ``pinctrl-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Names for the provided states. The number of names needs to match the
+                number of states.
+
+
+
+             This property is **required**.
+
+         * - ``functional-mode``
+           - ``string``
+           - .. code-block:: none
+
+                Selects opamp functional mode.
+
+                a) differential mode
+
+                - Signals applied to both inputs
+                - Amplifies the difference between two input signals
+                - Common-mode signals are rejected
+                - Used in instrumentation and noise rejection
+                - Vout = (Rf/Rin) * (Vin2 - Vin1), where Rf is the feedback resistor
+                  and Rin is the input resistor, with gain (Rf/Rin)
+
+                         Rin        Rf
+                Vin1 --/\/\/\--*--/\/\/\-----
+                               |            |
+                               |     |\     |
+                               ------|- \   |
+                                     |   >--*-- Vout
+                               ------|+ /
+                               |     |/
+                               |
+                Vin2 --/\/\/\--*--/\/\/\-----
+                         Rin        Rf      |
+                                           GND
+
+                b) inverting mode
+
+                - Input signal applied to inverting (-) terminal
+                - Non-inverting (+) terminal connected to ground
+                - Feedback resistor connects output to inverting input
+                - Output is 180° out of phase with input
+                - Vout = (-Rf/Rin) * Vin, where Rf is the feedback resistor
+                  and Rin is the input resistor, s.t. gain is (-Rf/Rin)
+
+                        Rin        Rf
+                Vin --/\/\/\--*--/\/\/\-----
+                              |            |
+                              |     |\     |
+                              ------|- \   |
+                                    |   >--*-- Vout
+                              ------|+ /
+                              |     |/
+                            GND
+
+                c) non_inverting mode
+
+                - Input signal applied to non-inverting (+) terminal
+                - Inverting (-) terminal connected to feedback network
+                - Output is in phase with input
+                - Vout = (1 + (Rf/Rin)) * Vin, where Rf is the feedback resistor
+                  and Rin is the input resistor, s.t. gain is (1 + (Rf/Rin))
+
+                      Rin        Rf
+                 |--/\/\/\--*--/\/\/\-----
+                 |          |            |
+                GND         |     |\     |
+                            ------|- \   |
+                                  |   >--*-- Vout
+                        Vin ------|+ /
+                                  |/
+
+                d) follower mode (voltage follower or buffer)
+
+                - Special case of non-inverting amplifier
+                - Vout = 1 * Vin, s.t. gain is 1
+                - Direct feedback from output to inverting input
+                - Very high input impedance, very low output impedance
+                - Used for impedance matching
+
+                    --------------
+                    |            |
+                    |     |\     |
+                    ------|- \   |
+                          |   >--*-- Vout
+                Vin ------|+ /
+                          |/
+
+                e) standalone mode
+
+                - The opamp mode is defined by external circuitry
+
+                          |\
+                Vin- -----|- \
+                          |   >---- Vout
+                Vin+ -----|+ /
+                          |/
+
+                References:
+                  - https://www.electronics-tutorials.ws/category/opamp
+
+
+
+             This property is **required**.
+
+             Legal values: ``differential``, ``inverting``, ``non_inverting``, ``follower``, ``standalone``
+
+         * - ``programmable-gain``
+           - ``string-array``
+           - .. code-block:: none
+
+                If the OPAMP supports programmable gain, then the gain of
+                the opamp can be changed dynamically at runtime. The gain
+                value needs to be one of the enumerations above.
+                Gain selection:
+                - OPAMP_GAIN_1_7  : x 1/7
+                - OPAMP_GAIN_1_3  : x 1/3
+                - OPAMP_GAIN_1    : x 1
+                - OPAMP_GAIN_5_3  : x 5/3
+                - OPAMP_GAIN_2    : x 2
+                - OPAMP_GAIN_11_5 : x 11/5
+                - OPAMP_GAIN_3    : x 3
+                - OPAMP_GAIN_4    : x 4
+                - OPAMP_GAIN_13_3 : x 13/3
+                - OPAMP_GAIN_7    : x 7
+                - OPAMP_GAIN_8    : x 8
+                - OPAMP_GAIN_15   : x 15
+                - OPAMP_GAIN_16   : x 16
+                - OPAMP_GAIN_31   : x 31
+                - OPAMP_GAIN_32   : x 32
+                - OPAMP_GAIN_33   : x 33
+                - OPAMP_GAIN_63   : x 63
+                - OPAMP_GAIN_64   : x 64
+
+
+
+             Legal values: ``OPAMP_GAIN_1_7``, ``OPAMP_GAIN_1_3``, ``OPAMP_GAIN_1``, ``OPAMP_GAIN_5_3``, ``OPAMP_GAIN_2``, ``OPAMP_GAIN_11_5``, ``OPAMP_GAIN_3``, ``OPAMP_GAIN_4``, ``OPAMP_GAIN_13_3``, ``OPAMP_GAIN_7``, ``OPAMP_GAIN_8``, ``OPAMP_GAIN_15``, ``OPAMP_GAIN_16``, ``OPAMP_GAIN_31``, ``OPAMP_GAIN_32``, ``OPAMP_GAIN_33``, ``OPAMP_GAIN_63``, ``OPAMP_GAIN_64``
+
+         * - ``pinctrl-1``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the second state. See pinctrl-0.
+
+
+
+         * - ``pinctrl-2``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the third state. See pinctrl-0.
+
+
+
+         * - ``pinctrl-3``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the fourth state. See pinctrl-0.
+
+
+
+         * - ``pinctrl-4``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the fifth state. See pinctrl-0.
+
+
+
+
+
+   .. group-tab:: Deprecated node specific properties
+
+      Deprecated properties not inherited from the base binding file.
+
+      (None)
+
+   .. group-tab:: Base properties
+
+      Properties inherited from the base binding file, which defines
+      common properties that may be set on many nodes. Not all of these
+      may apply to the "st,stm32g4-opamp" compatible.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``reg``
+           - ``array``
+           - .. code-block:: none
+
+                Information used to address the device. The value is specific to
+                the device (i.e. is different depending on the compatible
+                property).
+
+                The "reg" property is typically a sequence of (address, length) pairs.
+                Each pair is called a "register block". Values are
+                conventionally written in hex.
+
+                For details, see "2.3.6 reg" in Devicetree Specification v0.4.
+
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``clocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Information about the device's clock providers. In general, this property
+                should follow conventions established in the dt-schema binding:
+
+                  https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/clock/clock.yaml
+
+
+
+             This property is **required**.
+
+         * - ``clock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each clock provider in the "clocks" property.
+
+
+
+             This property is **required**.
+
+         * - ``status``
+           - ``string``
+           - .. code-block:: none
+
+                Indicates the operational status of the hardware or other
+                resource that the node represents. In particular:
+
+                  - "okay" means the resource is operational and, for example,
+                    can be used by device drivers
+                  - "disabled" means the resource is not operational and the system
+                    should treat it as if it is not present
+
+                For details, see "2.3.4 status" in Devicetree Specification v0.4.
+
+
+
+             Legal values: ``okay``, ``disabled``, ``reserved``, ``fail``, ``fail-sss``
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``compatible``
+           - ``string-array``
+           - .. code-block:: none
+
+                This property is a list of strings that essentially define what
+                type of hardware or other resource this devicetree node
+                represents. Each device driver checks for specific compatible
+                property values to find the devicetree nodes that represent
+                resources that the driver should manage.
+
+                The recommended format is "vendor,device", The "vendor" part is
+                an abbreviated name of the vendor. The "device" is usually from
+                the datasheet.
+
+                The compatible property can have multiple values, ordered from
+                most- to least-specific. Having additional values is useful when the
+                device is a specific instance of a more general family, to allow the
+                system to match the most specific driver available.
+
+                For details, see "2.3.1 compatible" in Devicetree Specification v0.4.
+
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``reg-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each register block in the "reg" property.
+                For example:
+
+                  / {
+                       soc {
+                           #address-cells = <1>;
+                           #size-cells = <1>;
+
+                           uart@1000 {
+                               reg = <0x1000 0x2000>, <0x3000 0x4000>;
+                               reg-names = "foo", "bar";
+                           };
+                       };
+                  };
+
+                The uart@1000 node has two register blocks:
+
+                  - one with base address 0x1000, size 0x2000, and name "foo"
+                  - another with base address 0x3000, size 0x4000, and name "bar"
+
+
+
+         * - ``interrupts``
+           - ``array``
+           - .. code-block:: none
+
+                Information about interrupts generated by the device, encoded as an array
+                of one or more interrupt specifiers. The format of the data in this property
+                varies by where the device appears in the interrupt tree. Devices with the same
+                "interrupt-parent" will use the same format in their interrupts properties.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``interrupts-extended``
+           - ``compound``
+           - .. code-block:: none
+
+                Extended interrupt specifier for device, used as an alternative to
+                the "interrupts" property.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each interrupt generated by a device.
+                The interrupts themselves are defined in either "interrupts" or
+                "interrupts-extended" properties.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-parent``
+           - ``phandle``
+           - .. code-block:: none
+
+                If present, this refers to the node which handles interrupts generated
+                by this device.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``label``
+           - ``string``
+           - .. code-block:: none
+
+                Human readable string describing the device. Use of this property is
+                deprecated except as needed on a case-by-case basis.
+
+                For details, see "4.1.2 Miscellaneous Properties" in Devicetree
+                Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``#address-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by address fields
+                in "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+         * - ``#size-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by size fields in
+                "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+         * - ``dmas``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                DMA channel specifiers relevant to the device.
+
+
+
+         * - ``dma-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the DMA channel specifiers in the "dmas" property.
+
+
+
+         * - ``io-channels``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                IO channel specifiers relevant to the device.
+
+
+
+         * - ``io-channel-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the IO channel specifiers in the "io-channels" property.
+
+
+
+         * - ``mboxes``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Mailbox / IPM channel specifiers relevant to the device.
+
+
+
+         * - ``mbox-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the mbox specifiers in the "mboxes" property.
+
+
+
+         * - ``power-domains``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Power domain specifiers relevant to the device.
+
+
+
+         * - ``power-domain-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the power domain specifiers in the "power-domains" property.
+
+
+
+         * - ``#power-domain-cells``
+           - ``int``
+           - .. code-block:: none
+
+                Number of cells in power-domains property
+
+
+
+         * - ``hwlocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                HW spinlock id relevant to the device.
+
+
+
+         * - ``hwlock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the hwlock specifiers in the "hwlocks" property.
+
+
+
+         * - ``zephyr,deferred-init``
+           - ``boolean``
+           - .. code-block:: none
+
+                Do not initialize device automatically on boot. Device should be manually
+                initialized using device_init().
+
+
+
+         * - ``wakeup-source``
+           - ``boolean``
+           - .. code-block:: none
+
+                Property to identify that a device can be used as wake up source.
+
+                When this property is provided a specific flag is set into the
+                device that tells the system that the device is capable of
+                wake up the system.
+
+                Wake up capable devices are disabled (interruptions will not wake up
+                the system) by default but they can be enabled at runtime if necessary.
+
+
+
+         * - ``zephyr,pm-device-runtime-auto``
+           - ``boolean``
+           - .. code-block:: none
+
+                Automatically configure the device for runtime power management after the
+                init function runs.
+
+
+
+         * - ``zephyr,disabling-power-states``
+           - ``phandles``
+           - .. code-block:: none
+
+                List of power states that will disable this device power.
+
+
+
+
+
+

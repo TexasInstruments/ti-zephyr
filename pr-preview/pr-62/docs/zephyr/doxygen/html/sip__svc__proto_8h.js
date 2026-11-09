@@ -1,0 +1,26 @@
+var sip__svc__proto_8h =
+[
+    [ "sip_svc_request", "structsip__svc__request.html", "structsip__svc__request" ],
+    [ "sip_svc_response", "structsip__svc__response.html", "structsip__svc__response" ],
+    [ "SIP_SVC_ID_INVALID", "sip__svc__proto_8h.html#ad1cb9509a40e51809b13f1fccf0f35ba", null ],
+    [ "SIP_SVC_PROTO_CMD_ASYNC", "sip__svc__proto_8h.html#a8bc75a10006e42097f74edf990fa1f16", null ],
+    [ "SIP_SVC_PROTO_CMD_MAX", "sip__svc__proto_8h.html#a8d7c4970ff149584080532c7bfa0cd51", null ],
+    [ "SIP_SVC_PROTO_CMD_SYNC", "sip__svc__proto_8h.html#a6ea30874bbe6393807ccc8c02038cc30", null ],
+    [ "SIP_SVC_PROTO_HEADER", "sip__svc__proto_8h.html#a8ad11e26b133a65a94877930e74afa90", null ],
+    [ "SIP_SVC_PROTO_HEADER_CODE_MASK", "sip__svc__proto_8h.html#aa8dbe689b3b375f72d049a89389ff591", null ],
+    [ "SIP_SVC_PROTO_HEADER_CODE_OFFSET", "sip__svc__proto_8h.html#a218d17af00117be8baf393e6b95cd9b2", null ],
+    [ "SIP_SVC_PROTO_HEADER_GET_CODE", "sip__svc__proto_8h.html#a365877f6f62717cb3f271666fa392d8e", null ],
+    [ "SIP_SVC_PROTO_HEADER_GET_TRANS_ID", "sip__svc__proto_8h.html#a4badc2fa72b4d5ae55c9b6503e3d2f41", null ],
+    [ "SIP_SVC_PROTO_HEADER_SET_TRANS_ID", "sip__svc__proto_8h.html#a57124f787454b1253737bdde7ad04c6f", null ],
+    [ "SIP_SVC_PROTO_HEADER_TRANS_ID_MASK", "sip__svc__proto_8h.html#a2da7d9fd032cf43814b535f7b9ff9028", null ],
+    [ "SIP_SVC_PROTO_HEADER_TRANS_ID_OFFSET", "sip__svc__proto_8h.html#a4f147d26b354026e01225395e3f074ce", null ],
+    [ "SIP_SVC_PROTO_HEADER_VER_MASK", "sip__svc__proto_8h.html#a8ffae8b2e3adb78378308944fb38601e", null ],
+    [ "SIP_SVC_PROTO_HEADER_VER_OFFSET", "sip__svc__proto_8h.html#a10ce84feaee4a6454c36dc3daf4f7722", null ],
+    [ "SIP_SVC_PROTO_STATUS_BUSY", "sip__svc__proto_8h.html#aeae6b273da4e3e91f0a6ee2558a7585f", null ],
+    [ "SIP_SVC_PROTO_STATUS_ERROR", "sip__svc__proto_8h.html#a0d92a17202ff227476277500f539fd51", null ],
+    [ "SIP_SVC_PROTO_STATUS_NO_RESPONSE", "sip__svc__proto_8h.html#afba704d63c783fdd3d143045ca260706", null ],
+    [ "SIP_SVC_PROTO_STATUS_OK", "sip__svc__proto_8h.html#af4153e73a6024d7d4355e9373f10388b", null ],
+    [ "SIP_SVC_PROTO_STATUS_REJECT", "sip__svc__proto_8h.html#aa777087a721423e0e65cac4949813aaf", null ],
+    [ "SIP_SVC_PROTO_STATUS_UNKNOWN", "sip__svc__proto_8h.html#a1c7567c532ab25d3d21ed76c655b9680", null ],
+    [ "SIP_SVC_PROTO_VER", "sip__svc__proto_8h.html#a5544d9131eef67538c3a36bdfec5482e", null ]
+];

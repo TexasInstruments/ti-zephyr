@@ -1,0 +1,326 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: andestech,qspi-nor
+.. _dtbinding_andestech_qspi_nor:
+
+andestech,qspi-nor
+##################
+
+.. sidebar:: Overview
+
+   :Name: ``andestech,qspi-nor``
+   :Vendor: :ref:`Andes Technology Corporation <dt_vendor_andestech>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=andestech,qspi-nor>` using
+               this compatible
+   :Driver: :zephyr_file:`drivers/flash/flash_andes_qspi.c`
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   Properties supporting Zephyr qspi-nor flash driver control of flash memories using the standard M25P80-based command set.
+
+Properties
+**********
+
+.. tabs::
+
+   .. group-tab:: Node specific properties
+
+      Properties not inherited from the base binding file.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``wp-gpios``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                WPn pin
+
+
+         * - ``hold-gpios``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                HOLDn pin
+
+
+         * - ``reset-gpios``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                RESETn pin
+
+
+         * - ``requires-ulbpr``
+           - ``boolean``
+           - .. code-block:: none
+
+                Indicates the device requires the ULBPR (0x98) command.
+
+                Some flash chips such as the Microchip SST26VF series have a block
+                protection register that initializes to write-protected.  Use this
+                property to indicate that the BPR must be unlocked before write
+                operations can proceed.
+
+
+
+         * - ``has-dpd``
+           - ``boolean``
+           - .. code-block:: none
+
+                Indicates the device supports the DPD (0xB9) command.
+
+                Use this property to indicate the flash chip supports the Deep
+                Power-Down mode that is entered by command 0xB9 to reduce power
+                consumption below normal standby levels.  Use of this property
+                implies that the RDPD (0xAB) Release from Deep Power Down command
+                is also supported.  (On some chips this command functions as Read
+                Electronic Signature; see t-enter-dpd).
+
+
+
+         * - ``dpd-wakeup-sequence``
+           - ``array``
+           - .. code-block:: none
+
+                Specifies wakeup durations for devices without RDPD.
+
+                Some devices (Macronix MX25R in particular) wake from deep power
+                down by a timed sequence of CSn toggles rather than the RDPD
+                command.  This property specifies three durations measured in
+                nanoseconds, in this order:
+                (1) tDPDD (Delay Time for Release from Deep Power-Down Mode)
+                (2) tCDRP (CSn Toggling Time before Release from Deep Power-Down Mode)
+                (3) tRDP (Recovery Time for Release from Deep Power-Down Mode)
+
+                Absence of this property indicates that the RDPD command should be
+                used to wake the chip from Deep Power-Down mode.
+
+
+
+         * - ``t-enter-dpd``
+           - ``int``
+           - .. code-block:: none
+
+                Duration required to complete the DPD command.
+
+                This provides the duration, in nanoseconds, that CSn must be
+                remain deasserted after issuing DPD before the chip will enter
+                deep power down.
+
+                If not provided the driver does not enforce a delay.
+
+
+
+         * - ``t-exit-dpd``
+           - ``int``
+           - .. code-block:: none
+
+                Duration required to complete the RDPD command.
+
+                This provides the duration, in nanoseconds, that CSn must be
+                remain deasserted after issuing RDPD before the chip will exit
+                deep power down and be ready to receive additional commands.
+
+                If not provided the driver does not enforce a delay.
+
+
+
+         * - ``has-lock``
+           - ``int``
+           - .. code-block:: none
+
+                Bit mask of bits of the status register that should be cleared on
+                startup.
+
+                Some devices from certain vendors power-up with block protect bits
+                set in the status register, which prevent any erase or program
+                operation from working.  Devices that have this behavior need to
+                clear those bits on startup.  However, other devices have
+                non-volatile bits in the status register that should not be
+                cleared.
+
+                This value, when present, identifies bits in the status register
+                that should be cleared when the device is initialized.
+
+
+
+         * - ``mxicy,mx25r-power-mode``
+           - ``string``
+           - .. code-block:: none
+
+                Select to configure flash to use ultra low power mode or high performance mode (L/H switch). The high performance mode has faster write and erase performance, but use more power than ultra low power mode.
+                Only supported on Macronix MX25R Ultra Low Power series.
+
+
+             Legal values: ``low-power``, ``high-performance``
+
+         * - ``use-4b-addr-opcodes``
+           - ``boolean``
+           - .. code-block:: none
+
+                Indicates the device uses special 4-byte address opcodes.
+                Instead of switching to 4-byte addressing mode, the device uses
+                special opcodes for 4-byte addressing.
+
+                Some devices support 4-byte address opcodes for read/write/erase
+                operations.  Use this property to indicate that the device supports
+                4-byte address opcodes.
+
+
+
+         * - ``use-flag-status-register``
+           - ``boolean``
+           - .. code-block:: none
+
+                Indicates the device supports a flag status register.
+
+                Some devices (Micron and possibly others) support a flag status register
+                which indicates more details on the status of program or erase operations.
+                In some cases, program operations will not function properly if the flag
+                status register is not read after the operation.
+
+
+
+         * - ``use-fast-read``
+           - ``boolean``
+           - .. code-block:: none
+
+                Indicates the device supports fast read.
+
+                Most SPI NOR devices support a fast read command that allows the device to
+                output data at a higher clock rate than the standard read command.  This
+                property indicates that the device supports the fast read command with
+                8 dummy cycles after the address phase of the command.
+
+
+
+         * - ``jedec-id``
+           - ``uint8-array``
+           - .. code-block:: none
+
+                JEDEC ID as manufacturer ID, memory type, memory density
+
+
+         * - ``size``
+           - ``int``
+           - .. code-block:: none
+
+                flash capacity in bits
+
+
+         * - ``sfdp-bfp``
+           - ``uint8-array``
+           - .. code-block:: none
+
+                Contains the 32-bit words in little-endian byte order from the
+                JESD216 Serial Flash Discoverable Parameters Basic Flash
+                Parameters table.  This provides flash-specific configuration
+                information in cases were runtime retrieval of SFDP data
+                is not desired.
+
+
+
+         * - ``sfdp-ff05``
+           - ``uint8-array``
+           - .. code-block:: none
+
+                Contains the 32-bit words in little-endian byte order from the JESD216
+                SFDP xSPI Profile 1.0 table.
+
+
+
+         * - ``sfdp-ff84``
+           - ``uint8-array``
+           - .. code-block:: none
+
+                Contains the 32-bit words in little-endian byte order from the JESD216
+                SFDP 4-byte Address Instruction Parameter table.
+
+
+
+         * - ``quad-enable-requirements``
+           - ``string``
+           - .. code-block:: none
+
+                Quad Enable Requirements value from JESD216 BFP DW15.
+
+                Use NONE if the device detects 1-1-4 and 1-4-4 modes by the
+                instruction.  Use S1B6 if QE is bit 6 of the first status register
+                byte, and can be configured by reading then writing one byte with
+                RDSR and WRSR.  For other fields see the specification.
+
+
+
+             Legal values: ``NONE``, ``S2B1v1``, ``S1B6``, ``S2B7``, ``S2B1v4``, ``S2B1v5``, ``S2B1v6``
+
+         * - ``enter-4byte-addr``
+           - ``int``
+           - .. code-block:: none
+
+                Enter 4-Byte Addressing value from JESD216 BFP DW16
+
+                This property is ignored if the device is configured to use SFDP data
+                from the sfdp-bfp property (CONFIG_SPI_NOR_SFDP_DEVICETREE) or to read
+                SFDP properties at runtime (CONFIG_SPI_NOR_SFDP_RUNTIME).
+
+                For CONFIG_SPI_NOR_SFDP_MINIMAL this is the 8-bit value from bits 31:24
+                of DW16 identifying ways a device can be placed into 4-byte addressing
+                mode.  If provided as a non-zero value the driver assumes that 4-byte
+                addressing is require to access the full address range, and
+                automatically puts the device into 4-byte address mode when the device
+                is initialized.
+
+
+
+         * - ``page-size``
+           - ``int``
+           - .. code-block:: none
+
+                Number of bytes in a page from JESD216 BFP DW11
+
+                This property is only used in the CONFIG_SPI_NOR_SFDP_MINIMAL configuration.
+                It is ignored if the device is configured to use SFDP data
+                from the sfdp-bfp property (CONFIG_SPI_NOR_SFDP_DEVICETREE) or
+                if the SFDP parameters are read from the device at
+                runtime (CONFIG_SPI_NOR_SFDP_RUNTIME).
+
+                The default value is 256 bytes if the value is not specified.
+
+
+
+
+
+   .. group-tab:: Deprecated node specific properties
+
+      Deprecated properties not inherited from the base binding file.
+
+      (None)
+
+   .. group-tab:: Base properties
+
+      Properties inherited from the base binding file, which defines
+      common properties that may be set on many nodes. Not all of these
+      may apply to the "andestech,qspi-nor" compatible.
+
+      (None)
+
+

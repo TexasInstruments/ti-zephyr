@@ -1,0 +1,1487 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Migration guide to Zephyr v3.7.0 &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/releases/migration-guide-3.7.html" />
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Zephyr 4.5.0 (Working Draft)" href="release-notes-4.5.html" />
+    <link rel="prev" title="Migration guide to Zephyr v4.3.0" href="migration-guide-4.3.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Releases</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#supported-releases">Supported Releases</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="migration-guide-4.5.html">Migration guide to Zephyr v4.5.0 (Working Draft)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="migration-guide-4.4.html">Migration guide to Zephyr v4.4.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="migration-guide-4.3.html">Migration guide to Zephyr v4.3.0</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Migration guide to Zephyr v3.7.0</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#build-system">Build System</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kernel">Kernel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#boards">Boards</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#modules">Modules</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#mbed-tls">Mbed TLS</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#trusted-firmware-m">Trusted Firmware-M</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lvgl">LVGL</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#device-drivers-and-devicetree">Device Drivers and Devicetree</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#charger">Charger</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#controller-area-network-can">Controller Area Network (CAN)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#crypto">Crypto</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#display">Display</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#enhanced-serial-peripheral-interface-espi">Enhanced Serial Peripheral Interface (eSPI)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#gnss">GNSS</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#input">Input</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#interrupt-controller">Interrupt Controller</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#led-strip">LED Strip</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#mdio">MDIO</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#sensors">Sensors</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#serial">Serial</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#regulator">Regulator</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#w1">W1</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#watchdog">Watchdog</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#bluetooth">Bluetooth</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#bluetooth-hci">Bluetooth HCI</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#bluetooth-mesh">Bluetooth Mesh</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#bluetooth-audio">Bluetooth Audio</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#bluetooth-classic">Bluetooth Classic</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#bluetooth-host">Bluetooth Host</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#bluetooth-crypto">Bluetooth Crypto</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#networking">Networking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#other-subsystems">Other Subsystems</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#flash-map">Flash map</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#hawkbit">hawkBit</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#mcumgr">MCUmgr</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#modem">Modem</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#posix-api">POSIX API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#state-machine-framework">State Machine Framework</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#updatehub">UpdateHub</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#architectures">Architectures</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="release-notes-4.5.html">Zephyr 4.5.0 (Working Draft)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="release-notes-4.4.html">Zephyr 4.4.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="release-notes-4.3.html">Zephyr 4.3.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="release-notes-3.7.html">Zephyr 3.7.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#end-of-life-releases">End-of-life releases</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#release-life-cycle-and-maintenance">Release Life Cycle and Maintenance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#release-documentation">Release documentation</a></li>
+</ul>
+</li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="index.html">Releases</a> &raquo;</li>
+  
+  <li>Migration guide to Zephyr v3.7.0</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/releases/migration-guide-3.7.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27releases%2Fmigration-guide-3.7%27&labels=bug%2Carea%3A+Documentation%2CRelease&env=-+Page%3A+releases%2Fmigration-guide-3.7%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="migration-guide-to-zephyr-v3-7-0">
+<span id="migration-3-7"></span><h1>Migration guide to Zephyr v3.7.0<a class="headerlink" href="#migration-guide-to-zephyr-v3-7-0" title="Link to this heading"></a></h1>
+<p>This document describes the changes required when migrating your application from Zephyr v3.6.0 to
+Zephyr v3.7.0.</p>
+<p>Any other changes (not directly related to migrating applications) can be found in
+the <a class="reference internal" href="release-notes-3.7.html#zephyr-3-7"><span class="std std-ref">release notes</span></a>.</p>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#build-system" id="id1">Build System</a></p></li>
+<li><p><a class="reference internal" href="#kernel" id="id2">Kernel</a></p></li>
+<li><p><a class="reference internal" href="#boards" id="id3">Boards</a></p></li>
+<li><p><a class="reference internal" href="#modules" id="id4">Modules</a></p>
+<ul>
+<li><p><a class="reference internal" href="#mbed-tls" id="id5">Mbed TLS</a></p></li>
+<li><p><a class="reference internal" href="#trusted-firmware-m" id="id6">Trusted Firmware-M</a></p></li>
+<li><p><a class="reference internal" href="#lvgl" id="id7">LVGL</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#device-drivers-and-devicetree" id="id8">Device Drivers and Devicetree</a></p>
+<ul>
+<li><p><a class="reference internal" href="#charger" id="id9">Charger</a></p></li>
+<li><p><a class="reference internal" href="#controller-area-network-can" id="id10">Controller Area Network (CAN)</a></p></li>
+<li><p><a class="reference internal" href="#crypto" id="id11">Crypto</a></p></li>
+<li><p><a class="reference internal" href="#display" id="id12">Display</a></p></li>
+<li><p><a class="reference internal" href="#enhanced-serial-peripheral-interface-espi" id="id13">Enhanced Serial Peripheral Interface (eSPI)</a></p></li>
+<li><p><a class="reference internal" href="#gnss" id="id14">GNSS</a></p></li>
+<li><p><a class="reference internal" href="#input" id="id15">Input</a></p></li>
+<li><p><a class="reference internal" href="#interrupt-controller" id="id16">Interrupt Controller</a></p></li>
+<li><p><a class="reference internal" href="#led-strip" id="id17">LED Strip</a></p></li>
+<li><p><a class="reference internal" href="#mdio" id="id18">MDIO</a></p></li>
+<li><p><a class="reference internal" href="#sensors" id="id19">Sensors</a></p></li>
+<li><p><a class="reference internal" href="#serial" id="id20">Serial</a></p></li>
+<li><p><a class="reference internal" href="#regulator" id="id21">Regulator</a></p></li>
+<li><p><a class="reference internal" href="#w1" id="id22">W1</a></p></li>
+<li><p><a class="reference internal" href="#watchdog" id="id23">Watchdog</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#bluetooth" id="id24">Bluetooth</a></p>
+<ul>
+<li><p><a class="reference internal" href="#bluetooth-hci" id="id25">Bluetooth HCI</a></p></li>
+<li><p><a class="reference internal" href="#bluetooth-mesh" id="id26">Bluetooth Mesh</a></p></li>
+<li><p><a class="reference internal" href="#bluetooth-audio" id="id27">Bluetooth Audio</a></p></li>
+<li><p><a class="reference internal" href="#bluetooth-classic" id="id28">Bluetooth Classic</a></p></li>
+<li><p><a class="reference internal" href="#bluetooth-host" id="id29">Bluetooth Host</a></p></li>
+<li><p><a class="reference internal" href="#bluetooth-crypto" id="id30">Bluetooth Crypto</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#networking" id="id31">Networking</a></p></li>
+<li><p><a class="reference internal" href="#other-subsystems" id="id32">Other Subsystems</a></p>
+<ul>
+<li><p><a class="reference internal" href="#flash-map" id="id33">Flash map</a></p></li>
+<li><p><a class="reference internal" href="#hawkbit" id="id34">hawkBit</a></p></li>
+<li><p><a class="reference internal" href="#mcumgr" id="id35">MCUmgr</a></p></li>
+<li><p><a class="reference internal" href="#modem" id="id36">Modem</a></p></li>
+<li><p><a class="reference internal" href="#posix-api" id="id37">POSIX API</a></p></li>
+<li><p><a class="reference internal" href="#state-machine-framework" id="id38">State Machine Framework</a></p></li>
+<li><p><a class="reference internal" href="#updatehub" id="id39">UpdateHub</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#architectures" id="id40">Architectures</a></p></li>
+</ul>
+</nav>
+<section id="build-system">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Build System</a><a class="headerlink" href="#build-system" title="Link to this heading"></a></h2>
+<ul>
+<li><p>Completely overhauled the way SoCs and boards are defined. This requires all
+out-of-tree SoCs and boards to be ported to the new model. See the
+<a class="reference internal" href="../hardware/porting/board_porting.html#hw-model-v2"><span class="std std-ref">Transition to the current hardware model</span></a> for more detailed information. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/69607">GitHub #69607</a>)</p></li>
+<li><p>The following build-time generated headers:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Affected header files</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">app_version.h</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">autoconf.h</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cmake_intdef.h</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">core-isa-dM.h</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">devicetree_generated.h</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">driver-validation.h</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">kobj-types-enum.h</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">linker-kobject-prebuilt-data.h</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">linker-kobject-prebuilt-priv-stacks.h</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">linker-kobject-prebuilt-rodata.h</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mcuboot_version.h</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">offsets.h</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">otype-to-size.h</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">otype-to-str.h</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">strerror_table.h</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">strsignal_table.h</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">syscall_list.h</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">version.h</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zsr.h</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>as well as syscall headers &amp; sources are now namespaced into the <code class="docutils literal notranslate"><span class="pre">zephyr/</span></code> folder. The change is largely
+automated, and the script can be found in <a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/63973">GitHub #63973</a>.
+For the time being, the compatibility Kconfig (<a class="reference internal" href="../kconfig.html#CONFIG_LEGACY_GENERATED_INCLUDE_PATH" title="CONFIG_LEGACY_GENERATED_INCLUDE_PATH"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LEGACY_GENERATED_INCLUDE_PATH</span></code></a>)
+is enabled by default so that downstream applications will continue to compile, a warning message
+will be generated during CMake configuration time.
+This Kconfig will be deprecated and eventually removed in the future, developers are advised to
+update the include paths of these affected headers as soon as possible.</p>
+</li>
+</ul>
+</section>
+<section id="kernel">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Kernel</a><a class="headerlink" href="#kernel" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>All architectures are now required to define the new <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">arch_esf</span></code>, which describes the members
+of a stack frame. This new struct replaces the named struct <code class="docutils literal notranslate"><span class="pre">z_arch_esf_t</span></code>. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73593">GitHub #73593</a>)</p></li>
+<li><p>The named struct <code class="docutils literal notranslate"><span class="pre">z_arch_esf_t</span></code> is now deprecated. Use <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">arch_esf</span></code> instead. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73593">GitHub #73593</a>)</p></li>
+<li><p>The header file <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/arch/arch_interface.h">include/zephyr/arch/arch_interface.h</a> has been moved from
+<code class="docutils literal notranslate"><span class="pre">include/zephyr/sys/</span></code> into <code class="docutils literal notranslate"><span class="pre">include/zephyr/arch/</span></code>. Out-of-tree source files will need to
+update the include path. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/64987">GitHub #64987</a>)</p></li>
+</ul>
+</section>
+<section id="boards">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Boards</a><a class="headerlink" href="#boards" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Reordered D1 and D0 in the <code class="docutils literal notranslate"><span class="pre">pro_micro</span></code> connector gpio-map for SparkFun Pro Micro RP2040 to match
+original Pro Micro definition. Out-of-tree shields must be updated to reflect this change. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/69994">GitHub #69994</a>)</p></li>
+<li><p>ITE: Rename all SoC variant Kconfig options, e.g., <code class="docutils literal notranslate"><span class="pre">CONFIG_SOC_IT82202_AX</span></code> is renamed to
+<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SOC_IT82202AX</span></code>.
+All symbols are renamed as follows: <code class="docutils literal notranslate"><span class="pre">SOC_IT81202BX</span></code>, <code class="docutils literal notranslate"><span class="pre">SOC_IT81202CX</span></code>, <code class="docutils literal notranslate"><span class="pre">SOC_IT81302BX</span></code>,
+<code class="docutils literal notranslate"><span class="pre">SOC_IT81302CX</span></code>, <code class="docutils literal notranslate"><span class="pre">SOC_IT82002AW</span></code>, <code class="docutils literal notranslate"><span class="pre">SOC_IT82202AX</span></code>, <code class="docutils literal notranslate"><span class="pre">SOC_IT82302AX</span></code>.
+And, rename the <code class="docutils literal notranslate"><span class="pre">SOC_SERIES_ITE_IT8XXX2</span></code> to <code class="docutils literal notranslate"><span class="pre">SOC_SERIES_IT8XXX2</span></code>. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/71680">GitHub #71680</a>)</p></li>
+<li><p>For native_sim/posix: <a class="reference internal" href="../kconfig.html#CONFIG_EMUL" title="CONFIG_EMUL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_EMUL</span></code></a> is no longer enabled by default when
+<a class="reference internal" href="../kconfig.html#CONFIG_I2C" title="CONFIG_I2C"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_I2C</span></code></a> is set. Users who need this setting enabled should set it in
+their project config file. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73067">GitHub #73067</a>)</p></li>
+<li><p>LiteX: Renamed the <code class="docutils literal notranslate"><span class="pre">compatible</span></code> of the LiteX VexRiscV interrupt controller node from
+<code class="docutils literal notranslate"><span class="pre">vexriscv-intc0</span></code> to <a class="reference internal" href="../build/dts/api/bindings/interrupt-controller/litex%2Cvexriscv-intc0.html#std-dtcompatible-litex-vexriscv-intc0"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">litex,vexriscv-intc0</span></code></a>. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73211">GitHub #73211</a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lairdconnect</span></code> boards are now <code class="docutils literal notranslate"><span class="pre">ezurio</span></code> boards. Laird Connectivity has rebranded to <a class="reference external" href="https://www.ezurio.com/laird-connectivity">Ezurio</a>.</p></li>
+</ul>
+</section>
+<section id="modules">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Modules</a><a class="headerlink" href="#modules" title="Link to this heading"></a></h2>
+<section id="mbed-tls">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">Mbed TLS</a><a class="headerlink" href="#mbed-tls" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>TLS 1.2, RSA, AES, DES, and all the hash algorithms except SHA-256
+(SHA-224, SHA-384, SHA-512, MD5 and SHA-1) are not enabled by default anymore.
+Their respective Kconfig options now need to be explicitly enabled to be able to use them.
+(<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/72078">GitHub #72078</a>)</p></li>
+<li><p>The Kconfig options previously named <code class="docutils literal notranslate"><span class="pre">CONFIG_MBEDTLS_MAC_*_ENABLED</span></code> have been renamed.
+The <code class="docutils literal notranslate"><span class="pre">_MAC</span></code> and <code class="docutils literal notranslate"><span class="pre">_ENABLED</span></code> parts have been removed from their names. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73267">GitHub #73267</a>)</p></li>
+<li><p>The <a class="reference internal" href="../kconfig.html#CONFIG_MBEDTLS_HASH_ALL_ENABLED" title="CONFIG_MBEDTLS_HASH_ALL_ENABLED"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MBEDTLS_HASH_ALL_ENABLED</span></code></a> Kconfig option has been fixed to actually
+enable all the available hash algorithms. Previously, it used to only enable the SHA-2 ones.
+(<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73267">GitHub #73267</a>)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">CONFIG_MBEDTLS_HASH_SHA*_ENABLED</span></code> Kconfig options have been removed. They were duplicates
+of other Kconfig options which are now named <code class="docutils literal notranslate"><span class="pre">CONFIG_MBEDTLS_SHA*</span></code>. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73267">GitHub #73267</a>)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">CONFIG_MBEDTLS_MAC_ALL_ENABLED</span></code> Kconfig option has been removed. Its equivalent is the
+combination of <a class="reference internal" href="../kconfig.html#CONFIG_MBEDTLS_HASH_ALL_ENABLED" title="CONFIG_MBEDTLS_HASH_ALL_ENABLED"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MBEDTLS_HASH_ALL_ENABLED</span></code></a> and <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MBEDTLS_CMAC</span></code>.
+(<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73267">GitHub #73267</a>)</p></li>
+<li><p>The Kconfig options <code class="docutils literal notranslate"><span class="pre">CONFIG_MBEDTLS_MAC_MD4_ENABLED</span></code>, <code class="docutils literal notranslate"><span class="pre">CONFIG_MBEDTLS_CIPHER_ARC4_ENABLED</span></code>
+and <code class="docutils literal notranslate"><span class="pre">CONFIG_MBEDTLS_CIPHER_BLOWFISH_ENABLED</span></code> were removed because they are no more supported
+in Mbed TLS. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73222">GitHub #73222</a>)</p></li>
+<li><p>When there is any PSA crypto provider available in the system
+(i.e. <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MBEDTLS_PSA_CRYPTO_CLIENT</span></code> is set), desired PSA crypto
+features must be explicitly enabled using proper <code class="docutils literal notranslate"><span class="pre">CONFIG_PSA_WANT_*</span></code>. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/72243">GitHub #72243</a>)</p></li>
+<li><p>TLS/X509/PK/MD modules will use PSA crypto APIs instead of legacy ones as soon
+as there is any PSA crypto provider available in the system
+(i.e. <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MBEDTLS_PSA_CRYPTO_CLIENT</span></code> is set). (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/72243">GitHub #72243</a>)</p></li>
+</ul>
+</section>
+<section id="trusted-firmware-m">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">Trusted Firmware-M</a><a class="headerlink" href="#trusted-firmware-m" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The default MCUboot signature type has been changed from RSA-3072 to EC-P256.
+This affects builds that have MCUboot enabled in TF-M (<a class="reference internal" href="../kconfig.html#CONFIG_TFM_BL2" title="CONFIG_TFM_BL2"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TFM_BL2</span></code></a>).
+If you wish to keep using RSA-3072, you need to set <a class="reference internal" href="../kconfig.html#CONFIG_TFM_MCUBOOT_SIGNATURE_TYPE" title="CONFIG_TFM_MCUBOOT_SIGNATURE_TYPE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TFM_MCUBOOT_SIGNATURE_TYPE</span></code></a>
+to <code class="docutils literal notranslate"><span class="pre">&quot;RSA-3072&quot;</span></code>. Otherwise, make sure to have your own signing keys of the signature type in use.</p></li>
+</ul>
+</section>
+<section id="lvgl">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">LVGL</a><a class="headerlink" href="#lvgl" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LV_Z_POINTER_KSCAN</span></code> was removed, you need to convert your kscan based
+driver to the input subsystem and use a <a class="reference internal" href="../build/dts/api/bindings/input/zephyr%2Clvgl-pointer-input.html#std-dtcompatible-zephyr-lvgl-pointer-input"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,lvgl-pointer-input</span></code></a> in your
+devicetree instead. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73800">GitHub #73800</a>)</p></li>
+</ul>
+</section>
+</section>
+<section id="device-drivers-and-devicetree">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">Device Drivers and Devicetree</a><a class="headerlink" href="#device-drivers-and-devicetree" title="Link to this heading"></a></h2>
+<ul>
+<li><p>The <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">nxp,kinetis-pit</span></code> pit driver has changed its compatible
+to <a class="reference internal" href="../build/dts/api/bindings/counter/nxp%2Cpit.html#std-dtcompatible-nxp-pit"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">nxp,pit</span></code></a> and has been updated to support multiple channels.
+To configure the individual channels, you must add a child node with the
+compatible <a class="reference internal" href="../build/dts/api/bindings/counter/nxp%2Cpit-channel.html#std-dtcompatible-nxp-pit-channel"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">nxp,pit-channel</span></code></a> and configure as below.
+The <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_COUNTER_MCUX_PIT</span></code> has also been renamed to
+<a class="reference internal" href="../kconfig.html#CONFIG_COUNTER_NXP_PIT" title="CONFIG_COUNTER_NXP_PIT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_COUNTER_NXP_PIT</span></code></a> with regards to the renaming
+of the binding for the pit. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/66336">GitHub #66336</a>)
+example:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nl">pit0</span><span class="p">:</span><span class="w"> </span><span class="nf">pit</span><span class="o">@</span><span class="mi">40037000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* Other Pit DT Attributes */</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;nxp,pit&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;disabled&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">num-channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">#address-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">#size-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="nl">pit0_channel0</span><span class="p">:</span><span class="w"> </span><span class="nf">pit0_channel</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;nxp,pit-channel&quot;</span><span class="p">;</span>
+<span class="w">            </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">            </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;disabled&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
+<li><p>The <a class="reference internal" href="../build/dts/api/bindings/ethernet/nxp%2Ckinetis-ethernet.html#std-dtcompatible-nxp-kinetis-ethernet"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">nxp,kinetis-ethernet</span></code></a> has been deprecated in favor of
+<a class="reference internal" href="../build/dts/api/bindings/ethernet/nxp%2Cenet.html#std-dtcompatible-nxp-enet"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">nxp,enet</span></code></a>. All in tree SOCs were converted to use this new schema.
+Thus, all boards using NXP’s ENET peripheral will need to align to this binding
+in DT, which also comes with a different version driver. Alternatively,
+the Ethernet node can be deleted and redefined as the old binding to use
+the deprecated legacy driver. The primary advantage of the new binding
+is to be able to abstract an arbitrary phy through the mdio API. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/70400">GitHub #70400</a>)
+Example of a basic board level ENET DT definition:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">enet_mac</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">pinctrl-0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">pinmux_enet</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">pinctrl-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;default&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">phy-handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">phy</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">zephyr</span><span class="p">,</span><span class="n">random-mac-address</span><span class="p">;</span>
+<span class="w">    </span><span class="n">phy-connection-type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;rmii&quot;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="o">&amp;</span><span class="nf">enet_mdio</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">pinctrl-0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">pinmux_enet_mdio</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">pinctrl-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;default&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="nl">phy</span><span class="p">:</span><span class="w"> </span><span class="nf">phy</span><span class="o">@</span><span class="mi">3</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ethernet-phy&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
+<li><p>The <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">nxp,kinetis-lptmr</span></code> compatible string has been changed to
+<a class="reference internal" href="../build/dts/api/bindings/counter/nxp%2Clptmr.html#std-dtcompatible-nxp-lptmr"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">nxp,lptmr</span></code></a>. The old string will be usable for a short time, but
+should be replaced for it will be removed in the future.</p></li>
+<li><p>Some of the driver API structs have been rename to have the required <code class="docutils literal notranslate"><span class="pre">_driver_api</span></code> suffix. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/72182">GitHub #72182</a>)
+The following types have been renamed:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">emul_sensor_backend_api</span></code> to <code class="xref c c-struct docutils literal notranslate"><span class="pre">emul_sensor_driver_api</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">emul_bbram_backend_api</span></code> to <code class="xref c c-struct docutils literal notranslate"><span class="pre">emul_bbram_driver_api</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">usbc_ppc_drv</span></code> to <a class="reference internal" href="../doxygen/html/structusbc__ppc__driver__api.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">usbc_ppc_driver_api</span></code></a></p></li>
+</ul>
+</li>
+<li><p>The driver for <a class="reference internal" href="../build/dts/api/bindings/mfd/maxim%2Cmax31790.html#std-dtcompatible-maxim-max31790"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">maxim,max31790</span></code></a> got split up into a MFD and an
+actual PWM driver. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/68433">GitHub #68433</a>)
+Previously, an instance of this device could have been defined like this:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nl">max31790_max31790</span><span class="p">:</span><span class="w"> </span><span class="nf">max31790</span><span class="o">@</span><span class="mi">20</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;maxim,max31790&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x20</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">pwm-controller</span><span class="p">;</span>
+<span class="w">    </span><span class="o">#</span><span class="n">pwm-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>This can be converted to:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nl">max31790_max31790</span><span class="p">:</span><span class="w"> </span><span class="nf">max31790</span><span class="o">@</span><span class="mi">20</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;maxim,max31790&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x20</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nl">max31790_max31790_pwm</span><span class="p">:</span><span class="w"> </span><span class="nf">max31790_max31790_pwm</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;maxim,max31790-pwm&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">pwm-controller</span><span class="p">;</span>
+<span class="w">        </span><span class="o">#</span><span class="n">pwm-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
+<li><p>The driver for <a class="reference internal" href="../build/dts/api/bindings/sensor/invensense%2Cicm42688.html#std-dtcompatible-invensense-icm42688"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">invensense,icm42688</span></code></a> now correctly supports device
+tree configuration(<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/74267">GitHub #74267</a>). Prior devicetrees may have tried to use
+the bindings to set sample rate and scale for the accel/gyro without any
+effect. The devicetree usage should now use the provided defines and include
+file along with new bindings which take these values.</p>
+<p>For example:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="cm"> </span><span class="cpf">&lt;zephyr/dt-bindings/sensor/icm42688.h&gt;</span>
+
+<span class="nl">icm42688</span><span class="p">:</span><span class="w"> </span><span class="nf">icm42688</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">accel-pwr-mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">ICM42688_ACCEL_LN</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">accel-fs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">ICM42688_ACCEL_FS_16G</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">accel-odr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">ICM42688_ACCEL_ODR_2000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">gyro-pwr-mode</span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">ICM42688_GYRO_LN</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">gyro-fs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">ICM42688_GYRO_FS_2000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">gyro-odr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">ICM42688_GYRO_ODR_2000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
+<li><p><a class="reference internal" href="../build/dts/api/compatibles/st%2Clis2mdl.html#std-dtcompatible-st-lis2mdl"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">st,lis2mdl</span></code></a> property <code class="docutils literal notranslate"><span class="pre">spi-full-duplex</span></code> changed to <code class="docutils literal notranslate"><span class="pre">duplex</span> <span class="pre">=</span>
+<span class="pre">SPI_FULL_DUPLEX</span></code>. Full duplex is now the default.</p></li>
+<li><p>The DT property <code class="docutils literal notranslate"><span class="pre">nxp,reference-supply</span></code> of <a class="reference internal" href="../build/dts/api/bindings/adc/nxp%2Clpc-lpadc.html#std-dtcompatible-nxp-lpc-lpadc"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">nxp,lpc-lpadc</span></code></a> driver has
+been removed, users should remove this property from their devicetree if it is present.
+Added new phandle-array type DT property <code class="docutils literal notranslate"><span class="pre">nxp,references</span></code>, the user can use this
+property to specify the reference voltage and reference voltage value to be used by
+the lpadc. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/75005">GitHub #75005</a>)</p></li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li><p>The DT properties <code class="docutils literal notranslate"><span class="pre">mc,interface-type</span></code>, <code class="docutils literal notranslate"><span class="pre">mc,reset-gpio</span></code>, and <code class="docutils literal notranslate"><span class="pre">mc,interrupt-gpio</span></code> of
+the <a class="reference internal" href="../build/dts/api/bindings/ethernet/phy/microchip%2Cksz8081.html#std-dtcompatible-microchip-ksz8081"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">microchip,ksz8081</span></code></a> phy binding have changed to
+<code class="docutils literal notranslate"><span class="pre">microchip,interface-type</span></code>, <code class="docutils literal notranslate"><span class="pre">reset-gpios</span></code>, and <code class="docutils literal notranslate"><span class="pre">int-gpios</span></code>, respectively (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73725">GitHub #73725</a>)</p></li>
+</ul>
+</div></blockquote>
+<section id="charger">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">Charger</a><a class="headerlink" href="#charger" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Dropped <code class="docutils literal notranslate"><span class="pre">constant-charge-current-max-microamp</span></code> property in <code class="docutils literal notranslate"><span class="pre">charger_max20335</span></code> driver because
+it did not reflect real chip functionality. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/69910">GitHub #69910</a>)</p></li>
+<li><p>Added enum key to <code class="docutils literal notranslate"><span class="pre">constant-charge-voltage-max-microvolt</span></code> property in <code class="docutils literal notranslate"><span class="pre">maxim,max20335-charger</span></code>
+binding to indicate invalid devicetree values at build time. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/69910">GitHub #69910</a>)</p></li>
+</ul>
+</section>
+<section id="controller-area-network-can">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">Controller Area Network (CAN)</a><a class="headerlink" href="#controller-area-network-can" title="Link to this heading"></a></h3>
+<ul>
+<li><p>Removed the following deprecated CAN controller devicetree properties. Out-of-tree boards using
+these properties can switch to using the <code class="docutils literal notranslate"><span class="pre">bitrate</span></code>, <code class="docutils literal notranslate"><span class="pre">sample-point</span></code>, <code class="docutils literal notranslate"><span class="pre">bitrate-data</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">sample-point-data</span></code> devicetree properties (or rely on
+<a class="reference internal" href="../kconfig.html#CONFIG_CAN_DEFAULT_BITRATE" title="CONFIG_CAN_DEFAULT_BITRATE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CAN_DEFAULT_BITRATE</span></code></a> and
+<a class="reference internal" href="../kconfig.html#CONFIG_CAN_DEFAULT_BITRATE_DATA" title="CONFIG_CAN_DEFAULT_BITRATE_DATA"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CAN_DEFAULT_BITRATE_DATA</span></code></a>) for specifying the initial CAN bitrate:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sjw</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prop-seg</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">phase-seg1</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">phase-seg2</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sjw-data</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prop-seg-data</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">phase-seg1-data</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">phase-seg2-data</span></code></p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">bus-speed</span></code> and <code class="docutils literal notranslate"><span class="pre">bus-speed-data</span></code> CAN controller devicetree properties have been
+deprecated.</p>
+<p>(<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/68714">GitHub #68714</a>)</p>
+</li>
+<li><p>Support for manual bus-off recovery was reworked (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/69460">GitHub #69460</a>):</p>
+<ul class="simple">
+<li><p>Automatic bus recovery will always be enabled upon driver initialization regardless of Kconfig
+options. Since CAN controllers are initialized in “stopped” state, no unwanted bus-off recovery
+will be started at this point.</p></li>
+<li><p>The Kconfig <code class="docutils literal notranslate"><span class="pre">CONFIG_CAN_AUTO_BUS_OFF_RECOVERY</span></code> was renamed (and inverted) to
+<a class="reference internal" href="../kconfig.html#CONFIG_CAN_MANUAL_RECOVERY_MODE" title="CONFIG_CAN_MANUAL_RECOVERY_MODE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CAN_MANUAL_RECOVERY_MODE</span></code></a>, which is disabled by default. This Kconfig
+option enables support for the <a class="reference internal" href="../doxygen/html/group__can__controller.html#gac474e56a50685736a1c25dca277aab5e" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">can_recover()</span></code></a> API function and a new manual recovery mode
+(see the next bullet).</p></li>
+<li><p>A new CAN controller operational mode <a class="reference internal" href="../doxygen/html/group__can__controller.html#ga3d8675253125b2af2bd22f0b2cc60cdd" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">CAN_MODE_MANUAL_RECOVERY</span></code></a> was added. Support for
+this is only enabled if <a class="reference internal" href="../kconfig.html#CONFIG_CAN_MANUAL_RECOVERY_MODE" title="CONFIG_CAN_MANUAL_RECOVERY_MODE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CAN_MANUAL_RECOVERY_MODE</span></code></a> is enabled. Having
+this as a mode allows applications to inquire whether the CAN controller supports manual
+recovery mode via the <a class="reference internal" href="../doxygen/html/group__can__controller.html#ga4afd7776c5039dec8acb089499dc1168" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">can_get_capabilities()</span></code></a> API function. The application can then
+either fail initialization or rely on automatic bus-off recovery. Having this as a mode
+furthermore allows CAN controller drivers not supporting manual recovery mode to fail early in
+<a class="reference internal" href="../doxygen/html/group__can__controller.html#gae04c3c884b3ed26dfea4745b7dff2c5f" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">can_set_mode()</span></code></a> during application startup instead of failing when <a class="reference internal" href="../doxygen/html/group__can__controller.html#gac474e56a50685736a1c25dca277aab5e" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">can_recover()</span></code></a>
+is called at a later point in time.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="crypto">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">Crypto</a><a class="headerlink" href="#crypto" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The CSS driver has been deprecated on NXP lpc55s36 (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/71173">GitHub #71173</a>).</p></li>
+</ul>
+</section>
+<section id="display">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">Display</a><a class="headerlink" href="#display" title="Link to this heading"></a></h3>
+<ul>
+<li><p>GC9X01 based displays now use the MIPI DBI driver class. These displays
+must now be declared within a MIPI DBI driver wrapper device, which will
+manage interfacing with the display. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73686">GitHub #73686</a>)
+For an example, see below:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Legacy GC9X01 display definition */</span>
+<span class="o">&amp;</span><span class="nf">spi0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nl">gc9a01</span><span class="p">:</span><span class="w"> </span><span class="nf">gc9a01</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;galaxycore,gc9x01x&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">spi-max-frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">100000000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">cmd-data-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="na">GPIO_ACTIVE_HIGH</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">reset-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">14</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="cm">/* New display definition with MIPI DBI device */</span>
+
+<span class="cp">#include</span><span class="cm"> </span><span class="cpf">&lt;zephyr/dt-bindings/mipi_dbi/mipi_dbi.h&gt;</span>
+
+<span class="p">...</span>
+
+<span class="nf">mipi_dbi</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,mipi-dbi-spi&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">dc-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="na">GPIO_ACTIVE_HIGH</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">reset-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">14</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">spi-dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">spi0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">#address-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">#size-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nl">gc9a01</span><span class="p">:</span><span class="w"> </span><span class="nf">gc9a01</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;galaxycore,gc9x01x&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">mipi-max-frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">100000000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
+<li><p>ST7735R based displays now use the MIPI DBI driver class. These displays
+must now be declared within a MIPI DBI driver wrapper device, which will
+manage interfacing with the display. Note that the <code class="docutils literal notranslate"><span class="pre">cmd-data-gpios</span></code> pin has
+changed polarity with this update, to align better with the new
+<code class="docutils literal notranslate"><span class="pre">dc-gpios</span></code> name. For an example, see below:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Legacy ST7735R display definition */</span>
+<span class="o">&amp;</span><span class="nf">spi0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nl">st7735r</span><span class="p">:</span><span class="w"> </span><span class="nf">st7735r</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sitronix,st7735r&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">spi-max-frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">32000000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">reset-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">cmd-data-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">12</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="cm">/* New display definition with MIPI DBI device */</span>
+
+<span class="cp">#include</span><span class="cm"> </span><span class="cpf">&lt;zephyr/dt-bindings/mipi_dbi/mipi_dbi.h&gt;</span>
+
+<span class="p">...</span>
+
+<span class="nf">mipi_dbi</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,mipi-dbi-spi&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">reset-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">dc-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">12</span><span class="w"> </span><span class="na">GPIO_ACTIVE_HIGH</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">spi-dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">spi0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">#address-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">#size-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nl">st7735r</span><span class="p">:</span><span class="w"> </span><span class="nf">st7735r</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sitronix,st7735r&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">mipi-max-frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">32000000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">mipi-mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">MIPI_DBI_MODE_SPI_4WIRE</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
+<li><p>UC81XX based displays now use the MIPI DBI driver class. These displays must
+now be declared within a MIPI DBI driver wrapper device, which will manage
+interfacing with the display. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73812">GitHub #73812</a>) Note that the <code class="docutils literal notranslate"><span class="pre">dc-gpios</span></code>
+pin has changed polarity with this update, for an example, see below:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Legacy UC81XX display definition */</span>
+<span class="o">&amp;</span><span class="nf">spi0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nl">uc8179</span><span class="p">:</span><span class="w"> </span><span class="nf">uc8179</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ultrachip,uc8179&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">spi-max-frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">4000000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">reset-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">dc-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">12</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="cm">/* New display definition with MIPI DBI device */</span>
+
+<span class="cp">#include</span><span class="cm"> </span><span class="cpf">&lt;zephyr/dt-bindings/mipi_dbi/mipi_dbi.h&gt;</span>
+
+<span class="p">...</span>
+
+<span class="nf">mipi_dbi</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,mipi-dbi-spi&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">reset-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">dc-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">12</span><span class="w"> </span><span class="na">GPIO_ACTIVE_HIGH</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">spi-dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">spi0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">#address-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">#size-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="nl">uc8179</span><span class="p">:</span><span class="w"> </span><span class="nf">uc8179</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ultrachip,uc8179&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">mipi-max-frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">4000000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
+<li><p>ST7789V based displays now use the MIPI DBI driver class. These displays
+must now be declared within a MIPI DBI driver wrapper device, which will
+manage interfacing with the display. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73750">GitHub #73750</a>) Note that the
+<code class="docutils literal notranslate"><span class="pre">cmd-data-gpios</span></code> pin has changed polarity with this update, to align better
+with the new <code class="docutils literal notranslate"><span class="pre">dc-gpios</span></code> name. For an example, see below:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Legacy ST7789V display definition */</span>
+<span class="o">&amp;</span><span class="nf">spi0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nl">st7789</span><span class="p">:</span><span class="w"> </span><span class="nf">st7789</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sitronix,st7789v&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">spi-max-frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">32000000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">reset-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">cmd-data-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">12</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="cm">/* New display definition with MIPI DBI device */</span>
+
+<span class="cp">#include</span><span class="cm"> </span><span class="cpf">&lt;zephyr/dt-bindings/mipi_dbi/mipi_dbi.h&gt;</span>
+
+<span class="p">...</span>
+
+<span class="nf">mipi_dbi</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,mipi-dbi-spi&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">reset-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">dc-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">12</span><span class="w"> </span><span class="na">GPIO_ACTIVE_HIGH</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">spi-dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">spi0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">#address-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">#size-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nl">st7789</span><span class="p">:</span><span class="w"> </span><span class="nf">st7789</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sitronix,st7789v&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">mipi-max-frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">32000000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">mipi-mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">MIPI_DBI_MODE_SPI_4WIRE</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
+<li><p>SSD16XX based displays now use the MIPI DBI driver class (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73946">GitHub #73946</a>).
+These displays must now be declared within a MIPI DBI driver wrapper device,
+which will manage interfacing with the display. Note that the <code class="docutils literal notranslate"><span class="pre">dc-gpios</span></code>
+pin has changed polarity with this update. For an example, see below:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Legacy SSD16XX display definition */</span>
+<span class="o">&amp;</span><span class="nf">spi0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nl">ssd1680</span><span class="p">:</span><span class="w"> </span><span class="nf">ssd1680</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;solomon,ssd1680&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">spi-max-frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">4000000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">reset-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">dc-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">12</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="cm">/* New display definition with MIPI DBI device */</span>
+
+<span class="cp">#include</span><span class="cm"> </span><span class="cpf">&lt;zephyr/dt-bindings/mipi_dbi/mipi_dbi.h&gt;</span>
+
+<span class="p">...</span>
+
+<span class="nf">mipi_dbi</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,mipi-dbi-spi&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">reset-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">dc-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">12</span><span class="w"> </span><span class="na">GPIO_ACTIVE_HIGH</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">spi-dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">spi0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">#address-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">#size-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nl">ssd1680</span><span class="p">:</span><span class="w"> </span><span class="nf">ssd1680</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;solomon,ssd1680&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">mipi-max-frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">4000000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">orientation-flipped</span></code> property has been removed from the SSD16XX
+display driver, as the driver now supports display rotation. Users should
+drop this property from their devicetree, and set orientation at runtime
+via <a class="reference internal" href="../doxygen/html/group__display__interface.html#ga4e0a4dc2e434144874af014b8e7c4394" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">display_set_orientation()</span></code></a> (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73360">GitHub #73360</a>)</p></li>
+</ul>
+</section>
+<section id="enhanced-serial-peripheral-interface-espi">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">Enhanced Serial Peripheral Interface (eSPI)</a><a class="headerlink" href="#enhanced-serial-peripheral-interface-espi" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The macros <code class="docutils literal notranslate"><span class="pre">ESPI_SLAVE_TO_MASTER</span></code> and <code class="docutils literal notranslate"><span class="pre">ESPI_MASTER_TO_SLAVE</span></code> were renamed to
+<code class="docutils literal notranslate"><span class="pre">ESPI_TARGET_TO_CONTROLLER</span></code> and <code class="docutils literal notranslate"><span class="pre">ESPI_CONTROLLER_TO_TARGET</span></code> respectively to reflect
+the new terminology in eSPI 1.5 specification.
+The enum values <code class="docutils literal notranslate"><span class="pre">ESPI_VWIRE_SIGNAL_SLV_BOOT_STS</span></code>, <code class="docutils literal notranslate"><span class="pre">ESPI_VWIRE_SIGNAL_SLV_BOOT_DONE</span></code> and
+all <code class="docutils literal notranslate"><span class="pre">ESPI_VWIRE_SIGNAL_SLV_GPIO_&lt;NUMBER&gt;</span></code> signals were renamed to
+<code class="docutils literal notranslate"><span class="pre">ESPI_VWIRE_SIGNAL_TARGET_BOOT_STS</span></code>, <code class="docutils literal notranslate"><span class="pre">ESPI_VWIRE_SIGNAL_TARGET_BOOT_DONE</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ESPI_VWIRE_SIGNAL_TARGET_GPIO_&lt;NUMBER&gt;</span></code> respectively to reflect the new terminology
+in eSPI 1.5 specification. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/68492">GitHub #68492</a>)
+The Kconfig <code class="docutils literal notranslate"><span class="pre">CONFIG_ESPI_SLAVE</span></code> was renamed to  <a class="reference internal" href="../kconfig.html#CONFIG_ESPI_TARGET" title="CONFIG_ESPI_TARGET"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ESPI_TARGET</span></code></a>, similarly
+<code class="docutils literal notranslate"><span class="pre">CONFIG_ESPI_SAF</span></code> was renamed as <a class="reference internal" href="../kconfig.html#CONFIG_ESPI_TAF" title="CONFIG_ESPI_TAF"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ESPI_TAF</span></code></a> (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73887">GitHub #73887</a>)</p></li>
+</ul>
+</section>
+<section id="gnss">
+<h3><a class="toc-backref" href="#id14" role="doc-backlink">GNSS</a><a class="headerlink" href="#gnss" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Basic power management support has been added to the <code class="docutils literal notranslate"><span class="pre">gnss-nmea-generic</span></code> driver.
+If <code class="docutils literal notranslate"><span class="pre">CONFIG_PM_DEVICE=y</span></code> the driver is now initialized in suspended mode and the
+application needs to call <a class="reference internal" href="../doxygen/html/group__subsys__pm__device.html#ga3840d6e7832a00b93763247a5951bfde" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pm_device_action_run()</span></code></a> with <code class="xref c c-macro docutils literal notranslate"><span class="pre">PM_DEVICE_ACTION_RESUME</span></code>
+to start up the driver. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/71774">GitHub #71774</a>)</p></li>
+</ul>
+</section>
+<section id="input">
+<h3><a class="toc-backref" href="#id15" role="doc-backlink">Input</a><a class="headerlink" href="#input" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">analog-axis</span></code> deadzone calibration value has been changed to be
+relative to the raw ADC values, similarly to min and max. The data structures
+and properties have been renamed to reflect that (from <code class="docutils literal notranslate"><span class="pre">out-deadzone</span></code> to
+<code class="docutils literal notranslate"><span class="pre">in-deadzone</span></code>) and when migrating to the new definition the value should be
+scaled accordingly. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/70377">GitHub #70377</a>)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">holtek,ht16k33-keyscan</span></code> driver has been converted to use the
+<a class="reference internal" href="../services/input/index.html#input"><span class="std std-ref">Input</span></a> subsystem, callbacks have to be migrated to use the input APIs,
+<code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,kscan-input</span></code> can be used for backward compatibility. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/69875">GitHub #69875</a>)</p></li>
+</ul>
+</section>
+<section id="interrupt-controller">
+<h3><a class="toc-backref" href="#id16" role="doc-backlink">Interrupt Controller</a><a class="headerlink" href="#interrupt-controller" title="Link to this heading"></a></h3>
+<ul>
+<li><p>The static auto-generation of the multilevel interrupt controller lookup table has been
+deprecated, and will be compiled only when the new compatibility Kconfig:
+<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LEGACY_MULTI_LEVEL_TABLE_GENERATION</span></code> is enabled, which will eventually
+be removed in the coming releases.</p>
+<p>Multi-level interrupt controller drivers should be updated to use the newly created
+<code class="docutils literal notranslate"><span class="pre">IRQ_PARENT_ENTRY_DEFINE</span></code> macro to register itself with the new multi-level interrupt
+architecture. To make the macro easier to use, <code class="docutils literal notranslate"><span class="pre">INTC_INST_ISR_TBL_OFFSET</span></code> macro is made to
+deduce the software ISR table offset for a given driver instance, for pseudo interrupt controller
+child, use the <code class="docutils literal notranslate"><span class="pre">INTC_CHILD_ISR_TBL_OFFSET</span></code> macro instead. New devicetree macros
+(<code class="docutils literal notranslate"><span class="pre">DT_INTC_GET_AGGREGATOR_LEVEL</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">DT_INST_INTC_GET_AGGREGATOR_LEVEL</span></code>) have been added
+for an interrupt controller driver instance to pass its aggregator level into the
+<code class="docutils literal notranslate"><span class="pre">IRQ_PARENT_ENTRY_DEFINE</span></code> macro.</p>
+</li>
+</ul>
+</section>
+<section id="led-strip">
+<h3><a class="toc-backref" href="#id17" role="doc-backlink">LED Strip</a><a class="headerlink" href="#led-strip" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The property <code class="docutils literal notranslate"><span class="pre">in-gpios</span></code> defined in <a class="reference internal" href="../build/dts/api/bindings/led_strip/worldsemi%2Cws2812-gpio.html#std-dtcompatible-worldsemi-ws2812-gpio"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">worldsemi,ws2812-gpio</span></code></a> has been
+renamed to <code class="docutils literal notranslate"><span class="pre">gpios</span></code>. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/68514">GitHub #68514</a>)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">chain-length</span></code> and <code class="docutils literal notranslate"><span class="pre">color-mapping</span></code> properties have been added to all LED strip bindings
+and are now mandatory.</p></li>
+<li><p>Added a new mandatory <code class="docutils literal notranslate"><span class="pre">length</span></code> function which returns the length (number of pixels) of an LED
+strip device.</p></li>
+<li><p>Made <code class="docutils literal notranslate"><span class="pre">update_channels</span></code> function optional and removed unimplemented functions.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">CONFIG_WS2812_STRIP_DRIVER</span></code> kconfig option has been removed.
+Previously, when using <a class="reference internal" href="../kconfig.html#CONFIG_WS2812_STRIP_SPI" title="CONFIG_WS2812_STRIP_SPI"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_WS2812_STRIP_SPI</span></code></a>,
+<a class="reference internal" href="../kconfig.html#CONFIG_WS2812_STRIP_I2S" title="CONFIG_WS2812_STRIP_I2S"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_WS2812_STRIP_I2S</span></code></a>, <a class="reference internal" href="../kconfig.html#CONFIG_WS2812_STRIP_GPIO" title="CONFIG_WS2812_STRIP_GPIO"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_WS2812_STRIP_GPIO</span></code></a>,
+or <a class="reference internal" href="../kconfig.html#CONFIG_WS2812_STRIP_RPI_PICO_PIO" title="CONFIG_WS2812_STRIP_RPI_PICO_PIO"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_WS2812_STRIP_RPI_PICO_PIO</span></code></a>, one of them had to be selected with
+<code class="docutils literal notranslate"><span class="pre">CONFIG_WS2812_STRIP_DRIVER</span></code>, but this is no longer necessary. Please set each option directly.</p></li>
+</ul>
+</section>
+<section id="mdio">
+<h3><a class="toc-backref" href="#id18" role="doc-backlink">MDIO</a><a class="headerlink" href="#mdio" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="../kconfig.html#CONFIG_MDIO_NXP_ENET_TIMEOUT" title="CONFIG_MDIO_NXP_ENET_TIMEOUT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MDIO_NXP_ENET_TIMEOUT</span></code></a> is now in units of
+microseconds instead of milliseconds. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/75625">GitHub #75625</a>)</p></li>
+</ul>
+</section>
+<section id="sensors">
+<h3><a class="toc-backref" href="#id19" role="doc-backlink">Sensors</a><a class="headerlink" href="#sensors" title="Link to this heading"></a></h3>
+<ul>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">chip</span></code> devicetree property from the <a class="reference internal" href="../build/dts/api/bindings/sensor/sensirion%2Cshtcx.html#std-dtcompatible-sensirion-shtcx"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">sensirion,shtcx</span></code></a> sensor driver has been
+removed. Chip variants are now selected using the matching compatible property (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/74033">GitHub #74033</a>).
+For an example of the new shtc3 configuration, see below:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">i2c0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nl">shtc3</span><span class="p">:</span><span class="w"> </span><span class="nf">shtc3</span><span class="o">@</span><span class="mi">70</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sensirion,shtc3&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;sensirion,shtcx&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x70</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">measure-mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;normal&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">clock-stretching</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="serial">
+<h3><a class="toc-backref" href="#id20" role="doc-backlink">Serial</a><a class="headerlink" href="#serial" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The Raspberry Pi UART driver <code class="docutils literal notranslate"><span class="pre">uart_rpi_pico</span></code> has been removed.
+Use <code class="docutils literal notranslate"><span class="pre">uart_pl011</span></code> (<a class="reference internal" href="../build/dts/api/bindings/serial/arm%2Cpl011.html#std-dtcompatible-arm-pl011"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">arm,pl011</span></code></a>) instead. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/71074">GitHub #71074</a>)</p></li>
+</ul>
+</section>
+<section id="regulator">
+<h3><a class="toc-backref" href="#id21" role="doc-backlink">Regulator</a><a class="headerlink" href="#regulator" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The <a class="reference internal" href="../build/dts/api/bindings/regulator/nxp%2Cvref.html#std-dtcompatible-nxp-vref"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">nxp,vref</span></code></a> driver no longer supports the ground selection function,
+as this setting should not be modified by the user. The DT property <code class="docutils literal notranslate"><span class="pre">nxp,ground-select</span></code>
+has been removed, users should remove this property from their devicetree if it is present.
+(<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/70642">GitHub #70642</a>)</p></li>
+</ul>
+</section>
+<section id="w1">
+<h3><a class="toc-backref" href="#id22" role="doc-backlink">W1</a><a class="headerlink" href="#w1" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The <a class="reference internal" href="../build/dts/api/bindings/w1/zephyr%2Cw1-gpio.html#std-dtcompatible-zephyr-w1-gpio"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,w1-gpio</span></code></a> 1-Wire master driver no longer defaults to enabling the
+internal pull-up resistor of the GPIO pin. The configuration is now taken from the pin’s
+configuration flags specified in devicetree. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/71789">GitHub #71789</a>)</p></li>
+</ul>
+</section>
+<section id="watchdog">
+<h3><a class="toc-backref" href="#id23" role="doc-backlink">Watchdog</a><a class="headerlink" href="#watchdog" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">nuvoton,npcx-watchdog</span></code> driver has been changed to extend the max timeout period.
+The time of one watchdog count varies with the different pre-scalar settings.
+Removed <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_WDT_NPCX_DELAY_CYCLES</span></code> because it is no longer suitable to
+set the leading warning time.
+Instead, added the <a class="reference internal" href="../kconfig.html#CONFIG_WDT_NPCX_WARNING_LEADING_TIME_MS" title="CONFIG_WDT_NPCX_WARNING_LEADING_TIME_MS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_WDT_NPCX_WARNING_LEADING_TIME_MS</span></code></a> to set
+the leading warning time in milliseconds.</p></li>
+</ul>
+</section>
+</section>
+<section id="bluetooth">
+<h2><a class="toc-backref" href="#id24" role="doc-backlink">Bluetooth</a><a class="headerlink" href="#bluetooth" title="Link to this heading"></a></h2>
+<section id="bluetooth-hci">
+<h3><a class="toc-backref" href="#id25" role="doc-backlink">Bluetooth HCI</a><a class="headerlink" href="#bluetooth-hci" title="Link to this heading"></a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>A new HCI driver API was introduced (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/72323">GitHub #72323</a>) and the old one deprecated. The new API
+follows the normal Zephyr driver model, with devicetree nodes, etc. The host now
+selects which driver instance to use as the controller by looking for a <code class="docutils literal notranslate"><span class="pre">zephyr,bt-hci</span></code>
+chosen property. The devicetree bindings for all HCI drivers derive from a common
+<code class="docutils literal notranslate"><span class="pre">bt-hci.yaml</span></code> base binding.</p></li>
+</ul>
+<blockquote>
+<div><ul class="simple">
+<li><p>As part of the new HCI driver API, the <code class="docutils literal notranslate"><span class="pre">zephyr,bt-uart</span></code> chosen property is no longer used,
+rather the UART HCI drivers select their UART by looking for the parent devicetree node of the
+HCI driver instance node.</p></li>
+<li><p>As part of the new HCI driver API, the <code class="docutils literal notranslate"><span class="pre">zephyr,bt-hci-ipc</span></code> chosen property is only used for
+the controller side, whereas the HCI driver now relies on nodes with the compatible string
+<code class="docutils literal notranslate"><span class="pre">zephyr,bt-hci-ipc</span></code>.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">BT_NO_DRIVER</span></code> Kconfig option was removed. HCI drivers are no-longer behind a Kconfig
+choice, rather they can now be enabled and disabled independently, mostly based on their
+respective devicetree node being enabled or not.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">BT_HCI_VS_EXT</span></code> Kconfig option was deleted and the feature is now included in the
+<a class="reference internal" href="../kconfig.html#CONFIG_BT_HCI_VS" title="CONFIG_BT_HCI_VS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_HCI_VS</span></code></a> Kconfig option.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">BT_HCI_VS_EVT</span></code> Kconfig option was removed, since vendor event support is implicit if
+the <a class="reference internal" href="../kconfig.html#CONFIG_BT_HCI_VS" title="CONFIG_BT_HCI_VS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_HCI_VS</span></code></a> option is enabled.</p></li>
+<li><p>The bt_read_static_addr() API was removed. This wasn’t really a completely public API, but
+since it was exposed by the public hci_driver.h header file the removal is mentioned here.
+Enable the <a class="reference internal" href="../kconfig.html#CONFIG_BT_HCI_VS" title="CONFIG_BT_HCI_VS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_HCI_VS</span></code></a> Kconfig option instead, and use vendor specific
+HCI commands API to get the Controller’s Bluetooth static address when available.</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</section>
+<section id="bluetooth-mesh">
+<h3><a class="toc-backref" href="#id26" role="doc-backlink">Bluetooth Mesh</a><a class="headerlink" href="#bluetooth-mesh" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The model metadata pointer declaration of <a class="reference internal" href="../doxygen/html/structbt__mesh__model.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">bt_mesh_model</span></code></a> has been changed
+to add <code class="docutils literal notranslate"><span class="pre">const</span></code> qualifiers. The data pointer of <a class="reference internal" href="../doxygen/html/structbt__mesh__models__metadata__entry.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">bt_mesh_models_metadata_entry</span></code></a>
+got <code class="docutils literal notranslate"><span class="pre">const</span></code> qualifier too. The model’s metadata structure and metadata raw value
+can be declared as permanent constants in the non-volatile memory. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/69679">GitHub #69679</a>)</p></li>
+<li><p>The model metadata pointer declaration of <a class="reference internal" href="../doxygen/html/structbt__mesh__model.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">bt_mesh_model</span></code></a> has been changed
+to a single <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">*</span></code> and redundant metadata pointer from <a class="reference internal" href="../doxygen/html/structbt__mesh__health__srv.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">bt_mesh_health_srv</span></code></a>
+is removed. Consequently, <code class="code docutils literal notranslate"><span class="pre">BT_MESH_MODEL_HEALTH_SRV</span></code> definition is changed
+to use variable argument notation. Now, when your implementation
+supports <a class="reference internal" href="../kconfig.html#CONFIG_BT_MESH_LARGE_COMP_DATA_SRV" title="CONFIG_BT_MESH_LARGE_COMP_DATA_SRV"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_MESH_LARGE_COMP_DATA_SRV</span></code></a> and when you need to
+specify metadata for Health Server model, simply pass metadata as the last argument
+to the <code class="code docutils literal notranslate"><span class="pre">BT_MESH_MODEL_HEALTH_SRV</span></code> macro, otherwise omit the last argument. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/71281">GitHub #71281</a>)</p></li>
+</ul>
+</section>
+<section id="bluetooth-audio">
+<h3><a class="toc-backref" href="#id27" role="doc-backlink">Bluetooth Audio</a><a class="headerlink" href="#bluetooth-audio" title="Link to this heading"></a></h3>
+<ul>
+<li><p><a class="reference internal" href="../kconfig.html#CONFIG_BT_ASCS" title="CONFIG_BT_ASCS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_ASCS</span></code></a>, <a class="reference internal" href="../kconfig.html#CONFIG_BT_PERIPHERAL" title="CONFIG_BT_PERIPHERAL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_PERIPHERAL</span></code></a> and
+<a class="reference internal" href="../kconfig.html#CONFIG_BT_ISO_PERIPHERAL" title="CONFIG_BT_ISO_PERIPHERAL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_ISO_PERIPHERAL</span></code></a> are no longer enabled automatically when
+enabling <a class="reference internal" href="../kconfig.html#CONFIG_BT_BAP_UNICAST_SERVER" title="CONFIG_BT_BAP_UNICAST_SERVER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_BAP_UNICAST_SERVER</span></code></a>, and these must now be set explicitly
+in the project configuration file. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/71993">GitHub #71993</a>)</p></li>
+<li><p>The discover callback functions <code class="code docutils literal notranslate"><span class="pre">bt_cap_initiator_cb.unicast_discovery_complete</span></code> and
+<code class="code docutils literal notranslate"><span class="pre">bt_cap_commander_cb.discovery_complete</span></code> for CAP now contain an additional parameter for
+the set member.
+This needs to be added to all instances of CAP discovery callback functions defined.
+(<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/72797">GitHub #72797</a>)</p></li>
+<li><p><a class="reference internal" href="../doxygen/html/group__bt__bap.html#ga8f2dc67c35299334d21c7dee7b8664ae" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_bap_stream_start()</span></code></a> no longer connects the CIS. To connect the CIS,
+the <a class="reference internal" href="../doxygen/html/group__bt__bap.html#gaa75f2cd2c36fdaef04a62c95bec6e2e3" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_bap_stream_connect()</span></code></a> shall now be called before <a class="reference internal" href="../doxygen/html/group__bt__bap.html#ga8f2dc67c35299334d21c7dee7b8664ae" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_bap_stream_start()</span></code></a>.
+(<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73032">GitHub #73032</a>)</p></li>
+<li><p>Renamed <code class="docutils literal notranslate"><span class="pre">stream_lang</span></code> to just <code class="docutils literal notranslate"><span class="pre">lang</span></code> to better fit with the assigned numbers document.
+This affects the <code class="docutils literal notranslate"><span class="pre">BT_AUDIO_METADATA_TYPE_LANG</span></code> macro and the following functions:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../doxygen/html/group__bt__audio__codec__cap.html#ga8182b2bed20449b8581b89677893c130" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_audio_codec_cap_meta_set_lang()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../doxygen/html/group__bt__audio__codec__cap.html#gafb631b55b69b256c60b9cf3c7f418ff8" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_audio_codec_cap_meta_get_lang()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../doxygen/html/group__bt__audio__codec__cfg.html#ga54b7eadf072c397879c1dababa2a3be0" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_audio_codec_cfg_meta_set_lang()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../doxygen/html/group__bt__audio__codec__cfg.html#ga55e3cbaeacf15fcb1f24a16eb28db99c" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_audio_codec_cfg_meta_get_lang()</span></code></a></p></li>
+</ul>
+<p>(<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/72584">GitHub #72584</a>)</p>
+</li>
+<li><p>Changed <code class="docutils literal notranslate"><span class="pre">lang</span></code> from <code class="docutils literal notranslate"><span class="pre">uint32_t</span></code> to <code class="docutils literal notranslate"><span class="pre">uint8_t</span> <span class="pre">[3]</span></code>. This modifies the following functions:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../doxygen/html/group__bt__audio__codec__cap.html#ga8182b2bed20449b8581b89677893c130" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_audio_codec_cap_meta_set_lang()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../doxygen/html/group__bt__audio__codec__cap.html#gafb631b55b69b256c60b9cf3c7f418ff8" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_audio_codec_cap_meta_get_lang()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../doxygen/html/group__bt__audio__codec__cfg.html#ga54b7eadf072c397879c1dababa2a3be0" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_audio_codec_cfg_meta_set_lang()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../doxygen/html/group__bt__audio__codec__cfg.html#ga55e3cbaeacf15fcb1f24a16eb28db99c" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_audio_codec_cfg_meta_get_lang()</span></code></a></p></li>
+</ul>
+<p>The result of this is that string values such as <code class="docutils literal notranslate"><span class="pre">&quot;eng&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;deu&quot;</span></code> can now be used to set
+new values, and to prevent unnecessary copies of data when getting the values. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/72584">GitHub #72584</a>)</p>
+</li>
+<li><p>All occurrences of <code class="docutils literal notranslate"><span class="pre">set_sirk</span></code> have been changed to just <code class="docutils literal notranslate"><span class="pre">sirk</span></code> as the <code class="docutils literal notranslate"><span class="pre">s</span></code> in <code class="docutils literal notranslate"><span class="pre">sirk</span></code> stands
+for set. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73413">GitHub #73413</a>)</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">fallback_to_default</span></code> parameter to <a class="reference internal" href="../doxygen/html/group__bt__audio__codec__cfg.html#gae712e0f8e84aeb4ad2528da34907e29d" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_audio_codec_cfg_get_chan_allocation()</span></code></a>.
+To maintain existing behavior set the parameter to <code class="docutils literal notranslate"><span class="pre">false</span></code>. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/72090">GitHub #72090</a>)</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">fallback_to_default</span></code> parameter to
+<a class="reference internal" href="../doxygen/html/group__bt__audio__codec__cap.html#ga63d5e083f03ec06939ee1cd0355c8c2a" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_audio_codec_cap_get_supported_audio_chan_counts()</span></code></a>.
+To maintain existing behavior set the parameter to <code class="docutils literal notranslate"><span class="pre">false</span></code>. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/72090">GitHub #72090</a>)</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">fallback_to_default</span></code> parameter to
+<a class="reference internal" href="../doxygen/html/group__bt__audio__codec__cap.html#ga194d938896ee65601bdce96d68c84885" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_audio_codec_cap_get_max_codec_frames_per_sdu()</span></code></a>.
+To maintain existing behavior set the parameter to <code class="docutils literal notranslate"><span class="pre">false</span></code>. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/72090">GitHub #72090</a>)</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">fallback_to_default</span></code> parameter to
+<a class="reference internal" href="../doxygen/html/group__bt__audio__codec__cfg.html#gaea087663426a49bb6ff4859800aecb84" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_audio_codec_cfg_meta_get_pref_context()</span></code></a>.
+To maintain existing behavior set the parameter to <code class="docutils literal notranslate"><span class="pre">false</span></code>. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/72090">GitHub #72090</a>)</p></li>
+</ul>
+</section>
+<section id="bluetooth-classic">
+<h3><a class="toc-backref" href="#id28" role="doc-backlink">Bluetooth Classic</a><a class="headerlink" href="#bluetooth-classic" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The source files of Host BR/EDR have been moved to <code class="docutils literal notranslate"><span class="pre">subsys/bluetooth/host/classic</span></code>.
+The Header files of Host BR/EDR have been moved to <code class="docutils literal notranslate"><span class="pre">include/zephyr/bluetooth/classic</span></code>.
+Removed the <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_BREDR</span></code>. It is replaced by new option
+<a class="reference internal" href="../kconfig.html#CONFIG_BT_CLASSIC" title="CONFIG_BT_CLASSIC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_CLASSIC</span></code></a>. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/69651">GitHub #69651</a>)</p></li>
+</ul>
+</section>
+<section id="bluetooth-host">
+<h3><a class="toc-backref" href="#id29" role="doc-backlink">Bluetooth Host</a><a class="headerlink" href="#bluetooth-host" title="Link to this heading"></a></h3>
+<ul>
+<li><p>The advertiser options <code class="code docutils literal notranslate"><span class="pre">BT_LE_ADV_OPT_USE_NAME</span></code> and <code class="code docutils literal notranslate"><span class="pre">BT_LE_ADV_OPT_FORCE_NAME_IN_AD</span></code>
+are deprecated in this release. The application need to include the device name explicitly. One
+way to do it is by adding the following to the advertising data or scan response data passed to
+the host:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">BT_DATA</span><span class="p">(</span><span class="n">BT_DATA_NAME_COMPLETE</span><span class="p">,</span><span class="w"> </span><span class="n">CONFIG_BT_DEVICE_NAME</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">CONFIG_BT_DEVICE_NAME</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>(<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/71686">GitHub #71686</a>)</p>
+</li>
+<li><p>The field <code class="code docutils literal notranslate"><span class="pre">init_credits</span></code> in <code class="xref c c-type docutils literal notranslate"><span class="pre">bt_l2cap_le_endpoint</span></code> has been removed as it was no
+longer used in Zephyr 3.4.0 and later. Any references to this field should be removed. No further
+action is needed.</p></li>
+<li><p><a class="reference internal" href="../doxygen/html/group__bt__gap.html#ga9557269dd36b624b49e76c511c3a0cc1" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">BT_LE_ADV_PARAM</span></code></a> now returns a <code class="code docutils literal notranslate"><span class="pre">const</span></code> pointer.
+Any place where the result is stored in a local variable such as
+<code class="code docutils literal notranslate"><span class="pre">struct</span> <span class="pre">bt_le_adv_param</span> <span class="pre">*param</span> <span class="pre">=</span> <span class="pre">BT_LE_ADV_CONN;</span></code> will need to
+be updated to <code class="code docutils literal notranslate"><span class="pre">const</span> <span class="pre">struct</span> <span class="pre">bt_le_adv_param</span> <span class="pre">*param</span> <span class="pre">=</span> <span class="pre">BT_LE_ADV_CONN;</span></code> or use it for
+initialization like <code class="code docutils literal notranslate"><span class="pre">struct</span> <span class="pre">bt_le_adv_param</span> <span class="pre">param</span> <span class="pre">=</span> <span class="pre">*BT_LE_ADV_CONN;</span></code></p>
+<p>The change to <a class="reference internal" href="../doxygen/html/group__bt__gap.html#ga9557269dd36b624b49e76c511c3a0cc1" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">BT_LE_ADV_PARAM</span></code></a> also affects all of its derivatives, including but not
+limited to:</p>
+<ul class="simple">
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">BT_LE_ADV_CONN</span></code></p></li>
+<li><p><a class="reference internal" href="../doxygen/html/group__bt__gap.html#ga1610555bf59f1d691d640f245957fdce" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">BT_LE_ADV_NCONN</span></code></a></p></li>
+<li><p><a class="reference internal" href="../doxygen/html/group__bt__gap.html#ga5dd57fc7f0e213db08655e631a2f314e" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">BT_LE_EXT_ADV_SCAN</span></code></a></p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">BT_LE_EXT_ADV_CODED_NCONN_NAME</span></code></p></li>
+</ul>
+<p>(<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/75065">GitHub #75065</a>)</p>
+</li>
+<li><p><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_BUF_ACL_RX_COUNT</span></code> now needs to be larger than
+<a class="reference internal" href="../kconfig.html#CONFIG_BT_MAX_CONN" title="CONFIG_BT_MAX_CONN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_MAX_CONN</span></code></a>. This was always the case due to the design of the HCI
+interface. It is now being enforced through a build-time assertion.</p>
+<p>(<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/75592">GitHub #75592</a>)</p>
+</li>
+</ul>
+</section>
+<section id="bluetooth-crypto">
+<h3><a class="toc-backref" href="#id30" role="doc-backlink">Bluetooth Crypto</a><a class="headerlink" href="#bluetooth-crypto" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_USE_PSA_API</span></code> was added to explicitly request use
+of PSA APIs instead of TinyCrypt for crypto operations. Of course, this is
+possible only a PSA crypto provider available in the system, i.e.
+<a class="reference internal" href="../kconfig.html#CONFIG_PSA_CRYPTO_CLIENT" title="CONFIG_PSA_CRYPTO_CLIENT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PSA_CRYPTO_CLIENT</span></code></a> is set. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73378">GitHub #73378</a>)</p></li>
+</ul>
+</section>
+</section>
+<section id="networking">
+<h2><a class="toc-backref" href="#id31" role="doc-backlink">Networking</a><a class="headerlink" href="#networking" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Deprecate the <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_POSIX_NAMES</span></code> option. It is a legacy option
+and was used to allow user to call BSD socket API while not enabling POSIX API.
+This could cause complications when building applications that wanted to enable the
+<a class="reference internal" href="../kconfig.html#CONFIG_POSIX_API" title="CONFIG_POSIX_API"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_POSIX_API</span></code></a> option. This means that if the application wants to use
+normal BSD socket interface, then it needs to enable <a class="reference internal" href="../kconfig.html#CONFIG_POSIX_API" title="CONFIG_POSIX_API"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_POSIX_API</span></code></a>.
+If the application does not want or is not able to enable that option, then the socket API
+calls need to be prefixed by a <code class="docutils literal notranslate"><span class="pre">zsock_</span></code> string.
+All the sample applications that use BSD socket interface are changed to enable
+<a class="reference internal" href="../kconfig.html#CONFIG_POSIX_API" title="CONFIG_POSIX_API"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_POSIX_API</span></code></a>. Internally the network stack will not enable POSIX API
+option which means that various network libraries that use sockets, are converted to
+use the <code class="docutils literal notranslate"><span class="pre">zsock_*</span></code> API calls. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/69950">GitHub #69950</a>)</p></li>
+<li><p>The zperf zperf_results struct is changed to support 64 bits transferred bytes (total_len)
+and test duration (time_in_us and client_time_in_us), instead of 32 bits. This will make
+the long-duration zperf test show with correct throughput result. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/69500">GitHub #69500</a>)</p></li>
+<li><p>Each IPv4 address assigned to a network interface has an IPv4 netmask
+tied to it instead of being set for the whole interface.
+If there is only one IPv4 address specified for a network interface,
+nothing changes from the user point of view. But, if there is more than
+one IPv4 address / network interface, the netmask must be specified
+for each IPv4 address separately. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/68419">GitHub #68419</a>)</p></li>
+<li><p>Virtual network interface API no longer has the <code class="docutils literal notranslate"><span class="pre">input</span></code> callback. The input callback was
+used to read the inner IPv4/IPv6 packets in an IP tunnel. This incoming tunnel read is now
+implemented in the <code class="docutils literal notranslate"><span class="pre">recv</span></code> callback. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/70549">GitHub #70549</a>)</p></li>
+<li><p>Virtual LAN (VLAN) implementation is changed to use the Virtual network interfaces.
+There are no API changes, but the type of a VLAN network interface is changed from <code class="docutils literal notranslate"><span class="pre">ETHERNET</span></code>
+to <code class="docutils literal notranslate"><span class="pre">VIRTUAL</span></code>. This could require changes to the code that sets the VLAN tags to a network
+interface. For example in the <a class="reference internal" href="../doxygen/html/group__ethernet.html#gac536aa7154c4a8d194ec67efb68e275c" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">net_eth_is_vlan_enabled()</span></code></a> API, the 2nd interface parameter
+must point to the main Ethernet interface, and not to the VLAN interface. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/70345">GitHub #70345</a>)</p></li>
+<li><p>Modified the <code class="docutils literal notranslate"><span class="pre">wifi</span> <span class="pre">connect</span></code> command to use key-value format for the arguments. In the
+previous implementation, we were identifying an option using its position in the argument string.
+This made it difficult to deal with optional arguments or extending the support
+for other options. Having this key-value format makes it easier to extend the options that
+can be passed to the connect command.
+<code class="docutils literal notranslate"><span class="pre">wifi</span> <span class="pre">-h</span></code> will give more information about the usage of connect command.
+(<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/70024">GitHub #70024</a>)</p></li>
+<li><p>The Kconfig <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_TCP_ACK_TIMEOUT</span></code> has been deprecated. Its usage was
+limited to TCP handshake only, and in such case the total timeout should depend
+on the total retransmission timeout (as in other cases) making the config
+redundant and confusing. Use <a class="reference internal" href="../kconfig.html#CONFIG_NET_TCP_INIT_RETRANSMISSION_TIMEOUT" title="CONFIG_NET_TCP_INIT_RETRANSMISSION_TIMEOUT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_TCP_INIT_RETRANSMISSION_TIMEOUT</span></code></a> and
+<a class="reference internal" href="../kconfig.html#CONFIG_NET_TCP_RETRY_COUNT" title="CONFIG_NET_TCP_RETRY_COUNT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_TCP_RETRY_COUNT</span></code></a> instead to control the total timeout at the
+TCP level. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/70731">GitHub #70731</a>)</p></li>
+<li><p>In LwM2M API, the callback type <a class="reference internal" href="../doxygen/html/group__lwm2m__api.html#ga3afac013b0cf731f9c86dc3791131585" title=""><code class="xref c c-type docutils literal notranslate"><span class="pre">lwm2m_engine_set_data_cb_t</span></code></a> has now an additional
+parameter <code class="docutils literal notranslate"><span class="pre">offset</span></code>. This parameter is used to indicate the offset of the data
+during a Coap Block-wise transfer. Any post write, validate or some firmware callbacks
+should be updated to include this parameter. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/72590">GitHub #72590</a>)</p></li>
+<li><p>The DNS resolver and mDNS/LLMNR responders are converted to use socket service API.
+This means that the number of pollable sockets in the system might need to be increased.
+Please check that the values of <a class="reference internal" href="../kconfig.html#CONFIG_NET_SOCKETS_POLL_MAX" title="CONFIG_NET_SOCKETS_POLL_MAX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_POLL_MAX</span></code></a> and
+<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_POSIX_MAX_FDS</span></code> are high enough. Unfortunately no exact values
+for these can be given as it depends on application needs and usage. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/72834">GitHub #72834</a>)</p></li>
+<li><p>The packet socket (type <code class="docutils literal notranslate"><span class="pre">AF_PACKET</span></code>) protocol field in <code class="docutils literal notranslate"><span class="pre">socket</span></code> API call has changed.
+The protocol field should be in network byte order so that we are compatible with Linux
+socket calls. Linux expects the protocol field to be <code class="docutils literal notranslate"><span class="pre">htons(ETH_P_ALL)</span></code> if it is desired
+to receive all the network packets. See details in
+<a class="reference external" href="https://www.man7.org/linux/man-pages/man7/packet.7.html">https://www.man7.org/linux/man-pages/man7/packet.7.html</a> documentation. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73338">GitHub #73338</a>)</p></li>
+<li><p>TCP now uses SHA-256 instead of MD5 for ISN generation. The crypto support for
+this hash computation was also changed from Mbed TLS to PSA APIs. This was achieved
+by making <a class="reference internal" href="../kconfig.html#CONFIG_NET_TCP_ISN_RFC6528" title="CONFIG_NET_TCP_ISN_RFC6528"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_TCP_ISN_RFC6528</span></code></a> depend on
+<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">PSA_WANT_ALG_SHA_256</span></code> instead of legacy <code class="docutils literal notranslate"><span class="pre">CONFIG_MBEDTLS_*</span></code>
+features. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/71827">GitHub #71827</a>)</p></li>
+</ul>
+</section>
+<section id="other-subsystems">
+<h2><a class="toc-backref" href="#id32" role="doc-backlink">Other Subsystems</a><a class="headerlink" href="#other-subsystems" title="Link to this heading"></a></h2>
+<section id="flash-map">
+<h3><a class="toc-backref" href="#id33" role="doc-backlink">Flash map</a><a class="headerlink" href="#flash-map" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The crypto backend for the flash check functions (<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FLASH_AREA_CHECK_INTEGRITY_BACKEND</span></code>),
+previously provided through either TinyCrypt or Mbed TLS, is now provided through either PSA or Mbed TLS.
+The updated Mbed TLS implementation has a slightly smaller footprint than the previous TinyCrypt one,
+and the PSA implementation offers an even greater footprint reduction for devices built with TF-M.
+PSA is the supported way forward, however as of now you may still use Mbed TLS if you cannot afford the
+one-time cost of enabling the PSA API (<a class="reference internal" href="../kconfig.html#CONFIG_MBEDTLS_PSA_CRYPTO_C" title="CONFIG_MBEDTLS_PSA_CRYPTO_C"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MBEDTLS_PSA_CRYPTO_C</span></code></a> for devices without TF-M).
+<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73511">GitHub #73511</a></p></li>
+</ul>
+</section>
+<section id="hawkbit">
+<h3><a class="toc-backref" href="#id34" role="doc-backlink">hawkBit</a><a class="headerlink" href="#hawkbit" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="../kconfig.html#CONFIG_HAWKBIT_PORT" title="CONFIG_HAWKBIT_PORT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HAWKBIT_PORT</span></code></a> is now an int instead of a string.
+<a class="reference internal" href="../kconfig.html#CONFIG_SETTINGS" title="CONFIG_SETTINGS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SETTINGS</span></code></a> needs to be enabled to use hawkBit, as it now uses the
+settings subsystem to store the hawkBit configuration. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/68806">GitHub #68806</a>)</p></li>
+</ul>
+</section>
+<section id="mcumgr">
+<h3><a class="toc-backref" href="#id35" role="doc-backlink">MCUmgr</a><a class="headerlink" href="#mcumgr" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The support for SHA-256 (when using checksum/hash functions), previously provided
+by either TinyCrypt or Mbed TLS, is now provided by either PSA or Mbed TLS.
+PSA is the recommended API going forward, however, if it is not already enabled
+(<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MBEDTLS_PSA_CRYPTO_CLIENT</span></code>) and you have tight code size
+constraints, you may be able to save 1.3 KB by using Mbed TLS instead.</p></li>
+</ul>
+</section>
+<section id="modem">
+<h3><a class="toc-backref" href="#id36" role="doc-backlink">Modem</a><a class="headerlink" href="#modem" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">CONFIG_MODEM_CHAT_LOG_BUFFER</span></code> Kconfig option was
+renamed to <a class="reference internal" href="../kconfig.html#CONFIG_MODEM_CHAT_LOG_BUFFER_SIZE" title="CONFIG_MODEM_CHAT_LOG_BUFFER_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MODEM_CHAT_LOG_BUFFER_SIZE</span></code></a>. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/70405">GitHub #70405</a>)</p></li>
+</ul>
+</section>
+<section id="posix-api">
+<span id="zephyr-3-7-posix-api-migration"></span><h3><a class="toc-backref" href="#id37" role="doc-backlink">POSIX API</a><a class="headerlink" href="#posix-api" title="Link to this heading"></a></h3>
+<ul>
+<li><p>The <a class="reference internal" href="release-notes-3.7.html#zephyr-3-7-posix-api-deprecations"><span class="std std-ref">POSIX API Kconfig deprecations</span></a> may require
+changes to Kconfig files (<code class="docutils literal notranslate"><span class="pre">prj.conf</span></code>, etc), as outlined in the release notes. A more automated
+approach is available via the provided migration script. Simply run the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python<span class="w"> </span><span class="si">${</span><span class="nv">ZEPHYR_BASE</span><span class="si">}</span>/scripts/utils/migrate_posix_kconfigs.py<span class="w"> </span>-r<span class="w"> </span>root_path
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="state-machine-framework">
+<h3><a class="toc-backref" href="#id38" role="doc-backlink">State Machine Framework</a><a class="headerlink" href="#state-machine-framework" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The <a class="reference internal" href="../doxygen/html/group__smf.html#ga5760b98a36ed1ac55eba700cf44c7e1e" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">SMF_CREATE_STATE</span></code></a> macro now always takes 5 arguments. The amount of arguments is
+now independent of the values of <a class="reference internal" href="../kconfig.html#CONFIG_SMF_ANCESTOR_SUPPORT" title="CONFIG_SMF_ANCESTOR_SUPPORT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SMF_ANCESTOR_SUPPORT</span></code></a> and
+<a class="reference internal" href="../kconfig.html#CONFIG_SMF_INITIAL_TRANSITION" title="CONFIG_SMF_INITIAL_TRANSITION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SMF_INITIAL_TRANSITION</span></code></a>. If the additional arguments are not used, they
+have to be set to <code class="docutils literal notranslate"><span class="pre">NULL</span></code>. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/71250">GitHub #71250</a>)</p></li>
+<li><p>SMF now follows a more UML-like transition flow when the transition source is a parent of the
+state called by <a class="reference internal" href="../doxygen/html/group__smf.html#ga8399cfa9e793a7f188b4ed4fec9f4f90" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">smf_run_state()</span></code></a>. Exit actions up to (but not including) the Least Common
+Ancestor of the transition source and target state will be executed, as will entry actions from
+(but not including) the LCA down to the target state. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/71675">GitHub #71675</a>)</p></li>
+<li><p>Previously, calling <a class="reference internal" href="../doxygen/html/group__smf.html#ga3e5ac3e2ad105d1a01b4cf0b1a8a6fcb" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">smf_set_state()</span></code></a> with a <code class="docutils literal notranslate"><span class="pre">new_state</span></code> set to NULL would execute all
+exit actions from the current state to the topmost parent, with the expectation the topmost exit
+action would terminate the state machine. Passing <code class="docutils literal notranslate"><span class="pre">NULL</span></code> is now not allowed. Instead create a
+‘terminate’ state at the top level, and call <a class="reference internal" href="../doxygen/html/group__smf.html#gaae28c66f0652c99ba8e843eeaf02aaf7" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">smf_set_terminate()</span></code></a> from its entry action.</p></li>
+</ul>
+</section>
+<section id="updatehub">
+<h3><a class="toc-backref" href="#id39" role="doc-backlink">UpdateHub</a><a class="headerlink" href="#updatehub" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The SHA-256 implementation used to perform integrity checks is not chosen with
+<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FLASH_AREA_CHECK_INTEGRITY_BACKEND</span></code> anymore. Instead, the implementation
+used (now either Mbed TLS or PSA) is chosen based on <a class="reference internal" href="../kconfig.html#CONFIG_PSA_CRYPTO_CLIENT" title="CONFIG_PSA_CRYPTO_CLIENT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PSA_CRYPTO_CLIENT</span></code></a>.
+It still defaults to using Mbed TLS (with a smaller footprint than previously) unless the
+board is built with TF-M or <a class="reference internal" href="../kconfig.html#CONFIG_MBEDTLS_PSA_CRYPTO_C" title="CONFIG_MBEDTLS_PSA_CRYPTO_C"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MBEDTLS_PSA_CRYPTO_C</span></code></a> is enabled. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/73511">GitHub #73511</a>)</p></li>
+</ul>
+</section>
+</section>
+<section id="architectures">
+<h2><a class="toc-backref" href="#id40" role="doc-backlink">Architectures</a><a class="headerlink" href="#architectures" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Function <code class="xref c c-func docutils literal notranslate"><span class="pre">arch_start_cpu()</span></code> has been renamed to <a class="reference internal" href="../doxygen/html/group__arch-smp.html#ga32b7e543ce51498200c368c39c900bc8" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_cpu_start()</span></code></a>. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/64987">GitHub #64987</a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CONFIG_ARM64_ENABLE_FRAME_POINTER</span></code> is deprecated. Use <a class="reference internal" href="../kconfig.html#CONFIG_FRAME_POINTER" title="CONFIG_FRAME_POINTER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FRAME_POINTER</span></code></a>
+instead. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/72646">GitHub #72646</a>)</p></li>
+<li><p>x86</p>
+<ul>
+<li><p>Kconfigs <code class="docutils literal notranslate"><span class="pre">CONFIG_DISABLE_SSBD</span></code> and <code class="docutils literal notranslate"><span class="pre">CONFIG_ENABLE_EXTENDED_IBRS</span></code>
+are deprecated. Use <a class="reference internal" href="../kconfig.html#CONFIG_X86_DISABLE_SSBD" title="CONFIG_X86_DISABLE_SSBD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_X86_DISABLE_SSBD</span></code></a> and
+<a class="reference internal" href="../kconfig.html#CONFIG_X86_ENABLE_EXTENDED_IBRS" title="CONFIG_X86_ENABLE_EXTENDED_IBRS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_X86_ENABLE_EXTENDED_IBRS</span></code></a> instead. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/69690">GitHub #69690</a>)</p></li>
+</ul>
+</li>
+<li><p>POSIX arch:</p>
+<ul>
+<li><p>LLVM fuzzing support has been refactored. A test application now needs to provide its own
+<code class="docutils literal notranslate"><span class="pre">LLVMFuzzerTestOneInput()</span></code> hook instead of relying on a board provided one. Check
+<code class="docutils literal notranslate"><span class="pre">samples/subsys/debug/fuzz/</span></code> for an example. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/71378">GitHub #71378</a>)</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

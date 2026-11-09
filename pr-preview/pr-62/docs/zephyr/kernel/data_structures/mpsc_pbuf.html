@@ -1,0 +1,542 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multi Producer Single Consumer Packet Buffer &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/kernel/data_structures/mpsc_pbuf.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Single Producer Single Consumer Packet Buffer" href="spsc_pbuf.html" />
+    <link rel="prev" title="Double-linked List" href="dlist.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Kernel</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../services/index.html">Kernel Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drivers/index.html">Device Driver Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usermode/index.html">User Mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management/index.html">Memory Management</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Data Structures</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="slist.html">Single-linked List</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dlist.html">Double-linked List</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Multi Producer Single Consumer Packet Buffer</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#internals">Internals</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#allocation">Allocation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#allocation-with-overwrite">Allocation with overwrite</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#usage">Usage</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#packet-header-definition">Packet header definition</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#packet-buffer-configuration">Packet buffer configuration</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#packet-producing">Packet producing</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#packet-consuming">Packet consuming</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spsc_pbuf.html">Single Producer Single Consumer Packet Buffer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbtree.html">Balanced Red/Black Tree</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ring_buffers.html">Ring Buffers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mpsc_lockfree.html">Multi Producer Single Consumer Lock Free Queue</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spsc_lockfree.html">Single Producer Single Consumer Lock Free Queue</a></li>
+<li class="toctree-l3"><a class="reference internal" href="min_heap.html">Min-Heap Data Structure</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../timing_functions/index.html">Executing Time Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../object_cores/index.html">Object Cores</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timeutil.html">Time Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../util/index.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iterable_sections/index.html">Iterable Sections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../code-relocation.html">Code And Data Relocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanup.html">Scope-based Cleanup Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Kernel</a> &raquo;</li>
+  
+     <li><a href="index.html">Data Structures</a> &raquo;</li>
+  
+  <li>Multi Producer Single Consumer Packet Buffer</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/kernel/data_structures/mpsc_pbuf.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27kernel%2Fdata_structures%2Fmpsc_pbuf%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Kernel%2Carea%3A+Logging&env=-+Page%3A+kernel%2Fdata_structures%2Fmpsc_pbuf%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="multi-producer-single-consumer-packet-buffer">
+<span id="mpsc-pbuf"></span><h1>Multi Producer Single Consumer Packet Buffer<a class="headerlink" href="#multi-producer-single-consumer-packet-buffer" title="Link to this heading"></a></h1>
+<p>A <em class="dfn">Multi Producer Single Consumer Packet Buffer (MPSC_PBUF)</em> is a circular
+buffer, whose contents are stored in first-in-first-out order. Variable size
+packets are stored in the buffer. Packet buffer works under assumption that there
+is a single context that consumes the data. However, it is possible that another
+context may interfere to flush the data and never come back (panic case).
+Packet is produced in two steps: first requested amount of data is allocated,
+producer fills the data and commits it. Consuming a packet is also performed in
+two steps: consumer claims the packet, gets pointer to it and length and later
+on packet is freed. This approach reduces memory copying.</p>
+<p>A <em class="dfn">MPSC Packet Buffer</em> has the following key properties:</p>
+<ul class="simple">
+<li><p>Allocate, commit scheme used for packet producing.</p></li>
+<li><p>Claim, free scheme used for packet consuming.</p></li>
+<li><p>Allocator ensures that contiguous memory of requested length is allocated.</p></li>
+<li><p>Following policies can be applied when requested space cannot be allocated:</p>
+<ul>
+<li><p><strong>Overwrite</strong> - oldest entries are dropped until requested amount of memory can
+be allocated. For each dropped packet user callback is called.</p></li>
+<li><p><strong>No overwrite</strong> - When requested amount of space cannot be allocated,
+allocation fails.</p></li>
+</ul>
+</li>
+<li><p>Dedicated, optimized API for storing short packets.</p></li>
+<li><p>Allocation with timeout.</p></li>
+</ul>
+<section id="internals">
+<h2>Internals<a class="headerlink" href="#internals" title="Link to this heading"></a></h2>
+<p>Each packet in the buffer contains <code class="docutils literal notranslate"><span class="pre">MPSC_PBUF</span></code> specific header which is used
+for internal management. Header consists of 2 bit flags. In order to optimize
+memory usage, header can be added on top of the user header using
+<a class="reference internal" href="../../doxygen/html/group__mpsc__packet.html#ga643932633f40ecdcfb9120662221d828" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">MPSC_PBUF_HDR</span></code></a> and remaining bits in the first word can be application
+specific. Header consists of following flags:</p>
+<ul class="simple">
+<li><p>valid - bit set to one when packet contains valid user packet</p></li>
+<li><p>busy - bit set when packet is being consumed (claimed but not free)</p></li>
+</ul>
+<p>Header state:</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>valid</p></td>
+<td><p>busy</p></td>
+<td><p>description</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>space is free</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>valid packet</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>claimed valid packet</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>internal skip packet</p></td>
+</tr>
+</tbody>
+</table>
+<p>Packet buffer space contains free space, valid user packets and internal skip
+packets. Internal skip packets indicates padding, e.g. at the end of the buffer.</p>
+<section id="allocation">
+<h3>Allocation<a class="headerlink" href="#allocation" title="Link to this heading"></a></h3>
+<p>Using pairs for read and write indexes, available space is determined. If
+space can be allocated, temporary write index is moved and pointer to a space
+within buffer is returned. Packet header is reset. If allocation required
+wrapping of the write index, a skip packet is added to the end of buffer. If
+space cannot be allocated and overwrite is disabled then <code class="docutils literal notranslate"><span class="pre">NULL</span></code> pointer is
+returned or context blocks if allocation was with timeout.</p>
+</section>
+<section id="allocation-with-overwrite">
+<h3>Allocation with overwrite<a class="headerlink" href="#allocation-with-overwrite" title="Link to this heading"></a></h3>
+<p>If overwrite is enabled, oldest packets are dropped until requested amount of
+space can be allocated. When packets are dropped <code class="docutils literal notranslate"><span class="pre">busy</span></code> flag is checked in the
+header to ensure that currently consumed packet is not overwritten. In that case,
+skip packet is added before busy packet and packets following the busy packet
+are dropped. When busy packet is being freed, such situation is detected and
+packet is converted to skip packet to avoid double processing.</p>
+</section>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<section id="packet-header-definition">
+<h3>Packet header definition<a class="headerlink" href="#packet-header-definition" title="Link to this heading"></a></h3>
+<p>Packet header details can be found in <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/sys/mpsc_packet.h">include/zephyr/sys/mpsc_packet.h</a>.
+API functions can be found in <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/sys/mpsc_pbuf.h">include/zephyr/sys/mpsc_pbuf.h</a>. Headers
+are split to avoid include spam when declaring the packet.</p>
+<p>User header structure must start with internal header:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/sys/mpsc_packet.h&gt;</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">foo_header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">MPSC_PBUF_HDR</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">length</span><span class="o">:</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">MPSC_PBUF_HDR_BITS</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="packet-buffer-configuration">
+<h3>Packet buffer configuration<a class="headerlink" href="#packet-buffer-configuration" title="Link to this heading"></a></h3>
+<p>Configuration structure contains buffer details, configuration flags and
+callbacks. Following callbacks are used by the packet buffer:</p>
+<ul class="simple">
+<li><p>Drop notification - callback called whenever a packet is dropped due to
+overwrite.</p></li>
+<li><p>Get packet length - callback to determine packet length</p></li>
+</ul>
+</section>
+<section id="packet-producing">
+<h3>Packet producing<a class="headerlink" href="#packet-producing" title="Link to this heading"></a></h3>
+<p>Standard, two step method:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">foo_packet</span><span class="w"> </span><span class="o">*</span><span class="n">packet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mpsc_pbuf_alloc</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">,</span><span class="w"> </span><span class="n">K_NO_WAIT</span><span class="p">);</span>
+
+<span class="n">fill_data</span><span class="p">(</span><span class="n">packet</span><span class="p">);</span>
+
+<span class="n">mpsc_pbuf_commit</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">packet</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Performance optimized storing of small packets:</p>
+<ul class="simple">
+<li><p>32 bit word packet</p></li>
+<li><p>32 bit word with pointer packet</p></li>
+</ul>
+<p>Note that since packets are written by value, they should already contain
+<code class="docutils literal notranslate"><span class="pre">valid</span></code> bit set in the header.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">mpsc_pbuf_put_word</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">);</span>
+<span class="n">mpsc_pbuf_put_word_ext</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">ptr</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="packet-consuming">
+<h3>Packet consuming<a class="headerlink" href="#packet-consuming" title="Link to this heading"></a></h3>
+<p>Two step method:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">foo_packet</span><span class="w"> </span><span class="o">*</span><span class="n">packet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mpsc_pbuf_claim</span><span class="p">(</span><span class="n">buffer</span><span class="p">);</span>
+
+<span class="n">process</span><span class="p">(</span><span class="n">packet</span><span class="p">);</span>
+
+<span class="n">mpsc_pbuf_free</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">packet</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

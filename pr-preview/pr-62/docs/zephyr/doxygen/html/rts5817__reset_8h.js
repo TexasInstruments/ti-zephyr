@@ -1,0 +1,28 @@
+var rts5817__reset_8h =
+[
+    [ "SYS_FORCE_RST_AES", "rts5817__reset_8h.html#aaf2e54b232aa60440f7c1d5c0511c02d", null ],
+    [ "SYS_FORCE_RST_BUS", "rts5817__reset_8h.html#a7414665cdf645632143c2d6fea17b776", null ],
+    [ "SYS_FORCE_RST_CK120M", "rts5817__reset_8h.html#a62f2a530b3edccb837cc41ebb9d96973", null ],
+    [ "SYS_FORCE_RST_CK30M", "rts5817__reset_8h.html#a4624f967815fc638e685370bafe2b78c", null ],
+    [ "SYS_FORCE_RST_CK60M", "rts5817__reset_8h.html#a9508afd065b96d90cc88142257592ad4", null ],
+    [ "SYS_FORCE_RST_DPHY", "rts5817__reset_8h.html#a8a91ec68333784a092cf44ff2c1dff66", null ],
+    [ "SYS_FORCE_RST_GE", "rts5817__reset_8h.html#a9ee92f1cc19dd0e75482bf0c03bff9f2", null ],
+    [ "SYS_FORCE_RST_I2C", "rts5817__reset_8h.html#ad937d749d63ed3f1cda7230b7d8703e3", null ],
+    [ "SYS_FORCE_RST_I2C0", "rts5817__reset_8h.html#af315c0759b65e0b1aeaad647affb2509", null ],
+    [ "SYS_FORCE_RST_I2C1", "rts5817__reset_8h.html#aa19e18aa4473a20663a4b27fe578da37", null ],
+    [ "SYS_FORCE_RST_I2C_S", "rts5817__reset_8h.html#a504688681d737871a07704144e067a5b", null ],
+    [ "SYS_FORCE_RST_PKE", "rts5817__reset_8h.html#a02b64ae56d06b3ce7d447e71745c165b", null ],
+    [ "SYS_FORCE_RST_PUF", "rts5817__reset_8h.html#afcdab368b9892c355b347edd5ef486e6", null ],
+    [ "SYS_FORCE_RST_SHA", "rts5817__reset_8h.html#a7196118597cf185463af315ce63cee11", null ],
+    [ "SYS_FORCE_RST_SPI_CACHE", "rts5817__reset_8h.html#a9294785a5191d0633c15b16fb495e4cf", null ],
+    [ "SYS_FORCE_RST_SPI_SSI_M", "rts5817__reset_8h.html#a39c4232a5a0e18666a830ae93895f8bb", null ],
+    [ "SYS_FORCE_RST_SPI_SSI_S", "rts5817__reset_8h.html#a5233a06892e42b27b6798a852263f9dd", null ],
+    [ "SYS_FORCE_RST_SPI_SSOR", "rts5817__reset_8h.html#a963f972e930500f24feaa5f9512042ef", null ],
+    [ "SYS_FORCE_RST_SSI_S_BUS", "rts5817__reset_8h.html#a48e137351e9d02a85fcdb89149e5133d", null ],
+    [ "SYS_FORCE_RST_SYS", "rts5817__reset_8h.html#a900714c25d444b1f12bfc6b47407aed5", null ],
+    [ "SYS_FORCE_RST_TRNG", "rts5817__reset_8h.html#ae714f838193b2d5e16aa0d4f7e0293fb", null ],
+    [ "SYS_FORCE_RST_UART0", "rts5817__reset_8h.html#a72d191c8107023c02a7aabc81e942026", null ],
+    [ "SYS_FORCE_RST_UART1", "rts5817__reset_8h.html#a150231404d7c6227d3e988543b172851", null ],
+    [ "SYS_FORCE_RST_USB2", "rts5817__reset_8h.html#ad77b24882ce1285f725ac09bbfa73aea", null ],
+    [ "SYS_FORCE_RST_USB2_PHY", "rts5817__reset_8h.html#a1ddc9ecddc2562732f91e47b63a394c0", null ]
+];

@@ -1,0 +1,511 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loading extensions &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/services/llext/load.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Debugging extensions" href="debug.html" />
+    <link rel="prev" title="Building extensions" href="build.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">OS Services</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../binary_descriptors/index.html">Binary Descriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../console.html">Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cpu_freq/index.html">CPU Frequency Scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cpu_load/index.html">CPU Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../crc/index.html">CRC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../crypto/index.html">Cryptography</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debugging/index.html">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">Device Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dsp/index.html">Digital Signal Processing (DSP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../formatted_output.html">Formatted Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../input/index.html">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../instrumentation/index.html">Instrumentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ipc/index.html">Interprocessor Communication (IPC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../jwt/index.html">JSON Web Token (JWT)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Linkable Loadable Extensions (LLEXT)</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="config.html">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="build.html">Building extensions</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Loading extensions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#loading-an-extension">Loading an extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#initializing-and-cleaning-up-the-extension">Initializing and cleaning up the extension</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#accessing-code-and-data">Accessing code and data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cleaning-up-after-use">Cleaning up after use</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="debug.html">Debugging extensions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html">API Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../logging/index.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tracing/index.html">Tracing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resource_management/index.html">Resource Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mem_mgmt/index.html">Memory Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../net_buf/index.html">Network Buffers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modem/index.html">Modem modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notify.html">Asynchronous Notifications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pm/index.html">Power Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">OS Abstraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../poweroff.html">Power off</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../profiling/index.html">Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../shell/index.html">Shell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../serialization/index.html">Serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../smf/index.html">State Machine Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sensing/index.html">Sensing Subsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../task_wdt/index.html">Task Watchdog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tfm/index.html">Trusted Firmware-M (TF-M)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../uuid/index.html">UUID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rtio/index.html">Real Time I/O (RTIO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../zbus/index.html">Zephyr bus (zbus)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">OS Services</a> &raquo;</li>
+  
+     <li><a href="index.html">Linkable Loadable Extensions (LLEXT)</a> &raquo;</li>
+  
+  <li>Loading extensions</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/services/llext/load.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27services%2Fllext%2Fload%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+llext&env=-+Page%3A+services%2Fllext%2Fload%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="loading-extensions">
+<h1>Loading extensions<a class="headerlink" href="#loading-extensions" title="Link to this heading"></a></h1>
+<p>Once an extension is built and the ELF file is available, it can be loaded into
+the Zephyr application using the LLEXT API, which provides a way to load the
+extension into memory, access its symbols and call its functions.</p>
+<section id="loading-an-extension">
+<h2>Loading an extension<a class="headerlink" href="#loading-an-extension" title="Link to this heading"></a></h2>
+<p>An extension may be loaded using any implementation of a <a class="reference internal" href="../../doxygen/html/structllext__loader.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">llext_loader</span></code></a>
+which has a set of function pointers that provide the necessary functionality
+to read the ELF data. A loader also provides some minimal context (memory)
+needed by the <a class="reference internal" href="../../doxygen/html/group__llext__apis.html#ga0a4c3db30bc3ec7aa8a9b0e076af7157" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">llext_load()</span></code></a> function. Several loaders are already provided:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>An implementation over a buffer containing an ELF in addressable memory in
+memory is available as <a class="reference internal" href="../../doxygen/html/structllext__buf__loader.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">llext_buf_loader</span></code></a>. To use this kind of
+loader, it is helpful to use one of the <a class="reference internal" href="../../doxygen/html/group__llext__loader__apis.html#ga8485b4dfecbd2eff3e21b5958d5e8699" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">LLEXT_TEMPORARY_BUF_LOADER</span></code></a>,
+<a class="reference internal" href="../../doxygen/html/group__llext__loader__apis.html#ga2c2214bcf1506f1209476619e42114b3" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">LLEXT_PERSISTENT_BUF_LOADER</span></code></a>, or <a class="reference internal" href="../../doxygen/html/group__llext__loader__apis.html#gac726727897e02bca0bf5d32f4c66be55" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">LLEXT_WRITABLE_BUF_LOADER</span></code></a>
+macros to tell LLEXT the appropriate type of memory buffer.</p></li>
+<li><p>An implementation that reads data from a file in the filesystem is available
+as the <a class="reference internal" href="../../doxygen/html/structllext__fs__loader.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">llext_fs_loader</span></code></a>. The path to the file must be provided
+when creating the loader with the <a class="reference internal" href="../../doxygen/html/group__llext__loader__apis.html#ga25a394fb7f7f93cfe3ab92d8ed4a6bff" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">LLEXT_FS_LOADER</span></code></a> macro.</p></li>
+</ul>
+</div></blockquote>
+<p>The extensions are loaded with a call to the <a class="reference internal" href="../../doxygen/html/group__llext__apis.html#ga0a4c3db30bc3ec7aa8a9b0e076af7157" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">llext_load()</span></code></a> function,
+passing in the extension name and the configured loader. Once that completes
+successfully, the extension is loaded into memory and is ready to be used.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When <a class="reference internal" href="../../kernel/usermode/index.html#usermode-api"><span class="std std-ref">User Mode</span></a> is enabled, the extension will not be
+included in any user memory domain. To allow access from user mode, the
+<a class="reference internal" href="../../doxygen/html/group__llext__apis.html#ga64b13edf15b7c233b49c9c8edff884e6" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">llext_add_domain()</span></code></a> function must be called.</p>
+</div>
+</section>
+<section id="initializing-and-cleaning-up-the-extension">
+<h2>Initializing and cleaning up the extension<a class="headerlink" href="#initializing-and-cleaning-up-the-extension" title="Link to this heading"></a></h2>
+<p>The extension may define a number of initialization functions that must be
+called after loading but before any function in it can be used; this is typical
+in languages such as C++ that provide the concept of object constructors. The
+same is true for cleanup functions that must be called before unloading the
+extension.</p>
+<p>LLEXT supports calling the functions listed in the <code class="docutils literal notranslate"><span class="pre">.preinit_array</span></code> and
+<code class="docutils literal notranslate"><span class="pre">.init_array</span></code> sections of the ELF file with the <a class="reference internal" href="../../doxygen/html/group__llext__apis.html#ga01c0c23dba5ff1aa9da42c7895cc7fab" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">llext_bringup()</span></code></a>
+function, and the functions listed in the <code class="docutils literal notranslate"><span class="pre">.fini_array</span></code> section with the
+<a class="reference internal" href="../../doxygen/html/group__llext__apis.html#gae061bb6100ad394fcaca7751ff3dadba" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">llext_teardown()</span></code></a> function. These APIs are compatible with
+<a class="reference internal" href="../../kernel/usermode/index.html#usermode-api"><span class="std std-ref">User Mode</span></a>, and thus can be called from either kernel or
+user context.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The code run by these functions is fully determined by the contents of the
+ELF file. This may have security implications if its origin is untrusted.</p>
+</div>
+<p>If the extension requires a dedicated thread, the <a class="reference internal" href="../../doxygen/html/group__llext__apis.html#ga809f7a7976b4436dad31aa03d9ea3729" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">llext_bootstrap()</span></code></a>
+function can be used to minimize boilerplate code. This function has a
+signature that is compatible with the <a class="reference internal" href="../../doxygen/html/group__thread__apis.html#gad5b0bff3102f1656089f5875d999a367" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_create()</span></code></a> API, and will
+call <a class="reference internal" href="../../doxygen/html/group__llext__apis.html#ga01c0c23dba5ff1aa9da42c7895cc7fab" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">llext_bringup()</span></code></a>, then a user-specified function in the same
+context, and finally <a class="reference internal" href="../../doxygen/html/group__llext__apis.html#gae061bb6100ad394fcaca7751ff3dadba" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">llext_teardown()</span></code></a> before returning.</p>
+</section>
+<section id="accessing-code-and-data">
+<h2>Accessing code and data<a class="headerlink" href="#accessing-code-and-data" title="Link to this heading"></a></h2>
+<p>To interact with the newly loaded extension, the host application must use the
+<a class="reference internal" href="../../doxygen/html/group__llext__apis.html#gac0982fad15a62723a5cad3f7edd6ba3e" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">llext_find_sym()</span></code></a> function to get the address of the exported symbol.
+The returned <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span></code> can then be cast to the appropriate type and used.</p>
+<p>A wrapper for calling a function with no arguments is provided in
+<a class="reference internal" href="../../doxygen/html/group__llext__apis.html#gad50ad281c70093da99851723fc6af470" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">llext_call_fn()</span></code></a>.</p>
+<p>Advanced users that need direct access to areas of the newly loaded extension
+may want to refer to <a class="reference internal" href="../../doxygen/html/group__llext__inspect__apis.html#ga23121962662f057da004ac1c527716e3" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">llext_get_section_info()</span></code></a> and other LLEXT
+inspection APIs.</p>
+</section>
+<section id="cleaning-up-after-use">
+<h2>Cleaning up after use<a class="headerlink" href="#cleaning-up-after-use" title="Link to this heading"></a></h2>
+<p>The <a class="reference internal" href="../../doxygen/html/group__llext__apis.html#gad3df7ed4d436846504c0047166eb929e" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">llext_unload()</span></code></a> function must be called to free the memory used by
+the extension once it is no longer required. After this call completes, all
+pointers to symbols in the extension that were obtained will be invalid.</p>
+</section>
+</section>
+<section id="troubleshooting">
+<h1>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h1>
+<p>This feature is being actively developed and as such it is possible that some
+issues may arise. Since linking does modify the binary code, in case of errors
+the results are difficult to predict. Some common issues may be:</p>
+<ul class="simple">
+<li><p>Results from <a class="reference internal" href="../../doxygen/html/group__llext__apis.html#gac0982fad15a62723a5cad3f7edd6ba3e" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">llext_find_sym()</span></code></a> point to an invalid address;</p></li>
+<li><p>Constants and variables defined in the extension do not have the expected
+values;</p></li>
+<li><p>Calling a function defined in an extension results in a hard fault, or memory
+in the main application is corrupted after returning from it.</p></li>
+</ul>
+<p>If any of this happens, the following tips may help understand the issue:</p>
+<ul class="simple">
+<li><p>Make sure <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LLEXT_LOG_LEVEL</span></code> is set to <code class="docutils literal notranslate"><span class="pre">DEBUG</span></code>, then
+obtain a log of the <a class="reference internal" href="../../doxygen/html/group__llext__apis.html#ga0a4c3db30bc3ec7aa8a9b0e076af7157" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">llext_load()</span></code></a> invocation.</p></li>
+<li><p>If possible, disable memory protection (MMU/MPU) and see if this results in
+different behavior.</p></li>
+<li><p>Try to simplify the extension to the minimum possible code that reproduces
+the issue.</p></li>
+<li><p>Use a debugger to inspect the memory and registers to try to understand what
+is happening. See <a class="reference internal" href="debug.html#llext-debug"><span class="std std-ref">Debugging extensions</span></a> for more details.</p></li>
+</ul>
+<p>If the issue persists, please open an issue in the GitHub repository, including
+all the above information.</p>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

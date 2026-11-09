@@ -1,0 +1,1552 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zephyr bus (zbus) &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/services/zbus/index.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Build and Configuration Systems" href="../../build/index.html" />
+    <link rel="prev" title="Real Time I/O (RTIO)" href="../rtio/index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">OS Services</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../binary_descriptors/index.html">Binary Descriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../console.html">Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cpu_freq/index.html">CPU Frequency Scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cpu_load/index.html">CPU Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../crc/index.html">CRC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../crypto/index.html">Cryptography</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debugging/index.html">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">Device Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dsp/index.html">Digital Signal Processing (DSP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../formatted_output.html">Formatted Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../input/index.html">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../instrumentation/index.html">Instrumentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ipc/index.html">Interprocessor Communication (IPC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../jwt/index.html">JSON Web Token (JWT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../llext/index.html">Linkable Loadable Extensions (LLEXT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../logging/index.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tracing/index.html">Tracing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resource_management/index.html">Resource Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mem_mgmt/index.html">Memory Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../net_buf/index.html">Network Buffers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modem/index.html">Modem modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notify.html">Asynchronous Notifications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pm/index.html">Power Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">OS Abstraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../poweroff.html">Power off</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../profiling/index.html">Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../shell/index.html">Shell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../serialization/index.html">Serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../smf/index.html">State Machine Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sensing/index.html">Sensing Subsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../task_wdt/index.html">Task Watchdog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tfm/index.html">Trusted Firmware-M (TF-M)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../uuid/index.html">UUID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rtio/index.html">Real Time I/O (RTIO)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Zephyr bus (zbus)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#concepts">Concepts</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#virtual-distributed-event-dispatcher">Virtual Distributed Event Dispatcher</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#hlp-priority-boost">HLP priority boost</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#limitations">Limitations</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#delivery-guarantees">Delivery guarantees</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#message-delivery-sequence">Message delivery sequence</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#usage">Usage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#publishing-to-a-channel">Publishing to a channel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reading-from-a-channel">Reading from a channel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#notifying-a-channel">Notifying a channel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#declaring-channels-and-observers">Declaring channels and observers</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#unique-channel-identifiers">Unique channel identifiers</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#iterating-over-channels-and-observers">Iterating over channels and observers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#advanced-channel-control">Advanced channel control</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#listeners-message-access">Listeners message access</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#async-listeners-message-access">Async listeners message access</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#user-data">User Data</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#id4">Claim and finish a channel</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#runtime-observer-registration">Runtime observer registration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#proxy-agent-communication-experimental">Proxy Agent Communication (Experimental)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id5">Concepts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#transport-backends">Transport Backends</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#ipc-backend">IPC Backend</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#samples">Samples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#suggested-uses">Suggested Uses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration Options</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#proxy-agent-configuration-options">Proxy Agent Configuration Options</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#api-reference">API Reference</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">OS Services</a> &raquo;</li>
+  
+  <li>Zephyr bus (zbus)</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/services/zbus/index.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27services%2Fzbus%2Findex%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+zbus&env=-+Page%3A+services%2Fzbus%2Findex%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="zephyr-bus-zbus">
+<span id="zbus"></span><h1>Zephyr bus (zbus)<a class="headerlink" href="#zephyr-bus-zbus" title="Link to this heading"></a></h1>
+<p>The <em class="dfn">Zephyr bus - zbus</em> is a lightweight and flexible software bus enabling a simple way for
+threads to talk to one another in a many-to-many way.</p>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#concepts" id="id18">Concepts</a></p>
+<ul>
+<li><p><a class="reference internal" href="#virtual-distributed-event-dispatcher" id="id19">Virtual Distributed Event Dispatcher</a></p></li>
+<li><p><a class="reference internal" href="#limitations" id="id20">Limitations</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#usage" id="id21">Usage</a></p>
+<ul>
+<li><p><a class="reference internal" href="#publishing-to-a-channel" id="id22">Publishing to a channel</a></p></li>
+<li><p><a class="reference internal" href="#reading-from-a-channel" id="id23">Reading from a channel</a></p></li>
+<li><p><a class="reference internal" href="#notifying-a-channel" id="id24">Notifying a channel</a></p></li>
+<li><p><a class="reference internal" href="#declaring-channels-and-observers" id="id25">Declaring channels and observers</a></p></li>
+<li><p><a class="reference internal" href="#iterating-over-channels-and-observers" id="id26">Iterating over channels and observers</a></p></li>
+<li><p><a class="reference internal" href="#advanced-channel-control" id="id27">Advanced channel control</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#proxy-agent-communication-experimental" id="id28">Proxy Agent Communication (Experimental)</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id5" id="id29">Concepts</a></p></li>
+<li><p><a class="reference internal" href="#transport-backends" id="id30">Transport Backends</a></p></li>
+<li><p><a class="reference internal" href="#id6" id="id31">Usage</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#samples" id="id32">Samples</a></p></li>
+<li><p><a class="reference internal" href="#suggested-uses" id="id33">Suggested Uses</a></p></li>
+<li><p><a class="reference internal" href="#configuration-options" id="id34">Configuration Options</a></p>
+<ul>
+<li><p><a class="reference internal" href="#proxy-agent-configuration-options" id="id35">Proxy Agent Configuration Options</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#api-reference" id="id36">API Reference</a></p></li>
+</ul>
+</nav>
+<section id="concepts">
+<h2><a class="toc-backref" href="#id18" role="doc-backlink">Concepts</a><a class="headerlink" href="#concepts" title="Link to this heading"></a></h2>
+<p>Threads can send messages to one or more observers using zbus. It makes the many-to-many
+communication possible. The bus implements message-passing and publish/subscribe communication
+paradigms that enable threads to communicate synchronously or asynchronously through shared memory.</p>
+<p>The communication through zbus is channel-based. Threads (or callbacks) use channels to exchange
+messages. Additionally, besides other actions, threads can publish and observe channels. When a
+thread publishes a message on a channel, the bus will make the message available to all the
+published channel’s observers. Based on the observer’s type, it can access the message directly,
+receive a copy of it, or even receive only a reference of the published channel.</p>
+<p>The figure below shows an example of a typical application using zbus in which the application logic
+(hardware independent) talks to other threads via software bus. Note that the threads are decoupled
+from each other because they only use zbus channels and do not need to know each other to talk.</p>
+<figure class="align-default" id="id7">
+<a class="reference internal image-reference" href="../../_images/zbus_overview.svg"><img alt="zbus usage overview" src="../../_images/zbus_overview.svg" style="width: 75%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">A typical zbus application architecture.</span><a class="headerlink" href="#id7" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The bus comprises:</p>
+<ul class="simple">
+<li><p>Set of channels that consists of the control metadata information, and the message itself;</p></li>
+<li><p><em class="dfn">Virtual Distributed Event Dispatcher</em> (VDED), the bus logic responsible for sending
+notifications/messages to the observers. The VDED logic runs inside the publishing action in the same
+thread context, giving the bus an idea of a distributed execution. When a thread publishes to a
+channel, it also propagates the notifications to the observers;</p></li>
+<li><p>Threads (subscribers and message subscribers) and callbacks (listeners) publishing, reading, and
+receiving notifications from the bus.</p></li>
+</ul>
+<figure class="align-default" id="id8">
+<a class="reference internal image-reference" href="../../_images/zbus_anatomy.svg"><img alt="ZBus anatomy" src="../../_images/zbus_anatomy.svg" style="width: 70%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">ZBus anatomy.</span><a class="headerlink" href="#id8" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The bus makes the publish, read, claim, finish, notify, and subscribe actions available over
+channels. Publishing, reading, claiming, and finishing are available in all RTOS thread contexts,
+including ISRs. The publish and read operations are simple and fast; the procedure is channel
+locking followed by a memory copy to and from a shared memory region and then a channel unlocking.
+Another essential aspect of zbus is the observers. There are three types of observers:</p>
+<figure class="align-default" id="id9">
+<a class="reference internal image-reference" href="../../_images/zbus_type_of_observers.svg"><img alt="ZBus observers type" src="../../_images/zbus_type_of_observers.svg" style="width: 70%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">ZBus observers.</span><a class="headerlink" href="#id9" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<ul class="simple">
+<li><p>Listeners, a callback that the event dispatcher executes every time an observed channel is
+published or notified;</p></li>
+<li><p>Async Listeners, a callback that the event dispatcher schedules to execute in a work
+queue (system work queue by default) every time an observed channel is published or notified;</p></li>
+<li><p>Subscriber, a thread-based observer that relies internally on a message queue where the event
+dispatcher puts a changed channel’s reference every time an observed channel is published or
+notified. Note this kind of observer does not receive the message itself. It should read the
+message from the channel after receiving the notification;</p></li>
+<li><p>Message subscribers, a thread-based observer that relies internally on a FIFO where the event
+dispatcher puts a copy of the message every time an observed channel is published or notified.</p></li>
+</ul>
+<p>Channel observation structures define the relationship between a channel and its observers. For
+every observation, a pair channel/observer. Developers can statically allocate observation using the
+<a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#ga29a3a39e5c78a34b2d8491615d1f0687" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_CHAN_DEFINE</span></code></a> or <a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#gaf63215f3f53741edf52b4d0d7b2b97df" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_CHAN_ADD_OBS</span></code></a>. There are also runtime observers,
+enabling developers to create runtime observations. It is possible to disable an observer entirely
+or observations individually.  The event dispatcher will ignore disabled observers and observations.</p>
+<figure class="align-default" id="id10">
+<a class="reference internal image-reference" href="../../_images/zbus_observation_mask.svg"><img alt="ZBus observation mask." src="../../_images/zbus_observation_mask.svg" style="width: 75%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">ZBus observation mask.</span><a class="headerlink" href="#id10" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The above figure illustrates some states, from (a) to (d), for channels from <code class="docutils literal notranslate"><span class="pre">C1</span></code> to <code class="docutils literal notranslate"><span class="pre">C5</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Subscriber</span> <span class="pre">1</span></code>, and the observations. The last two are in orange to indicate they are dynamically
+allocated (runtime observation). (a) shows that the observer and all observations are enabled. (b)
+shows the observer is disabled, so the event dispatcher will ignore it. (c) shows the observer
+enabled. However, there is one static observation disabled. The event dispatcher will only stop
+sending notifications from channel <code class="docutils literal notranslate"><span class="pre">C3</span></code>.  In (d), the event dispatcher will stop sending
+notifications from channels <code class="docutils literal notranslate"><span class="pre">C3</span></code> and <code class="docutils literal notranslate"><span class="pre">C5</span></code> to <code class="docutils literal notranslate"><span class="pre">Subscriber</span> <span class="pre">1</span></code>.</p>
+<p>Suppose a usual sensor-based solution is in the figure below for illustration purposes. When
+triggered, the timer publishes to the <code class="docutils literal notranslate"><span class="pre">Trigger</span></code> channel. As the sensor thread subscribed to the
+<code class="docutils literal notranslate"><span class="pre">Trigger</span></code> channel, it receives the sensor data. Notice the VDED executes the <code class="docutils literal notranslate"><span class="pre">Blink</span></code> because it
+also listens to the <code class="docutils literal notranslate"><span class="pre">Trigger</span></code> channel. When the sensor data is ready, the sensor thread publishes
+it to the <code class="docutils literal notranslate"><span class="pre">Sensor</span> <span class="pre">data</span></code> channel. The core thread receives the message as a <code class="docutils literal notranslate"><span class="pre">Sensor</span> <span class="pre">data</span></code> channel
+message subscriber, processes the sensor data, and stores it in an internal sample buffer. It
+repeats until the sample buffer is full; when it happens, the core thread aggregates the sample
+buffer information, prepares a package, and publishes that to the <code class="docutils literal notranslate"><span class="pre">Payload</span></code> channel. The Lora
+thread receives that because it is a <code class="docutils literal notranslate"><span class="pre">Payload</span></code> channel message subscriber and sends the payload to
+the cloud. When it completes the transmission, the Lora thread publishes to the <code class="docutils literal notranslate"><span class="pre">Transmission</span>
+<span class="pre">done</span></code> channel. The VDED executes the <code class="docutils literal notranslate"><span class="pre">Blink</span></code> again since it listens to the <code class="docutils literal notranslate"><span class="pre">Transmission</span> <span class="pre">done</span></code>
+channel.</p>
+<figure class="align-default" id="id11">
+<a class="reference internal image-reference" href="../../_images/zbus_operations.svg"><img alt="ZBus sensor-based application" src="../../_images/zbus_operations.svg" style="width: 85%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">ZBus sensor-based application.</span><a class="headerlink" href="#id11" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>This way of implementing the solution makes the application more flexible, enabling us to change
+things independently. For example, we want to change the trigger from a timer to a button press. We
+can do that, and the change does not affect other parts of the system. Likewise, we would like to
+change the communication interface from LoRa to Bluetooth; we only need to change the LoRa thread.
+No other change is required in order to make that work. Thus, the developer would do that for every
+block of the image. Based on that, there is a sign zbus promotes decoupling in the system
+architecture.</p>
+<p>Another important aspect of using zbus is the reuse of system modules. If a code portion with
+well-defined behaviors (we call that module) only uses zbus channels and not hardware interfaces, it
+can easily be reused in other solutions. The new solution must implement the interfaces (set of
+channels) the module needs to work. That indicates zbus could improve the module reuse.</p>
+<p>The last important note is the zbus solution reach. We can count on many ways of using zbus to
+enable the developer to be as free as possible to create what they need. For example, messages can
+be dynamic or static allocated; notifications can be synchronous or asynchronous; the developer can
+control the channel in so many different ways claiming the channel, developers can add their
+metadata information to a channel by using the user-data field, the discretionary use of a validator
+enables the systems to be accurate over message format, and so on. Those characteristics increase
+the solutions that can be done with zbus and make it a good fit as an open-source community tool.</p>
+<section id="virtual-distributed-event-dispatcher">
+<span id="id1"></span><h3><a class="toc-backref" href="#id19" role="doc-backlink">Virtual Distributed Event Dispatcher</a><a class="headerlink" href="#virtual-distributed-event-dispatcher" title="Link to this heading"></a></h3>
+<p>The VDED execution always happens in the publisher’s context. It can be a thread or an ISR. Be
+careful with publications inside ISR because the scheduler won’t preempt the VDED. Use that wisely.
+The basic description of the execution is as follows:</p>
+<ul class="simple">
+<li><p>The channel lock is acquired;</p></li>
+<li><p>The channel receives the new message via direct copy (by a raw <a class="reference internal" href="../../doxygen/html/string_8h.html#af0f01bffcd16daa9143f6014d10a25ad" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">memcpy()</span></code></a>);</p></li>
+<li><p>The event dispatcher logic executes the listeners, sends a copy of the message to the message
+subscribers, and pushes the channel’s reference to the subscribers’ notification message queue in
+the same sequence they appear on the channel observers’ list. The listeners can perform non-copy
+quick access to the constant message reference directly (via the <a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#gafee07c355df9ac86b85e601196b56a10" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_const_msg()</span></code></a>
+function) since the channel is still locked;</p></li>
+<li><p>At last, the publishing function unlocks the channel.</p></li>
+</ul>
+<p>To illustrate the VDED execution, consider the example illustrated below. We have four threads in
+ascending priority <code class="docutils literal notranslate"><span class="pre">S1</span></code>, <code class="docutils literal notranslate"><span class="pre">MS2</span></code>, <code class="docutils literal notranslate"><span class="pre">MS1</span></code>, and <code class="docutils literal notranslate"><span class="pre">T1</span></code> (the highest priority); two listeners,
+<code class="docutils literal notranslate"><span class="pre">L1</span></code> and <code class="docutils literal notranslate"><span class="pre">L2</span></code>; and channel A. Supposing <code class="docutils literal notranslate"><span class="pre">L1</span></code>, <code class="docutils literal notranslate"><span class="pre">L2</span></code>, <code class="docutils literal notranslate"><span class="pre">MS1</span></code>, <code class="docutils literal notranslate"><span class="pre">MS2</span></code>, and <code class="docutils literal notranslate"><span class="pre">S1</span></code> observer
+channel A.</p>
+<figure class="align-default" id="id12">
+<a class="reference internal image-reference" href="../../_images/zbus_publishing_process_example_scenario.svg"><img alt="ZBus example scenario" src="../../_images/zbus_publishing_process_example_scenario.svg" style="width: 45%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">ZBus VDED execution example scenario.</span><a class="headerlink" href="#id12" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The following code implements channel A. Note the <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">a_msg</span></code> is illustrative only.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ZBUS_CHAN_DEFINE</span><span class="p">(</span><span class="n">a_chan</span><span class="p">,</span><span class="w">                       </span><span class="cm">/* Name */</span>
+<span class="w">         </span><span class="k">struct</span><span class="w"> </span><span class="nc">a_msg</span><span class="p">,</span><span class="w">                         </span><span class="cm">/* Message type */</span>
+
+<span class="w">         </span><span class="nb">NULL</span><span class="p">,</span><span class="w">                                 </span><span class="cm">/* Validator */</span>
+<span class="w">         </span><span class="nb">NULL</span><span class="p">,</span><span class="w">                                 </span><span class="cm">/* User Data */</span>
+<span class="w">         </span><span class="n">ZBUS_OBSERVERS</span><span class="p">(</span><span class="n">L1</span><span class="p">,</span><span class="w"> </span><span class="n">L2</span><span class="p">,</span><span class="w"> </span><span class="n">MS1</span><span class="p">,</span><span class="w"> </span><span class="n">MS2</span><span class="p">,</span><span class="w"> </span><span class="n">S1</span><span class="p">),</span><span class="w"> </span><span class="cm">/* observers */</span>
+<span class="w">         </span><span class="n">ZBUS_MSG_INIT</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w">                      </span><span class="cm">/* Initial value {0} */</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>In the figure below, the letters indicate some action related to the VDED execution. The X-axis
+represents the time, and the Y-axis represents the priority of threads. Channel A’s message,
+represented by a voice balloon, is only one memory portion (shared memory). It appears several times
+only as an illustration of the message at that point in time.</p>
+<figure class="align-default" id="id13">
+<a class="reference internal image-reference" href="../../_images/zbus_publishing_process_example.svg"><img alt="ZBus publish processing detail" src="../../_images/zbus_publishing_process_example.svg" style="width: 85%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">ZBus VDED execution detail for priority T1 &gt; MS1 &gt; MS2 &gt; S1.</span><a class="headerlink" href="#id13" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The figure above illustrates the actions performed during the VDED execution when T1 publishes to
+channel A. Thus, the table below describes the activities (represented by a letter) of the VDED
+execution. The scenario considers the following priorities: T1 &gt; MS1 &gt; MS2 &gt; S1. T1 has the highest
+priority.</p>
+<table class="docutils align-default" id="id14">
+<caption><span class="caption-text">VDED execution steps in detail for priority T1 &gt; MS1 &gt; MS2 &gt; S1.</span><a class="headerlink" href="#id14" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 7.1%" />
+<col style="width: 92.9%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Actions</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>a</p></td>
+<td><p>T1 starts and, at some point, publishes to channel A.</p></td>
+</tr>
+<tr class="row-odd"><td><p>b</p></td>
+<td><p>The publishing (VDED) process starts. The VDED locks the channel A.</p></td>
+</tr>
+<tr class="row-even"><td><p>c</p></td>
+<td><p>The VDED copies the T1 message to the channel A message.</p></td>
+</tr>
+<tr class="row-odd"><td><p>d, e</p></td>
+<td><p>The VDED executes L1 and L2 in the respective sequence. Inside the listeners, usually, there
+is a call to the <a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#gafee07c355df9ac86b85e601196b56a10" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_const_msg()</span></code></a> function, which provides a direct constant
+reference to channel A’s message. It is quick, and no copy is needed here.</p></td>
+</tr>
+<tr class="row-even"><td><p>f, g</p></td>
+<td><p>The VDED copies the message and sends that to MS1 and MS2 sequentially. Notice the threads
+get ready to execute right after receiving the notification. However, they go to a pending
+state because they have less priority than T1.</p></td>
+</tr>
+<tr class="row-odd"><td><p>h</p></td>
+<td><p>The VDED pushes the notification message to the queue of S1. Notice the thread gets ready to
+execute right after receiving the notification. However, it goes to a pending state because
+it cannot access the channel since it is still locked.</p></td>
+</tr>
+<tr class="row-even"><td><p>i</p></td>
+<td><p>VDED finishes the publishing by unlocking channel A. The MS1 leaves the pending state and
+starts executing.</p></td>
+</tr>
+<tr class="row-odd"><td><p>j</p></td>
+<td><p>MS1 finishes execution. The MS2 leaves the pending state and starts executing.</p></td>
+</tr>
+<tr class="row-even"><td><p>k</p></td>
+<td><p>MS2 finishes execution. The S1 leaves the pending state and starts executing.</p></td>
+</tr>
+<tr class="row-odd"><td><p>l, m, n</p></td>
+<td><p>The S1 leaves the pending state since channel A is not locked. It gets in the CPU again and
+starts executing. As it did receive a notification from channel A, it performed a channel read
+(as simple as lock, memory copy, unlock), continues its execution and goes out of the CPU.</p></td>
+</tr>
+<tr class="row-even"><td><p>o</p></td>
+<td><p>S1 finishes its workload.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The figure below illustrates the actions performed during the VDED execution when T1 publishes to
+channel A. The scenario considers the following priorities: T1 &lt; MS1 &lt; MS2 &lt; S1.</p>
+<figure class="align-default" id="id15">
+<a class="reference internal image-reference" href="../../_images/zbus_publishing_process_example2.svg"><img alt="ZBus publish processing detail" src="../../_images/zbus_publishing_process_example2.svg" style="width: 85%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">ZBus VDED execution detail for priority T1 &lt; MS1 &lt; MS2 &lt; S1.</span><a class="headerlink" href="#id15" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Thus, the table below describes the activities (represented by a letter) of the VDED execution.</p>
+<table class="docutils align-default" id="id16">
+<caption><span class="caption-text">VDED execution steps in detail for priority T1 &lt; MS1 &lt; MS2 &lt; S1.</span><a class="headerlink" href="#id16" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 7.1%" />
+<col style="width: 92.9%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Actions</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>a</p></td>
+<td><p>T1 starts and, at some point, publishes to channel A.</p></td>
+</tr>
+<tr class="row-odd"><td><p>b</p></td>
+<td><p>The publishing (VDED) process starts. The VDED locks the channel A.</p></td>
+</tr>
+<tr class="row-even"><td><p>c</p></td>
+<td><p>The VDED copies the T1 message to the channel A message.</p></td>
+</tr>
+<tr class="row-odd"><td><p>d, e</p></td>
+<td><p>The VDED executes L1 and L2 in the respective sequence. Inside the listeners, usually, there
+is a call to the <a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#gafee07c355df9ac86b85e601196b56a10" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_const_msg()</span></code></a> function, which provides a direct constant
+reference to channel A’s message. It is quick, and no copy is needed here.</p></td>
+</tr>
+<tr class="row-even"><td><p>f</p></td>
+<td><p>The VDED copies the message and sends that to MS1. MS1 preempts T1 and starts working.
+After that, the T1 regain MCU.</p></td>
+</tr>
+<tr class="row-odd"><td><p>g</p></td>
+<td><p>The VDED copies the message and sends that to MS2. MS2 preempts T1 and starts working.
+After that, the T1 regain MCU.</p></td>
+</tr>
+<tr class="row-even"><td><p>h</p></td>
+<td><p>The VDED pushes the notification message to the queue of S1.</p></td>
+</tr>
+<tr class="row-odd"><td><p>i</p></td>
+<td><p>VDED finishes the publishing by unlocking channel A.</p></td>
+</tr>
+<tr class="row-even"><td><p>j, k, l</p></td>
+<td><p>The S1 leaves the pending state since channel A is not locked. It gets in the CPU again and
+starts executing. As it did receive a notification from channel A, it performs a channel read
+(as simple as lock, memory copy, unlock), continues its execution, and goes out the CPU.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="hlp-priority-boost">
+<h4>HLP priority boost<a class="headerlink" href="#hlp-priority-boost" title="Link to this heading"></a></h4>
+<p>ZBus implements the Highest Locker Protocol that relies on the observers’ thread priority to
+determine a temporary publisher priority. The protocol considers the channel’s Highest Observer
+Priority (HOP); even if the observer is not waiting for a message on the channel, it is considered
+in the calculation. The VDED will elevate the publisher’s priority based on the HOP to ensure small
+latency and as few preemptions as possible.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The priority boost is enabled by default. To deactivate it, you must set the
+<a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PRIORITY_BOOST" title="CONFIG_ZBUS_PRIORITY_BOOST"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PRIORITY_BOOST</span></code></a> configuration.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>ZBus priority boost does not consider runtime observers on the HOP calculations.</p>
+</div>
+<p>The figure below illustrates the actions performed during the VDED execution when T1 publishes to
+channel A. The scenario considers the priority boost feature and the following priorities: T1 &lt; MS1
+&lt; MS2 &lt; S1.</p>
+<figure class="align-default" id="id17">
+<a class="reference internal image-reference" href="../../_images/zbus_publishing_process_example_HLP.svg"><img alt="ZBus publishing process details using priority boost." src="../../_images/zbus_publishing_process_example_HLP.svg" style="width: 85%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">ZBus VDED execution detail with priority boost enabled and for priority T1 &lt; MS1 &lt; MS2 &lt; S1.</span><a class="headerlink" href="#id17" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>To properly use the priority boost, attaching the observer to a thread is necessary. When the
+subscriber is attached to a thread, it assumes its priority, and the priority boost algorithm will
+consider the observer’s priority. The following code illustrates the thread-attaching function.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ZBUS_SUBSCRIBER_DEFINE</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">s1_thread</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">ptr1</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">ptr2</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">ptr3</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="n">ARG_UNUSED</span><span class="p">(</span><span class="n">ptr1</span><span class="p">);</span>
+<span class="w">        </span><span class="n">ARG_UNUSED</span><span class="p">(</span><span class="n">ptr2</span><span class="p">);</span>
+<span class="w">        </span><span class="n">ARG_UNUSED</span><span class="p">(</span><span class="n">ptr3</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_channel</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="p">;</span>
+
+<span class="hll"><span class="w">        </span><span class="n">zbus_obs_attach_to_thread</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s1</span><span class="p">);</span>
+</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">zbus_sub_wait</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s1</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">chan</span><span class="p">,</span><span class="w"> </span><span class="n">K_FOREVER</span><span class="p">);</span>
+
+<span class="w">                </span><span class="cm">/* Subscriber implementation */</span>
+
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="n">K_THREAD_DEFINE</span><span class="p">(</span><span class="n">s1_id</span><span class="p">,</span><span class="w"> </span><span class="n">CONFIG_MAIN_STACK_SIZE</span><span class="p">,</span><span class="w"> </span><span class="n">s1_thread</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>On the above code, the <a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#gabecf160e4d468d0275ad79e22fd0fb5b" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_obs_attach_to_thread()</span></code></a> will set the <code class="docutils literal notranslate"><span class="pre">s1</span></code> observer with
+priority two as the thread has that priority. It is possible to reverse that by detaching the
+observer using the <a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#ga493c125c31e44d5a222f0e9c6d01249e" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_obs_detach_from_thread()</span></code></a>. Only enabled observers and observations
+will be considered on the channel HOP calculation. Masking a specific observation of a channel will
+affect the channel HOP.</p>
+<p>In summary, the benefits of the feature are:</p>
+<ul class="simple">
+<li><p>The HLP is more effective for zbus than the mutexes priority inheritance;</p></li>
+<li><p>No bounded priority inversion will happen among the publisher and the observers;</p></li>
+<li><p>No other threads (that are not involved in the communication) with priority between T1 and S1 can
+preempt T1, avoiding unbounded priority inversion;</p></li>
+<li><p>Message subscribers will wait for the VDED to finish the message delivery process. So the VDED
+execution will be faster and more consistent;</p></li>
+<li><p>The HLP priority is dynamic and can change in execution;</p></li>
+<li><p>ZBus operations can be used inside ISRs;</p></li>
+<li><p>The priority boosting feature can be turned off, and plain semaphores can be used as the channel
+lock mechanism;</p></li>
+<li><p>The Highest Locker Protocol’s major disadvantage, the Inheritance-related Priority Inversion, is
+acceptable in the zbus scenario since it will ensure a small bus latency.</p></li>
+</ul>
+</section>
+</section>
+<section id="limitations">
+<h3><a class="toc-backref" href="#id20" role="doc-backlink">Limitations</a><a class="headerlink" href="#limitations" title="Link to this heading"></a></h3>
+<p>Based on the fact that developers can use zbus to solve many different problems, some challenges
+arise. ZBus will not solve every problem, so it is necessary to analyze the situation to be sure
+zbus is applicable. For instance, based on the zbus benchmark, it would not be well suited to a
+high-speed stream of bytes between threads. The <a class="reference internal" href="../../kernel/services/data_passing/pipes.html#pipes-v2"><span class="std std-ref">Pipe</span></a> kernel object solves this
+kind of need.</p>
+<section id="delivery-guarantees">
+<h4>Delivery guarantees<a class="headerlink" href="#delivery-guarantees" title="Link to this heading"></a></h4>
+<p>ZBus always delivers the messages to the listeners, message subscribers, and async listeners. However, there are no
+message delivery guarantees for subscribers because zbus only sends the notification, but the
+message reading depends on the subscriber’s implementation. It is possible to increase the delivery
+rate by following design tips:</p>
+<ul class="simple">
+<li><p>Keep the listeners as quick as possible (deal with them as ISRs). If time-consuming processing is
+required, consider offloading some or all of it to a work queue using async listeners.</p></li>
+<li><p>Try to give consumers a high priority to avoid losses.</p></li>
+<li><p>Leave spare CPU for observers to consume data produced.</p></li>
+<li><p>Consider using message queues or pipes for intensive byte transfers.</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>ZBus uses <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/net_buf.h">include/zephyr/net_buf.h</a> (network buffers) to exchange data with message
+subscribers. Thus, choose carefully the configurations
+<a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_SIZE" title="CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_SIZE</span></code></a> and
+<a class="reference internal" href="../../kconfig.html#CONFIG_HEAP_MEM_POOL_ADD_SIZE_ZBUS" title="CONFIG_HEAP_MEM_POOL_ADD_SIZE_ZBUS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HEAP_MEM_POOL_ADD_SIZE_ZBUS</span></code></a> are crucial to a proper VDED execution
+(delivery guarantee) considering message subscribers and async listeners. If you want to keep an
+isolated pool for a specific set of channels, you can use
+<a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_ISOLATION" title="CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_ISOLATION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_ISOLATION</span></code></a> with a dedicated pool. Look
+at the <a class="reference internal" href="../../samples/subsys/zbus/msg_subscriber/README.html#zbus-msg-subscriber" title="Use zbus message subscribers to listen to messages published to channels.">Message subscriber</a> and <a class="reference internal" href="../../samples/subsys/zbus/async_listeners/README.html#zbus-async-listeners" title="Demonstrate the usage of zbus async listeners.">zbus Async Listeners</a>
+to see the isolation in action.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Subscribers will receive only the reference of the changing channel. A data loss may be perceived
+if the channel is published twice before the subscriber reads it. The second publication
+overwrites the value from the first. Thus, the subscriber will receive two notifications, but
+only the last data is there.</p>
+</div>
+</section>
+<section id="message-delivery-sequence">
+<span id="zbus-delivery-sequence"></span><h4>Message delivery sequence<a class="headerlink" href="#message-delivery-sequence" title="Link to this heading"></a></h4>
+<p>The message delivery will follow the precedence:</p>
+<ol class="arabic simple">
+<li><p>Observers defined in a channel using the <a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#ga29a3a39e5c78a34b2d8491615d1f0687" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_CHAN_DEFINE</span></code></a> (following the definition
+sequence);</p></li>
+<li><p>Observers defined using the <a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#gaf63215f3f53741edf52b4d0d7b2b97df" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_CHAN_ADD_OBS</span></code></a> based on the sequence priority
+(parameter of the macro);</p></li>
+<li><p>The latest is the runtime observers in the addition sequence using the
+<a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#gaddd8ce480bc29ead4442e529915cfbf6" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_add_obs()</span></code></a>.</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The VDED will ignore all disabled observers or observations.</p>
+</div>
+</section>
+</section>
+</section>
+<section id="usage">
+<h2><a class="toc-backref" href="#id21" role="doc-backlink">Usage</a><a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<p>ZBus operation depends on channels and observers. Therefore, it is necessary to determine the
+channel’s message during the channel definition and its list of observers, which can be either
+statically (in the channel definition), using the <a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#gaf63215f3f53741edf52b4d0d7b2b97df" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_CHAN_ADD_OBS</span></code></a> or at runtime (see
+<a class="reference internal" href="#runtime-observers">runtime observers</a>). A message is a regular C struct; the observer can be a listener
+(synchronous), an async listener (asynchronous), a subscriber (asynchronous), or a message
+subscriber (asynchronous).</p>
+<p>The following code defines and initializes a regular channel and its dependencies. This channel
+exchanges accelerometer data, for example.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">y</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">z</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">ZBUS_CHAN_DEFINE</span><span class="p">(</span><span class="n">acc_chan</span><span class="p">,</span><span class="w">                           </span><span class="cm">/* Name */</span>
+<span class="w">         </span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="p">,</span><span class="w">                             </span><span class="cm">/* Message type */</span>
+
+<span class="w">         </span><span class="nb">NULL</span><span class="p">,</span><span class="w">                                       </span><span class="cm">/* Validator */</span>
+<span class="w">         </span><span class="nb">NULL</span><span class="p">,</span><span class="w">                                       </span><span class="cm">/* User Data */</span>
+<span class="w">         </span><span class="n">ZBUS_OBSERVERS</span><span class="p">(</span><span class="n">my_listener</span><span class="p">,</span><span class="w"> </span><span class="n">my_subscriber</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">my_msg_subscriber</span><span class="p">),</span><span class="w">          </span><span class="cm">/* observers */</span>
+<span class="w">         </span><span class="n">ZBUS_MSG_INIT</span><span class="p">(.</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">       </span><span class="cm">/* Initial value */</span>
+<span class="p">);</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">listener_callback_example</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_channel</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="w"> </span><span class="o">*</span><span class="n">acc</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">chan</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">acc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zbus_chan_const_msg</span><span class="p">(</span><span class="n">chan</span><span class="p">);</span><span class="w"> </span><span class="c1">// Direct message access</span>
+<span class="w">                </span><span class="n">LOG_DBG</span><span class="p">(</span><span class="s">&quot;From listener -&gt; Acc x=%d, y=%d, z=%d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="o">-&gt;</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="o">-&gt;</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="o">-&gt;</span><span class="n">z</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">ZBUS_LISTENER_DEFINE</span><span class="p">(</span><span class="n">my_listener</span><span class="p">,</span><span class="w"> </span><span class="n">listener_callback_example</span><span class="p">);</span>
+
+<span class="n">ZBUS_LISTENER_DEFINE</span><span class="p">(</span><span class="n">my_listener2</span><span class="p">,</span><span class="w"> </span><span class="n">listener_callback_example</span><span class="p">);</span>
+
+<span class="n">ZBUS_CHAN_ADD_OBS</span><span class="p">(</span><span class="n">acc_chan</span><span class="p">,</span><span class="w"> </span><span class="n">my_listener2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span>
+
+<span class="n">ZBUS_SUBSCRIBER_DEFINE</span><span class="p">(</span><span class="n">my_subscriber</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">subscriber_task</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_channel</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">zbus_sub_wait</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_subscriber</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">chan</span><span class="p">,</span><span class="w"> </span><span class="n">K_FOREVER</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">chan</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="c1">// Indirect message access</span>
+<span class="w">                        </span><span class="n">zbus_chan_read</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">acc</span><span class="p">,</span><span class="w"> </span><span class="n">K_NO_WAIT</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">LOG_DBG</span><span class="p">(</span><span class="s">&quot;From subscriber -&gt; Acc x=%d, y=%d, z=%d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="p">.</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="p">.</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="n">K_THREAD_DEFINE</span><span class="p">(</span><span class="n">subscriber_task_id</span><span class="p">,</span><span class="w"> </span><span class="mi">512</span><span class="p">,</span><span class="w"> </span><span class="n">subscriber_task</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+
+<span class="n">ZBUS_MSG_SUBSCRIBER_DEFINE</span><span class="p">(</span><span class="n">my_msg_subscriber</span><span class="p">);</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">msg_subscriber_task</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">ptr1</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">ptr2</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">ptr3</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="n">ARG_UNUSED</span><span class="p">(</span><span class="n">ptr1</span><span class="p">);</span>
+<span class="w">        </span><span class="n">ARG_UNUSED</span><span class="p">(</span><span class="n">ptr2</span><span class="p">);</span>
+<span class="w">        </span><span class="n">ARG_UNUSED</span><span class="p">(</span><span class="n">ptr3</span><span class="p">);</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_channel</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">zbus_sub_wait_msg</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_msg_subscriber</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">chan</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">acc</span><span class="p">,</span><span class="w"> </span><span class="n">K_FOREVER</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">chan</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">&quot;From msg subscriber -&gt; Acc x=%d, y=%d, z=%d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="p">.</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="p">.</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="n">K_THREAD_DEFINE</span><span class="p">(</span><span class="n">msg_subscriber_task_id</span><span class="p">,</span><span class="w"> </span><span class="mi">1024</span><span class="p">,</span><span class="w"> </span><span class="n">msg_subscriber_task</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>It is possible to add static observers to a channel using the <a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#gaf63215f3f53741edf52b4d0d7b2b97df" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_CHAN_ADD_OBS</span></code></a>. We call
+that a post-definition static observer. The command enables us to indicate an initialization
+priority that affects the observers’ initialization order. The sequence priority param only affects
+the post-definition static observers. There is no possibility to overwrite the message delivery
+sequence of the static observers.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is unnecessary to claim/lock a channel before accessing the message inside the listener since
+the event dispatcher calls listeners with the notifying channel already locked. Subscribers,
+however, must claim/lock that or use regular read operations to access the message after being
+notified.</p>
+</div>
+<p>Channels can have a <em>validator function</em> that enables a channel to accept only valid messages.
+Publish attempts invalidated by hard channels will return immediately with an error code. This
+allows original creators of a channel to exert some authority over other developers/publishers who
+may want to piggy-back on their channels. The following code defines and initializes a <em class="dfn">hard
+channel</em> and its dependencies. Only valid messages can be published to a <em class="dfn">hard channel</em>. It is
+possible because a <em>validator function</em> was passed to the channel’s definition. In this example,
+only messages with <code class="docutils literal notranslate"><span class="pre">move</span></code> equal to 0, -1, and 1 are valid. Publish function will discard all other
+values to <code class="docutils literal notranslate"><span class="pre">move</span></code>.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">control_msg</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">move</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">bool</span><span class="w"> </span><span class="nf">control_validator</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">msg_size</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">control_msg</span><span class="o">*</span><span class="w"> </span><span class="n">cm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">msg</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">is_valid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">cm</span><span class="o">-&gt;</span><span class="n">move</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">-1</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">cm</span><span class="o">-&gt;</span><span class="n">move</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">cm</span><span class="o">-&gt;</span><span class="n">move</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">is_valid</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">message_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="n">ZBUS_CHAN_DEFINE</span><span class="p">(</span><span class="n">control_chan</span><span class="p">,</span><span class="w">    </span><span class="cm">/* Name */</span>
+<span class="w">         </span><span class="k">struct</span><span class="w"> </span><span class="nc">control_msg</span><span class="p">,</span><span class="w">      </span><span class="cm">/* Message type */</span>
+
+<span class="w">         </span><span class="n">control_validator</span><span class="p">,</span><span class="w">       </span><span class="cm">/* Validator */</span>
+<span class="w">         </span><span class="o">&amp;</span><span class="n">message_count</span><span class="p">,</span><span class="w">          </span><span class="cm">/* User data */</span>
+<span class="w">         </span><span class="n">ZBUS_OBSERVERS_EMPTY</span><span class="p">,</span><span class="w">    </span><span class="cm">/* observers */</span>
+<span class="w">         </span><span class="n">ZBUS_MSG_INIT</span><span class="p">(.</span><span class="n">move</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="cm">/* Initial value */</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>The following sections describe in detail how to use zbus features.</p>
+<section id="publishing-to-a-channel">
+<span id="id2"></span><h3><a class="toc-backref" href="#id22" role="doc-backlink">Publishing to a channel</a><a class="headerlink" href="#publishing-to-a-channel" title="Link to this heading"></a></h3>
+<p>Messages are published to a channel in zbus by calling <a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#gadfcaba65b397c1d8c31836ef3cf61244" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_pub()</span></code></a>. For example, the
+following code builds on the examples above and publishes to channel <code class="docutils literal notranslate"><span class="pre">acc_chan</span></code>. The code is
+trying to publish the message <code class="docutils literal notranslate"><span class="pre">acc1</span></code> to channel <code class="docutils literal notranslate"><span class="pre">acc_chan</span></code>, and it will wait up to one second
+for the message to be published. Otherwise, the operation fails. As can be inferred from the code
+sample, it’s OK to use stack allocated messages since VDED copies the data internally.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="w"> </span><span class="n">acc1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{.</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">};</span>
+<span class="n">zbus_chan_pub</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">acc1</span><span class="p">,</span><span class="w"> </span><span class="n">K_SECONDS</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Only use this function inside an ISR with a <a class="reference internal" href="../../doxygen/html/group__clock__apis.html#ga3d9541cfe2e8395af66d186efa77362f" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_NO_WAIT</span></code></a> timeout.</p>
+</div>
+</section>
+<section id="reading-from-a-channel">
+<span id="id3"></span><h3><a class="toc-backref" href="#id23" role="doc-backlink">Reading from a channel</a><a class="headerlink" href="#reading-from-a-channel" title="Link to this heading"></a></h3>
+<p>Messages are read from a channel in zbus by calling <a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#ga8209721e0a295c84d112ba1a7171100e" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_read()</span></code></a>. So, for example, the
+following code tries to read the channel <code class="docutils literal notranslate"><span class="pre">acc_chan</span></code>, which will wait up to 500 milliseconds to
+read the message. Otherwise, the operation fails.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="n">zbus_chan_read</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">acc</span><span class="p">,</span><span class="w"> </span><span class="n">K_MSEC</span><span class="p">(</span><span class="mi">500</span><span class="p">));</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Only use this function inside an ISR with a <a class="reference internal" href="../../doxygen/html/group__clock__apis.html#ga3d9541cfe2e8395af66d186efa77362f" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_NO_WAIT</span></code></a> timeout.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Choose the timeout of <a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#ga8209721e0a295c84d112ba1a7171100e" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_read()</span></code></a> after receiving a notification from
+<a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#ga84a65e276a01ef97eeb5c81b880da72b" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_sub_wait()</span></code></a> carefully because the channel will always be unavailable during the VDED
+execution. Using <code class="docutils literal notranslate"><span class="pre">K_NO_WAIT</span></code> for reading is highly likely to return a timeout error if there
+are more than one subscriber. For example, consider the VDED illustration again and notice how
+<code class="docutils literal notranslate"><span class="pre">S1</span></code> read attempts would definitely fail with K_NO_WAIT. For more details, check
+the <a class="reference internal" href="#virtual-distributed-event-dispatcher">Virtual Distributed Event Dispatcher</a> section.</p>
+</div>
+</section>
+<section id="notifying-a-channel">
+<h3><a class="toc-backref" href="#id24" role="doc-backlink">Notifying a channel</a><a class="headerlink" href="#notifying-a-channel" title="Link to this heading"></a></h3>
+<p>It is possible to force zbus to notify a channel’s observers by calling <a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#ga6ec2f463801499e23a011fa4e68aa3e7" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_notify()</span></code></a>.
+For example, the following code builds on the examples above and forces a notification for the
+channel <code class="docutils literal notranslate"><span class="pre">acc_chan</span></code>. Note this can send events with no message, which does not require any data
+exchange. See the code example under <a class="reference internal" href="#claim-and-finish-a-channel">Claim and finish a channel</a> where this may become useful.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">zbus_chan_notify</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">,</span><span class="w"> </span><span class="n">K_NO_WAIT</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Only use this function inside an ISR with a <a class="reference internal" href="../../doxygen/html/group__clock__apis.html#ga3d9541cfe2e8395af66d186efa77362f" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_NO_WAIT</span></code></a> timeout.</p>
+</div>
+</section>
+<section id="declaring-channels-and-observers">
+<h3><a class="toc-backref" href="#id25" role="doc-backlink">Declaring channels and observers</a><a class="headerlink" href="#declaring-channels-and-observers" title="Link to this heading"></a></h3>
+<p>For accessing channels or observers from files other than its defining files, it is necessary to
+declare them by calling <a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#ga0662b2db8077a8075c07a3afd0161d0f" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_CHAN_DECLARE</span></code></a> and <a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#ga49f169c6d50a3bad57e1b319362d2924" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_OBS_DECLARE</span></code></a>. In other
+words, zbus channel definitions and declarations with the same channel names in different files
+would point to the same (global) channel. Thus, developers should be careful about existing
+channels, and naming new channels or linking will fail. It is possible to declare more than one
+channel or observer on the same call. The following code builds on the examples above and displays
+the defined channels and observers.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ZBUS_OBS_DECLARE</span><span class="p">(</span><span class="n">my_listener</span><span class="p">,</span><span class="w"> </span><span class="n">my_subscriber</span><span class="p">);</span>
+<span class="n">ZBUS_CHAN_DECLARE</span><span class="p">(</span><span class="n">acc_chan</span><span class="p">,</span><span class="w"> </span><span class="n">version_chan</span><span class="p">);</span>
+</pre></div>
+</div>
+<section id="unique-channel-identifiers">
+<h4>Unique channel identifiers<a class="headerlink" href="#unique-channel-identifiers" title="Link to this heading"></a></h4>
+<p>To simplify integrations with external entities, it is possible to assign a unique numeric identifier
+to a channel. Users can then retrieve the channel reference by using the identifier with
+<a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#gacef06cf9818ab91be97d45ab5f58a4a3" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_from_id()</span></code></a>, rather than needing to obtain the reference at compile time with
+<a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#ga0662b2db8077a8075c07a3afd0161d0f" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_CHAN_DECLARE</span></code></a>. Channels using this feature are declared with
+<a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#ga7c49cba434b90d417859b37722843e5f" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ZBUS_CHAN_DEFINE_WITH_ID()</span></code></a>.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ZBUS_CHAN_DEFINE_WITH_ID</span><span class="p">(</span><span class="n">control_chan</span><span class="p">,</span><span class="w">    </span><span class="cm">/* Name */</span>
+<span class="w">    </span><span class="mh">0x12345678</span><span class="p">,</span><span class="w">              </span><span class="cm">/* Unique channel identifier */</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">control_msg</span><span class="p">,</span><span class="w">      </span><span class="cm">/* Message type */</span>
+<span class="w">    </span><span class="n">control_validator</span><span class="p">,</span><span class="w">       </span><span class="cm">/* Validator */</span>
+<span class="w">    </span><span class="o">&amp;</span><span class="n">message_count</span><span class="p">,</span><span class="w">          </span><span class="cm">/* User data */</span>
+<span class="w">    </span><span class="n">ZBUS_OBSERVERS_EMPTY</span><span class="p">,</span><span class="w">    </span><span class="cm">/* observers */</span>
+<span class="w">    </span><span class="n">ZBUS_MSG_INIT</span><span class="p">(.</span><span class="n">move</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="cm">/* Initial value */</span>
+<span class="p">);</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">channel_retrieve</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_channel</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zbus_chan_from_id</span><span class="p">(</span><span class="mh">0x12345678</span><span class="p">);</span>
+
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="iterating-over-channels-and-observers">
+<h3><a class="toc-backref" href="#id26" role="doc-backlink">Iterating over channels and observers</a><a class="headerlink" href="#iterating-over-channels-and-observers" title="Link to this heading"></a></h3>
+<p>ZBus subsystem also implements <a class="reference internal" href="../../kernel/iterable_sections/index.html#iterable-sections-api"><span class="std std-ref">Iterable Sections</span></a> for channels and
+observers, for which there are supporting APIs like <a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#ga6dffd25f4eb368e773c2bd55f34a0e10" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_iterate_over_channels()</span></code></a>,
+<a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#gab8df108b0238757ff631ec1e120fa2c3" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_iterate_over_channels_with_user_data()</span></code></a>, <a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#ga2fa50316993afc5807e9d707d664be14" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_iterate_over_observers()</span></code></a> and
+<a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#ga2f4e39c500fed0a6bcfedb5dec3f797a" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_iterate_over_observers_with_user_data()</span></code></a>. This feature enables developers to call a
+procedure over all declared channels, where the procedure parameter is a <a class="reference internal" href="../../doxygen/html/structzbus__channel.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">zbus_channel</span></code></a>.
+The execution sequence is in the alphabetical name order of the channels (see <a class="reference internal" href="../../kernel/iterable_sections/index.html#iterable-sections-api"><span class="std std-ref">Iterable
+Sections</span></a> documentation for details). ZBus also implements this feature for
+<a class="reference internal" href="../../doxygen/html/structzbus__observer.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">zbus_observer</span></code></a>.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">print_channel_data_iterator</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_channel</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">user_data</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">      </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user_data</span><span class="p">;</span>
+
+<span class="w">      </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">&quot;%d - Channel %s:&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="n">zbus_chan_name</span><span class="p">(</span><span class="n">chan</span><span class="p">));</span>
+<span class="w">      </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">&quot;      Message size: %d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">zbus_chan_msg_size</span><span class="p">(</span><span class="n">chan</span><span class="p">));</span>
+<span class="w">      </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">&quot;      Observers:&quot;</span><span class="p">);</span>
+
+<span class="w">      </span><span class="o">++</span><span class="p">(</span><span class="o">*</span><span class="n">count</span><span class="p">);</span>
+
+<span class="w">      </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_channel_observation</span><span class="w"> </span><span class="o">*</span><span class="n">observation</span><span class="p">;</span>
+
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int16_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="o">-&gt;</span><span class="n">observers_start_idx</span><span class="p">,</span><span class="w"> </span><span class="n">limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="o">-&gt;</span><span class="n">observers_end_idx</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">limit</span><span class="p">;</span>
+<span class="w">            </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">STRUCT_SECTION_GET</span><span class="p">(</span><span class="n">zbus_channel_observation</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">observation</span><span class="p">);</span>
+
+<span class="w">            </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">&quot;      - %s&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">observation</span><span class="o">-&gt;</span><span class="n">obs</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_observer_node</span><span class="w"> </span><span class="o">*</span><span class="n">obs_nd</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">tmp</span><span class="p">;</span>
+
+<span class="w">      </span><span class="n">SYS_SLIST_FOR_EACH_CONTAINER_SAFE</span><span class="p">(</span><span class="n">chan</span><span class="o">-&gt;</span><span class="n">observers</span><span class="p">,</span><span class="w"> </span><span class="n">obs_nd</span><span class="p">,</span><span class="w"> </span><span class="n">tmp</span><span class="p">,</span><span class="w"> </span><span class="n">node</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">&quot;      - %s&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">obs_nd</span><span class="o">-&gt;</span><span class="n">obs</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">print_observer_data_iterator</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_observer</span><span class="w"> </span><span class="o">*</span><span class="n">obs</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">user_data</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">      </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user_data</span><span class="p">;</span>
+
+<span class="w">      </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">&quot;%d - %s %s&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="n">obs</span><span class="o">-&gt;</span><span class="n">queue</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;Subscriber&quot;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">&quot;Listener&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">zbus_obs_name</span><span class="p">(</span><span class="n">obs</span><span class="p">));</span>
+
+<span class="w">      </span><span class="o">++</span><span class="p">(</span><span class="o">*</span><span class="n">count</span><span class="p">);</span>
+
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">      </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">      </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">&quot;Channel list:&quot;</span><span class="p">);</span>
+
+<span class="w">      </span><span class="n">zbus_iterate_over_channels_with_user_data</span><span class="p">(</span><span class="n">print_channel_data_iterator</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">count</span><span class="p">);</span>
+
+<span class="w">      </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">      </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">&quot;Observers list:&quot;</span><span class="p">);</span>
+
+<span class="w">      </span><span class="n">zbus_iterate_over_observers_with_user_data</span><span class="p">(</span><span class="n">print_observer_data_iterator</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">count</span><span class="p">);</span>
+
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The code will log the following output:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">D: Channel list:</span>
+<span class="go">D: 0 - Channel acc_chan:</span>
+<span class="go">D:       Message size: 12</span>
+<span class="go">D:       Observers:</span>
+<span class="go">D:       - my_listener</span>
+<span class="go">D:       - my_subscriber</span>
+<span class="go">D: 1 - Channel version_chan:</span>
+<span class="go">D:       Message size: 4</span>
+<span class="go">D:       Observers:</span>
+<span class="go">D: Observers list:</span>
+<span class="go">D: 0 - Listener my_listener</span>
+<span class="go">D: 1 - Subscriber my_subscriber</span>
+</pre></div>
+</div>
+</section>
+<section id="advanced-channel-control">
+<span id="claim-and-finish-a-channel"></span><h3><a class="toc-backref" href="#id27" role="doc-backlink">Advanced channel control</a><a class="headerlink" href="#advanced-channel-control" title="Link to this heading"></a></h3>
+<p>ZBus was designed to be as flexible and extensible as possible. Thus, there are some features
+designed to provide some control and extensibility to the bus.</p>
+<section id="listeners-message-access">
+<h4>Listeners message access<a class="headerlink" href="#listeners-message-access" title="Link to this heading"></a></h4>
+<p>For performance purposes, listeners can access the receiving channel message directly since they
+already have the channel locked for it. To access the channel’s message, the listener should use the
+<a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#gafee07c355df9ac86b85e601196b56a10" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_const_msg()</span></code></a> because the channel passed as an argument to the listener function is
+a constant pointer to the channel. The const pointer return type tells developers not to modify the
+message.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">listener_callback_example</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_channel</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="w"> </span><span class="o">*</span><span class="n">acc</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">chan</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">acc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zbus_chan_const_msg</span><span class="p">(</span><span class="n">chan</span><span class="p">);</span><span class="w"> </span><span class="c1">// Use this</span>
+<span class="w">                </span><span class="c1">// instead of zbus_chan_read(chan, &amp;acc, K_MSEC(200))</span>
+<span class="w">                </span><span class="c1">// or zbus_chan_msg(chan)</span>
+
+<span class="w">                </span><span class="n">LOG_DBG</span><span class="p">(</span><span class="s">&quot;From listener -&gt; Acc x=%d, y=%d, z=%d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="o">-&gt;</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="o">-&gt;</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="o">-&gt;</span><span class="n">z</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="async-listeners-message-access">
+<h4>Async listeners message access<a class="headerlink" href="#async-listeners-message-access" title="Link to this heading"></a></h4>
+<p>Async listeners are implemented by utilizing the established message subscriber infrastructure. They
+are executed in a work queue context rather than in the publisher’s context. When using the system
+work queue, the user will experience similar behavior to the regular listeners. Since the system
+work queue is, by default, a cooperative thread with a priority of -1, async listeners would run
+before all other application threads (usually preemptive) after the VDED execution.</p>
+<p>Async listeners can access the receiving channel’s message directly via the message copy reference
+passed to the callback. Be aware that the message copy is freed just after the async listener
+execution. To access the channel’s message, the async listener should only cast to the proper
+constant message format. The following example demonstrates how to access the message from an async
+listener.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">async_listener_callback</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_channel</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">message</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">chan</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">chan_event</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">LOG_ERR</span><span class="p">(</span><span class="s">&quot;Unexpected channel&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">msg_event</span><span class="w"> </span><span class="o">*</span><span class="n">msg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">message</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">&quot;From async listener -&gt; Evt=%d | %s&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="o">-&gt;</span><span class="n">type</span><span class="p">,</span>
+<span class="w">                </span><span class="n">k_thread_name_get</span><span class="p">(</span><span class="n">k_current_get</span><span class="p">()));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="user-data">
+<h4>User Data<a class="headerlink" href="#user-data" title="Link to this heading"></a></h4>
+<p>It is possible to pass custom data into the channel’s <code class="docutils literal notranslate"><span class="pre">user_data</span></code> for various purposes, such as
+writing channel metadata. That can be achieved by passing a pointer to the channel definition
+macro’s <code class="docutils literal notranslate"><span class="pre">user_data</span></code> field, which will then be accessible by others. Note that <code class="docutils literal notranslate"><span class="pre">user_data</span></code> is
+individual for each channel. Also, note that <code class="docutils literal notranslate"><span class="pre">user_data</span></code> access is not thread-safe. For
+thread-safe access to <code class="docutils literal notranslate"><span class="pre">user_data</span></code>, see the next section.</p>
+</section>
+<section id="id4">
+<h4>Claim and finish a channel<a class="headerlink" href="#id4" title="Link to this heading"></a></h4>
+<p>To take more control over channels, two functions were added <a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#ga00bfb7db54594029f4d288bcf5b56b3a" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_claim()</span></code></a> and
+<a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#ga74747affb345e68ce1d564c349409e59" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_finish()</span></code></a>. With these functions, it is possible to access the channel’s metadata
+safely. When a channel is claimed, no actions are available to that channel. After finishing the
+channel, all the actions are available again.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Never change the fields of the channel struct directly. It may cause zbus behavior
+inconsistencies and scheduling issues.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Only use this function inside an ISR with a <a class="reference internal" href="../../doxygen/html/group__clock__apis.html#ga3d9541cfe2e8395af66d186efa77362f" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_NO_WAIT</span></code></a> timeout.</p>
+</div>
+<p>The following code builds on the examples above and claims the <code class="docutils literal notranslate"><span class="pre">acc_chan</span></code> to set the <code class="docutils literal notranslate"><span class="pre">user_data</span></code>
+to the channel. Suppose we would like to count how many times the channels exchange messages. We
+defined the <code class="docutils literal notranslate"><span class="pre">user_data</span></code> to have the 32 bits integer. This code could be added to the listener code
+described above.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">zbus_chan_claim</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">,</span><span class="w"> </span><span class="n">K_MSEC</span><span class="p">(</span><span class="mi">200</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">message_counting</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">zbus_chan_user_data</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">);</span>
+<span class="w">        </span><span class="o">*</span><span class="n">message_counting</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="n">zbus_chan_finish</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The following code has the exact behavior of the code in <a class="reference internal" href="#publishing-to-a-channel"><span class="std std-ref">Publishing to a channel</span></a>.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">zbus_chan_claim</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">,</span><span class="w"> </span><span class="n">K_MSEC</span><span class="p">(</span><span class="mi">200</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="w"> </span><span class="o">*</span><span class="n">acc1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">zbus_chan_msg</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">);</span>
+<span class="w">        </span><span class="n">acc1</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="n">acc1</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="n">acc1</span><span class="p">.</span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="n">zbus_chan_finish</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">);</span>
+<span class="w">        </span><span class="n">zbus_chan_notify</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">,</span><span class="w"> </span><span class="n">K_SECONDS</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The following code has the exact behavior of the code in <a class="reference internal" href="#reading-from-a-channel"><span class="std std-ref">Reading from a channel</span></a>.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">zbus_chan_claim</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">,</span><span class="w"> </span><span class="n">K_MSEC</span><span class="p">(</span><span class="mi">200</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="w"> </span><span class="o">*</span><span class="n">acc1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">zbus_chan_const_msg</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">);</span>
+<span class="w">        </span><span class="c1">// access the acc_msg fields directly.</span>
+<span class="w">        </span><span class="n">zbus_chan_finish</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="runtime-observer-registration">
+<span id="runtime-observers"></span><h4>Runtime observer registration<a class="headerlink" href="#runtime-observer-registration" title="Link to this heading"></a></h4>
+<p>It is possible to add observers to channels in runtime. Set the
+<a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS" title="CONFIG_ZBUS_RUNTIME_OBSERVERS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS</span></code></a> to enable the feature. This feature uses the heap to
+allocate the nodes dynamically, a memory slab to allocate the nodes statically, or user-provided
+nodes. It depends on the <a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC" title="CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC</span></code></a>, which can be
+<a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_DYNAMIC" title="CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_DYNAMIC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_DYNAMIC</span></code></a>,
+<a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_STATIC" title="CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_STATIC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_STATIC</span></code></a>, and
+<a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_NONE" title="CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_NONE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_NONE</span></code></a>. The dynamic is the default. When
+<a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_STATIC" title="CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_STATIC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_STATIC</span></code></a> is enabled, you need to set the
+number of runtime observers you are going to use by setting the
+<a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_POOL_SIZE" title="CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_POOL_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_POOL_SIZE</span></code></a> configuration. The following example
+illustrates the runtime registration usage.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ZBUS_LISTENER_DEFINE</span><span class="p">(</span><span class="n">my_listener</span><span class="p">,</span><span class="w"> </span><span class="n">callback</span><span class="p">);</span>
+<span class="c1">// ...</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">thread_entry</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// ...</span>
+<span class="w">        </span><span class="cm">/* Adding the observer to channel chan1 */</span>
+<span class="w">        </span><span class="n">zbus_chan_add_obs</span><span class="p">(</span><span class="o">&amp;</span><span class="n">chan1</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_listener</span><span class="p">,</span><span class="w"> </span><span class="n">K_NO_WAIT</span><span class="p">);</span>
+<span class="w">        </span><span class="cm">/* Removing the observer from channel chan1 */</span>
+<span class="w">        </span><span class="n">zbus_chan_rm_obs</span><span class="p">(</span><span class="o">&amp;</span><span class="n">chan1</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_listener</span><span class="p">,</span><span class="w"> </span><span class="n">K_NO_WAIT</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The <a class="reference internal" href="../../doxygen/html/structzbus__observer__node.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">zbus_observer_node</span></code></a> can only be reused in <a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#ga6f2b8db3a13546e3d0fd095ff9cd37ba" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_add_obs_with_node()</span></code></a> after removing
+the channel observer it was first associated with through <a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#gaee11d7472a3f87156b8ef1dcfbe897c4" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_rm_obs()</span></code></a>.</p>
+</div>
+</section>
+</section>
+</section>
+<section id="proxy-agent-communication-experimental">
+<span id="zbus-proxy-agent"></span><h2><a class="toc-backref" href="#id28" role="doc-backlink">Proxy Agent Communication (Experimental)</a><a class="headerlink" href="#proxy-agent-communication-experimental" title="Link to this heading"></a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Proxy agent communication is experimental and may change without deprecation.</p>
+</div>
+<p>ZBus supports proxy agent forwarding, enabling message passing between different execution
+domains such as CPU cores or separate devices.</p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/zbus_proxy_agent.svg"><img alt="ZBus proxy agent communication" src="../../_images/zbus_proxy_agent.svg" style="width: 75%;" />
+</a>
+</figure>
+<section id="id5">
+<h3><a class="toc-backref" href="#id29" role="doc-backlink">Concepts</a><a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<p>Proxy agent communication introduces several key concepts:</p>
+<ul class="simple">
+<li><p><strong>Shadow channels</strong>: Read-only channels that mirror channels from other domains</p></li>
+<li><p><strong>Proxy agents</strong>: Background services that synchronize channel data between domains</p></li>
+<li><p><strong>Transport backends</strong>: Communication mechanisms used by proxy agents</p></li>
+</ul>
+<p>Proxy agents are set up in code using <a class="reference internal" href="../../doxygen/html/group__zbus__proxy__agent.html#ga7e7053ab642e15e577e36bbc5109baac" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_PROXY_AGENT_DEFINE</span></code></a>, specifying the transport
+backend and configuration parameters.
+Channels are defined using standard zbus macros (<a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#ga29a3a39e5c78a34b2d8491615d1f0687" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_CHAN_DEFINE</span></code></a> or
+<a class="reference internal" href="../../doxygen/html/group__zbus__apis.html#ga7c49cba434b90d417859b37722843e5f" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_CHAN_DEFINE_WITH_ID</span></code></a>) and shadow channels use <a class="reference internal" href="../../doxygen/html/group__zbus__proxy__agent.html#ga8da82a59ccd656c4e051a4cadedb4d1c" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_SHADOW_CHAN_DEFINE</span></code></a>
+to create read-only mirrors linked to specific proxy agents.</p>
+</section>
+<section id="transport-backends">
+<h3><a class="toc-backref" href="#id30" role="doc-backlink">Transport Backends</a><a class="headerlink" href="#transport-backends" title="Link to this heading"></a></h3>
+<p>ZBus proxy agent communication relies on transport backends to forward messages between different
+execution domains.</p>
+<section id="ipc-backend">
+<h4>IPC Backend<a class="headerlink" href="#ipc-backend" title="Link to this heading"></a></h4>
+<p>The IPC backend forwards messages between CPU cores within the same system using
+Inter-Process Communication mechanisms.</p>
+<p>See the <a class="reference internal" href="../../samples/subsys/zbus/proxy_agent_ipc/README.html#zbus-proxy-agent-ipc" title="Forward zbus messages between different domains using IPC proxy agents.">zbus Proxy agent - IPC</a> sample for a complete implementation.</p>
+</section>
+</section>
+<section id="id6">
+<h3><a class="toc-backref" href="#id31" role="doc-backlink">Usage</a><a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Enable <a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PROXY_AGENT" title="CONFIG_ZBUS_PROXY_AGENT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PROXY_AGENT</span></code></a> and the desired backend option.</p></li>
+<li><p>Provide the backend device in devicetree.</p></li>
+<li><p>Instantiate the proxy agent:</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/zbus/proxy_agent/zbus_proxy_agent.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/zbus/proxy_agent/zbus_proxy_agent_ipc.h&gt;</span>
+
+<span class="cp">#define IPC_DEV_NODE DT_NODELABEL(ipc0)</span>
+
+<span class="n">ZBUS_PROXY_AGENT_DEFINE</span><span class="p">(</span><span class="n">proxy_agent</span><span class="p">,</span><span class="w">                   </span><span class="cm">/* Proxy agent name */</span>
+<span class="w">                        </span><span class="n">ZBUS_PROXY_AGENT_BACKEND_IPC</span><span class="p">,</span><span class="w">  </span><span class="cm">/* Proxy agent type */</span>
+<span class="w">                        </span><span class="n">IPC_DEV_NODE</span><span class="w">                   </span><span class="cm">/* Backend node */</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p>“proxy_agent”: Name of the proxy agent instance</p></li>
+<li><p>“ZBUS_PROXY_AGENT_BACKEND_IPC”: Transport backend type (IPC in this case)</p></li>
+<li><p>“IPC_DEV_NODE”: Device tree node for the backend device</p></li>
+</ul>
+<ol class="arabic simple" start="4">
+<li><p>Forward local channels through the agent:</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ZBUS_CHAN_DEFINE</span><span class="p">(</span><span class="n">my_channel</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">my_msg</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">                 </span><span class="n">ZBUS_OBSERVERS_EMPTY</span><span class="p">,</span><span class="w"> </span><span class="n">ZBUS_MSG_INIT</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="n">ZBUS_PROXY_ADD_CHAN</span><span class="p">(</span><span class="n">proxy_agent</span><span class="p">,</span><span class="w"> </span><span class="n">my_channel</span><span class="p">);</span>
+
+<span class="n">zbus_chan_pub</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_channel</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="n">K_MSEC</span><span class="p">(</span><span class="mi">100</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Any message published to “my_channel” will be forwarded by “proxy_agent” to remote domains.</p>
+<ol class="arabic simple" start="5">
+<li><p>Mirror remote channels with shadows:</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ZBUS_SHADOW_CHAN_DEFINE</span><span class="p">(</span><span class="n">my_channel_shadow</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">my_msg</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">proxy_agent</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="n">ZBUS_OBSERVERS_EMPTY</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">ZBUS_MSG_INIT</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Where the shadow channel can be used like any regular channel, but is read-only. For example, adding a listener:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">my_listener_cb</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_channel</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">my_msg</span><span class="w"> </span><span class="o">*</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zbus_chan_const_msg</span><span class="p">(</span><span class="n">chan</span><span class="p">);</span>
+<span class="w">    </span><span class="n">printk</span><span class="p">(</span><span class="s">&quot;Received: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">ZBUS_LISTENER_DEFINE</span><span class="p">(</span><span class="n">my_listener</span><span class="p">,</span><span class="w"> </span><span class="n">my_listener_cb</span><span class="p">);</span>
+<span class="n">ZBUS_CHAN_ADD_OBS</span><span class="p">(</span><span class="n">my_channel_shadow</span><span class="p">,</span><span class="w"> </span><span class="n">my_listener</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="samples">
+<h2><a class="toc-backref" href="#id32" role="doc-backlink">Samples</a><a class="headerlink" href="#samples" title="Link to this heading"></a></h2>
+<p>For a complete overview of zbus usage, take a look at the samples. There are the following samples
+available:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/hello_world/README.html#zbus-hello-world" title="Make three threads talk to each other using zbus.">zbus Hello World</a> illustrates the code used above in action;</p></li>
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/work_queue/README.html#zbus-work-queue" title="Use a work queue to process zbus messages in various ways.">Work queue</a> shows how to define and use different kinds of observers.
+Note there is an example of using a work queue instead of executing the listener as an execution
+option;</p></li>
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/msg_subscriber/README.html#zbus-msg-subscriber" title="Use zbus message subscribers to listen to messages published to channels.">Message subscriber</a> illustrates how to use message subscribers;</p></li>
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/async_listeners/README.html#zbus-async-listeners" title="Demonstrate the usage of zbus async listeners.">zbus Async Listeners</a> illustrates how to use async listeners;</p></li>
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/dyn_channel/README.html#zbus-dyn-channel" title="Use zbus channels with dynamically allocated messages.">Dynamic channel</a> demonstrates how to use dynamically allocated exchanging
+data in zbus;</p></li>
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/uart_bridge/README.html#zbus-uart-bridge" title="Redirect channel events to the host over UART.">UART bridge</a> shows an example of sending the operation of the channel to
+a host via serial;</p></li>
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/remote_mock/README.html#zbus-remote-mock" title="Publish to a zbus instance using UART as a bridge.">Remote mock sample</a> illustrates how to implement an external mock (on the host)
+to send and receive messages to and from the bus;</p></li>
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/priority_boost/README.html#zbus-priority-boost" title="Illustrates zbus priority boost feature with a priority inversion scenario.">zbus Priority Boost</a> illustrates zbus priority boost feature with a priority
+inversion scenario;</p></li>
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/runtime_obs_registration/README.html#zbus-runtime-obs-registration" title="Use zbus' runtime observer registration to filter data generated by a producer.">Runtime observer registration</a> illustrates a way of using the runtime
+observer registration feature;</p></li>
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/confirmed_channel/README.html#zbus-confirmed-channel" title="Use confirmed zbus channels to ensure all subscribers consume a message.">Confirmed channel</a> implements a way of implement confirmed channel only
+with subscribers;</p></li>
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/benchmark/README.html#zbus-benchmark" title="Measure the time for sending 256KB from a producer to N consumers.">Benchmarking</a> implements a benchmark with different combinations of inputs.</p></li>
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/proxy_agent_ipc/README.html#zbus-proxy-agent-ipc" title="Forward zbus messages between different domains using IPC proxy agents.">zbus Proxy agent - IPC</a> demonstrates multi-core communication using IPC proxy agents;</p></li>
+</ul>
+</section>
+<section id="suggested-uses">
+<h2><a class="toc-backref" href="#id33" role="doc-backlink">Suggested Uses</a><a class="headerlink" href="#suggested-uses" title="Link to this heading"></a></h2>
+<p>Use zbus to transfer data (messages) between threads in one-to-one, one-to-many, and many-to-many
+synchronously or asynchronously. Choosing the proper observer type is crucial. Use subscribers for
+scenarios that can tolerate message losses and duplications; when they cannot, use message
+subscribers (if you need a thread) or listeners (if you need to be lean and fast). In addition to
+the listener, another asynchronous message processing mechanism (like <a class="reference internal" href="../../kernel/services/data_passing/message_queues.html#message-queues-v2"><span class="std std-ref">message queues</span></a>) may be necessary to retain the pending message until it gets processed.</p>
+<p>For proxy agent scenarios, use zbus to enable communication across execution boundaries:</p>
+<ul class="simple">
+<li><p><strong>Multi-core systems</strong>: Use IPC backend proxy agents to coordinate between application and network processors,
+or distribute workloads across multiple CPU cores.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>ZBus can be used to transfer streams from the producer to the consumer. However, this can
+increase zbus’ communication latency. So maybe consider a Pipe a good alternative for this
+communication topology.</p>
+</div>
+</section>
+<section id="configuration-options">
+<h2><a class="toc-backref" href="#id34" role="doc-backlink">Configuration Options</a><a class="headerlink" href="#configuration-options" title="Link to this heading"></a></h2>
+<p>For enabling zbus, it is necessary to enable the <a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS" title="CONFIG_ZBUS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS</span></code></a> option.</p>
+<p>Related configuration options:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PRIORITY_BOOST" title="CONFIG_ZBUS_PRIORITY_BOOST"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PRIORITY_BOOST</span></code></a> zbus Highest Locker Protocol implementation;</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_CHANNELS_SYS_INIT_PRIORITY" title="CONFIG_ZBUS_CHANNELS_SYS_INIT_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_CHANNELS_SYS_INIT_PRIORITY</span></code></a> determine the <a class="reference internal" href="../../doxygen/html/group__sys__init.html#gaf507cc0613add8113c41896bd631254f" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">SYS_INIT</span></code></a>
+priority used by zbus to organize the channels observations by channel;</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_CHANNEL_NAME" title="CONFIG_ZBUS_CHANNEL_NAME"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_CHANNEL_NAME</span></code></a> enables the name of channels to be available inside the
+channels metadata. The log uses this information to show the channels’ names;</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_OBSERVER_NAME" title="CONFIG_ZBUS_OBSERVER_NAME"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_OBSERVER_NAME</span></code></a> enables the name of observers to be available inside
+the channels metadata;</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PREFER_DYNAMIC_ALLOCATION" title="CONFIG_ZBUS_PREFER_DYNAMIC_ALLOCATION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PREFER_DYNAMIC_ALLOCATION</span></code></a> instructs zbus to
+use dynamic allocation for its internals. That can be disabled by the user and tuned later;</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_MSG_SUBSCRIBER" title="CONFIG_ZBUS_MSG_SUBSCRIBER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_MSG_SUBSCRIBER</span></code></a> enables the message subscriber observer type;</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_MSG_SUBSCRIBER_BUF_ALLOC_DYNAMIC" title="CONFIG_ZBUS_MSG_SUBSCRIBER_BUF_ALLOC_DYNAMIC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_MSG_SUBSCRIBER_BUF_ALLOC_DYNAMIC</span></code></a> uses the heap to allocate message
+buffers;</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_MSG_SUBSCRIBER_BUF_ALLOC_STATIC" title="CONFIG_ZBUS_MSG_SUBSCRIBER_BUF_ALLOC_STATIC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_MSG_SUBSCRIBER_BUF_ALLOC_STATIC</span></code></a> uses the stack to allocate message
+buffers;</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_SIZE" title="CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_SIZE</span></code></a> the available number of message
+buffers to be used simultaneously;</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_ISOLATION" title="CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_ISOLATION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_ISOLATION</span></code></a> enables the developer to isolate
+a pool for the message subscriber for a set of channels;</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_STATIC_DATA_SIZE" title="CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_STATIC_DATA_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_STATIC_DATA_SIZE</span></code></a> the biggest message of zbus
+channels to be transported into a message buffer;</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_HEAP_MEM_POOL_ADD_SIZE_ZBUS" title="CONFIG_HEAP_MEM_POOL_ADD_SIZE_ZBUS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HEAP_MEM_POOL_ADD_SIZE_ZBUS</span></code></a> the reserved heap size for ZBus in a whole
+including message buffer allocation;</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_ASYNC_LISTENER" title="CONFIG_ZBUS_ASYNC_LISTENER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_ASYNC_LISTENER</span></code></a> enables the async listener observer type;</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS" title="CONFIG_ZBUS_RUNTIME_OBSERVERS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS</span></code></a> enables the runtime observer registration;</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_DYNAMIC" title="CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_DYNAMIC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_DYNAMIC</span></code></a> allocate the runtime observers
+dynamically using the heap;</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_STATIC" title="CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_STATIC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_STATIC</span></code></a> allocate the runtime observers
+statically using a memory slab;</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_POOL_SIZE" title="CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_POOL_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_POOL_SIZE</span></code></a> the amount of enabled runtime
+observers to statically allocate.</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_NONE" title="CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_NONE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_NONE</span></code></a> use user-provided runtime
+observers nodes;</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PROXY_AGENT" title="CONFIG_ZBUS_PROXY_AGENT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PROXY_AGENT</span></code></a> enable proxy agent communication support.</p></li>
+</ul>
+<section id="proxy-agent-configuration-options">
+<h3><a class="toc-backref" href="#id35" role="doc-backlink">Proxy Agent Configuration Options</a><a class="headerlink" href="#proxy-agent-configuration-options" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PROXY_AGENT_LOG_LEVEL</span></code> log level for proxy agent communication;</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PROXY_AGENT_IPC" title="CONFIG_ZBUS_PROXY_AGENT_IPC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PROXY_AGENT_IPC</span></code></a> enable IPC backend for proxy agent communication;</p></li>
+<li><p><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PROXY_AGENT_IPC_LOG_LEVEL</span></code> log level for IPC backend proxy agent
+communication;</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PROXY_AGENT_MAX_MESSAGE_SIZE" title="CONFIG_ZBUS_PROXY_AGENT_MAX_MESSAGE_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PROXY_AGENT_MAX_MESSAGE_SIZE</span></code></a> maximum message size for proxy agent
+channels;</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PROXY_AGENT_MAX_CHANNEL_NAME_SIZE" title="CONFIG_ZBUS_PROXY_AGENT_MAX_CHANNEL_NAME_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PROXY_AGENT_MAX_CHANNEL_NAME_SIZE</span></code></a> maximum size of channel names in
+proxy agent communication;</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PROXY_AGENT_INIT_PRIORITY" title="CONFIG_ZBUS_PROXY_AGENT_INIT_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PROXY_AGENT_INIT_PRIORITY</span></code></a> initialization priority for proxy agent
+setup.</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PROXY_AGENT_WORK_QUEUE_STACK_SIZE" title="CONFIG_ZBUS_PROXY_AGENT_WORK_QUEUE_STACK_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PROXY_AGENT_WORK_QUEUE_STACK_SIZE</span></code></a> stack size for the proxy agent
+receive work queue thread;</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PROXY_AGENT_WORK_QUEUE_PRIORITY" title="CONFIG_ZBUS_PROXY_AGENT_WORK_QUEUE_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PROXY_AGENT_WORK_QUEUE_PRIORITY</span></code></a> priority for the proxy agent receive
+work queue thread.</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PROXY_AGENT_RX_QUEUE_DEPTH" title="CONFIG_ZBUS_PROXY_AGENT_RX_QUEUE_DEPTH"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PROXY_AGENT_RX_QUEUE_DEPTH</span></code></a> depth of the proxy agent receive queue
+for incoming messages from remote domains.</p></li>
+</ul>
+</section>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id36" role="doc-backlink">API Reference</a><a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__zbus__apis.html" title=""><span class="pre">Zbus</span> <span class="pre">APIs</span></a></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/benchmark/README.html#zbus-benchmark" title="Measure the time for sending 256KB from a producer to N consumers.">Benchmarking</a></span><span class="code-sample-description">Measure the time for sending 256KB from a producer to N consumers.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/confirmed_channel/README.html#zbus-confirmed-channel" title="Use confirmed zbus channels to ensure all subscribers consume a message.">Confirmed channel</a></span><span class="code-sample-description">Use confirmed zbus channels to ensure all subscribers consume a message.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/dyn_channel/README.html#zbus-dyn-channel" title="Use zbus channels with dynamically allocated messages.">Dynamic channel</a></span><span class="code-sample-description">Use zbus channels with dynamically allocated messages.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/msg_subscriber/README.html#zbus-msg-subscriber" title="Use zbus message subscribers to listen to messages published to channels.">Message subscriber</a></span><span class="code-sample-description">Use zbus message subscribers to listen to messages published to channels.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/remote_mock/README.html#zbus-remote-mock" title="Publish to a zbus instance using UART as a bridge.">Remote mock sample</a></span><span class="code-sample-description">Publish to a zbus instance using UART as a bridge.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/runtime_obs_registration/README.html#zbus-runtime-obs-registration" title="Use zbus' runtime observer registration to filter data generated by a producer.">Runtime observer registration</a></span><span class="code-sample-description">Use zbus' runtime observer registration to filter data generated by a producer.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/uart_bridge/README.html#zbus-uart-bridge" title="Redirect channel events to the host over UART.">UART bridge</a></span><span class="code-sample-description">Redirect channel events to the host over UART.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/work_queue/README.html#zbus-work-queue" title="Use a work queue to process zbus messages in various ways.">Work queue</a></span><span class="code-sample-description">Use a work queue to process zbus messages in various ways.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/async_listeners/README.html#zbus-async-listeners" title="Demonstrate the usage of zbus async listeners.">zbus Async Listeners</a></span><span class="code-sample-description">Demonstrate the usage of zbus async listeners.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/hello_world/README.html#zbus-hello-world" title="Make three threads talk to each other using zbus.">zbus Hello World</a></span><span class="code-sample-description">Make three threads talk to each other using zbus.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/priority_boost/README.html#zbus-priority-boost" title="Illustrates zbus priority boost feature with a priority inversion scenario.">zbus Priority Boost</a></span><span class="code-sample-description">Illustrates zbus priority boost feature with a priority inversion scenario.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/proxy_agent_ipc/README.html#zbus-proxy-agent-ipc" title="Forward zbus messages between different domains using IPC proxy agents.">zbus Proxy agent - IPC</a></span><span class="code-sample-description">Forward zbus messages between different domains using IPC proxy agents.</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

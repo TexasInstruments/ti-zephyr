@@ -1,0 +1,628 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Memory Heaps &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/kernel/memory_management/heap.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Shared Multi Heap" href="shared_multi_heap.html" />
+    <link rel="prev" title="Memory Management" href="index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Kernel</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../services/index.html">Kernel Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drivers/index.html">Device Driver Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usermode/index.html">User Mode</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Memory Management</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Memory Heaps</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synchronized-heap-allocator">Synchronized Heap Allocator</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#creating-a-heap">Creating a Heap</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#allocating-memory">Allocating Memory</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#releasing-memory">Releasing Memory</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#low-level-heap-allocator">Low Level Heap Allocator</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#implementation">Implementation</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#multi-heap-wrapper-utility">Multi-Heap Wrapper Utility</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#system-heap">System Heap</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#defining-the-heap-memory-pool">Defining the Heap Memory Pool</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#id1">Allocating Memory</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#id2">Releasing Memory</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#suggested-uses">Suggested Uses</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#api-reference">API Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#heap-listener">Heap listener</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="shared_multi_heap.html">Shared Multi Heap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slabs.html">Memory Slabs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sys_mem_blocks.html">Memory Blocks Allocator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demand_paging.html">Demand Paging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="virtual_memory.html">Virtual Memory</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../data_structures/index.html">Data Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timing_functions/index.html">Executing Time Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../object_cores/index.html">Object Cores</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timeutil.html">Time Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../util/index.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iterable_sections/index.html">Iterable Sections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../code-relocation.html">Code And Data Relocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanup.html">Scope-based Cleanup Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Kernel</a> &raquo;</li>
+  
+     <li><a href="index.html">Memory Management</a> &raquo;</li>
+  
+  <li>Memory Heaps</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/kernel/memory_management/heap.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27kernel%2Fmemory_management%2Fheap%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Kernel&env=-+Page%3A+kernel%2Fmemory_management%2Fheap%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="memory-heaps">
+<span id="heap-v2"></span><h1>Memory Heaps<a class="headerlink" href="#memory-heaps" title="Link to this heading"></a></h1>
+<p>Zephyr provides a collection of utilities that allow threads to
+dynamically allocate memory.</p>
+<section id="synchronized-heap-allocator">
+<h2>Synchronized Heap Allocator<a class="headerlink" href="#synchronized-heap-allocator" title="Link to this heading"></a></h2>
+<section id="creating-a-heap">
+<h3>Creating a Heap<a class="headerlink" href="#creating-a-heap" title="Link to this heading"></a></h3>
+<p>The simplest way to define a heap is statically, with the
+<a class="reference internal" href="../../doxygen/html/group__heap__apis.html#ga795d7f1e6d5b7b19a7a50198d7829a0f" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_HEAP_DEFINE</span></code></a> macro.  This creates a static <a class="reference internal" href="../../doxygen/html/structk__heap.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">k_heap</span></code></a> variable
+with a given name that manages a memory region of the
+specified size.</p>
+<p>Heaps can also be created to manage arbitrary regions of
+application-controlled memory using <a class="reference internal" href="../../doxygen/html/group__heap__apis.html#ga9273e06dc8d6a351499f2f5abfdcb39f" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_heap_init()</span></code></a>.</p>
+</section>
+<section id="allocating-memory">
+<h3>Allocating Memory<a class="headerlink" href="#allocating-memory" title="Link to this heading"></a></h3>
+<p>Memory can be allocated from a heap using <a class="reference internal" href="../../doxygen/html/group__heap__apis.html#ga22b83564e50ae6177388dfe63e32a512" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_heap_alloc()</span></code></a>,
+passing it the address of the heap object and the number of bytes
+desired.  This functions similarly to standard C <code class="docutils literal notranslate"><span class="pre">malloc()</span></code>,
+returning a NULL pointer on an allocation failure.</p>
+<p>The heap supports blocking operation, allowing threads to go to sleep
+until memory is available.  The final argument is a
+<code class="xref c c-type docutils literal notranslate"><span class="pre">k_timeout_t</span></code> timeout value indicating how long the thread may
+sleep before returning, or else one of the constant timeout values
+<a class="reference internal" href="../../doxygen/html/group__clock__apis.html#ga3d9541cfe2e8395af66d186efa77362f" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_NO_WAIT</span></code></a> or <a class="reference internal" href="../../doxygen/html/group__clock__apis.html#ga0bb4b83f0222193b21a8910311bab0ca" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_FOREVER</span></code></a>.</p>
+</section>
+<section id="releasing-memory">
+<h3>Releasing Memory<a class="headerlink" href="#releasing-memory" title="Link to this heading"></a></h3>
+<p>Memory allocated with <a class="reference internal" href="../../doxygen/html/group__heap__apis.html#ga22b83564e50ae6177388dfe63e32a512" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_heap_alloc()</span></code></a> must be released using
+<a class="reference internal" href="../../doxygen/html/group__heap__apis.html#ga6cf917a0b3d91a0101192bd4808ada9c" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_heap_free()</span></code></a>.  Similar to standard C <code class="docutils literal notranslate"><span class="pre">free()</span></code>, the pointer
+provided must be either a <code class="docutils literal notranslate"><span class="pre">NULL</span></code> value or a pointer previously
+returned by <a class="reference internal" href="../../doxygen/html/group__heap__apis.html#ga22b83564e50ae6177388dfe63e32a512" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_heap_alloc()</span></code></a> for the same heap.  Freeing a
+<code class="docutils literal notranslate"><span class="pre">NULL</span></code> value is defined to have no effect.</p>
+</section>
+</section>
+<section id="low-level-heap-allocator">
+<h2>Low Level Heap Allocator<a class="headerlink" href="#low-level-heap-allocator" title="Link to this heading"></a></h2>
+<p>The underlying implementation of the <a class="reference internal" href="../../doxygen/html/structk__heap.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">k_heap</span></code></a>
+abstraction is provided a data structure named <a class="reference internal" href="../../doxygen/html/structsys__heap.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">sys_heap</span></code></a>.  This
+implements exactly the same allocation semantics, but
+provides no kernel synchronization tools.  It is available for
+applications that want to manage their own blocks of memory in
+contexts (for example, userspace) where synchronization is unavailable
+or more complicated.  Unlike <code class="docutils literal notranslate"><span class="pre">k_heap</span></code>, all calls to any <code class="docutils literal notranslate"><span class="pre">sys_heap</span></code>
+functions on a single heap must be serialized by the caller.
+Simultaneous use from separate threads is disallowed.</p>
+<section id="implementation">
+<h3>Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h3>
+<p>Internally, the <code class="docutils literal notranslate"><span class="pre">sys_heap</span></code> memory block is partitioned into “chunks”
+of 8 bytes.  All allocations are made out of a contiguous region of
+chunks.  The first chunk of every allocation or unused block is
+prefixed by a chunk header that stores the length of the chunk, the
+length of the next lower (“left”) chunk in physical memory, a bit
+indicating whether the chunk is in use, and chunk-indexed link
+pointers to the previous and next chunk in a “free list” to which
+unused chunks are added.</p>
+<p>The heap code takes reasonable care to avoid fragmentation.  Free
+block lists are stored in “buckets” by their size, each bucket storing
+blocks within one power of two (i.e. a bucket for blocks of 3-4
+chunks, another for 5-8, 9-16, etc…) this allows new allocations to
+be made from the smallest/most-fragmented blocks available.  Also, as
+allocations are freed and added to the heap, they are automatically
+combined with adjacent free blocks to prevent fragmentation.</p>
+<p>All metadata is stored at the beginning of the contiguous block of
+heap memory, including the variable-length list of bucket list heads
+(which depend on heap size).  The only external memory required is the
+<a class="reference internal" href="../../doxygen/html/structsys__heap.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">sys_heap</span></code></a> structure itself.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">sys_heap</span></code> functions are unsynchronized.  Care must be taken by
+any users to prevent concurrent access.  Only one context may be
+inside one of the API functions at a time.</p>
+<p>The heap code takes care to present high performance and reliable
+latency.  All <code class="docutils literal notranslate"><span class="pre">sys_heap</span></code> API functions are guaranteed to complete
+within constant time.  On typical architectures, they will all
+complete within 1-200 cycles.  One complexity is that the search of
+the minimum bucket size for an allocation (the set of free blocks that
+“might fit”) has a compile-time upper bound of iterations to prevent
+unbounded list searches, at the expense of some fragmentation
+resistance.  This <a class="reference internal" href="../../kconfig.html#CONFIG_SYS_HEAP_ALLOC_LOOPS" title="CONFIG_SYS_HEAP_ALLOC_LOOPS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SYS_HEAP_ALLOC_LOOPS</span></code></a> value may be
+chosen by the user at build time, and defaults to a value of 3.</p>
+</section>
+</section>
+<section id="multi-heap-wrapper-utility">
+<h2>Multi-Heap Wrapper Utility<a class="headerlink" href="#multi-heap-wrapper-utility" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">sys_heap</span></code> utility requires that all managed memory be in a
+single contiguous block.  It is common for complicated microcontroller
+applications to have more complicated memory setups that they still
+want to manage dynamically as a “heap”.  For example, the memory might
+exist as separate discontiguous regions, different areas may have
+different cache, performance or power behavior, peripheral devices may
+only be able to perform DMA to certain regions, etc…</p>
+<p>For those situations, Zephyr provides a <code class="docutils literal notranslate"><span class="pre">sys_multi_heap</span></code> utility.
+Effectively this is a simple wrapper around a set of one or more
+<code class="docutils literal notranslate"><span class="pre">sys_heap</span></code> objects.  It should be initialized after its child heaps
+via <a class="reference internal" href="../../doxygen/html/group__multi__heap__wrapper.html#ga50ded513b50c7aed7d89386bb8f425cc" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_multi_heap_init()</span></code></a>, after which each heap can be added
+to the managed set via <a class="reference internal" href="../../doxygen/html/group__multi__heap__wrapper.html#gacd6b92e8090a56e1eb59a18166d659d1" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_multi_heap_add_heap()</span></code></a>.  No
+destruction utility is provided; just as for <code class="docutils literal notranslate"><span class="pre">sys_heap</span></code>,
+applications that want to destroy a multi heap should simply ensure
+all allocated blocks are freed (or at least will never be used again)
+and repurpose the underlying memory for another usage.</p>
+<p>It has a single pair of allocation entry points,
+<a class="reference internal" href="../../doxygen/html/group__multi__heap__wrapper.html#ga050d7499b982ed62f85d5fc15f79548b" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_multi_heap_alloc()</span></code></a> and
+<a class="reference internal" href="../../doxygen/html/group__multi__heap__wrapper.html#ga9f958dbfa86e12236b8e356375b8d04c" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_multi_heap_aligned_alloc()</span></code></a>.  These behave identically to
+the <code class="docutils literal notranslate"><span class="pre">sys_heap</span></code> functions with similar names, except that they also
+accept an opaque “configuration” parameter.  This pointer is
+uninspected by the multi heap code itself; instead it is passed to a
+callback function provided at initialization time.  This
+application-provided callback is responsible for doing the underlying
+allocation from one of the managed heaps, and may use the
+configuration parameter in any way it likes to make that decision.</p>
+<p>For modifying the size of an allocated buffer (whether shrinking
+or enlarging it), you can use the
+<a class="reference internal" href="../../doxygen/html/group__multi__heap__wrapper.html#ga68c2739931487c6b1235c187d563f5f8" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_multi_heap_realloc()</span></code></a> and
+<a class="reference internal" href="../../doxygen/html/group__multi__heap__wrapper.html#ga603800e6e2ae8c6e058fff18c891c3f0" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_multi_heap_aligned_realloc()</span></code></a> APIs.  If the buffer cannot be
+enlarged on the heap where it currently resides,
+any of the eligible heaps specified by the configuration parameter may be used.</p>
+<p>When unused, a multi heap may be freed via
+<a class="reference internal" href="../../doxygen/html/group__multi__heap__wrapper.html#gac6f913a3bbf247807ba80408a242db73" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_multi_heap_free()</span></code></a>.  The application does not need to pass
+a configuration parameter.  Memory allocated from any of the managed
+<code class="docutils literal notranslate"><span class="pre">sys_heap</span></code> objects may be freed with in the same way.</p>
+</section>
+<section id="system-heap">
+<h2>System Heap<a class="headerlink" href="#system-heap" title="Link to this heading"></a></h2>
+<p>The <em class="dfn">system heap</em> is a predefined memory allocator that allows
+threads to dynamically allocate memory from a common memory region in
+a <a class="reference internal" href="../../doxygen/html/stdlib_8h.html#a9c36d0fe3ec4675cbffdc9b52f5fb399" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">malloc()</span></code></a>-like manner.</p>
+<p>Only a single system heap is defined. Unlike other heaps or memory
+pools, the system heap cannot be directly referenced using its
+memory address.</p>
+<p>The size of the system heap is configurable to arbitrary sizes,
+subject to space availability.</p>
+<p>A thread can dynamically allocate a chunk of heap memory by calling
+<a class="reference internal" href="../../doxygen/html/group__heap__apis.html#gaa8edf1e63e5d5dd78d7adcfd787394ee" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_malloc()</span></code></a>. The address of the allocated chunk is
+guaranteed to be aligned on a multiple of pointer sizes. If a suitable
+chunk of heap memory cannot be found <code class="docutils literal notranslate"><span class="pre">NULL</span></code> is returned.</p>
+<p>When the thread is finished with a chunk of heap memory it can release
+the chunk back to the system heap by calling <a class="reference internal" href="../../doxygen/html/group__heap__apis.html#ga79b63cc93b3358cf82d74f40e73b69d5" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_free()</span></code></a>.</p>
+<section id="defining-the-heap-memory-pool">
+<h3>Defining the Heap Memory Pool<a class="headerlink" href="#defining-the-heap-memory-pool" title="Link to this heading"></a></h3>
+<p>The size of the heap memory pool is specified using the
+<a class="reference internal" href="../../kconfig.html#CONFIG_HEAP_MEM_POOL_SIZE" title="CONFIG_HEAP_MEM_POOL_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HEAP_MEM_POOL_SIZE</span></code></a> configuration option.</p>
+<p>By default, the heap memory pool size is zero bytes. This value instructs
+the kernel not to define the heap memory pool object. The maximum size is limited
+by the amount of available memory in the system. The project build will fail in
+the link stage if the size specified can not be supported.</p>
+<p>In addition, each subsystem (board, driver, library, etc) can set a custom
+requirement by defining a Kconfig option with the prefix
+<code class="docutils literal notranslate"><span class="pre">HEAP_MEM_POOL_ADD_SIZE_</span></code> (this value is in bytes). If multiple subsystems
+specify custom values, the sum of these will be used as the minimum requirement.
+If the application tries to set a value that’s less than the minimum value, this
+will be ignored and the minimum value will be used instead.</p>
+<p>To force a smaller than minimum value to be used, the application may enable the
+<a class="reference internal" href="../../kconfig.html#CONFIG_HEAP_MEM_POOL_IGNORE_MIN" title="CONFIG_HEAP_MEM_POOL_IGNORE_MIN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HEAP_MEM_POOL_IGNORE_MIN</span></code></a> option. This can be useful
+when optimizing the heap size and the minimum requirement can be more accurately
+determined for a specific application.</p>
+</section>
+<section id="id1">
+<h3>Allocating Memory<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<p>A chunk of heap memory is allocated by calling <a class="reference internal" href="../../doxygen/html/group__heap__apis.html#gaa8edf1e63e5d5dd78d7adcfd787394ee" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_malloc()</span></code></a>.</p>
+<p>The following code allocates a 200 byte chunk of heap memory, then fills it
+with zeros. A warning is issued if a suitable chunk is not obtained.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">mem_ptr</span><span class="p">;</span>
+
+<span class="n">mem_ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k_malloc</span><span class="p">(</span><span class="mi">200</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mem_ptr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">memset</span><span class="p">(</span><span class="n">mem_ptr</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p">);</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Memory not allocated&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h3>Releasing Memory<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<p>A chunk of heap memory is released by calling <a class="reference internal" href="../../doxygen/html/group__heap__apis.html#ga79b63cc93b3358cf82d74f40e73b69d5" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_free()</span></code></a>.</p>
+<p>The following code allocates a 75 byte chunk of memory, then releases it
+once it is no longer needed.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">mem_ptr</span><span class="p">;</span>
+
+<span class="n">mem_ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k_malloc</span><span class="p">(</span><span class="mi">75</span><span class="p">);</span>
+<span class="p">...</span><span class="w"> </span><span class="cm">/* use memory block */</span>
+<span class="n">k_free</span><span class="p">(</span><span class="n">mem_ptr</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="suggested-uses">
+<h3>Suggested Uses<a class="headerlink" href="#suggested-uses" title="Link to this heading"></a></h3>
+<p>Use the heap memory pool to dynamically allocate memory in a
+<a class="reference internal" href="../../doxygen/html/stdlib_8h.html#a9c36d0fe3ec4675cbffdc9b52f5fb399" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">malloc()</span></code></a>-like manner.</p>
+</section>
+<section id="configuration-options">
+<h3>Configuration Options<a class="headerlink" href="#configuration-options" title="Link to this heading"></a></h3>
+<p>Related configuration options:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_HEAP_MEM_POOL_SIZE" title="CONFIG_HEAP_MEM_POOL_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HEAP_MEM_POOL_SIZE</span></code></a></p></li>
+</ul>
+</section>
+<section id="api-reference">
+<h3>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__heap__apis.html" title=""><span class="pre">Heap</span> <span class="pre">APIs</span></a></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__low__level__heap__allocator.html" title=""><span class="pre">Low</span> <span class="pre">Level</span> <span class="pre">Heap</span> <span class="pre">Allocator</span></a></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__multi__heap__wrapper.html" title=""><span class="pre">Multi-Heap</span> <span class="pre">Wrapper</span></a></dt>
+</dl>
+
+</section>
+</section>
+<section id="heap-listener">
+<h2>Heap listener<a class="headerlink" href="#heap-listener" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__heap__listener__apis.html" title=""><span class="pre">Heap</span> <span class="pre">Listener</span> <span class="pre">APIs</span></a></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

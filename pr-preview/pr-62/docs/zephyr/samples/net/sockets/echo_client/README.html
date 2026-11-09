@@ -1,0 +1,724 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="Implement a client that sends IP packets, waits for data to be sent back, and verifies it." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Echo client (advanced) &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/samples/net/sockets/echo_client/README.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Echo server (advanced)" href="../echo_server/README.html" />
+    <link rel="prev" title="Asynchronous echo server using select()" href="../echo_async_select/README.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1 current"><a class="category-link reference internal" href="../../../index.html">Samples and Demos</a><ul class="current">
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../application_development/application_development.html">Application Development</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../arch/index.html">Architecture-dependent Samples</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../basic/basic.html">Basic</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../bluetooth/bluetooth.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../boards/boards.html">Boards</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../cpp/cpp.html">C++</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../data_structures/data_structures.html">Data Structures</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../drivers/drivers.html">Drivers</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../modules/index.html">External modules</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../kernel/index.html">Kernel and Scheduler</a></li>
+<li class="toctree-l2 current"><a class="category-link reference internal" href="../../net.html">Networking</a><ul class="current">
+<li class="toctree-l3"><a class="category-link reference internal" href="../../cloud/README.html">IoT Cloud</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../ethernet/README.html">Network Ethernet</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../openthread/README.html">OpenThread</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../qos/QoS.html">Quality of Service</a></li>
+<li class="toctree-l3 current"><a class="category-link reference internal" href="../sockets.html">Sockets API</a><ul class="current">
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../echo_async/README.html" title="Implement an asynchronous IPv4/IPv6 TCP echo server using BSD sockets and poll()">Asynchronous echo server using poll()</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../echo_async_select/README.html" title="Implement an asynchronous IPv4/IPv6 TCP echo server using BSD sockets and select()">Asynchronous echo server using select()</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../coap_client/README.html" title="Use the CoAP library to implement a client that fetches a resource.">CoAP client</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../coap_download/README.html" title="Use the CoAP client API to download data via a GET request">CoAP download</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../coap_server/README.html" title="Use the CoAP server subsystem to register CoAP resources.">CoAP service</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../coap_upload/README.html" title="Use the CoAP client API to upload data via a PUT request">CoAP upload</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../dumb_http_server/README.html" title="Implement a simple, portable, HTTP server using BSD sockets.">Dumb HTTP server</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../dumb_http_server_mt/README.html" title="Implement a simple HTTP server supporting simultaneous connections using BSD sockets.">Dumb HTTP server (multi-threaded)</a></li>
+<li class="toctree-l4 current"><a class="code-sample-link current reference internal" href="#" title="Implement a client that sends IP packets, waits for data to be sent back, and verifies it.">Echo client (advanced)</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../echo_server/README.html" title="Implement a UDP/TCP server that sends received packets back to the sender.">Echo server (advanced)</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../echo_service/README.html" title="Implements a simple IPv4/IPv6 TCP echo server using BSD sockets and socket service API.">Echo server (service)</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../echo/README.html" title="Implements a simple IPv4/IPv6 TCP echo server using BSD sockets.">Echo server (simple)</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../http_client/README.html" title="Implement an HTTP(S) client that issues a variety of HTTP requests.">HTTP Client</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../http_get/README.html" title="Implement an HTTP(S) client using plain BSD sockets.">HTTP GET using plain sockets</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../http_server/README.html" title="Implement an HTTP(s) Server demonstrating various resource types.">HTTP Server</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../big_http_download/README.html" title="Download a large file from a web server using BSD sockets.">Large HTTP download</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../net_mgmt/README.html" title="Listen to network management events using a network management socket.">Network management socket</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../packet/README.html" title="Use raw packet sockets over Ethernet.">Packet socket</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../sntp_client/README.html" title="Use SNTP to get the current time from the host.">SNTP client</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../can/README.html" title="Send and receive raw CAN frames using BSD sockets API.">SocketCAN</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../socketpair/README.html" title="Implement communication between threads using socket pairs.">Socketpair</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../tcp/README.html" title="Use TTCN-3 to validate the functionality of the TCP stack.">TCP sample for TTCN-3 based sanity check</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../txtime/README.html" title="Control the transmission time of a packet using SO_TXTIME socket option.">UDP sender using SO_TXTIME</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../websocket_client/README.html" title="Implement a Websocket client that connects to a Websocket server.">WebSocket Client</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../wifi/README.html">Wi-Fi</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../wpan_serial/README.html" title="Implement a slip-radio device for Contiki-based border routers.">802.15.4 &quot;serial-radio&quot;</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../cellular_modem/README.html" title="Use a cellular modem to communicate with a UDP server.">Cellular modem</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../dhcpv4_client/README.html" title="Start a DHCPv4 client to obtain an IPv4 address from a DHCPv4 server.">DHCPv4 client</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../dns_resolve/README.html" title="Resolve an IP address for a given hostname.">DNS resolve</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../ftp_client/README.html" title="FTP client sample interacting with FTP server over Zephyr shell.">FTP client shell sample</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../ipv4_autoconf/README.html" title="Perform IPv4 autoconfiguration and self-assign a random IPv4 address">IPv4 autoconf client</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../latmon/README.html" title="Measures delta time between GPIO events and reports the latency metrics via latmon to the latmus service executing on the SUT.">Latmon Client</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../lwm2m_client/README.html" title="Implement a LwM2M client that connects to a LwM2M server.">LwM2M client</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../mdns_responder/README.html" title="Listen and respond to mDNS queries.">mDNS responder</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../midi2/README.html" title="Exchange Universal MIDI Packets over the Network MIDI 2.0 protocol">MIDI2 network transport</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../mqtt_publisher/README.html" title="Send MQTT PUBLISH messages to an MQTT server.">MQTT publisher</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../mqtt_sn_publisher/README.html" title="Send MQTT-SN PUBLISH messages to an MQTT-SN gateway.">MQTT-SN publisher</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../capture/README.html" title="Capture network packets and send them to a remote host via IPIP tunnel.">Network packet capture</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../pkt_filter/README.html" title="Install network packet filter hooks.">Network packet filter</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../stats/README.html" title="Query and display network statistics from a user application.">Network statistics</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../ocpp/README.html" title="Implement an OCPP charge point that connects to a Central System server and simulates the meter readings.">OCPP charge point</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../prometheus/README.html" title="Implement a Prometheus Metric Server demonstrating various metric types.">Prometheus Sample</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../promiscuous_mode/README.html" title="Enable promiscuous mode on all interfaces and print information about incoming packets.">Promiscuous mode</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../ptp/README.html" title="Enable PTP support and monitor messages and events via logging.">PTP</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../syslog_net/README.html" title="Enable a remote syslog service that sends syslog messages to a remote server">Remote syslog</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../secure_mqtt_sensor_actuator/README.html" title="Implement an MQTT-based IoT sensor/actuator device">Secure MQTT Sensor/Actuator</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../telnet/README.html" title="Access Zephyr shell over telnet.">Telnet console</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../tftp_client/README.html" title="Use the TFTP client library to get/put files from/to a TFTP server.">TFTP client</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../virtual/README.html" title="Create a sample virtual network interface.">Virtual network interface</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../wireguard/README.html" title="Implement a echo-server application that sends received packets back to the sender over Wireguard VPN connection.">Wireguard VPN</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../zperf/README.html" title="Use the zperf shell utility to evaluate network bandwidth.">zperf: Network Traffic Generator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../posix/posix.html">POSIX API</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../psa/index.html">PSA</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../regulator/index.html">Regulator</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../sensor/sensor.html">Sensors</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../shields/shields.html">Shields</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/subsys.html">Subsystems</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../sysbuild/sysbuild.html">Sysbuild</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../tfm_integration/tfm_integration.html">TF-M Integration</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../userspace/index.html">Userspace</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../../synchronization/README.html" title="Manipulate basic kernel synchronization primitives.">Basic Synchronization</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../../philosophers/README.html" title="Implement a solution to the Dining Philosophers problem using Zephyr kernel services.">Dining Philosophers</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../../hello_world/README.html" title="Print &quot;Hello World&quot; to the console.">Hello World</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">Samples and Demos</a> &raquo;</li>
+  
+     <li><a href="../../net.html">Networking</a> &raquo;</li>
+  
+     <li><a href="../sockets.html">Sockets API</a> &raquo;</li>
+  
+  <li>Echo client (advanced)</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main//samples/net/sockets/echo_client/README.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27samples%2Fnet%2Fsockets%2Fecho_client%2FREADME%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Networking%2Carea%3A+Networking%2Carea%3A+Sockets%2Carea%3A+Samples&env=-+Page%3A+samples%2Fnet%2Fsockets%2Fecho_client%2FREADME%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="sockets-echo-client">
+<h1>Echo client (advanced)<a class="headerlink" href="#sockets-echo-client" title="Link to this heading"></a></h1>
+<p>
+                <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main//samples/net/sockets/echo_client/README.rst/.." class="btn btn-info fa fa-github"
+                    target="_blank" style="text-align: center;">
+                    Browse source code on GitHub
+                </a>
+                </p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The echo-client sample application for Zephyr implements a UDP/TCP client
+that will send IPv4 or IPv6 packets, wait for the data to be sent back,
+and then verify it matches the data that was sent.</p>
+<p>The source code for this sample application can be found at:
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/samples/net/sockets/echo_client">samples/net/sockets/echo_client</a>.</p>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../../connectivity/networking/networking_with_host.html#networking-with-host"><span class="std std-ref">Networking with the host system</span></a></p></li>
+</ul>
+</section>
+<section id="building-and-running">
+<h2>Building and Running<a class="headerlink" href="#building-and-running" title="Link to this heading"></a></h2>
+<p>There are multiple ways to use this application. One of the most common
+usage scenario is to run echo-client application inside QEMU. This is
+described in <a class="reference internal" href="../../../../connectivity/networking/qemu_setup.html#networking-with-qemu"><span class="std std-ref">Networking with QEMU</span></a>.</p>
+<p>There are configuration files for different boards and setups in the
+echo-client directory:</p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">prj.conf</span></code>
+Generic config file, normally you should use this.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">overlay-ot.conf</span></code>
+This overlay config enables support for OpenThread.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">overlay-802154.conf</span></code>
+This overlay config enables support for native IEEE 802.15.4 connectivity.
+Note, that by default IEEE 802.15.4 L2 uses unacknowledged communication. To
+improve connection reliability, acknowledgments can be enabled with shell
+command: <code class="docutils literal notranslate"><span class="pre">ieee802154</span> <span class="pre">ack</span> <span class="pre">set</span></code>.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">overlay-qemu_802154.conf</span></code>
+This overlay config enables support for two QEMU’s when simulating
+IEEE 802.15.4 network that are connected together.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">overlay-tls.conf</span></code>
+This overlay config enables support for TLS.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">overlay-vlan.conf</span></code>
+This overlay config enables support for Virtual LAN.
+See <a class="reference internal" href="../../common/README.html#networking-samples-common"><span class="std std-ref">Overview</span></a> for details.</p></li>
+</ul>
+<p>Build echo-client sample application like this:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>&lt;board<span class="w"> </span>to<span class="w"> </span>use&gt;<span class="w"> </span>samples/net/sockets/echo_client<span class="w"> </span>--<span class="w"> </span>-DCONF_FILE<span class="o">=</span>&lt;config<span class="w"> </span>file<span class="w"> </span>to<span class="w"> </span>use&gt;
+</pre></div>
+</div>
+<p>Example building for the nrf52840dk/nrf52840 with OpenThread support:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>nrf52840dk/nrf52840<span class="w"> </span>samples/net/sockets/echo_client<span class="w"> </span>--<span class="w"> </span>-DCONF_FILE<span class="o">=</span><span class="s2">&quot;prj.conf overlay-ot.conf&quot;</span>
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>run
+</pre></div>
+</div>
+<p>Example building for the IEEE 802.15.4 RF2XX transceiver:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span><span class="o">[</span>samr21_xpro<span class="w"> </span><span class="p">|</span><span class="w"> </span>sam4s_xplained<span class="w"> </span><span class="p">|</span><span class="w"> </span>sam_v71_xult/samv71q21<span class="o">]</span><span class="w"> </span>samples/net/sockets/echo_client<span class="w"> </span>--<span class="w"> </span>-DEXTRA_CONF_FILE<span class="o">=</span>overlay-802154.conf
+west<span class="w"> </span>flash
+</pre></div>
+</div>
+<p>In a terminal window you can check if communication is happen:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>minicom<span class="w"> </span>-D<span class="w"> </span>/dev/ttyACM1
+</pre></div>
+</div>
+<section id="enabling-tls-support">
+<h3>Enabling TLS support<a class="headerlink" href="#enabling-tls-support" title="Link to this heading"></a></h3>
+<p>Enable TLS support in the sample by building the project with the
+<code class="docutils literal notranslate"><span class="pre">overlay-tls.conf</span></code> overlay file enabled, for example, using these commands:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>qemu_x86<span class="w"> </span>samples/net/sockets/echo_client<span class="w"> </span>--<span class="w"> </span>-DCONF_FILE<span class="o">=</span><span class="s2">&quot;prj.conf overlay-tls.conf&quot;</span>
+</pre></div>
+</div>
+<p>An alternative way is to specify <code class="docutils literal notranslate"><span class="pre">-DEXTRA_CONF_FILE=overlay-tls.conf</span></code> when
+running <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> or <code class="docutils literal notranslate"><span class="pre">cmake</span></code>.</p>
+<p>The certificate and private key used by the sample can be found in the sample’s
+<code class="docutils literal notranslate"><span class="pre">src</span></code> directory. The default certificates used by Socket Echo Client and
+<a class="reference internal" href="../echo_server/README.html#sockets-echo-server" title="Implement a UDP/TCP server that sends received packets back to the sender.">Echo server (advanced)</a> enable establishing a secure connection
+between the samples.</p>
+</section>
+<section id="socks5-proxy-support">
+<h3>SOCKS5 proxy support<a class="headerlink" href="#socks5-proxy-support" title="Link to this heading"></a></h3>
+<p>It is also possible to connect to the echo-server through a SOCKS5 proxy.
+To enable it, use <code class="docutils literal notranslate"><span class="pre">-DEXTRA_CONF_FILE=overlay-socks5.conf</span></code> when running <code class="docutils literal notranslate"><span class="pre">west</span>
+<span class="pre">build</span></code> or  <code class="docutils literal notranslate"><span class="pre">cmake</span></code>.</p>
+<p>By default, to make the testing easier, the proxy is expected to run on the
+same host as the echo-server in Linux host.</p>
+<p>To start a proxy server, for example a builtin SOCKS server support in ssh
+can be used (-D option). Use the following command to run it on your host
+with the default port:</p>
+<p>For IPv4 proxy server:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>ssh<span class="w"> </span>-N<span class="w"> </span>-D<span class="w"> </span><span class="m">0</span>.0.0.0:1080<span class="w"> </span>localhost
+</pre></div>
+</div>
+<p>For IPv6 proxy server:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>ssh<span class="w"> </span>-N<span class="w"> </span>-D<span class="w"> </span><span class="o">[</span>::<span class="o">]</span>:1080<span class="w"> </span>localhost
+</pre></div>
+</div>
+<p>Run both commands if you are testing IPv4 and IPv6.</p>
+<p>To connect to a proxy server that is not running under the same IP as the
+echo-server or uses a different port number, modify the following values
+in echo_client/src/tcp.c.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define SOCKS5_PROXY_V4_ADDR IPV4_ADDR</span>
+<span class="cp">#define SOCKS5_PROXY_V6_ADDR IPV6_ADDR</span>
+<span class="cp">#define SOCKS5_PROXY_PORT    1080</span>
+</pre></div>
+</div>
+</section>
+<section id="running-echo-server-in-linux-host">
+<h3>Running echo-server in Linux Host<a class="headerlink" href="#running-echo-server-in-linux-host" title="Link to this heading"></a></h3>
+<p>There is one useful testing scenario that can be used with Linux host.
+Here echo-client is run in QEMU and echo-server is run in Linux host.</p>
+<p>To use QEMU for testing, follow the <a class="reference internal" href="../../../../connectivity/networking/qemu_setup.html#networking-with-qemu"><span class="std std-ref">Networking with QEMU</span></a> guide.</p>
+<p>In a terminal window:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>./echo-server<span class="w"> </span>-i<span class="w"> </span>tap0
+</pre></div>
+</div>
+<p>Run echo-client application in QEMU:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>qemu_x86<span class="w"> </span>samples/net/sockets/echo_client<span class="w"> </span>--<span class="w"> </span>-DCONF_FILE<span class="o">=</span><span class="s2">&quot;prj.conf overlay-linux.conf&quot;</span>
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>run
+</pre></div>
+</div>
+<p>Note that echo-server must be running in the Linux host terminal window
+before you start the echo-client application in QEMU.
+Exit QEMU by pressing <kbd class="kbd docutils literal notranslate">CTRL</kbd>+<kbd class="kbd docutils literal notranslate">A</kbd> <kbd class="kbd docutils literal notranslate">x</kbd>.</p>
+<p>You can verify TLS communication with a Linux host as well. See
+<a class="reference external" href="https://github.com/zephyrproject-rtos/net-tools">https://github.com/zephyrproject-rtos/net-tools</a> documentation for information
+on how to test TLS with Linux host samples.</p>
+<p>See the <a class="reference internal" href="../echo_server/README.html#sockets-echo-server" title="Implement a UDP/TCP server that sends received packets back to the sender.">Echo server (advanced)</a> documentation for an alternate
+way of running, with the echo-client on the Linux host and the echo-server
+in QEMU.</p>
+</section>
+<section id="openthread-rcp-zephyr-host-spinel-connection-via-uart">
+<h3>OpenThread RCP+Zephyr HOST (SPINEL connection via UART)<a class="headerlink" href="#openthread-rcp-zephyr-host-spinel-connection-via-uart" title="Link to this heading"></a></h3>
+<section id="prerequisites">
+<h4>Prerequisites:<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Build <code class="docutils literal notranslate"><span class="pre">echo-server</span></code> for HOST PC (x86_64)
+(<a class="reference external" href="https://github.com/zephyrproject-rtos/net-tools">https://github.com/zephyrproject-rtos/net-tools</a>) SHA1:1c4fdba</p></li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>make<span class="w"> </span>echo-server
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Program nRF RCP from Nordic nrf SDK (v2.7.0):</p></li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(v2.7.0)</span> <span class="go">~/ncs$ west build -p always -b nrf21540dk/nrf52840 -S logging nrf/samples/openthread/coprocessor</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Build mimxrt1020_evk HOST (Zephyr):</p></li>
+</ul>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>mimxrt1020_evk<span class="w"> </span>samples/net/sockets/echo_client<span class="w"> </span>--<span class="w"> </span>-DCONF_FILE<span class="o">=</span><span class="s2">&quot;prj.conf overlay-ot-rcp-host-uart.conf&quot;</span>
+</pre></div>
+</div>
+<p>And flash</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>west<span class="w"> </span>flash<span class="w"> </span>-r<span class="w"> </span>pyocd<span class="w"> </span>-i<span class="w"> </span>0226000047784e4500439004d9170013e56100009796990
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Connect the nRF RCP with IMXRT1020 (HOST) via UART</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * imxrt1020_evk -&gt; HOST</span>
+<span class="cm"> * nRF21540-DK   -&gt; RCP (nrf/samples/openthread/coprocessor)</span>
+<span class="cm"> * LPUART2 used for communication:</span>
+<span class="cm"> *  nRF21540 (P6) P0.08 RXD -&gt; IMXRT1020-EVK (J17) D1 (GPIO B1 08) (TXD)</span>
+<span class="cm"> *  nRF21540 (P6) P0.07 CTS -&gt; IMXRT1020-EVK (J19) D8 (GPIO B1 07) (RTS)</span>
+<span class="cm"> *  nRF21540 (P6) P0.06 TXD -&gt; IMXRT1020-EVK (J17) D0 (GPIO B1 09) (RXD)</span>
+<span class="cm"> *  nRF21540 (P6) P0.05 RTS -&gt; IMXRT1020-EVK (J17) D7 (GPIO B1 06) (CTS)</span>
+<span class="cm"> */</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Install the OTBR (OpenThread Border Router) docker container on your HOST PC (x86_64)
+Follow steps from <a class="reference external" href="https://docs.nordicsemi.com/bundle/ncs-2.5.1/page/nrf/protocols/thread/tools.html#running_otbr_using_docker">https://docs.nordicsemi.com/bundle/ncs-2.5.1/page/nrf/protocols/thread/tools.html#running_otbr_using_docker</a></p></li>
+</ul>
+<p><strong>Most notable ones:</strong></p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">otbr0</span></code> network bridge to have access to OT network from HOST
+Linux PC</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sudo docker network create --ipv6 --subnet fd11:db8:1::/64 -o com.docker.network.bridge.name=otbr0 otbr</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Pull docker container for OTBR:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">docker pull nrfconnect/otbr:84c6aff</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Start the docker image:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sudo modprobe ip6table_filter</span>
+<span class="go">sudo docker run -it --rm --privileged --name otbr --network otbr -p 8080:80 --sysctl &quot;net.ipv6.conf.all.disable_ipv6=0 net.ipv4.conf.all.forwarding=1 net.ipv6.conf.all.forwarding=1&quot; --volume /dev/ttyACM5:/dev/radio nrfconnect/otbr:84c6aff --radio-url spinel+hdlc+uart:///dev/radio?uart-baudrate=1000000</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Add proper routing (<code class="docutils literal notranslate"><span class="pre">fd11:22::/64</span></code> are the IPv6 addresses - On-Mesh - which allow accessing the OT devices) on HOST PC (x86_64)</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sudo ip -6 route add fd11:22::/64 dev otbr0 via fd11:db8:1::2</span>
+</pre></div>
+</div>
+<p>And the output for on-OT address:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ip route get fd11:22:0:0:5188:1678:d0c0:6893</span>
+<span class="go">fd11:22::5188:1678:d0c0:6893 from :: via fd11:db8:1::2 dev otbr0 src fd11:db8:1::1 metric 1024 pref medium</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>Start the console to the docker image:</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sudo docker exec -it otbr /bin/bash</span>
+</pre></div>
+</div>
+<p>Test with e.g.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ot-ctl router table</span>
+<span class="go">ot-ctl ipaddr</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="configure-otbr">
+<h4>Configure OTBR<a class="headerlink" href="#configure-otbr" title="Link to this heading"></a></h4>
+<p>On the HOST PC’s webbrowser: <a class="reference external" href="http://localhost:8080/">http://localhost:8080/</a></p>
+<p>Go to <code class="docutils literal notranslate"><span class="pre">Form</span></code> and leave default values - e.g:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Network Key:        <code class="docutils literal notranslate"><span class="pre">00112233445566778899aabbccddeeff</span></code></p></li>
+<li><p>On-Mesh Prefix:     <code class="docutils literal notranslate"><span class="pre">fd11:22::</span></code></p></li>
+<li><p>Channel:    <code class="docutils literal notranslate"><span class="pre">15</span></code></p></li>
+</ul>
+</div></blockquote>
+<p>to “FORM” the OT network.</p>
+<p><em>Note:</em>
+The “On-Mesh Prefix” shall match the one setup in <code class="docutils literal notranslate"><span class="pre">otbr0</span></code> routing.</p>
+</section>
+<section id="configure-rcp-nrf21540-dk-ot-host-mimxrt1020">
+<h4>Configure RCP (nRF21540-DK) + OT HOST (mimxrt1020)<a class="headerlink" href="#configure-rcp-nrf21540-dk-ot-host-mimxrt1020" title="Link to this heading"></a></h4>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ot factoryreset</span>
+<span class="go">ot dataset networkkey 00112233445566778899aabbccddeeff</span>
+<span class="go">ot ifconfig up</span>
+</pre></div>
+</div>
+<p>In the HOST PC www webpage interface please:
+Commission -&gt; Joiner PSKd* set to <code class="docutils literal notranslate"><span class="pre">J01NME</span></code> -&gt; START COMMISSION</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ot joiner start J01NME</span>
+<span class="go">ot thread start</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">ot</span> <span class="pre">ipaddr</span></code> shall show IPv6 address starting from <code class="docutils literal notranslate"><span class="pre">fd11:22:0:0:</span></code>.
+This one can be accessed from HOST’s PC network (via e.g.
+<code class="docutils literal notranslate"><span class="pre">ping</span> <span class="pre">-6</span> <span class="pre">fd11:22:0:0:e8bf:266b:63ca:eff4</span></code>).</p>
+</section>
+<section id="start-echo-server-on-host-pc-x86-64">
+<h4>Start <code class="docutils literal notranslate"><span class="pre">echo-server</span></code> on HOST PC (x86-64)<a class="headerlink" href="#start-echo-server-on-host-pc-x86-64" title="Link to this heading"></a></h4>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./echo-server -i otbr0</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../../doxygen/html/group__bsd__sockets.html" title=""><span class="pre">BSD</span> <span class="pre">Sockets</span> <span class="pre">compatible</span> <span class="pre">API</span></a></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../../doxygen/html/group__tls__credentials.html" title=""><span class="pre">TLS</span> <span class="pre">credentials</span> <span class="pre">management</span></a></dt>
+</dl>
+
+</section>
+</section>
+<script type="application/ld+json">
+                {"@context": "http://schema.org", "@type": "SoftwareSourceCode", "name": "Echo client (advanced)", "description": "Implement a client that sends IP packets, waits for data to be sent back, and verifies it.", "codeSampleType": "full", "codeRepository": "https://github.com/zephyrproject-rtos/zephyr/blob/main//samples/net/sockets/echo_client/README.rst"}
+                </script>
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

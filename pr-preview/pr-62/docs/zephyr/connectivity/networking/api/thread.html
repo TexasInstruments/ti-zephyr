@@ -1,0 +1,535 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thread protocol &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/connectivity/networking/api/thread.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Point-to-Point Protocol (PPP) Support" href="ppp.html" />
+    <link rel="prev" title="IEEE 802.15.4" href="ieee802154.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Connectivity</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../canbus/index.html">Controller Area Network (CAN) Bus Protocols</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Networking</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../net-stack-architecture.html">Network Stack Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../net_config_guide.html">Network Configuration Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../networking_with_host.html">Networking with the host system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../network_monitoring.html">Monitor Network Traffic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../network_tracing.html">Network Tracing</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Networking APIs</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="apis.html">Network APIs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="buf_mgmt.html">Network Packet Management</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="net_tech.html">Networking Technologies</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="ethernet.html">Ethernet</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ieee802154.html">IEEE 802.15.4</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">Thread protocol</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ppp.html">Point-to-Point Protocol (PPP) Support</a></li>
+<li class="toctree-l5"><a class="reference internal" href="wifi.html">Wi-Fi Management</a></li>
+<li class="toctree-l5"><a class="reference internal" href="wifi_credentials.html">Wi-Fi credentials Library</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="protocols.html">Protocols</a></li>
+<li class="toctree-l4"><a class="reference internal" href="system_mgmt.html">Network System Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tsn.html">Time Sensitive Networking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="zperf.html">zperf: Network Traffic Generator</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../conn_mgr/index.html">Connection Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dsa.html">Distributed Switch Architecture (DSA)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa and LoRaWAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../usb/index.html">USB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Connectivity</a> &raquo;</li>
+  
+     <li><a href="../index.html">Networking</a> &raquo;</li>
+  
+     <li><a href="index.html">Networking APIs</a> &raquo;</li>
+  
+     <li><a href="net_tech.html">Networking Technologies</a> &raquo;</li>
+  
+  <li>Thread protocol</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/connectivity/networking/api/thread.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27connectivity%2Fnetworking%2Fapi%2Fthread%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Networking&env=-+Page%3A+connectivity%2Fnetworking%2Fapi%2Fthread%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="thread-protocol">
+<span id="thread-protocol-interface"></span><h1>Thread protocol<a class="headerlink" href="#thread-protocol" title="Link to this heading"></a></h1>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id1">Overview</a></p></li>
+<li><p><a class="reference internal" href="#internet-connectivity" id="id2">Internet connectivity</a></p></li>
+<li><p><a class="reference internal" href="#sample-usage" id="id3">Sample usage</a></p></li>
+<li><p><a class="reference internal" href="#thread-related-apis" id="id4">Thread related APIs</a></p>
+<ul>
+<li><p><a class="reference internal" href="#openthread-driver-api" id="id5">OpenThread Driver API</a></p></li>
+<li><p><a class="reference internal" href="#openthread-l2-adaptation-layer-api" id="id6">OpenThread L2 Adaptation Layer API</a></p></li>
+<li><p><a class="reference internal" href="#openthread-platform-api" id="id7">OpenThread Platform API</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Overview</a><a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>Thread is a low-power mesh networking technology, designed specifically for home
+automation applications. It is an IPv6-based standard, which uses 6LoWPAN
+technology over IEEE 802.15.4 protocol. IP connectivity lets you easily connect
+a Thread mesh network to the internet with a Thread Border Router.</p>
+<p>The Thread specification provides a high level of network security. Mesh networks
+built with Thread are secure - only authenticated devices can join the network
+and all communications within the mesh are encrypted. More information about
+Thread protocol can be found at
+<a class="reference external" href="https://www.threadgroup.org">Thread Group website</a>.</p>
+<p>Zephyr integrates an open source Thread protocol implementation called OpenThread,
+documented on the <a class="reference external" href="https://openthread.io/">OpenThread website</a>.</p>
+</section>
+<section id="internet-connectivity">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Internet connectivity</a><a class="headerlink" href="#internet-connectivity" title="Link to this heading"></a></h2>
+<p>A Thread Border Router is required to connect mesh network to the internet.
+An open source implementation of Thread Border Router is provided by the OpenThread
+community. See
+<a class="reference external" href="https://openthread.io/guides/border-router">OpenThread Border Router guide</a>
+for instructions on how to set up a Border Router.</p>
+</section>
+<section id="sample-usage">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Sample usage</a><a class="headerlink" href="#sample-usage" title="Link to this heading"></a></h2>
+<p>You can try using OpenThread with the Zephyr Echo server and Echo client samples,
+which provide out-of-the-box configuration for OpenThread. To enable OpenThread
+support in these samples, build them with <code class="docutils literal notranslate"><span class="pre">overlay-ot.conf</span></code> overlay config file.
+See <a class="reference internal" href="../../../samples/net/sockets/echo_server/README.html#sockets-echo-server" title="Implement a UDP/TCP server that sends received packets back to the sender.">Echo server (advanced)</a> and <a class="reference internal" href="../../../samples/net/sockets/echo_client/README.html#sockets-echo-client" title="Implement a client that sends IP packets, waits for data to be sent back, and verifies it.">Echo client (advanced)</a>
+samples for details.</p>
+<p>Zephyr also provides an <a class="reference internal" href="../../../samples/net/openthread/shell/README.html#openthread-shell" title="Test Thread and IEEE 802.15.4 using the OpenThread shell.">OpenThread shell</a>, which is useful for
+testing and debugging Thread and its underlying IEEE 802.15.4 drivers.</p>
+</section>
+<section id="thread-related-apis">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Thread related APIs</a><a class="headerlink" href="#thread-related-apis" title="Link to this heading"></a></h2>
+<section id="openthread-driver-api">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">OpenThread Driver API</a><a class="headerlink" href="#openthread-driver-api" title="Link to this heading"></a></h3>
+<p>OpenThread L2 uses Zephyr’s protocol agnostic IEEE 802.15.4 driver API
+internally. This API is of interest to <strong>driver developers</strong> that want to
+support OpenThread.</p>
+<p>The driver API is part of the <a class="reference internal" href="ieee802154.html#ieee802154-driver-api"><span class="std std-ref">IEEE 802.15.4 Driver API</span></a> subsystem and
+documented there.</p>
+</section>
+<section id="openthread-l2-adaptation-layer-api">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">OpenThread L2 Adaptation Layer API</a><a class="headerlink" href="#openthread-l2-adaptation-layer-api" title="Link to this heading"></a></h3>
+<p>Zephyr’s OpenThread L2 platform adaptation layer glues the external OpenThread
+stack together with Zephyr’s IEEE 802.15.4 protocol agnostic driver API. This
+API is of interest to OpenThread L2 <strong>subsystem contributors</strong> only.</p>
+</section>
+<section id="openthread-platform-api">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">OpenThread Platform API</a><a class="headerlink" href="#openthread-platform-api" title="Link to this heading"></a></h3>
+<p>The OpenThread platform API is defined by the OpenThread stack and implemented in Zephyr as an
+OpenThread module. Applications can use this implementation directly, or access it through the
+OpenThread L2 adaptation layer.</p>
+<section id="using-the-openthread-l2-adaptation-layer-api">
+<h4>Using the OpenThread L2 Adaptation Layer API<a class="headerlink" href="#using-the-openthread-l2-adaptation-layer-api" title="Link to this heading"></a></h4>
+<p>To use the OpenThread platform API via the OpenThread L2 adaptation layer, enable both the
+<a class="reference internal" href="../../../kconfig.html#CONFIG_NET_L2_OPENTHREAD" title="CONFIG_NET_L2_OPENTHREAD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_L2_OPENTHREAD</span></code></a> and <a class="reference internal" href="../../../kconfig.html#CONFIG_NETWORKING" title="CONFIG_NETWORKING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NETWORKING</span></code></a> Kconfig options
+by setting them to <code class="docutils literal notranslate"><span class="pre">y</span></code>. The adaptation layer will use the OpenThread radio API implementation
+found in <code class="file docutils literal notranslate"><span class="pre">modules/openthread/platform/radio.c</span></code>. In this setup, the OpenThread stack is
+initialized and managed by the adaptation layer.</p>
+</section>
+<section id="using-the-openthread-platform-api-directly">
+<h4>Using the OpenThread Platform API Directly<a class="headerlink" href="#using-the-openthread-platform-api-directly" title="Link to this heading"></a></h4>
+<p>You can also use the OpenThread platform API directly, bypassing the OpenThread L2 adaptation
+layer. However, this approach requires you to provide your own implementation of the OpenThread
+radio API that is compatible with your specific radio driver.</p>
+<p>To use the OpenThread platform API directly, set the <a class="reference internal" href="../../../kconfig.html#CONFIG_OPENTHREAD" title="CONFIG_OPENTHREAD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OPENTHREAD</span></code></a> Kconfig
+option to <code class="docutils literal notranslate"><span class="pre">y</span></code>, and do <strong>not</strong> set <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_L2_OPENTHREAD" title="CONFIG_NET_L2_OPENTHREAD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_L2_OPENTHREAD</span></code></a>. In this case, you
+must implement the following functions from the <a class="reference external" href="https://openthread.io/reference/group/radio-config">OpenThread radio API</a> using your own radio driver:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioGetPromiscuous</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioGetCcaEnergyDetectThreshold</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioGetTransmitPower</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioGetIeeeEui64</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioSetPromiscuous</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioGetCaps</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioGetTransmitBuffer</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioSetPanId</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioEnable</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioDisable</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioReceive</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioGetRssi</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioGetReceiveSensitivity</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioEnergyScan</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioSetExtendedAddress</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioSetShortAddress</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioAddSrcMatchExtEntry</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioTransmit</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioClearSrcMatchShortEntries</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioClearSrcMatchExtEntries</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioEnableSrcMatch</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioAddSrcMatchShortEntry</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioClearSrcMatchShortEntry</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">otPlatRadioClearSrcMatchExtEntry</span></code></p></li>
+</ul>
+<p>Additionally, you must implement the following functions from the OpenThread radio API (see
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/net/openthread.h">include/zephyr/net/openthread.h</a>) to handle radio initialization and event processing:</p>
+<ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">platformRadioInit()</span></code></p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">platformRadioProcess()</span></code></p></li>
+</ul>
+<p>To initialize the OpenThread stack in this approach, either call the <code class="xref c c-func docutils literal notranslate"><span class="pre">ot_platform_init()</span></code>
+function in your application, or enable the <a class="reference internal" href="../../../kconfig.html#CONFIG_OPENTHREAD_SYS_INIT" title="CONFIG_OPENTHREAD_SYS_INIT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OPENTHREAD_SYS_INIT</span></code></a> Kconfig
+option to automatically initialize OpenThread during system startup. You can set the
+initialization priority using the <a class="reference internal" href="../../../kconfig.html#CONFIG_OPENTHREAD_SYS_INIT_PRIORITY" title="CONFIG_OPENTHREAD_SYS_INIT_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OPENTHREAD_SYS_INIT_PRIORITY</span></code></a> Kconfig
+option.</p>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../doxygen/html/group__openthread.html" title=""><span class="pre">OpenThread</span> <span class="pre">stack</span></a></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/openthread/coprocessor/README.html#openthread-coprocessor" title="Build a Thread border-router using OpenThread's co-processor designs.">OpenThread co-processor</a></span><span class="code-sample-description">Build a Thread border-router using OpenThread's co-processor designs.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/openthread/coap/README.html#ot-coap" title="Build a Full Thread Device (FTD) CoAP server and client.">OpenThread CoAP client and server application</a></span><span class="code-sample-description">Build a Full Thread Device (FTD) CoAP server and client.</span></li>
+</ul>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

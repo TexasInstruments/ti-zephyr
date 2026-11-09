@@ -1,0 +1,550 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flash map &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/services/storage/flash_map/flash_map.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Non-Volatile Memory (NVMEM)" href="../nvmem/index.html" />
+    <link rel="prev" title="File Systems" href="../file_system/index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">OS Services</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../binary_descriptors/index.html">Binary Descriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../console.html">Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cpu_freq/index.html">CPU Frequency Scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cpu_load/index.html">CPU Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../crc/index.html">CRC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../crypto/index.html">Cryptography</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../debugging/index.html">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../device_mgmt/index.html">Device Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dsp/index.html">Digital Signal Processing (DSP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../formatted_output.html">Formatted Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../input/index.html">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../instrumentation/index.html">Instrumentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ipc/index.html">Interprocessor Communication (IPC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jwt/index.html">JSON Web Token (JWT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../llext/index.html">Linkable Loadable Extensions (LLEXT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../logging/index.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tracing/index.html">Tracing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../resource_management/index.html">Resource Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../mem_mgmt/index.html">Memory Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../net_buf/index.html">Network Buffers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modem/index.html">Modem modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notify.html">Asynchronous Notifications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../pm/index.html">Power Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../portability/index.html">OS Abstraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../poweroff.html">Power off</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../profiling/index.html">Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../shell/index.html">Shell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../serialization/index.html">Serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../smf/index.html">State Machine Framework</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Storage</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../disk/access.html">Disk Access</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fcb/fcb.html">Flash Circular Buffer (FCB)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../file_system/index.html">File Systems</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Flash map</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#relationship-with-devicetree">Relationship with Devicetree</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../nvmem/index.html">Non-Volatile Memory (NVMEM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../nvs/nvs.html">Non-Volatile Storage (NVS)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../retention/index.html">Retention System</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../secure_storage/index.html">Secure Storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../settings/index.html">Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stream/stream_flash.html">Stream Flash</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../zms/zms.html">Zephyr Memory Storage (ZMS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../sensing/index.html">Sensing Subsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../task_wdt/index.html">Task Watchdog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tfm/index.html">Trusted Firmware-M (TF-M)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../uuid/index.html">UUID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../virtualization/index.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../rtio/index.html">Real Time I/O (RTIO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../zbus/index.html">Zephyr bus (zbus)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">OS Services</a> &raquo;</li>
+  
+     <li><a href="../index.html">Storage</a> &raquo;</li>
+  
+  <li>Flash map</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/services/storage/flash_map/flash_map.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27services%2Fstorage%2Fflash_map%2Fflash_map%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Storage&env=-+Page%3A+services%2Fstorage%2Fflash_map%2Fflash_map%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="flash-map">
+<span id="flash-map-api"></span><h1>Flash map<a class="headerlink" href="#flash-map" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">&lt;zephyr/storage/flash_map.h&gt;</span></code> API allows accessing information about device
+flash partitions via <a class="reference internal" href="../../../doxygen/html/structflash__area.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">flash_area</span></code></a> structures.</p>
+<p>Each <a class="reference internal" href="../../../doxygen/html/structflash__area.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">flash_area</span></code></a> describes a flash partition. The API provides access
+to a “flash map”, which contains predefined flash areas accessible via globally
+unique ID numbers. The map is created from “fixed-partition” compatible entries
+in DTS file. Users may also create <a class="reference internal" href="../../../doxygen/html/structflash__area.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">flash_area</span></code></a> objects at runtime
+for application-specific purposes.</p>
+<p>This documentation uses “flash area” when referencing single “fixed-partition”
+entities.</p>
+<p>The <a class="reference internal" href="../../../doxygen/html/structflash__area.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">flash_area</span></code></a> contains a pointer to a <a class="reference internal" href="../../../doxygen/html/structdevice.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">device</span></code></a>,
+which can be used to access the flash device an area is placed on directly
+with the <a class="reference internal" href="../../../hardware/peripherals/flash.html#flash-api"><span class="std std-ref">flash API</span></a>.
+Each flash area is characterized by a device it is placed on, offset
+from the beginning of the device and size on the device.
+An additional identifier parameter is used by the <a class="reference internal" href="../../../doxygen/html/group__flash__area__api.html#ga6fe2593210688eb85e03bea5f96ea2f7" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">flash_area_open()</span></code></a>
+function to find flash area in flash map.</p>
+<p>The flash_map.h API provides functions for operating on a <a class="reference internal" href="../../../doxygen/html/structflash__area.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">flash_area</span></code></a>.
+The main examples are <a class="reference internal" href="../../../doxygen/html/group__flash__area__api.html#ga7c55704b0c0061a4715470676114b127" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">flash_area_read()</span></code></a> and <a class="reference internal" href="../../../doxygen/html/group__flash__area__api.html#gaa56052f8d6bf4f6966752bc21f5cceb8" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">flash_area_write()</span></code></a>.
+These functions are basically wrappers around the flash API with additional
+offset and size checks, to limit flash operations to a predefined area.</p>
+<p>Most <code class="docutils literal notranslate"><span class="pre">&lt;zephyr/storage/flash_map.h&gt;</span></code> API functions require a <a class="reference internal" href="../../../doxygen/html/structflash__area.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">flash_area</span></code></a> object pointer
+characterizing the flash area they will be working on. There are two possible
+methods to obtain such a pointer:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>obtain it using <a class="reference internal" href="../../../doxygen/html/group__flash__area__api.html#ga6fe2593210688eb85e03bea5f96ea2f7" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">flash_area_open()</span></code></a>;</p></li>
+<li><p>defining a <a class="reference internal" href="../../../doxygen/html/structflash__area.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">flash_area</span></code></a> type object, which requires providing
+a valid <a class="reference internal" href="../../../doxygen/html/structdevice.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">device</span></code></a> object pointer with offset and size of the area
+within the flash device.</p></li>
+</ul>
+</div></blockquote>
+<p><a class="reference internal" href="../../../doxygen/html/group__flash__area__api.html#ga6fe2593210688eb85e03bea5f96ea2f7" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">flash_area_open()</span></code></a> uses numeric identifiers to search flash map for
+<a class="reference internal" href="../../../doxygen/html/structflash__area.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">flash_area</span></code></a> objects and returns, if found, a pointer to an object
+representing area with given ID.
+The ID number for a flash area can be obtained from a fixed-partition
+DTS node label using <a class="reference internal" href="../../../doxygen/html/group__flash__area__api.html#ga60d5298007e2ee261b915a110389e76a" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">FIXED_PARTITION_ID()</span></code></a>; these labels are obtained
+from the devicetree as described below.</p>
+<section id="relationship-with-devicetree">
+<h2>Relationship with Devicetree<a class="headerlink" href="#relationship-with-devicetree" title="Link to this heading"></a></h2>
+<p>The flash_map.h API uses data generated from the <a class="reference internal" href="../../../build/dts/api/api.html#devicetree-api"><span class="std std-ref">Devicetree API</span></a>, in
+particular its <a class="reference internal" href="../../../build/dts/api/api.html#devicetree-flash-api"><span class="std std-ref">Fixed flash partitions</span></a>. Zephyr additionally has some
+partitioning conventions used for <a class="reference internal" href="../../device_mgmt/dfu.html#dfu"><span class="std std-ref">Device Firmware Upgrade</span></a> via the MCUboot bootloader, as
+well as defining partitions usable by <a class="reference internal" href="../file_system/index.html#file-system-api"><span class="std std-ref">file systems</span></a> or
+other nonvolatile <a class="reference internal" href="../index.html#storage-reference"><span class="std std-ref">storage</span></a>.</p>
+<p>Here is an example devicetree fragment which uses fixed flash partitions for
+both MCUboot and a storage partition. Some details were left out for clarity.</p>
+<div class="highlight-DTS notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nf">soc</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nl">flashctrl</span><span class="p">:</span><span class="w"> </span><span class="nf">flash-controller</span><span class="o">@</span><span class="mi">deadbeef</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">			</span><span class="nl">flash0</span><span class="p">:</span><span class="w"> </span><span class="nf">flash</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">				</span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;soc-nv-flash&quot;</span><span class="p">;</span>
+<span class="w">				</span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x0</span><span class="w"> </span><span class="mh">0x100000</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">				</span><span class="nf">partitions</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">					</span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;fixed-partitions&quot;</span><span class="p">;</span>
+<span class="w">					</span><span class="kr">#address-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">					</span><span class="kr">#size-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x1</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">					</span><span class="nl">boot_partition</span><span class="p">:</span><span class="w"> </span><span class="nf">partition</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">						</span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x0</span><span class="w"> </span><span class="mh">0x10000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">						</span><span class="n">read-only</span><span class="p">;</span>
+<span class="w">					</span><span class="p">};</span>
+
+<span class="w">					</span><span class="nl">storage_partition</span><span class="p">:</span><span class="w"> </span><span class="nf">partition</span><span class="o">@</span><span class="mi">1e000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">						</span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x1e000</span><span class="w"> </span><span class="mh">0x2000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">					</span><span class="p">};</span>
+
+<span class="w">					</span><span class="nl">slot0_partition</span><span class="p">:</span><span class="w"> </span><span class="nf">partition</span><span class="o">@</span><span class="mi">20000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">						</span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x20000</span><span class="w"> </span><span class="mh">0x60000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">					</span><span class="p">};</span>
+
+<span class="w">					</span><span class="nl">slot1_partition</span><span class="p">:</span><span class="w"> </span><span class="nf">partition</span><span class="o">@</span><span class="mi">80000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">						</span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x80000</span><span class="w"> </span><span class="mh">0x60000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">					</span><span class="p">};</span>
+
+<span class="w">					</span><span class="nl">scratch_partition</span><span class="p">:</span><span class="w"> </span><span class="nf">partition</span><span class="o">@</span><span class="mi">e0000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">						</span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0xe0000</span><span class="w"> </span><span class="mh">0x20000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">					</span><span class="p">};</span>
+<span class="w">				</span><span class="p">};</span>
+<span class="w">			</span><span class="p">};</span>
+<span class="w">		</span><span class="p">};</span>
+<span class="w">	</span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Partition offset shall be expressed in relation to the flash memory beginning
+address, to which the partition belongs to.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">boot_partition</span></code>, <code class="docutils literal notranslate"><span class="pre">slot0_partition</span></code>, <code class="docutils literal notranslate"><span class="pre">slot1_partition</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">scratch_partition</span></code> node labels are defined for MCUboot, though not all MCUboot
+configurations require all of them to be defined. See the <a class="reference external" href="https://docs.mcuboot.com">MCUboot
+documentation</a> for more details.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">storage_partition</span></code> node is defined for use by a file system or other
+nonvolatile storage API.</p>
+<p>Numeric flash area ID is obtained by passing DTS node label to
+<a class="reference internal" href="../../../doxygen/html/group__flash__area__api.html#ga60d5298007e2ee261b915a110389e76a" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">FIXED_PARTITION_ID()</span></code></a>; for example to obtain ID number
+for <code class="docutils literal notranslate"><span class="pre">slot0_partition</span></code>, user would invoke <code class="docutils literal notranslate"><span class="pre">FIXED_PARTITION_ID(slot0_partition)</span></code>.</p>
+<p>All <code class="code docutils literal notranslate"><span class="pre">FIXED_PARTITION_*</span></code> macros take DTS node labels as partition
+identifiers.</p>
+<p>Users do not have to obtain a <a class="reference internal" href="../../../doxygen/html/structflash__area.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">flash_area</span></code></a> object pointer
+using <code class="xref c c-func docutils literal notranslate"><span class="pre">flash_map_open()</span></code> to get information on flash area size, offset
+or device, if such area is defined in DTS file. Knowing the DTS node label
+of an area, users may use <a class="reference internal" href="../../../doxygen/html/group__flash__area__api.html#ga9229bc06458c19baf093ced063a9494b" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">FIXED_PARTITION_OFFSET()</span></code></a>,
+<a class="reference internal" href="../../../doxygen/html/group__flash__area__api.html#ga2dbc50d9f80d7f7c597c75cbd536cd50" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">FIXED_PARTITION_SIZE()</span></code></a> or <a class="reference internal" href="../../../doxygen/html/group__flash__area__api.html#ga3c92b6797feb183da38b8b57e77f2d17" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">FIXED_PARTITION_DEVICE()</span></code></a>
+respectively to obtain such information directly from DTS node definition.
+For example to obtain offset of <code class="docutils literal notranslate"><span class="pre">storage_partition</span></code> it is enough to
+invoke <code class="docutils literal notranslate"><span class="pre">FIXED_PARTITION_OFFSET(storage_partition)</span></code>.</p>
+<p>Below example shows how to obtain a <a class="reference internal" href="../../../doxygen/html/structflash__area.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">flash_area</span></code></a> object pointer
+using <a class="reference internal" href="../../../doxygen/html/group__flash__area__api.html#ga6fe2593210688eb85e03bea5f96ea2f7" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">flash_area_open()</span></code></a> and DTS node label:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">flash_area</span><span class="w"> </span><span class="o">*</span><span class="n">my_area</span><span class="p">;</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">flash_area_open</span><span class="p">(</span><span class="n">FIXED_PARTITION_ID</span><span class="p">(</span><span class="n">slot0_partition</span><span class="p">),</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_area</span><span class="p">);</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="n">handle_the_error</span><span class="p">(</span><span class="n">err</span><span class="p">);</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="n">flash_area_read</span><span class="p">(</span><span class="n">my_area</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../doxygen/html/group__flash__area__api.html" title=""><span class="pre">flash</span> <span class="pre">area</span> <span class="pre">Interface</span></a></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/subsys/fs/littlefs/README.html#littlefs" title="Use file system API over LittleFS.">LittleFS filesystem</a></span><span class="code-sample-description">Use file system API over LittleFS.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/drivers/soc_flash_nrf/README.html#soc-flash-nrf" title="Use the flash API to interact with the SoC flash.">nRF SoC Internal Storage</a></span><span class="code-sample-description">Use the flash API to interact with the SoC flash.</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

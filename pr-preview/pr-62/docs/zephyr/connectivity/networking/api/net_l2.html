@@ -1,0 +1,592 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>L2 Layer Management &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/connectivity/networking/api/net_l2.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Network Traffic Offloading" href="net_offload.html" />
+    <link rel="prev" title="Network Interface" href="net_if.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Connectivity</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../canbus/index.html">Controller Area Network (CAN) Bus Protocols</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Networking</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../net-stack-architecture.html">Network Stack Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../net_config_guide.html">Network Configuration Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../networking_with_host.html">Networking with the host system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../network_monitoring.html">Monitor Network Traffic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../network_tracing.html">Network Tracing</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Networking APIs</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="apis.html">Network APIs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="buf_mgmt.html">Network Packet Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="net_tech.html">Networking Technologies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protocols.html">Protocols</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="system_mgmt.html">Network System Management</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="net_config.html">Network Configuration Library</a></li>
+<li class="toctree-l5"><a class="reference internal" href="dhcpv4.html">DHCPv4</a></li>
+<li class="toctree-l5"><a class="reference internal" href="dhcpv6.html">DHCPv6</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_hostname.html">Hostname Configuration</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_core.html">Network Core Helpers</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_if.html">Network Interface</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">L2 Layer Management</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_offload.html">Network Traffic Offloading</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_linkaddr.html">Link Layer Address Handling</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ethernet_mgmt.html">Ethernet Management</a></li>
+<li class="toctree-l5"><a class="reference internal" href="traffic-class.html">Traffic Classification</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_pkt_filter.html">Network Packet Filtering</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_shell.html">Network Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="tls_credentials_shell.html">TLS Credentials Shell</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="tsn.html">Time Sensitive Networking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="zperf.html">zperf: Network Traffic Generator</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../conn_mgr/index.html">Connection Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dsa.html">Distributed Switch Architecture (DSA)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa and LoRaWAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../usb/index.html">USB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Connectivity</a> &raquo;</li>
+  
+     <li><a href="../index.html">Networking</a> &raquo;</li>
+  
+     <li><a href="index.html">Networking APIs</a> &raquo;</li>
+  
+     <li><a href="system_mgmt.html">Network System Management</a> &raquo;</li>
+  
+  <li>L2 Layer Management</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/connectivity/networking/api/net_l2.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27connectivity%2Fnetworking%2Fapi%2Fnet_l2%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Networking&env=-+Page%3A+connectivity%2Fnetworking%2Fapi%2Fnet_l2%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="l2-layer-management">
+<span id="net-l2-interface"></span><h1>L2 Layer Management<a class="headerlink" href="#l2-layer-management" title="Link to this heading"></a></h1>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id1">Overview</a></p></li>
+<li><p><a class="reference internal" href="#l2-layer-api" id="id2">L2 layer API</a></p></li>
+<li><p><a class="reference internal" href="#network-device-drivers" id="id3">Network Device drivers</a></p>
+<ul>
+<li><p><a class="reference internal" href="#ethernet-device-driver" id="id4">Ethernet device driver</a></p></li>
+<li><p><a class="reference internal" href="#ieee-802-15-4-device-driver" id="id5">IEEE 802.15.4 device driver</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#api-reference" id="id6">API Reference</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Overview</a><a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The L2 stack is designed to hide the whole networking link-layer part
+and the related device drivers from the upper network stack. This is made
+through a <a class="reference internal" href="../../../doxygen/html/structnet__if.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">net_if</span></code></a> declared in
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/net/net_if.h">include/zephyr/net/net_if.h</a>.</p>
+<p>The upper layers are unaware of implementation details beyond the net_if
+object and the generic API provided by the L2 layer in
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/net/net_l2.h">include/zephyr/net/net_l2.h</a> as <a class="reference internal" href="../../../doxygen/html/structnet__l2.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">net_l2</span></code></a>.</p>
+<p>Only the L2 layer can talk to the device driver, linked to the net_if
+object. The L2 layer dictates the API provided by the device driver,
+specific for that device, and optimized for working together.</p>
+<p>Currently, there are L2 layers for <a class="reference internal" href="ethernet.html#ethernet-interface"><span class="std std-ref">Ethernet</span></a>,
+<a class="reference internal" href="ieee802154.html#ieee802154-interface"><span class="std std-ref">IEEE 802.15.4 Soft-MAC</span></a>, <a class="reference internal" href="../../../hardware/peripherals/can/controller.html#can-api"><span class="std std-ref">CANBUS</span></a>,
+<a class="reference internal" href="thread.html#thread-protocol-interface"><span class="std std-ref">OpenThread</span></a>, Wi-Fi, and a dummy layer example
+that can be used as a template for writing a new one.</p>
+</section>
+<section id="l2-layer-api">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">L2 layer API</a><a class="headerlink" href="#l2-layer-api" title="Link to this heading"></a></h2>
+<p>In order to create an L2 layer, or a driver for a specific L2 layer,
+one needs to understand how the L3 layer interacts with it and
+how the L2 layer is supposed to behave.
+See also <a class="reference internal" href="../net-stack-architecture.html#network-stack-architecture"><span class="std std-ref">network stack architecture</span></a> for
+more details. The generic L2 API has these functions:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">recv()</span></code>: All device drivers, once they receive a packet which they put
+into a <a class="reference internal" href="../../../doxygen/html/structnet__pkt.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">net_pkt</span></code></a>, will push this buffer to the network
+stack via <a class="reference internal" href="../../../doxygen/html/group__net__core.html#ga3421119d2b1797ee5d70f736a61f93b7" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">net_recv_data()</span></code></a>. At this point, the network
+stack does not know what to do with it. Instead, it passes the
+buffer along to the L2 stack’s <code class="docutils literal notranslate"><span class="pre">recv()</span></code> function for handling.
+The L2 stack does what it needs to do with the packet, for example, parsing
+the link layer header, or handling link-layer only packets. The <code class="docutils literal notranslate"><span class="pre">recv()</span></code>
+function will return <code class="docutils literal notranslate"><span class="pre">NET_DROP</span></code> in case of an erroneous packet,
+<code class="docutils literal notranslate"><span class="pre">NET_OK</span></code> if the packet was fully consumed by the L2, or <code class="docutils literal notranslate"><span class="pre">NET_CONTINUE</span></code>
+if the network stack should then handle it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">send()</span></code>: Similar to receive function, the network stack will call this
+function to actually send a network packet. All relevant link-layer content
+will be generated and added by this function.
+The <code class="docutils literal notranslate"><span class="pre">send()</span></code> function returns the number of bytes sent, or a negative
+error code if there was a failure sending the network packet.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">enable()</span></code>: This function is used to enable/disable traffic over a network
+interface. The function returns <code class="docutils literal notranslate"><span class="pre">&lt;0</span></code> if error and <code class="docutils literal notranslate"><span class="pre">&gt;=0</span></code> if no error.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">get_flags()</span></code>: This function will return the capabilities of an L2 driver,
+for example whether the L2 supports multicast or promiscuous mode.</p></li>
+</ul>
+</section>
+<section id="network-device-drivers">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Network Device drivers</a><a class="headerlink" href="#network-device-drivers" title="Link to this heading"></a></h2>
+<p>Network device drivers fully follows Zephyr device driver model as a
+basis. Please refer to <a class="reference internal" href="../../../kernel/drivers/index.html#device-model-api"><span class="std std-ref">Device Driver Model</span></a>.</p>
+<p>There are, however, two differences:</p>
+<ul class="simple">
+<li><p>The driver_api pointer must point to a valid <code class="xref c c-struct docutils literal notranslate"><span class="pre">net_if_api</span></code>
+pointer.</p></li>
+<li><p>The network device driver must use <a class="reference internal" href="../../../doxygen/html/group__net__if.html#gacc7edecdd9de9920cc155977d8fec2a2" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_DEVICE_INIT_INSTANCE()</span></code></a>
+or <a class="reference internal" href="../../../doxygen/html/group__ethernet.html#ga197e02748be8eaf410f7deb57c984642" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ETH_NET_DEVICE_INIT()</span></code></a> for Ethernet devices. These
+macros will call the <a class="reference internal" href="../../../doxygen/html/group__device__model.html#gac12521f4d900e8947aac45c1b228366d" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DEVICE_DEFINE()</span></code></a> macro, and also
+instantiate a unique <a class="reference internal" href="../../../doxygen/html/structnet__if.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">net_if</span></code></a> related to the created
+device driver instance.</p></li>
+</ul>
+<p>Implementing a network device driver depends on the L2 stack it
+belongs to: <a class="reference internal" href="ethernet.html#ethernet-interface"><span class="std std-ref">Ethernet</span></a>,
+<a class="reference internal" href="ieee802154.html#ieee802154-interface"><span class="std std-ref">IEEE 802.15.4</span></a>, etc.
+In the next section, we will describe how a device driver should behave when
+receiving or sending a network packet. The rest is hardware dependent
+and is not detailed here.</p>
+<section id="ethernet-device-driver">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">Ethernet device driver</a><a class="headerlink" href="#ethernet-device-driver" title="Link to this heading"></a></h3>
+<p>On reception, it is up to the device driver to fill-in the network packet with
+as many data buffers as required. The network packet itself is a
+<a class="reference internal" href="../../../doxygen/html/structnet__pkt.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">net_pkt</span></code></a> and should be allocated through
+<code class="xref c c-func docutils literal notranslate"><span class="pre">net_pkt_rx_alloc_with_buffer()</span></code>. Then all data buffers will be
+automatically allocated and filled by <a class="reference internal" href="../../../doxygen/html/group__net__pkt.html#gae99eadd977b7f66ecc91d2ccba34c6fa" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">net_pkt_write()</span></code></a>.</p>
+<p>After all the network data has been received, the device driver needs to
+call <a class="reference internal" href="../../../doxygen/html/group__net__core.html#ga3421119d2b1797ee5d70f736a61f93b7" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">net_recv_data()</span></code></a>. If that call fails, it will be up to the
+device driver to unreference the buffer via <a class="reference internal" href="../../../doxygen/html/group__net__pkt.html#ga893d1660fd18ad5842224fda78466099" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">net_pkt_unref()</span></code></a>.</p>
+<p>On sending, the device driver send function will be called, and it is up to
+the device driver to send the network packet all at once, with all the buffers.</p>
+<p>Each Ethernet device driver will need, in the end, to call
+<code class="docutils literal notranslate"><span class="pre">ETH_NET_DEVICE_INIT()</span></code> like this:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ETH_NET_DEVICE_INIT</span><span class="p">(...,</span><span class="w"> </span><span class="n">CONFIG_ETH_INIT_PRIORITY</span><span class="p">,</span>
+<span class="w">                    </span><span class="o">&amp;</span><span class="n">the_valid_net_if_api_instance</span><span class="p">,</span><span class="w"> </span><span class="mi">1500</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="ieee-802-15-4-device-driver">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">IEEE 802.15.4 device driver</a><a class="headerlink" href="#ieee-802-15-4-device-driver" title="Link to this heading"></a></h3>
+<p>Device drivers for IEEE 802.15.4 L2 work basically the same as for
+Ethernet. What has been described above, especially for <code class="docutils literal notranslate"><span class="pre">recv()</span></code>, applies
+here as well. There are two specific differences however:</p>
+<ul class="simple">
+<li><p>It requires a dedicated device driver API: <a class="reference internal" href="../../../doxygen/html/structieee802154__radio__api.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">ieee802154_radio_api</span></code></a>,
+which overloads <code class="xref c c-struct docutils literal notranslate"><span class="pre">net_if_api</span></code>. This is because 802.15.4 L2 needs more from the device
+driver than just <code class="docutils literal notranslate"><span class="pre">send()</span></code> and <code class="docutils literal notranslate"><span class="pre">recv()</span></code> functions.  This dedicated API is
+declared in <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/net/ieee802154_radio.h">include/zephyr/net/ieee802154_radio.h</a>. Each and every
+IEEE 802.15.4 device driver must provide a valid pointer on such
+relevantly filled-in API structure.</p></li>
+<li><p>Sending a packet is slightly different than in Ethernet. Most IEEE 802.15.4
+PHYs support relatively small frames only, 127 bytes all inclusive: frame
+header, payload and frame checksum. Buffers to be sent over the radio will
+often not fit this frame size limitation, e.g. a buffer containing an IPv6
+packet will often have to be split into several fragments and IP6 packet headers
+and fragments need to be compressed using a protocol like 6LoWPAN before being
+passed on to the radio driver. Additionally the IEEE 802.15.4 standard defines
+medium access (e.g. CSMA/CA), frame retransmission, encryption and other pre-processing
+procedures (e.g. addition of information elements) that individual
+radio drivers should not have to care about. This is why the
+<a class="reference internal" href="../../../doxygen/html/structieee802154__radio__api.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">ieee802154_radio_api</span></code></a> requires a tx function pointer which differs
+from the <code class="xref c c-struct docutils literal notranslate"><span class="pre">net_if_api</span></code> send function pointer. Zephyr’s native
+IEEE 802.15.4 L2 implementation provides a generic <code class="xref c c-func docutils literal notranslate"><span class="pre">ieee802154_send()</span></code>
+instead, meant to be given as <code class="xref c c-type docutils literal notranslate"><span class="pre">net_if</span></code> send function. The implementation
+of <code class="xref c c-func docutils literal notranslate"><span class="pre">ieee802154_send()</span></code> takes care of IEEE 802.15.4 standard packet
+preparation procedures, splitting the packet into possibly compressed,
+encrypted and otherwise pre-processed fragment buffers, sending one buffer
+at a time through <a class="reference internal" href="../../../doxygen/html/structieee802154__radio__api.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">ieee802154_radio_api</span></code></a> tx function and unreferencing
+the network packet only when the transmission as a whole was either successful
+or failed.</p></li>
+</ul>
+<p>Interaction between IEEE 802.15.4 radio device drivers and L2 is bidirectional:</p>
+<ul class="simple">
+<li><p>L2 -&gt; L1: Methods as <code class="xref c c-func docutils literal notranslate"><span class="pre">ieee802154_send()</span></code> and several IEEE 802.15.4 net
+management calls will call into the driver, e.g. to send a packet over the
+radio link or re-configure the driver at runtime. These incoming calls will
+all be handled by the methods in the <a class="reference internal" href="../../../doxygen/html/structieee802154__radio__api.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">ieee802154_radio_api</span></code></a>.</p></li>
+<li><p>L1 -&gt; L2: There are several situations in which the driver needs to initiate
+calls into the L2/MAC layer. Zephyr’s IEEE 802.15.4 L1 -&gt; L2 adaptation API
+employs an “inversion-of-control” pattern in such cases avoids duplication of
+complex logic across independent driver implementations and ensures
+implementation agnostic loose coupling and clean separation of concerns between
+MAC (L2) and PHY (L1) whenever reverse information transfer or close co-operation
+between hardware and L2 is required. During driver initialization, for example,
+the driver calls <a class="reference internal" href="../../../doxygen/html/group__ieee802154__driver.html#gad2a4cb5df84ffe20b83fc54dc9bcfc91" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ieee802154_init()</span></code></a> to pass the interface’s MAC address
+as well as other hardware-related configuration to L2. Similarly, drivers may
+indicate performance or timing critical radio events to L2 that require close
+integration with the hardware (e.g. <a class="reference internal" href="../../../doxygen/html/group__ieee802154__driver.html#ga68e1f89571ccbefef61a5496577337fc" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ieee802154_handle_ack()</span></code></a>). Calls
+from L1 into L2 are not implemented as methods in <a class="reference internal" href="../../../doxygen/html/structieee802154__radio__api.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">ieee802154_radio_api</span></code></a>
+but are standalone functions declared and documented as such in
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/net/ieee802154_radio.h">include/zephyr/net/ieee802154_radio.h</a>. The API documentation will
+clearly state which functions must be implemented by all L2 stacks as part
+of the L1 -&gt; L2 “inversion-of-control” adaptation API.</p></li>
+</ul>
+<p>Note: Standalone functions in <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/net/ieee802154_radio.h">include/zephyr/net/ieee802154_radio.h</a>
+that are not explicitly documented as callbacks are considered to be helper functions
+within the PHY (L1) layer implemented independently of any specific L2 stack, see for
+example <a class="reference internal" href="../../../doxygen/html/group__ieee802154__driver.html#gaf5d7bdde2a9774f9d90604a6e203bb07" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ieee802154_is_ar_flag_set()</span></code></a>.</p>
+<p>As all net interfaces, IEEE 802.15.4 device driver implementations will have to call
+<code class="docutils literal notranslate"><span class="pre">NET_DEVICE_INIT_INSTANCE()</span></code> in the end:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">NET_DEVICE_INIT_INSTANCE</span><span class="p">(...,</span>
+<span class="w">                         </span><span class="n">the_device_init_prio</span><span class="p">,</span>
+<span class="w">                         </span><span class="o">&amp;</span><span class="n">the_valid_ieee802154_radio_api_instance</span><span class="p">,</span>
+<span class="w">                         </span><span class="n">IEEE802154_L2</span><span class="p">,</span>
+<span class="w">                         </span><span class="n">NET_L2_GET_CTX_TYPE</span><span class="p">(</span><span class="n">IEEE802154_L2</span><span class="p">),</span><span class="w"> </span><span class="mi">125</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">API Reference</a><a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../doxygen/html/group__net__l2.html" title=""><span class="pre">Network</span> <span class="pre">L2</span> <span class="pre">Abstraction</span> <span class="pre">Layer</span></a></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/ethernet/lldp/README.html#lldp" title="Enable LLDP support and setup VLANs.">Link Layer Discovery Protocol (LLDP)</a></span><span class="code-sample-description">Enable LLDP support and setup VLANs.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/ethernet/vlan/README.html#vlan" title="Setup two virtual LAN networks and use net-shell to view the networks' settings.">Virtual LAN</a></span><span class="code-sample-description">Setup two virtual LAN networks and use net-shell to view the networks' settings.</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

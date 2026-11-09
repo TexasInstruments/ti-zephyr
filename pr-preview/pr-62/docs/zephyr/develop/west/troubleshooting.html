@@ -1,0 +1,537 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Troubleshooting West &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/develop/west/troubleshooting.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Basics" href="basics.html" />
+    <link rel="prev" title="West Release Notes" href="release-notes.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developing with Zephyr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/index.html">Getting Started Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beyond-GSG.html">Beyond the Getting Started Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env_vars.html">Environment Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../application/index.html">Application Development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debug/index.html">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/index.html">API Status and Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../languages/index.html">Language Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optimizations/index.html">Optimizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flash_debug/index.html">Flashing and Hardware Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html">Modules (External projects)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">West (Zephyr’s meta-tool)</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="install.html">Installing west</a></li>
+<li class="toctree-l3"><a class="reference internal" href="release-notes.html">West Release Notes</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Troubleshooting West</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#west-update-fetching-failures"><code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">update</span></code> fetching failures</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#west-is-not-recognized-as-an-internal-or-external-command-operable-program-or-batch-file">“‘west’ is not recognized as an internal or external command, operable program or batch file.’</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#invalid-choice-build-or-flash-etc">“invalid choice: ‘build’” (or ‘flash’, etc.)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#invalid-choice-post-init">“invalid choice: ‘post-init’”</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="basics.html">Basics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="built-in.html">Built-in commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workspaces.html">Workspaces</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest.html">West Manifests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="config.html">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="alias.html">West aliases</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extensions.html">Extensions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="build-flash-debug.html">Building, Flashing and Debugging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sign.html">Signing Binaries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="zephyr-cmds.html">Additional Zephyr extension commands</a></li>
+<li class="toctree-l3"><a class="reference internal" href="why.html">History and Motivation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="without-west.html">Using Zephyr without west</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../test/index.html">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sca/index.html">Static Code Analysis (SCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains/index.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/index.html">Tools and IDEs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Developing with Zephyr</a> &raquo;</li>
+  
+     <li><a href="index.html">West (Zephyr’s meta-tool)</a> &raquo;</li>
+  
+  <li>Troubleshooting West</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/develop/west/troubleshooting.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27develop%2Fwest%2Ftroubleshooting%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Documentation%2Carea%3A+West&env=-+Page%3A+develop%2Fwest%2Ftroubleshooting%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="troubleshooting-west">
+<span id="west-troubleshooting"></span><h1>Troubleshooting West<a class="headerlink" href="#troubleshooting-west" title="Link to this heading"></a></h1>
+<p>This page covers common issues with west and how to solve them.</p>
+<section id="west-update-fetching-failures">
+<h2><code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">update</span></code> fetching failures<a class="headerlink" href="#west-update-fetching-failures" title="Link to this heading"></a></h2>
+<p>One good way to troubleshoot fetching issues is to run <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">update</span></code> in
+verbose mode, like this:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>-v<span class="w"> </span>update
+</pre></div>
+</div>
+<p>The output includes Git commands run by west and their outputs. Look for
+something like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>=== updating your_project (path/to/your/project):
+west.manifest: your_project: checking if cloned
+[...other west.manifest logs...]
+--- your_project: fetching, need revision SOME_SHA
+west.manifest: running &#39;git fetch ... https://github.com/your-username/your_project ...&#39; in /some/directory
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">fetch</span></code> command example in the last line above is what needs to
+succeed.</p>
+<p>One strategy is to go to <code class="docutils literal notranslate"><span class="pre">/path/to/your/project</span></code>, copy/paste and run the entire
+<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">fetch</span></code> command, then debug from there using the documentation for your
+credential storage helper.</p>
+<p>If you’re behind a corporate firewall and may have proxy or other issues,
+<code class="docutils literal notranslate"><span class="pre">curl</span> <span class="pre">-v</span> <span class="pre">FETCH_URL</span></code> (for HTTPS URLs) or <code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">-v</span> <span class="pre">FETCH_URL</span></code> (for SSH URLs)
+may be helpful.</p>
+<p>If you can get the <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">fetch</span></code> command to run successfully without prompting
+for a password when you run it directly, you will be able to run <code class="docutils literal notranslate"><span class="pre">west</span>
+<span class="pre">update</span></code> without entering your password in that same shell.</p>
+</section>
+<section id="west-is-not-recognized-as-an-internal-or-external-command-operable-program-or-batch-file">
+<h2>“‘west’ is not recognized as an internal or external command, operable program or batch file.’<a class="headerlink" href="#west-is-not-recognized-as-an-internal-or-external-command-operable-program-or-batch-file" title="Link to this heading"></a></h2>
+<p>On Windows, this means that either west is not installed, or your <span class="target" id="index-0"></span><a class="reference internal" href="../env_vars.html#envvar-PATH"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PATH</span></code></a>
+environment variable does not contain the directory where pip installed
+<code class="file docutils literal notranslate"><span class="pre">west.exe</span></code>.</p>
+<p>First, make sure you’ve installed west; see <a class="reference internal" href="install.html#west-install"><span class="std std-ref">Installing west</span></a>. Then try
+running <code class="docutils literal notranslate"><span class="pre">west</span></code> from a new <code class="docutils literal notranslate"><span class="pre">cmd.exe</span></code> window. If that still doesn’t work,
+keep reading.</p>
+<p>You need to find the directory containing <code class="file docutils literal notranslate"><span class="pre">west.exe</span></code>, then add it to your
+<span class="target" id="index-1"></span><a class="reference internal" href="../env_vars.html#envvar-PATH"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PATH</span></code></a>. (This <span class="target" id="index-2"></span><a class="reference internal" href="../env_vars.html#envvar-PATH"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PATH</span></code></a> change should have been done for you when
+you installed Python and pip, so ordinarily you should not need to follow these
+steps.)</p>
+<p>Run this command in <code class="docutils literal notranslate"><span class="pre">cmd.exe</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>pip3 show west
+</pre></div>
+</div>
+<p>Then:</p>
+<ol class="arabic">
+<li><p>Look for a line in the output that looks like <code class="docutils literal notranslate"><span class="pre">Location:</span>
+<span class="pre">C:\foo\python\python38\lib\site-packages</span></code>. The exact location
+will be different on your computer.</p></li>
+<li><p>Look for a file named <code class="docutils literal notranslate"><span class="pre">west.exe</span></code> in the <code class="docutils literal notranslate"><span class="pre">scripts</span></code> directory
+<code class="docutils literal notranslate"><span class="pre">C:\foo\python\python38\scripts</span></code>.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Notice how <code class="docutils literal notranslate"><span class="pre">lib\site-packages</span></code> in the <code class="docutils literal notranslate"><span class="pre">pip3</span> <span class="pre">show</span></code> output was changed
+to <code class="docutils literal notranslate"><span class="pre">scripts</span></code>!</p>
+</div>
+</li>
+<li><p>If you see <code class="docutils literal notranslate"><span class="pre">west.exe</span></code> in the <code class="docutils literal notranslate"><span class="pre">scripts</span></code> directory, add the full path to
+<code class="docutils literal notranslate"><span class="pre">scripts</span></code> to your <span class="target" id="index-3"></span><a class="reference internal" href="../env_vars.html#envvar-PATH"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PATH</span></code></a> using a command like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>setx PATH &quot;%PATH%;C:\foo\python\python38\scripts&quot;
+</pre></div>
+</div>
+<p><strong>Do not just copy/paste this command</strong>. The <code class="docutils literal notranslate"><span class="pre">scripts</span></code> directory location
+will be different on your system.</p>
+</li>
+<li><p>Close your <code class="docutils literal notranslate"><span class="pre">cmd.exe</span></code> window and open a new one. You should be able to run
+<code class="docutils literal notranslate"><span class="pre">west</span></code>.</p></li>
+</ol>
+</section>
+<section id="invalid-choice-build-or-flash-etc">
+<h2>“invalid choice: ‘build’” (or ‘flash’, etc.)<a class="headerlink" href="#invalid-choice-build-or-flash-etc" title="Link to this heading"></a></h2>
+<p>If you see an unexpected error like this when trying to run a Zephyr extension
+command (like <a class="reference internal" href="build-flash-debug.html#west-flashing"><span class="std std-ref">west flash</span></a>, <a class="reference internal" href="build-flash-debug.html#west-building"><span class="std std-ref">west build</span></a>, etc.):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ west build [...]
+west: error: argument &lt;command&gt;: invalid choice: &#39;build&#39; (choose from &#39;init&#39;, [...])
+
+$ west flash [...]
+west: error: argument &lt;command&gt;: invalid choice: &#39;flash&#39; (choose from &#39;init&#39;, [...])
+</pre></div>
+</div>
+<p>The most likely cause is that you’re running the command outside of a
+<a class="reference internal" href="basics.html#west-workspace"><span class="std std-ref">west workspace</span></a>. West needs to know where your workspace
+is to find <a class="reference internal" href="extensions.html#west-extensions"><span class="std std-ref">Extensions</span></a>.</p>
+<p>To fix this, you have two choices:</p>
+<ol class="arabic">
+<li><p>Run the command from inside a workspace (e.g. the <code class="file docutils literal notranslate"><span class="pre">zephyrproject</span></code>
+directory you created when you <a class="reference internal" href="../getting_started/index.html#getting-started"><span class="std std-ref">got started</span></a>).</p>
+<p>For example, create your build directory inside the workspace, or run <code class="docutils literal notranslate"><span class="pre">west</span>
+<span class="pre">flash</span> <span class="pre">--build-dir</span> <span class="pre">YOUR_BUILD_DIR</span></code> from inside the workspace.</p>
+</li>
+<li><p>Set the <span class="target" id="index-4"></span><a class="reference internal" href="../env_vars.html#envvar-ZEPHYR_BASE"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">ZEPHYR_BASE</span></code></a> <a class="reference internal" href="../env_vars.html#env-vars"><span class="std std-ref">environment variable</span></a> and re-run
+the west extension command. If set, west will use <span class="target" id="index-5"></span><a class="reference internal" href="../env_vars.html#envvar-ZEPHYR_BASE"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">ZEPHYR_BASE</span></code></a> to
+find your workspace.</p></li>
+</ol>
+<p>If you’re unsure whether a command is built-in or an extension, run <code class="docutils literal notranslate"><span class="pre">west</span>
+<span class="pre">help</span></code> from inside your workspace. The output prints extension commands
+separately, and looks like this for mainline Zephyr:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ west help
+
+built-in commands for managing git repositories:
+  init:                 create a west workspace
+  [...]
+
+other built-in commands:
+  help:                 get help for west or a command
+  [...]
+
+extension commands from project manifest (path: zephyr):
+  build:                compile a Zephyr application
+  flash:                flash and run a binary on a board
+  [...]
+</pre></div>
+</div>
+</section>
+<section id="invalid-choice-post-init">
+<h2>“invalid choice: ‘post-init’”<a class="headerlink" href="#invalid-choice-post-init" title="Link to this heading"></a></h2>
+<p>If you see this error when running <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">init</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west: error: argument &lt;command&gt;: invalid choice: &#39;post-init&#39;
+(choose from &#39;init&#39;, &#39;update&#39;, &#39;list&#39;, &#39;manifest&#39;, &#39;diff&#39;,
+&#39;status&#39;, &#39;forall&#39;, &#39;config&#39;, &#39;selfupdate&#39;, &#39;help&#39;)
+</pre></div>
+</div>
+<p>Then you have an old version of west installed, and are trying to use it in a
+workspace that requires a more recent version.</p>
+<p>The easiest way to resolve this issue is to upgrade west and retry as follows:</p>
+<ol class="arabic simple">
+<li><p>Install the latest west with the <code class="docutils literal notranslate"><span class="pre">-U</span></code> option for <code class="docutils literal notranslate"><span class="pre">pip3</span> <span class="pre">install</span></code> as shown
+in <a class="reference internal" href="install.html#west-install"><span class="std std-ref">Installing west</span></a>.</p></li>
+<li><p>Back up any contents of <code class="file docutils literal notranslate"><span class="pre">zephyrproject/.west/config</span></code> that you want to
+save. (If you don’t have any configuration options set, it’s safe to skip
+this step.)</p></li>
+<li><p>Completely remove the <code class="file docutils literal notranslate"><span class="pre">zephyrproject/.west</span></code> directory (if you don’t,
+you will get the “already in a workspace” error message discussed next).</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">init</span></code> again.</p></li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

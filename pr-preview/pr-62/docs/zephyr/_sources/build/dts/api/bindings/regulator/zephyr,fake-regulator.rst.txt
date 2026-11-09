@@ -1,0 +1,480 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: zephyr,fake-regulator
+.. _dtbinding_zephyr_fake_regulator:
+
+zephyr,fake-regulator
+#####################
+
+.. sidebar:: Overview
+
+   :Name: ``zephyr,fake-regulator``
+   :Vendor: :ref:`Zephyr Project <dt_vendor_zephyr>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=zephyr,fake-regulator>` using
+               this compatible
+   :Driver: :zephyr_file:`drivers/regulator/regulator_fake.c`
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   Fake regulator, to be used as a mock or stub in tests.
+
+   An arbitrary number of children can be defined.
+
+Properties
+**********
+
+Top level properties
+====================
+
+No top-level properties.
+
+Child node properties
+=====================
+
+.. list-table::
+   :widths: 1 1 4
+   :header-rows: 1
+
+   * - Name
+     - Type
+     - Details
+
+   * - ``fake-is-enabled-in-hardware``
+     - ``boolean``
+     - .. code-block:: none
+
+          Sets the is_enabled flag passed to regulator_common_init.
+          Allows test cases where the regulator is enabled in hardware.
+
+
+
+   * - ``regulator-name``
+     - ``string``
+     - .. code-block:: none
+
+          A string used as a descriptive name for regulator outputs
+
+
+   * - ``regulator-init-microvolt``
+     - ``int``
+     - .. code-block:: none
+
+          Voltage set during initialisation
+
+
+   * - ``regulator-min-microvolt``
+     - ``int``
+     - .. code-block:: none
+
+          smallest voltage consumers may set
+
+
+   * - ``regulator-max-microvolt``
+     - ``int``
+     - .. code-block:: none
+
+          largest voltage consumers may set
+
+
+   * - ``regulator-microvolt-offset``
+     - ``int``
+     - .. code-block:: none
+
+          Offset applied to voltages to compensate for voltage drops
+
+
+   * - ``regulator-init-microamp``
+     - ``int``
+     - .. code-block:: none
+
+          Current set during initialisation
+
+
+   * - ``regulator-min-microamp``
+     - ``int``
+     - .. code-block:: none
+
+          smallest current consumers may set
+
+
+   * - ``regulator-max-microamp``
+     - ``int``
+     - .. code-block:: none
+
+          largest current consumers may set
+
+
+   * - ``regulator-input-current-limit-microamp``
+     - ``int``
+     - .. code-block:: none
+
+          maximum input current regulator allows
+
+
+   * - ``regulator-always-on``
+     - ``boolean``
+     - .. code-block:: none
+
+          boolean, regulator should never be disabled
+
+
+   * - ``regulator-boot-on``
+     - ``boolean``
+     - .. code-block:: none
+
+          bootloader/firmware enabled regulator.
+          It's expected that this regulator was left on by the bootloader.
+          If the bootloader didn't leave it on then OS should turn it on
+          at boot but shouldn't prevent it from being turned off later.
+          This property is intended to only be used for regulators where
+          software cannot read the state of the regulator.
+
+
+
+   * - ``regulator-boot-off``
+     - ``boolean``
+     - .. code-block:: none
+
+          Regulator should be disabled on boot.
+
+
+
+   * - ``regulator-allow-bypass``
+     - ``boolean``
+     - .. code-block:: none
+
+          allow the regulator to go into bypass mode
+
+
+   * - ``regulator-allow-set-load``
+     - ``boolean``
+     - .. code-block:: none
+
+          allow the regulator performance level to be configured
+
+
+   * - ``regulator-ramp-delay``
+     - ``int``
+     - .. code-block:: none
+
+          ramp delay for regulator(in uV/us) For hardware which supports disabling
+          ramp rate, it should be explicitly initialised to zero
+          (regulator-ramp-delay = <0>) for disabling ramp delay.
+
+
+
+   * - ``regulator-enable-ramp-delay``
+     - ``int``
+     - .. code-block:: none
+
+          The time taken, in microseconds, for the supply rail to reach the target
+          voltage, plus/minus whatever tolerance the board design requires. This
+          property describes the total system ramp time required due to the
+          combination of internal ramping of the regulator itself, and board design
+          issues such as trace capacitance and load on the supply.
+
+
+
+   * - ``regulator-settling-time-us``
+     - ``int``
+     - .. code-block:: none
+
+          Settling time, in microseconds, for voltage change if regulator have the
+          constant time for any level voltage change. This is useful when regulator
+          have exponential voltage change.
+
+
+
+   * - ``regulator-settling-time-up-us``
+     - ``int``
+     - .. code-block:: none
+
+          Settling time, in microseconds, for voltage increase if the regulator
+          needs a constant time to settle after voltage increases of any level. This
+          is useful for regulators with exponential voltage changes.
+
+
+
+   * - ``regulator-settling-time-down-us``
+     - ``int``
+     - .. code-block:: none
+
+          Settling time, in microseconds, for voltage decrease if the regulator
+          needs a constant time to settle after voltage decreases of any level. This
+          is useful for regulators with exponential voltage changes.
+
+
+
+   * - ``regulator-soft-start``
+     - ``boolean``
+     - .. code-block:: none
+
+          Enable soft start so that voltage ramps slowly
+
+
+   * - ``regulator-initial-mode``
+     - ``int``
+     - .. code-block:: none
+
+          Initial operating mode. The set of possible operating modes depends on the
+          capabilities of every hardware so each device binding documentation
+          explains which values the regulator supports.
+
+
+
+   * - ``regulator-allowed-modes``
+     - ``array``
+     - .. code-block:: none
+
+          List of operating modes that software is allowed to configure for the
+          regulator at run-time. Elements may be specified in any order. The set of
+          possible operating modes depends on the capabilities of every hardware so
+          each device binding document explains which values the regulator supports.
+
+
+
+   * - ``regulator-system-load``
+     - ``int``
+     - .. code-block:: none
+
+          Load in uA present on regulator that is not captured by any consumer
+          request.
+
+
+
+   * - ``regulator-pull-down``
+     - ``boolean``
+     - .. code-block:: none
+
+          Enable pull down resistor when the regulator is disabled.
+
+
+   * - ``regulator-over-current-protection``
+     - ``boolean``
+     - .. code-block:: none
+
+          Enable over current protection.
+
+
+   * - ``regulator-oc-protection-microamp``
+     - ``int``
+     - .. code-block:: none
+
+          Set over current protection limit. This is a limit where hardware performs
+          emergency shutdown. Zero can be passed to disable protection and value '1'
+          indicates that protection should be enabled but limit setting can be
+          omitted.
+
+
+
+   * - ``regulator-oc-error-microamp``
+     - ``int``
+     - .. code-block:: none
+
+          Set over current error limit. This is a limit where part of the hardware
+          probably is malfunctional and damage prevention is requested. Zero can be
+          passed to disable error detection and value '1' indicates that detection
+          should be enabled but limit setting can be omitted.
+
+
+
+   * - ``regulator-oc-warn-microamp``
+     - ``int``
+     - .. code-block:: none
+
+          Set over current warning limit. This is a limit where hardware is assumed
+          still to be functional but approaching limit where it gets damaged.
+          Recovery actions should be initiated. Zero can be passed to disable
+          detection and value '1' indicates that detection should be enabled but
+          limit setting can be omitted.
+
+
+
+   * - ``regulator-ov-protection-microvolt``
+     - ``int``
+     - .. code-block:: none
+
+          Set over voltage protection limit. This is a limit where hardware performs
+          emergency shutdown. Zero can be passed to disable protection and value '1'
+          indicates that protection should be enabled but limit setting can be
+          omitted. Limit is given as microvolt offset from voltage set to regulator.
+
+
+
+   * - ``regulator-ov-error-microvolt``
+     - ``int``
+     - .. code-block:: none
+
+          Set over voltage error limit. This is a limit where part of the hardware
+          probably is malfunctional and damage prevention is requested Zero can be
+          passed to disable error detection and value '1' indicates that detection
+          should be enabled but limit setting can be omitted. Limit is given as
+          microvolt offset from voltage set to regulator.
+
+
+
+   * - ``regulator-ov-warn-microvolt``
+     - ``int``
+     - .. code-block:: none
+
+          Set over voltage warning limit. This is a limit where hardware is assumed
+          still to be functional but approaching limit where it gets damaged.
+          Recovery actions should be initiated. Zero can be passed to disable
+          detection and value '1' indicates that detection should be enabled but
+          limit setting can be omitted. Limit is given as microvolt offset from
+          voltage set to regulator.
+
+
+
+   * - ``regulator-uv-protection-microvolt``
+     - ``int``
+     - .. code-block:: none
+
+          Set over under voltage protection limit. This is a limit where hardware
+          performs emergency shutdown. Zero can be passed to disable protection and
+          value '1' indicates that protection should be enabled but limit setting
+          can be omitted. Limit is given as microvolt offset from voltage set to
+          regulator.
+
+
+
+   * - ``regulator-uv-error-microvolt``
+     - ``int``
+     - .. code-block:: none
+
+          Set under voltage error limit. This is a limit where part of the hardware
+          probably is malfunctional and damage prevention is requested Zero can be
+          passed to disable error detection and value '1' indicates that detection
+          should be enabled but limit setting can be omitted. Limit is given as
+          microvolt offset from voltage set to regulator.
+
+
+
+   * - ``regulator-uv-warn-microvolt``
+     - ``int``
+     - .. code-block:: none
+
+          Set over under voltage warning limit. This is a limit where hardware is
+          assumed still to be functional but approaching limit where it gets
+          damaged. Recovery actions should be initiated. Zero can be passed to
+          disable detection and value '1' indicates that detection should be enabled
+          but limit setting can be omitted. Limit is given as microvolt offset from
+          voltage set to regulator.
+
+
+
+   * - ``regulator-temp-protection-kelvin``
+     - ``int``
+     - .. code-block:: none
+
+          Set over temperature protection limit. This is a limit where hardware
+          performs emergency shutdown. Zero can be passed to disable protection and
+          value '1' indicates that protection should be enabled but limit setting
+          can be omitted.
+
+
+
+   * - ``regulator-temp-error-kelvin``
+     - ``int``
+     - .. code-block:: none
+
+          Set over temperature error limit. This is a limit where part of the
+          hardware probably is malfunctional and damage prevention is requested Zero
+          can be passed to disable error detection and value '1' indicates that
+          detection should be enabled but limit setting can be omitted.
+
+
+
+   * - ``regulator-temp-warn-kelvin``
+     - ``int``
+     - .. code-block:: none
+
+          Set over temperature warning limit. This is a limit where hardware is
+          assumed still to be functional but approaching limit where it gets
+          damaged. Recovery actions should be initiated. Zero can be passed to
+          disable detection and value '1' indicates that detection should be enabled
+          but limit setting can be omitted.
+
+
+
+   * - ``regulator-active-discharge``
+     - ``int``
+     - .. code-block:: none
+
+          tristate, enable/disable active discharge of regulators. The values are:
+          0: Disable active discharge.
+          1: Enable active discharge.
+          Absence of this property will leave configuration to default.
+
+
+
+       Legal values: ``0``, ``1``
+
+   * - ``regulator-max-step-microvolt``
+     - ``int``
+     - .. code-block:: none
+
+          Maximum difference between current and target voltages that can be changed
+          safely in a single step.
+
+
+
+   * - ``startup-delay-us``
+     - ``int``
+     - .. code-block:: none
+
+          Startup time, in microseconds
+
+
+   * - ``off-on-delay-us``
+     - ``int``
+     - .. code-block:: none
+
+          Off to on delay time, in microseconds
+
+
+   * - ``supply-gpios``
+     - ``phandle-array``
+     - .. code-block:: none
+
+          GPIO specifier that controls power to the device.
+
+          This property should be provided when the device has a dedicated
+          switch that controls power to the device.  The supply state is
+          entirely the responsibility of the device driver.
+
+          Contrast with vin-supply.
+
+
+
+   * - ``vin-supply``
+     - ``phandle``
+     - .. code-block:: none
+
+          Reference to the regulator that controls power to the device.
+          The referenced devicetree node must have a regulator compatible.
+
+          This property should be provided when device power is supplied
+          by a shared regulator.  The supply state is dependent on the
+          request status of all devices fed by the regulator.
+
+          Contrast with supply-gpios.  If both properties are provided
+          then the regulator must be requested before the supply GPIOS is
+          set to an active state, and the supply GPIOS must be set to an
+          inactive state before releasing the regulator.
+
+
+

@@ -1,0 +1,574 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: renesas,rx-lvd
+.. _dtbinding_renesas_rx_lvd:
+
+renesas,rx-lvd
+##############
+
+.. sidebar:: Overview
+
+   :Name: ``renesas,rx-lvd``
+   :Vendor: :ref:`Renesas Electronics Corporation <dt_vendor_renesas>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=renesas,rx-lvd>` using
+               this compatible
+   :Driver: :zephyr_file:`drivers/comparator/comparator_renesas_rx_lvd.c`
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   Renesas RX LVD (Low-voltage detection) Controller
+
+   The following example displays the minimum node layout:
+
+     lvd: lvd@800e2 {
+             compatible = "renesas,rx-lvd";
+             reg = <0x000800e2 0x02>;
+             interrupts = <89 1>;
+             status = "disabled";
+     };
+
+   Enabling the comparator controller node requires setting the minimum
+   default configuration of the comparator. This includes selecting the
+   positive and negative inputs.
+   Note: negative input of this controller is selected through specific
+   voltage threshold levels, and positive input can be either Vcc or CMPA pin.
+   If CMPA pin is selected as positive input, pinctrl must be defined to
+   route CMPA pin to the controller.
+
+       &pinctrl {
+                 lvd1_cmpa: lvd1_cmpa {
+                         group1 {
+                                 /* CMPA */
+                                 psels = <RX_PSEL(RX_PSEL_LVD, ..., ...)>;
+                                 renesas,analog-enable;
+                                 input-enable;
+                         };
+                 };
+         };
+
+       &lvd1 {
+             pinctrl-0 = <&lvd1_cmpa>;
+             pinctrl-names = "default";
+             lvd-action = "maskable-interrupt";
+             voltage_level = <384>;
+             vdet-target = "cmpa";
+             lvd-trigger = "rising";
+             lvd-stabilization = <0>;
+             status = "okay";
+       };
+
+Properties
+**********
+
+.. tabs::
+
+   .. group-tab:: Node specific properties
+
+      Properties not inherited from the base binding file.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``channel``
+           - ``int``
+           - This property is **required**.
+
+         * - ``lvd-action``
+           - ``string``
+           - .. code-block:: none
+
+                Choose the action to be taken when the LVD is detected.
+
+
+
+             This property is **required**.
+
+             Legal values: ``reset``, ``non-maskable-interrupt``, ``maskable-interrupt``, ``no-action``
+
+         * - ``lvd-support-cmpa``
+           - ``boolean``
+           - .. code-block:: none
+
+                Specifies whether the RX LVD supports CMPA pin as target.
+
+
+
+         * - ``voltage-level``
+           - ``int``
+           - .. code-block:: none
+
+                Specifies the voltage detection level for each channel, as an integer
+                value that represents the voltage in hundredths of a volt.
+                Example:
+                  - To set the voltage detection level to 3.00 V, specify '300'.
+                  - To set the voltage detection level to 3.84 V, specify '384'.
+                  - To set the voltage detection level to default value, specify '0xFFFF'
+                For specific voltage detection support levels of each RX MCU series,
+                please refer to the HWM.
+
+
+
+             This property is **required**.
+
+         * - ``vdet-target``
+           - ``string``
+           - .. code-block:: none
+
+                Specifies the target to be monitored for each channel.
+                Not all RX LVD channels support CMPA pin as target.
+                Please refer to the HWM for details.
+
+
+
+             This property is **required**.
+
+             Legal values: ``vcc``, ``cmpa``
+
+         * - ``lvd-trigger``
+           - ``string``
+           - .. code-block:: none
+
+                Specifies the voltage detection conditions and influences interrupt conditions
+
+
+
+             This property is **required**.
+
+             Legal values: ``rising``, ``falling``, ``both``
+
+         * - ``lvd-stabilization``
+           - ``int``
+           - .. code-block:: none
+
+                Specifies the reset negation timing for each channel, with reset selected as processing.
+                  - 0: After a LVD reset, negation occurs when a certain period elapses after the
+                    monitored voltage goes above the voltage detection level.
+                  - 1: Negation occurs when a certain period elapses after the LVD reset assertion.
+                Note: "a certain period" here means a wait time after a voltage monitoring reset.
+                      Refer to the User's Manual: Hardware for details.
+
+
+
+             Legal values: ``0``, ``1``
+
+         * - ``pinctrl-0``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin control for LVD when using CMPA pin as target
+
+
+         * - ``pinctrl-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Pin control names for LVD when using CMPA pin as target
+
+
+         * - ``pinctrl-1``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the second state. See pinctrl-0.
+
+
+
+         * - ``pinctrl-2``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the third state. See pinctrl-0.
+
+
+
+         * - ``pinctrl-3``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the fourth state. See pinctrl-0.
+
+
+
+         * - ``pinctrl-4``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the fifth state. See pinctrl-0.
+
+
+
+
+
+   .. group-tab:: Deprecated node specific properties
+
+      Deprecated properties not inherited from the base binding file.
+
+      (None)
+
+   .. group-tab:: Base properties
+
+      Properties inherited from the base binding file, which defines
+      common properties that may be set on many nodes. Not all of these
+      may apply to the "renesas,rx-lvd" compatible.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``reg``
+           - ``array``
+           - .. code-block:: none
+
+                Information used to address the device. The value is specific to
+                the device (i.e. is different depending on the compatible
+                property).
+
+                The "reg" property is typically a sequence of (address, length) pairs.
+                Each pair is called a "register block". Values are
+                conventionally written in hex.
+
+                For details, see "2.3.6 reg" in Devicetree Specification v0.4.
+
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``status``
+           - ``string``
+           - .. code-block:: none
+
+                Indicates the operational status of the hardware or other
+                resource that the node represents. In particular:
+
+                  - "okay" means the resource is operational and, for example,
+                    can be used by device drivers
+                  - "disabled" means the resource is not operational and the system
+                    should treat it as if it is not present
+
+                For details, see "2.3.4 status" in Devicetree Specification v0.4.
+
+
+
+             Legal values: ``okay``, ``disabled``, ``reserved``, ``fail``, ``fail-sss``
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``compatible``
+           - ``string-array``
+           - .. code-block:: none
+
+                This property is a list of strings that essentially define what
+                type of hardware or other resource this devicetree node
+                represents. Each device driver checks for specific compatible
+                property values to find the devicetree nodes that represent
+                resources that the driver should manage.
+
+                The recommended format is "vendor,device", The "vendor" part is
+                an abbreviated name of the vendor. The "device" is usually from
+                the datasheet.
+
+                The compatible property can have multiple values, ordered from
+                most- to least-specific. Having additional values is useful when the
+                device is a specific instance of a more general family, to allow the
+                system to match the most specific driver available.
+
+                For details, see "2.3.1 compatible" in Devicetree Specification v0.4.
+
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``reg-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each register block in the "reg" property.
+                For example:
+
+                  / {
+                       soc {
+                           #address-cells = <1>;
+                           #size-cells = <1>;
+
+                           uart@1000 {
+                               reg = <0x1000 0x2000>, <0x3000 0x4000>;
+                               reg-names = "foo", "bar";
+                           };
+                       };
+                  };
+
+                The uart@1000 node has two register blocks:
+
+                  - one with base address 0x1000, size 0x2000, and name "foo"
+                  - another with base address 0x3000, size 0x4000, and name "bar"
+
+
+
+         * - ``interrupts``
+           - ``array``
+           - .. code-block:: none
+
+                Information about interrupts generated by the device, encoded as an array
+                of one or more interrupt specifiers. The format of the data in this property
+                varies by where the device appears in the interrupt tree. Devices with the same
+                "interrupt-parent" will use the same format in their interrupts properties.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``interrupts-extended``
+           - ``compound``
+           - .. code-block:: none
+
+                Extended interrupt specifier for device, used as an alternative to
+                the "interrupts" property.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each interrupt generated by a device.
+                The interrupts themselves are defined in either "interrupts" or
+                "interrupts-extended" properties.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-parent``
+           - ``phandle``
+           - .. code-block:: none
+
+                If present, this refers to the node which handles interrupts generated
+                by this device.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``label``
+           - ``string``
+           - .. code-block:: none
+
+                Human readable string describing the device. Use of this property is
+                deprecated except as needed on a case-by-case basis.
+
+                For details, see "4.1.2 Miscellaneous Properties" in Devicetree
+                Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``clocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Information about the device's clock providers. In general, this property
+                should follow conventions established in the dt-schema binding:
+
+                  https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/clock/clock.yaml
+
+
+
+         * - ``clock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each clock provider in the "clocks" property.
+
+
+
+         * - ``#address-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by address fields
+                in "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+         * - ``#size-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by size fields in
+                "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+         * - ``dmas``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                DMA channel specifiers relevant to the device.
+
+
+
+         * - ``dma-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the DMA channel specifiers in the "dmas" property.
+
+
+
+         * - ``io-channels``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                IO channel specifiers relevant to the device.
+
+
+
+         * - ``io-channel-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the IO channel specifiers in the "io-channels" property.
+
+
+
+         * - ``mboxes``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Mailbox / IPM channel specifiers relevant to the device.
+
+
+
+         * - ``mbox-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the mbox specifiers in the "mboxes" property.
+
+
+
+         * - ``power-domains``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Power domain specifiers relevant to the device.
+
+
+
+         * - ``power-domain-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the power domain specifiers in the "power-domains" property.
+
+
+
+         * - ``#power-domain-cells``
+           - ``int``
+           - .. code-block:: none
+
+                Number of cells in power-domains property
+
+
+
+         * - ``hwlocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                HW spinlock id relevant to the device.
+
+
+
+         * - ``hwlock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the hwlock specifiers in the "hwlocks" property.
+
+
+
+         * - ``zephyr,deferred-init``
+           - ``boolean``
+           - .. code-block:: none
+
+                Do not initialize device automatically on boot. Device should be manually
+                initialized using device_init().
+
+
+
+         * - ``wakeup-source``
+           - ``boolean``
+           - .. code-block:: none
+
+                Property to identify that a device can be used as wake up source.
+
+                When this property is provided a specific flag is set into the
+                device that tells the system that the device is capable of
+                wake up the system.
+
+                Wake up capable devices are disabled (interruptions will not wake up
+                the system) by default but they can be enabled at runtime if necessary.
+
+
+
+         * - ``zephyr,pm-device-runtime-auto``
+           - ``boolean``
+           - .. code-block:: none
+
+                Automatically configure the device for runtime power management after the
+                init function runs.
+
+
+
+         * - ``zephyr,disabling-power-states``
+           - ``phandles``
+           - .. code-block:: none
+
+                List of power states that will disable this device power.
+
+
+
+
+
+

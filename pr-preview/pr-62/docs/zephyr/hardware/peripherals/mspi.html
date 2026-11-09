@@ -1,0 +1,639 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multi-bit SPI Bus &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/hardware/peripherals/mspi.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Multi-Channel Inter-Processor Mailbox (MBOX)" href="mbox.html" />
+    <link rel="prev" title="Management Data Input/Output (MDIO)" href="mdio.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Hardware Support</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../arch/index.html">Architecture-related Guides</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../barriers/index.html">Barriers API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cache/index.html">Caching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/index.html">Zephyr’s device emulators/simulators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/bus_emulators.html">External Bus and Bus Connected Peripherals Emulators</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Peripherals</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="w1.html">1-Wire Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="adc.html">Analog-to-Digital Converter (ADC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auxdisplay.html">Auxiliary Display (auxdisplay)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="audio/index.html">Audio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bbram.html">Battery Backed RAM (BBRAM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bc12.html">BC1.2 Devices (Experimental)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="biometrics.html">Biometrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clock_control.html">Clock Control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="can/index.html">Controller Area Network (CAN)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="charger.html">Chargers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="comparator.html">Comparator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="coredump.html">Coredump Device</a></li>
+<li class="toctree-l3"><a class="reference internal" href="counter.html">Counter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crc.html">Cyclic Redundancy Check (CRC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dac.html">Digital-to-Analog Converter (DAC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dma.html">Direct Memory Access (DMA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="display/index.html">Display</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eeprom/index.html">Electrically Erasable Programmable Read-Only Memory (EEPROM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="espi.html">Enhanced Serial Peripheral Interface (eSPI) Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="entropy.html">Entropy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="edac/index.html">Error Detection And Correction (EDAC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flash.html">Flash</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fuel_gauge.html">Fuel Gauge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnss.html">GNSS (Global Navigation Satellite System)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gpio.html">General-Purpose Input/Output (GPIO)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="haptics.html">Haptics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hwinfo.html">Hardware Information</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hwspinlock.html">Hardware Spinlocks (HWSPINLOCK)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="i2c_eeprom_target.html">I2C EEPROM Target</a></li>
+<li class="toctree-l3"><a class="reference internal" href="i3c.html">Improved Inter-Integrated Circuit (I3C) Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="i2c.html">Inter-Integrated Circuit (I2C) Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ipm.html">Inter-Processor Mailbox (IPM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="led.html">Light-Emitting Diode (LED)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mdio.html">Management Data Input/Output (MDIO)</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Multi-bit SPI Bus</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#mspi-controller-api">MSPI Controller API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#transceive">Transceive</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#device-tree">Device Tree</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#multi-peripheral">Multi Peripheral</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mbox.html">Multi-Channel Inter-Processor Mailbox (MBOX)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mux.html">Multiplexer (MUX)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="opamp.html">Operational Amplifier (OPAMP)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="otp/index.html">One Time Programmable (OTP) memory devices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcie.html">Peripheral Component Interconnect express Bus (PCIe)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="peci.html">Platform Environment Control Interface (PECI)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ps2.html">PS/2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psi5.html">Peripheral Sensor Interface (PSI5)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pwm.html">Pulse Width Modulation (PWM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rtc.html">Real-Time Clock (RTC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="regulators.html">Regulators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reset.html">Reset Controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="retained_mem.html">Retained Memory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sdhc.html">Secure Digital (SD card) interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sensor/index.html">Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sent.html">Single Edge Nibble Transmission (SENT)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spi.html">Serial Peripheral Interface (SPI) Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stepper/index.html">Steppers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smbus.html">System Management Bus (SMBus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uart.html">Universal Asynchronous Receiver-Transmitter (UART)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usbc_vbus.html">USB-C VBUS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tcpc.html">USB Type-C Port Controller (TCPC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tgpio.html">Time-aware General-Purpose Input/Output (TGPIO)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="video.html">Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="watchdog.html">Watchdog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="wuc.html">Wakeup Controller (WUC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../pinctrl/index.html">Pin Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../porting/index.html">Porting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">Virtualization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Hardware Support</a> &raquo;</li>
+  
+     <li><a href="index.html">Peripherals</a> &raquo;</li>
+  
+  <li>Multi-bit SPI Bus</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/hardware/peripherals/mspi.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27hardware%2Fperipherals%2Fmspi%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+MSPI&env=-+Page%3A+hardware%2Fperipherals%2Fmspi%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="multi-bit-spi-bus">
+<span id="mspi-api"></span><h1>Multi-bit SPI Bus<a class="headerlink" href="#multi-bit-spi-bus" title="Link to this heading"></a></h1>
+<p>The MSPI (multi-bit SPI) is provided as a generic API to accommodate
+advanced SPI peripherals and devices that typically require command,
+address and data phases, and multiple signal lines during these phases.
+While the API supports advanced features such as <a class="reference internal" href="../../glossary.html#term-XIP"><span class="xref std std-term">XIP</span></a> and scrambling,
+it is also compatible with generic SPI.</p>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#mspi-controller-api" id="id2">MSPI Controller API</a></p>
+<ul>
+<li><p><a class="reference internal" href="#transceive" id="id3">Transceive</a></p></li>
+<li><p><a class="reference internal" href="#device-tree" id="id4">Device Tree</a></p></li>
+<li><p><a class="reference internal" href="#multi-peripheral" id="id5">Multi Peripheral</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#configuration-options" id="id6">Configuration Options</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id7">API Reference</a></p></li>
+</ul>
+</nav>
+<section id="mspi-controller-api">
+<span id="id1"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">MSPI Controller API</a><a class="headerlink" href="#mspi-controller-api" title="Link to this heading"></a></h2>
+<p>Zephyr’s MSPI controller API may be used when a multi-bit SPI controller
+is present. E.g. Ambiq MSPI, QSPI, OSPI, Flexspi, etc.
+The API supports single to hex SDR/DDR IO with variable latency and advanced
+features such as <a class="reference internal" href="../../glossary.html#term-XIP"><span class="xref std std-term">XIP</span></a> and scrambling. Applicable devices include but
+not limited to high-speed, high density flash/psram memory devices, displays
+and sensors.</p>
+<p>The MSPI interface contains controller drivers that are SoC platform specific
+and implement the MSPI APIs, and device drivers that reference these APIs.
+The relationship between the controller and device drivers is many-to-many to
+allow for easy switching between platforms.</p>
+<p>Here is a list of generic steps for initializing the MSPI controller and the
+MSPI bus inside the device driver initialization function:</p>
+<ol class="arabic simple">
+<li><p>Initialize the data structure of the MSPI controller driver instance.
+The usual device defining macros such as <a class="reference internal" href="../../doxygen/html/group__device__model.html#gada5ba4aca9e0662ccebb2232c7256419" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DEVICE_DT_INST_DEFINE</span></code></a>
+can be used, and the initialization function, config and data provided
+as a parameter to the macro.</p></li>
+<li><p>Initialize the hardware, including but not limited to:</p>
+<ul class="simple">
+<li><p>Check <a class="reference internal" href="../../doxygen/html/structmspi__cfg.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">mspi_cfg</span></code></a> against hardware’s own capabilities to prevent
+incorrect usages.</p></li>
+<li><p>Setup default pinmux.</p></li>
+<li><p>Setup the clock for the controller.</p></li>
+<li><p>Power on the hardware.</p></li>
+<li><p>Configure the hardware using <a class="reference internal" href="../../doxygen/html/structmspi__cfg.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">mspi_cfg</span></code></a> and possibly more
+platform specific settings.</p></li>
+<li><p>Usually, the <a class="reference internal" href="../../doxygen/html/structmspi__cfg.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">mspi_cfg</span></code></a> is filled from device tree and contains
+static, boot time parameters. However, if needed, one can use <a class="reference internal" href="../../doxygen/html/group__mspi__configure__api.html#ga46c2b98e99ecea045c1ecac4bdf3f087" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">mspi_config()</span></code></a>
+to re-initialize the hardware with new parameters during runtime.</p></li>
+<li><p>Release any lock if applicable.</p></li>
+</ul>
+</li>
+<li><p>Perform device driver initialization. As usually, <a class="reference internal" href="../../doxygen/html/group__device__model.html#gada5ba4aca9e0662ccebb2232c7256419" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DEVICE_DT_INST_DEFINE</span></code></a>
+can be used. Inside device driver initialization function, perform the following
+required steps.</p>
+<ol class="arabic simple">
+<li><p>Call <a class="reference internal" href="../../doxygen/html/group__mspi__configure__api.html#gaa3c1eae8b3000c9bafcc26f14a8beb8b" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">mspi_dev_config()</span></code></a> with device specific hardware settings obtained
+from device datasheets.</p>
+<ul class="simple">
+<li><p>The <a class="reference internal" href="../../doxygen/html/structmspi__dev__cfg.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">mspi_dev_cfg</span></code></a> should be filled by device tree and helper macro
+<a class="reference internal" href="../../doxygen/html/group__mspi__devicetree.html#gaa8e730d85dede3d1e5dc9f69f30098b2" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">MSPI_DEVICE_CONFIG_DT</span></code></a> can be used.</p></li>
+<li><p>The controller driver should then validate the members of <a class="reference internal" href="../../doxygen/html/structmspi__dev__cfg.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">mspi_dev_cfg</span></code></a>
+to prevent incorrect usage.</p></li>
+<li><p>The controller driver should implement a mutex to protect from accidental access.</p></li>
+<li><p>The controller driver may also switch between different devices based on
+<a class="reference internal" href="../../doxygen/html/structmspi__dev__id.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">mspi_dev_id</span></code></a>.</p></li>
+</ul>
+</li>
+<li><p>Call API for additional setups if supported by hardware</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../doxygen/html/group__mspi__configure__api.html#gac025129882f814b59d5726c01f0138ce" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">mspi_memmap_config()</span></code></a> for memory mapped access (e.g. <a class="reference internal" href="../../glossary.html#term-XIP"><span class="xref std std-term">XIP</span></a>)</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__mspi__configure__api.html#gacf287e08b6ce4898524884e8de22b806" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">mspi_scramble_config()</span></code></a> for scrambling feature</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__mspi__configure__api.html#gaff82af1cfc99b9e78cec17ea27f79ab6" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">mspi_timing_config()</span></code></a> for platform specific timing setup.</p></li>
+</ul>
+</li>
+<li><p>Register any callback with <a class="reference internal" href="../../doxygen/html/group__mspi__callback__api.html#ga967f5fed63f08ac2d5a88625b030cd14" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">mspi_register_callback()</span></code></a> if needed.</p></li>
+<li><p>Release the controller mutex lock.</p></li>
+</ol>
+</li>
+</ol>
+<section id="transceive">
+<h3><a class="toc-backref" href="#id3" role="doc-backlink">Transceive</a><a class="headerlink" href="#transceive" title="Link to this heading"></a></h3>
+<p>The transceive request is of type <a class="reference internal" href="../../doxygen/html/structmspi__xfer.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">mspi_xfer</span></code></a> which allows dynamic change to
+the transfer related settings once the mode of operation is determined and configured
+by <a class="reference internal" href="../../doxygen/html/group__mspi__configure__api.html#gaa3c1eae8b3000c9bafcc26f14a8beb8b" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">mspi_dev_config()</span></code></a>.</p>
+<p>The API also supports bulk transfers with different starting addresses and sizes with
+<a class="reference internal" href="../../doxygen/html/structmspi__xfer__packet.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">mspi_xfer_packet</span></code></a>. However, it is up to the controller implementation
+whether to support scatter IO and callback management. The controller can determine
+which user callback to trigger based on <a class="reference internal" href="../../doxygen/html/group__mspi__interface.html#gab33e9840b0937c944f4e1a2525534cb1" title=""><code class="xref c c-enum docutils literal notranslate"><span class="pre">mspi_bus_event_cb_mask</span></code></a> upon completion
+of each async/sync transfer if the callback had been registered using
+<a class="reference internal" href="../../doxygen/html/group__mspi__callback__api.html#ga967f5fed63f08ac2d5a88625b030cd14" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">mspi_register_callback()</span></code></a>. Or not to trigger any callback at all with
+<code class="xref c c-enum docutils literal notranslate"><span class="pre">MSPI_BUS_NO_CB</span></code> even if the callbacks are already registered. If the implemented
+driver support it, the API supports <code class="xref c c-enum docutils literal notranslate"><span class="pre">MSPI_BUS_XFER_COMPLETE_CB</span></code> to signal when a
+transfer finishes and <code class="xref c c-enum docutils literal notranslate"><span class="pre">MSPI_BUS_TIMEOUT_CB</span></code> to signal when a transfer or request
+has timed-out. In which case that a controller supports hardware command queue, user could
+take full advantage of the hardware performance if scatter IO and callback management are
+supported by the driver implementation.</p>
+</section>
+<section id="device-tree">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">Device Tree</a><a class="headerlink" href="#device-tree" title="Link to this heading"></a></h3>
+<p>Here is an example for defining an MSPI controller in device tree:
+The mspi controller’s bindings should reference mspi-controller.yaml as one of the base.</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nl">mspi0</span><span class="p">:</span><span class="w"> </span><span class="nf">mspi</span><span class="o">@</span><span class="mi">400</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">         </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">         </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,mspi-emul-controller&quot;</span><span class="p">;</span>
+
+<span class="w">         </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x400</span><span class="w"> </span><span class="mh">0x4</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">         </span><span class="kr">#address-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x1</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">         </span><span class="kr">#size-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x0</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">         </span><span class="n">clock-frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x17d7840</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">         </span><span class="n">op-mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MSPI_CONTROLLER&quot;</span><span class="p">;</span>
+<span class="w">         </span><span class="n">duplex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MSPI_HALF_DUPLEX&quot;</span><span class="p">;</span>
+<span class="w">         </span><span class="n">ce-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mh">0x5</span><span class="w"> </span><span class="mh">0x1</span><span class="w"> </span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mh">0x12</span><span class="w"> </span><span class="mh">0x1</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">         </span><span class="n">dqs-support</span><span class="p">;</span>
+
+<span class="w">         </span><span class="n">pinctrl-0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">&amp;</span><span class="na">pinmux</span><span class="o">-</span><span class="na">mspi0</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">         </span><span class="n">pinctrl-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;default&quot;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Here is an example for defining an MSPI device in device tree:
+The mspi device’s bindings should reference mspi-device.yaml as one of the base.</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">mspi0</span><span class="cm"> </span><span class="p">{</span>
+
+<span class="w">         </span><span class="nl">mspi_dev0</span><span class="p">:</span><span class="w"> </span><span class="nf">mspi_dev0</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                  </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">                  </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,mspi-emul-device&quot;</span><span class="p">;</span>
+
+<span class="w">                  </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x0</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x10000</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">                  </span><span class="n">mspi-max-frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x2dc6c00</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">mspi-io-mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MSPI_IO_MODE_QUAD&quot;</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">mspi-data-rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MSPI_DATA_RATE_SINGLE&quot;</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">mspi-hardware-ce-num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x0</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">read-instruction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0xb</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">write-instruction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x2</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">instruction-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;INSTR_1_BYTE&quot;</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">address-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ADDR_4_BYTE&quot;</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">rx-dummy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x8</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">tx-dummy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x0</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">memmap-config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x0</span><span class="w"> </span><span class="mh">0x0</span><span class="w"> </span><span class="mh">0x0</span><span class="w"> </span><span class="mh">0x0</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">ce-break-config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x0</span><span class="w"> </span><span class="mh">0x0</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">         </span><span class="p">};</span>
+
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>User should specify target operating parameters in the DTS such as <code class="docutils literal notranslate"><span class="pre">mspi-max-frequency</span></code>,
+<code class="docutils literal notranslate"><span class="pre">mspi-io-mode</span></code> and <code class="docutils literal notranslate"><span class="pre">mspi-data-rate</span></code> even though they may subject to change during runtime.
+It should represent the typical configuration of the device during normal operations.</p>
+</section>
+<section id="multi-peripheral">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">Multi Peripheral</a><a class="headerlink" href="#multi-peripheral" title="Link to this heading"></a></h3>
+<p>With <a class="reference internal" href="../../doxygen/html/structmspi__dev__id.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">mspi_dev_id</span></code></a> defined as collection of the device index and CE GPIO from
+device tree, the API supports multiple devices on the same controller instance.
+The controller driver implementation may or may not support device switching,
+which can be performed either by software or by hardware. If the switching is handled
+by software, it should be performed in <a class="reference internal" href="../../doxygen/html/group__mspi__configure__api.html#gaa3c1eae8b3000c9bafcc26f14a8beb8b" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">mspi_dev_config()</span></code></a> call.</p>
+<p>The device driver should record the current operating conditions of the device to support
+software controlled device switching by saving and updating <a class="reference internal" href="../../doxygen/html/structmspi__dev__cfg.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">mspi_dev_cfg</span></code></a> and
+other relevant mspi struct or private data structures. In particular, <a class="reference internal" href="../../doxygen/html/structmspi__dev__id.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">mspi_dev_id</span></code></a>
+which contains the identity of the device needs to be used for every API call.</p>
+</section>
+</section>
+<section id="configuration-options">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Configuration Options</a><a class="headerlink" href="#configuration-options" title="Link to this heading"></a></h2>
+<p>Related configuration options:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MSPI" title="CONFIG_MSPI"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MSPI</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MSPI_ASYNC" title="CONFIG_MSPI_ASYNC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MSPI_ASYNC</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MSPI_PERIPHERAL" title="CONFIG_MSPI_PERIPHERAL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MSPI_PERIPHERAL</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MSPI_MEMMAP" title="CONFIG_MSPI_MEMMAP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MSPI_MEMMAP</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MSPI_SCRAMBLE" title="CONFIG_MSPI_SCRAMBLE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MSPI_SCRAMBLE</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MSPI_TIMING" title="CONFIG_MSPI_TIMING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MSPI_TIMING</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MSPI_INIT_PRIORITY" title="CONFIG_MSPI_INIT_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MSPI_INIT_PRIORITY</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MSPI_COMPLETION_TIMEOUT_TOLERANCE" title="CONFIG_MSPI_COMPLETION_TIMEOUT_TOLERANCE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MSPI_COMPLETION_TIMEOUT_TOLERANCE</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MSPI_DMA" title="CONFIG_MSPI_DMA"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MSPI_DMA</span></code></a></p></li>
+</ul>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">API Reference</a><a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__mspi__interface.html" title=""><span class="pre">MSPI</span></a></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/drivers/mspi/mspi_async/README.html#mspi-async" title="Use the MSPI API to interact with MSPI memory device asynchronously.">MSPI asynchronous transfer</a></span><span class="code-sample-description">Use the MSPI API to interact with MSPI memory device asynchronously.</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,648 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: ite,enhance-i2c
+.. _dtbinding_ite_enhance_i2c:
+
+ite,enhance-i2c
+###############
+
+.. sidebar:: Overview
+
+   :Name: ``ite,enhance-i2c``
+   :Vendor: :ref:`ITE Tech. Inc. <dt_vendor_ite>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=ite,enhance-i2c>` using
+               this compatible
+   :Driver: :zephyr_file:`drivers/i2c/i2c_ite_enhance.c`
+
+Description
+***********
+
+These nodes are "i2c" bus nodes.
+
+.. code-block:: none
+
+   ITE enhance I2C
+
+Properties
+**********
+
+.. tabs::
+
+   .. group-tab:: Node specific properties
+
+      Properties not inherited from the base binding file.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``prescale-scl-low``
+           - ``int``
+           - .. code-block:: none
+
+                This option is used to configure the I2C speed prescaler for
+                the SCL low period. When set to >= 1, it will increase the
+                low period of the SCL clock and so reduce the signal frequency.
+                The resulting SCL cycle time is given by the following formula:
+                SCL cycle = 2 * (psr + prescale_tweak + 2) *
+                            SMBus clock cycle
+
+
+
+         * - ``data-hold-time``
+           - ``int``
+           - .. code-block:: none
+
+                This option is used to configure the data hold time of the I2C.
+                The unit is number of SMB clock cycles.  The time calculation
+                is (data-hold-time / smb_clk) seconds.
+
+
+
+             Default value: ``3``
+
+             Legal values: ``3``, ``4``, ``5``, ``6``, ``7``, ``8``, ``9``, ``10``
+
+         * - ``target-enable``
+           - ``boolean``
+           - .. code-block:: none
+
+                This option is used when the I2C target is enabled. It is
+                necessary to prevent the target port from being configured
+                with I2C host related initialization.
+
+
+
+         * - ``target-pio-mode``
+           - ``boolean``
+           - .. code-block:: none
+
+                This option is used when the I2C target is enabled and it can
+                support PIO mode for I2C target transfer.
+
+
+
+         * - ``port-num``
+           - ``int``
+           - .. code-block:: none
+
+                Ordinal identifying the port 0 = SMB_CHANNEL_A, 1 = SMB_CHANNEL_B, 2 = SMB_CHANNEL_C, 3 = I2C_CHANNEL_D, 4 = I2C_CHANNEL_E, 5 = I2C_CHANNEL_F,
+
+
+             This property is **required**.
+
+             Legal values: ``0``, ``1``, ``2``, ``3``, ``4``, ``5``
+
+         * - ``channel-switch-sel``
+           - ``int``
+           - .. code-block:: none
+
+                The default setting is as described below
+                0 = I2C_CHA_LOCATE: Channel A is located at SMCLK0/SMDAT0
+                1 = I2C_CHB_LOCATE: Channel B is located at SMCLK1/SMDAT1
+                2 = I2C_CHC_LOCATE: Channel C is located at SMCLK2/SMDAT2
+                3 = I2C_CHD_LOCATE: Channel D is located at SMCLK3/SMDAT3
+                4 = I2C_CHE_LOCATE: Channel E is located at SMCLK4/SMDAT4
+                5 = I2C_CHF_LOCATE: Channel F is located at SMCLK5/SMDAT5
+
+                The following is an example of the 'channel-switch-sel' property
+                being swapped between node &i2c0 and &i2c2 in the application:
+                Note: The property of 'port-num' cannot be changed in the
+                      application.
+
+                Channel C is located at SMCLK0/SMDAT0:
+                &i2c0 {
+                       channel-switch-sel = <I2C_CHC_LOCATE>;
+                       pinctrl-0 = <&i2c2_clk_gpf6_default
+                                    &i2c2_data_gpf7_default>;
+                       pinctrl-names = "default";
+                       scl-gpios = <&gpiof 6 0>;
+                       sda-gpios = <&gpiof 7 0>;
+                };
+
+                Channel A is located at SMCLK2/SMDAT2:
+                &i2c2 {
+                       channel-switch-sel = <I2C_CHA_LOCATE>;
+                       pinctrl-0 = <&i2c0_clk_gpb3_default
+                                    &i2c0_data_gpb4_default>;
+                       pinctrl-names = "default";
+                       scl-gpios = <&gpiob 3 0>;
+                       sda-gpios = <&gpiob 4 0>;
+                };
+
+                If the property of 'channel-switch-sel' is changed, the pinctrl
+                setting and recovery pin in &i2c0 and &i2c2 nodes must also be
+                modified accordingly.
+
+
+
+             This property is **required**.
+
+             Legal values: ``0``, ``1``, ``2``, ``3``, ``4``, ``5``
+
+         * - ``scl-gpios``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                The SCL pin for the selected port.
+
+
+
+             This property is **required**.
+
+         * - ``sda-gpios``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                The SDA pin for the selected port.
+
+
+
+             This property is **required**.
+
+         * - ``clock-gate-offset``
+           - ``int``
+           - .. code-block:: none
+
+                The clock gate offsets combine the register offset from
+                ECPM_BASE and the mask within that register into one value.
+
+
+
+             This property is **required**.
+
+         * - ``transfer-timeout-ms``
+           - ``int``
+           - .. code-block:: none
+
+                Maximum time allowed for an I2C transfer.
+
+
+
+             Default value: ``100``
+
+         * - ``pinctrl-0``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the first state. Content is specific to the
+                selected pin controller driver implementation.
+
+
+
+             This property is **required**.
+
+         * - ``pinctrl-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Names for the provided states. The number of names needs to match the
+                number of states.
+
+
+
+             This property is **required**.
+
+         * - ``push-pull-recovery``
+           - ``boolean``
+           - .. code-block:: none
+
+                This property is enabled when selecting the push-pull GPIO output
+                type to drive the I2C recovery. The default is open-drain.
+
+
+
+         * - ``clock-frequency``
+           - ``int``
+           - .. code-block:: none
+
+                Initial clock frequency in Hz
+
+
+         * - ``sq-size``
+           - ``int``
+           - .. code-block:: none
+
+                Size of the submission queue for blocking requests
+
+
+             Default value: ``4``
+
+         * - ``cq-size``
+           - ``int``
+           - .. code-block:: none
+
+                Size of the completion queue for blocking requests
+
+
+             Default value: ``4``
+
+         * - ``pinctrl-1``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the second state. See pinctrl-0.
+
+
+
+         * - ``pinctrl-2``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the third state. See pinctrl-0.
+
+
+
+         * - ``pinctrl-3``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the fourth state. See pinctrl-0.
+
+
+
+         * - ``pinctrl-4``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the fifth state. See pinctrl-0.
+
+
+
+
+
+   .. group-tab:: Deprecated node specific properties
+
+      Deprecated properties not inherited from the base binding file.
+
+      (None)
+
+   .. group-tab:: Base properties
+
+      Properties inherited from the base binding file, which defines
+      common properties that may be set on many nodes. Not all of these
+      may apply to the "ite,enhance-i2c" compatible.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``reg``
+           - ``array``
+           - .. code-block:: none
+
+                Information used to address the device. The value is specific to
+                the device (i.e. is different depending on the compatible
+                property).
+
+                The "reg" property is typically a sequence of (address, length) pairs.
+                Each pair is called a "register block". Values are
+                conventionally written in hex.
+
+                For details, see "2.3.6 reg" in Devicetree Specification v0.4.
+
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``interrupts``
+           - ``array``
+           - .. code-block:: none
+
+                Information about interrupts generated by the device, encoded as an array
+                of one or more interrupt specifiers. The format of the data in this property
+                varies by where the device appears in the interrupt tree. Devices with the same
+                "interrupt-parent" will use the same format in their interrupts properties.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``#address-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by address fields
+                in "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+             This property is **required**.
+
+             Constant value: ``1``
+
+         * - ``#size-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by size fields in
+                "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+             This property is **required**.
+
+         * - ``status``
+           - ``string``
+           - .. code-block:: none
+
+                Indicates the operational status of the hardware or other
+                resource that the node represents. In particular:
+
+                  - "okay" means the resource is operational and, for example,
+                    can be used by device drivers
+                  - "disabled" means the resource is not operational and the system
+                    should treat it as if it is not present
+
+                For details, see "2.3.4 status" in Devicetree Specification v0.4.
+
+
+
+             Legal values: ``okay``, ``disabled``, ``reserved``, ``fail``, ``fail-sss``
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``compatible``
+           - ``string-array``
+           - .. code-block:: none
+
+                This property is a list of strings that essentially define what
+                type of hardware or other resource this devicetree node
+                represents. Each device driver checks for specific compatible
+                property values to find the devicetree nodes that represent
+                resources that the driver should manage.
+
+                The recommended format is "vendor,device", The "vendor" part is
+                an abbreviated name of the vendor. The "device" is usually from
+                the datasheet.
+
+                The compatible property can have multiple values, ordered from
+                most- to least-specific. Having additional values is useful when the
+                device is a specific instance of a more general family, to allow the
+                system to match the most specific driver available.
+
+                For details, see "2.3.1 compatible" in Devicetree Specification v0.4.
+
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``reg-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each register block in the "reg" property.
+                For example:
+
+                  / {
+                       soc {
+                           #address-cells = <1>;
+                           #size-cells = <1>;
+
+                           uart@1000 {
+                               reg = <0x1000 0x2000>, <0x3000 0x4000>;
+                               reg-names = "foo", "bar";
+                           };
+                       };
+                  };
+
+                The uart@1000 node has two register blocks:
+
+                  - one with base address 0x1000, size 0x2000, and name "foo"
+                  - another with base address 0x3000, size 0x4000, and name "bar"
+
+
+
+         * - ``interrupts-extended``
+           - ``compound``
+           - .. code-block:: none
+
+                Extended interrupt specifier for device, used as an alternative to
+                the "interrupts" property.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each interrupt generated by a device.
+                The interrupts themselves are defined in either "interrupts" or
+                "interrupts-extended" properties.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-parent``
+           - ``phandle``
+           - .. code-block:: none
+
+                If present, this refers to the node which handles interrupts generated
+                by this device.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``label``
+           - ``string``
+           - .. code-block:: none
+
+                Human readable string describing the device. Use of this property is
+                deprecated except as needed on a case-by-case basis.
+
+                For details, see "4.1.2 Miscellaneous Properties" in Devicetree
+                Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``clocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Information about the device's clock providers. In general, this property
+                should follow conventions established in the dt-schema binding:
+
+                  https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/clock/clock.yaml
+
+
+
+         * - ``clock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each clock provider in the "clocks" property.
+
+
+
+         * - ``dmas``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                DMA channel specifiers relevant to the device.
+
+
+
+         * - ``dma-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the DMA channel specifiers in the "dmas" property.
+
+
+
+         * - ``io-channels``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                IO channel specifiers relevant to the device.
+
+
+
+         * - ``io-channel-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the IO channel specifiers in the "io-channels" property.
+
+
+
+         * - ``mboxes``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Mailbox / IPM channel specifiers relevant to the device.
+
+
+
+         * - ``mbox-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the mbox specifiers in the "mboxes" property.
+
+
+
+         * - ``power-domains``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Power domain specifiers relevant to the device.
+
+
+
+         * - ``power-domain-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the power domain specifiers in the "power-domains" property.
+
+
+
+         * - ``#power-domain-cells``
+           - ``int``
+           - .. code-block:: none
+
+                Number of cells in power-domains property
+
+
+
+         * - ``hwlocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                HW spinlock id relevant to the device.
+
+
+
+         * - ``hwlock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the hwlock specifiers in the "hwlocks" property.
+
+
+
+         * - ``zephyr,deferred-init``
+           - ``boolean``
+           - .. code-block:: none
+
+                Do not initialize device automatically on boot. Device should be manually
+                initialized using device_init().
+
+
+
+         * - ``wakeup-source``
+           - ``boolean``
+           - .. code-block:: none
+
+                Property to identify that a device can be used as wake up source.
+
+                When this property is provided a specific flag is set into the
+                device that tells the system that the device is capable of
+                wake up the system.
+
+                Wake up capable devices are disabled (interruptions will not wake up
+                the system) by default but they can be enabled at runtime if necessary.
+
+
+
+         * - ``zephyr,pm-device-runtime-auto``
+           - ``boolean``
+           - .. code-block:: none
+
+                Automatically configure the device for runtime power management after the
+                init function runs.
+
+
+
+         * - ``zephyr,disabling-power-states``
+           - ``phandles``
+           - .. code-block:: none
+
+                List of power states that will disable this device power.
+
+
+
+
+
+

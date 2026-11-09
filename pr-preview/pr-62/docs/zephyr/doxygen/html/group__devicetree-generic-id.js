@@ -1,0 +1,26 @@
+var group__devicetree_generic_id =
+[
+    [ "DT_ALIAS", "group__devicetree-generic-id.html#gaa49e19bbc39dc0d6f16b78a5d02482c9", null ],
+    [ "DT_CHILD", "group__devicetree-generic-id.html#ga88259608f4e9083ccc2e9ca5ec2c212e", null ],
+    [ "DT_CHILD_BY_UNIT_ADDR_INT", "group__devicetree-generic-id.html#ga3ebb396be1ef1bc6d6ab1414efbf8001", null ],
+    [ "DT_CHILD_NUM", "group__devicetree-generic-id.html#ga37cf660c2a7a844f70191d21b6543dc1", null ],
+    [ "DT_CHILD_NUM_STATUS_OKAY", "group__devicetree-generic-id.html#ga98544b8fd880fdd632f18e2410d39739", null ],
+    [ "DT_COMPAT_GET_ANY_STATUS_OKAY", "group__devicetree-generic-id.html#ga4858c378b098dcb7c35de1db25442acc", null ],
+    [ "DT_GPARENT", "group__devicetree-generic-id.html#gaa4eccf276a426cbbc6e440d72b692753", null ],
+    [ "DT_HAS_ALIAS", "group__devicetree-generic-id.html#ga1f6c459577dbb195192bef33a30c5d51", null ],
+    [ "DT_INST", "group__devicetree-generic-id.html#gae199b930cb21ff38dab284a696093ead", null ],
+    [ "DT_INVALID_NODE", "group__devicetree-generic-id.html#ga710cc4455dd7e738f43f750153163855", null ],
+    [ "DT_NODE_CHILD_IDX", "group__devicetree-generic-id.html#ga34452788d4fed1fce3e6650d61246866", null ],
+    [ "DT_NODE_FULL_NAME", "group__devicetree-generic-id.html#ga8a8ab5d12fe59787433d1add94fb1667", null ],
+    [ "DT_NODE_FULL_NAME_TOKEN", "group__devicetree-generic-id.html#gad24b51e728175e7d347407f2131a3850", null ],
+    [ "DT_NODE_FULL_NAME_UNQUOTED", "group__devicetree-generic-id.html#ga8832fb6fa0e0555884621d210440fdcd", null ],
+    [ "DT_NODE_FULL_NAME_UPPER_TOKEN", "group__devicetree-generic-id.html#gab966ae50efe46cc3a54f086f508edb3b", null ],
+    [ "DT_NODE_HASH", "group__devicetree-generic-id.html#ga067821c9b49437ac9333fd2a0443f1fc", null ],
+    [ "DT_NODE_PATH", "group__devicetree-generic-id.html#gacd79818b99724d834e3bb7ae74ee02cf", null ],
+    [ "DT_NODELABEL", "group__devicetree-generic-id.html#gab7d23294a6bf7fd44a98b48ec47d8a79", null ],
+    [ "DT_NODELABEL_STRING_ARRAY", "group__devicetree-generic-id.html#ga0114cbfa3a2075558769d4632b7bb1e9", null ],
+    [ "DT_PARENT", "group__devicetree-generic-id.html#ga3ac56d491510275ee1321446796ab63b", null ],
+    [ "DT_PATH", "group__devicetree-generic-id.html#ga015b4819473797982e83cae497697086", null ],
+    [ "DT_ROOT", "group__devicetree-generic-id.html#gad65aa36621281687b22fa5d72db33e86", null ],
+    [ "DT_SAME_NODE", "group__devicetree-generic-id.html#ga977d0ad58626e3ab906064fdcdace5e6", null ]
+];

@@ -1,0 +1,1282 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lightweight M2M (LWM2M) &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/connectivity/networking/api/lwm2m.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="MQTT" href="mqtt.html" />
+    <link rel="prev" title="HTTP Server" href="http_server.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Connectivity</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../canbus/index.html">Controller Area Network (CAN) Bus Protocols</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Networking</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../net-stack-architecture.html">Network Stack Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../net_config_guide.html">Network Configuration Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../networking_with_host.html">Networking with the host system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../network_monitoring.html">Monitor Network Traffic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../network_tracing.html">Network Tracing</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Networking APIs</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="apis.html">Network APIs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="buf_mgmt.html">Network Packet Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="net_tech.html">Networking Technologies</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="protocols.html">Protocols</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="coap.html">CoAP</a></li>
+<li class="toctree-l5"><a class="reference internal" href="coap_client.html">CoAP client</a></li>
+<li class="toctree-l5"><a class="reference internal" href="coap_server.html">CoAP server</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ftp_client.html">FTP client</a></li>
+<li class="toctree-l5"><a class="reference internal" href="http_client.html">HTTP Client</a></li>
+<li class="toctree-l5"><a class="reference internal" href="http_server.html">HTTP Server</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">Lightweight M2M (LWM2M)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="mqtt.html">MQTT</a></li>
+<li class="toctree-l5"><a class="reference internal" href="mqtt_sn.html">MQTT-SN</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ocpp.html">Open Charge Point Protocol (OCPP)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="tftp.html">TFTP</a></li>
+<li class="toctree-l5"><a class="reference internal" href="latmon.html">Latmon Network Service</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="system_mgmt.html">Network System Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tsn.html">Time Sensitive Networking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="zperf.html">zperf: Network Traffic Generator</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../conn_mgr/index.html">Connection Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dsa.html">Distributed Switch Architecture (DSA)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa and LoRaWAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../usb/index.html">USB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Connectivity</a> &raquo;</li>
+  
+     <li><a href="../index.html">Networking</a> &raquo;</li>
+  
+     <li><a href="index.html">Networking APIs</a> &raquo;</li>
+  
+     <li><a href="protocols.html">Protocols</a> &raquo;</li>
+  
+  <li>Lightweight M2M (LWM2M)</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/connectivity/networking/api/lwm2m.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27connectivity%2Fnetworking%2Fapi%2Flwm2m%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Networking&env=-+Page%3A+connectivity%2Fnetworking%2Fapi%2Flwm2m%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="lightweight-m2m-lwm2m">
+<span id="lwm2m-interface"></span><h1>Lightweight M2M (LWM2M)<a class="headerlink" href="#lightweight-m2m-lwm2m" title="Link to this heading"></a></h1>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id8">Overview</a></p></li>
+<li><p><a class="reference internal" href="#example-lwm2m-object-and-resources-device" id="id9">Example LwM2M object and resources: Device</a></p></li>
+<li><p><a class="reference internal" href="#sample-usage" id="id10">Sample usage</a></p></li>
+<li><p><a class="reference internal" href="#lwm2m-security-modes" id="id11">LwM2M security modes</a></p></li>
+<li><p><a class="reference internal" href="#multi-thread-usage" id="id12">Multi-thread usage</a></p></li>
+<li><p><a class="reference internal" href="#support-for-time-series-data" id="id13">Support for time series data</a></p>
+<ul>
+<li><p><a class="reference internal" href="#enabling-and-configuring" id="id14">Enabling and configuring</a></p></li>
+<li><p><a class="reference internal" href="#read-and-write-operations" id="id15">Read and Write operations</a></p></li>
+<li><p><a class="reference internal" href="#limitations" id="id16">Limitations</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#send-scheduler-helper-objects" id="id17">Send scheduler helper objects</a></p>
+<ul>
+<li><p><a class="reference internal" href="#enabling-and-wiring" id="id18">Enabling and wiring</a></p></li>
+<li><p><a class="reference internal" href="#scheduler-control-object-10523" id="id19">Scheduler Control object (10523)</a></p></li>
+<li><p><a class="reference internal" href="#sampling-rules-object-10524" id="id20">Sampling Rules object (10524)</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#lwm2m-engine-and-application-events" id="id21">LwM2M engine and application events</a></p></li>
+<li><p><a class="reference internal" href="#configuring-lifetime-and-activity-period" id="id22">Configuring lifetime and activity period</a></p></li>
+<li><p><a class="reference internal" href="#lwm2m-shell" id="id23">LwM2M shell</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id24">API Reference</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">Overview</a><a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>Lightweight Machine to Machine (LwM2M) is an application layer protocol
+designed with device management, data reporting and device actuation in mind.
+Based on CoAP/UDP, <a class="reference external" href="https://www.openmobilealliance.org/specifications/lwm2m">LwM2M</a> is a
+<a class="reference external" href="https://openmobilealliance.org/release/LightweightM2M/">standard</a> defined by
+the Open Mobile Alliance and suitable for constrained devices by its use of
+CoAP packet-size optimization and a simple, stateless flow that supports a
+REST API.</p>
+<p>One of the key differences between LwM2M and CoAP is that an LwM2M client
+initiates the connection to an LwM2M server.  The server can then use the
+REST API to manage various interfaces with the client.</p>
+<p>LwM2M uses a simple resource model with the core set of objects and resources
+defined in the specification.</p>
+<p>The LwM2M library can be enabled with <a class="reference internal" href="../../../kconfig.html#CONFIG_LWM2M" title="CONFIG_LWM2M"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LWM2M</span></code></a> Kconfig option.</p>
+</section>
+<section id="example-lwm2m-object-and-resources-device">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">Example LwM2M object and resources: Device</a><a class="headerlink" href="#example-lwm2m-object-and-resources-device" title="Link to this heading"></a></h2>
+<p><em>Object definition</em></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Object ID</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Instance</p></th>
+<th class="head"><p>Mandatory</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>Device</p></td>
+<td><p>Single</p></td>
+<td><p>Mandatory</p></td>
+</tr>
+</tbody>
+</table>
+<p><em>Resource definitions</em></p>
+<p><code class="docutils literal notranslate"><span class="pre">*</span> <span class="pre">R=Read,</span> <span class="pre">W=Write,</span> <span class="pre">E=Execute</span></code></p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>ID</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>OP*</p></th>
+<th class="head"><p>Instance</p></th>
+<th class="head"><p>Mandatory</p></th>
+<th class="head"><p>Type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>Manufacturer</p></td>
+<td><p>R</p></td>
+<td><p>Single</p></td>
+<td><p>Optional</p></td>
+<td><p>String</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>Model</p></td>
+<td><p>R</p></td>
+<td><p>Single</p></td>
+<td><p>Optional</p></td>
+<td><p>String</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>Serial number</p></td>
+<td><p>R</p></td>
+<td><p>Single</p></td>
+<td><p>Optional</p></td>
+<td><p>String</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>Firmware version</p></td>
+<td><p>R</p></td>
+<td><p>Single</p></td>
+<td><p>Optional</p></td>
+<td><p>String</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>Reboot</p></td>
+<td><p>E</p></td>
+<td><p>Single</p></td>
+<td><p>Mandatory</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>5</p></td>
+<td><p>Factory Reset</p></td>
+<td><p>E</p></td>
+<td><p>Single</p></td>
+<td><p>Optional</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>6</p></td>
+<td><p>Available Power Sources</p></td>
+<td><p>R</p></td>
+<td><p>Multiple</p></td>
+<td><p>Optional</p></td>
+<td><p>Integer 0-7</p></td>
+</tr>
+<tr class="row-odd"><td><p>7</p></td>
+<td><p>Power Source Voltage (mV)</p></td>
+<td><p>R</p></td>
+<td><p>Multiple</p></td>
+<td><p>Optional</p></td>
+<td><p>Integer</p></td>
+</tr>
+<tr class="row-even"><td><p>8</p></td>
+<td><p>Power Source Current (mA)</p></td>
+<td><p>R</p></td>
+<td><p>Multiple</p></td>
+<td><p>Optional</p></td>
+<td><p>Integer</p></td>
+</tr>
+<tr class="row-odd"><td><p>9</p></td>
+<td><p>Battery Level %</p></td>
+<td><p>R</p></td>
+<td><p>Single</p></td>
+<td><p>Optional</p></td>
+<td><p>Integer</p></td>
+</tr>
+<tr class="row-even"><td><p>10</p></td>
+<td><p>Memory Free (Kb)</p></td>
+<td><p>R</p></td>
+<td><p>Single</p></td>
+<td><p>Optional</p></td>
+<td><p>Integer</p></td>
+</tr>
+<tr class="row-odd"><td><p>11</p></td>
+<td><p>Error Code</p></td>
+<td><p>R</p></td>
+<td><p>Multiple</p></td>
+<td><p>Optional</p></td>
+<td><p>Integer 0-8</p></td>
+</tr>
+<tr class="row-even"><td><p>12</p></td>
+<td><p>Reset Error</p></td>
+<td><p>E</p></td>
+<td><p>Single</p></td>
+<td><p>Optional</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>13</p></td>
+<td><p>Current Time</p></td>
+<td><p>RW</p></td>
+<td><p>Single</p></td>
+<td><p>Optional</p></td>
+<td><p>Time</p></td>
+</tr>
+<tr class="row-even"><td><p>14</p></td>
+<td><p>UTC Offset</p></td>
+<td><p>RW</p></td>
+<td><p>Single</p></td>
+<td><p>Optional</p></td>
+<td><p>String</p></td>
+</tr>
+<tr class="row-odd"><td><p>15</p></td>
+<td><p>Timezone</p></td>
+<td><p>RW</p></td>
+<td><p>Single</p></td>
+<td><p>Optional</p></td>
+<td><p>String</p></td>
+</tr>
+<tr class="row-even"><td><p>16</p></td>
+<td><p>Supported Binding</p></td>
+<td><p>R</p></td>
+<td><p>Single</p></td>
+<td><p>Mandatory</p></td>
+<td><p>String</p></td>
+</tr>
+<tr class="row-odd"><td><p>17</p></td>
+<td><p>Device Type</p></td>
+<td><p>R</p></td>
+<td><p>Single</p></td>
+<td><p>Optional</p></td>
+<td><p>String</p></td>
+</tr>
+<tr class="row-even"><td><p>18</p></td>
+<td><p>Hardware Version</p></td>
+<td><p>R</p></td>
+<td><p>Single</p></td>
+<td><p>Optional</p></td>
+<td><p>String</p></td>
+</tr>
+<tr class="row-odd"><td><p>19</p></td>
+<td><p>Software Version</p></td>
+<td><p>R</p></td>
+<td><p>Single</p></td>
+<td><p>Optional</p></td>
+<td><p>String</p></td>
+</tr>
+<tr class="row-even"><td><p>20</p></td>
+<td><p>Battery Status</p></td>
+<td><p>R</p></td>
+<td><p>Single</p></td>
+<td><p>Optional</p></td>
+<td><p>Integer 0-6</p></td>
+</tr>
+<tr class="row-odd"><td><p>21</p></td>
+<td><p>Memory Total (Kb)</p></td>
+<td><p>R</p></td>
+<td><p>Single</p></td>
+<td><p>Optional</p></td>
+<td><p>Integer</p></td>
+</tr>
+<tr class="row-even"><td><p>22</p></td>
+<td><p>ExtDevInfo</p></td>
+<td><p>R</p></td>
+<td><p>Multiple</p></td>
+<td><p>Optional</p></td>
+<td><p>ObjLnk</p></td>
+</tr>
+</tbody>
+</table>
+<p>The server could query the <code class="docutils literal notranslate"><span class="pre">Manufacturer</span></code> resource for <code class="docutils literal notranslate"><span class="pre">Device</span></code> object
+instance 0 (the default and only instance) by sending a <code class="docutils literal notranslate"><span class="pre">READ</span> <span class="pre">3/0/0</span></code>
+operation to the client.</p>
+<p>The full list of registered objects and resource IDs can be found in the
+<a class="reference external" href="https://www.openmobilealliance.org/specifications/registries">OMA LwM2M registries</a>.</p>
+<p>Zephyr’s LwM2M library lives in the <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/subsys/net/lib/lwm2m">subsys/net/lib/lwm2m</a>, with a
+client sample in <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/samples/net/lwm2m_client">samples/net/lwm2m_client</a>.  For more information
+about the provided sample see: <a class="reference internal" href="../../../samples/net/lwm2m_client/README.html#lwm2m-client" title="Implement a LwM2M client that connects to a LwM2M server.">LwM2M client</a>. The sample can be
+configured to use normal insecure network sockets or sockets secured via DTLS.</p>
+<p>The Zephyr LwM2M library implements the following items:</p>
+<ul class="simple">
+<li><p>engine to process networking events and core functions</p></li>
+<li><p>RD client which performs BOOTSTRAP and REGISTRATION functions</p></li>
+<li><p>SenML CBOR, SenML JSON, CBOR, TLV, JSON, and plain text formatting functions</p></li>
+<li><p>LwM2M Technical Specification Enabler objects such as Security, Server,
+Device, Firmware Update, etc.</p></li>
+<li><p>Extended IPSO objects such as Light Control, Temperature Sensor, and Timer</p></li>
+</ul>
+<p>By default, the library implements <a class="reference external" href="https://www.openmobilealliance.org/release/LightweightM2M/V1_0_2-20180209-A/OMA-TS-LightweightM2M-V1_0_2-20180209-A.pdf">LwM2M specification 1.0.2</a> and can be set to
+<a class="reference external" href="https://www.openmobilealliance.org/release/LightweightM2M/V1_1_1-20190617-A/">LwM2M specification 1.1.1</a> with a Kconfig option.</p>
+<p>For more information about LwM2M specification releases visit the
+<a class="reference external" href="https://www.openmobilealliance.org/specifications/lwm2m/releases">OMA LwM2M releases</a> page.</p>
+</section>
+<section id="sample-usage">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">Sample usage</a><a class="headerlink" href="#sample-usage" title="Link to this heading"></a></h2>
+<p>To use the LwM2M library, start by creating an LwM2M client context
+<a class="reference internal" href="../../../doxygen/html/structlwm2m__ctx.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">lwm2m_ctx</span></code></a> structure:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* LwM2M client context */</span>
+<span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">lwm2m_ctx</span><span class="w"> </span><span class="n">client</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Create callback functions for LwM2M resource executions:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">device_reboot_cb</span><span class="p">(</span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">obj_inst_id</span><span class="p">,</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">args</span><span class="p">,</span>
+<span class="w">                            </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">args_len</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">&quot;Device rebooting.&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">LOG_PANIC</span><span class="p">();</span>
+<span class="w">        </span><span class="n">sys_reboot</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="cm">/* won&#39;t reach this */</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The LwM2M RD client can send events back to the sample.  To receive those
+events, setup a callback function:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">rd_client_event</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">lwm2m_ctx</span><span class="w"> </span><span class="o">*</span><span class="n">client</span><span class="p">,</span>
+<span class="w">                            </span><span class="k">enum</span><span class="w"> </span><span class="n">lwm2m_rd_client_event</span><span class="w"> </span><span class="n">client_event</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">client_event</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">LWM2M_RD_CLIENT_EVENT_NONE</span><span class="p">:</span>
+<span class="w">                </span><span class="cm">/* do nothing */</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">LWM2M_RD_CLIENT_EVENT_BOOTSTRAP_REG_FAILURE</span><span class="p">:</span>
+<span class="w">                </span><span class="n">LOG_DBG</span><span class="p">(</span><span class="s">&quot;Bootstrap registration failure!&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">LWM2M_RD_CLIENT_EVENT_BOOTSTRAP_REG_COMPLETE</span><span class="p">:</span>
+<span class="w">                </span><span class="n">LOG_DBG</span><span class="p">(</span><span class="s">&quot;Bootstrap registration complete&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">LWM2M_RD_CLIENT_EVENT_BOOTSTRAP_TRANSFER_COMPLETE</span><span class="p">:</span>
+<span class="w">                </span><span class="n">LOG_DBG</span><span class="p">(</span><span class="s">&quot;Bootstrap transfer complete&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">LWM2M_RD_CLIENT_EVENT_REGISTRATION_FAILURE</span><span class="p">:</span>
+<span class="w">                </span><span class="n">LOG_DBG</span><span class="p">(</span><span class="s">&quot;Registration failure!&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">LWM2M_RD_CLIENT_EVENT_REGISTRATION_COMPLETE</span><span class="p">:</span>
+<span class="w">                </span><span class="n">LOG_DBG</span><span class="p">(</span><span class="s">&quot;Registration complete&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">LWM2M_RD_CLIENT_EVENT_REG_TIMEOUT</span><span class="p">:</span>
+<span class="w">                </span><span class="n">LOG_DBG</span><span class="p">(</span><span class="s">&quot;Registration timeout!&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">LWM2M_RD_CLIENT_EVENT_REG_UPDATE_COMPLETE</span><span class="p">:</span>
+<span class="w">                </span><span class="n">LOG_DBG</span><span class="p">(</span><span class="s">&quot;Registration update complete&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">LWM2M_RD_CLIENT_EVENT_DEREGISTER_FAILURE</span><span class="p">:</span>
+<span class="w">                </span><span class="n">LOG_DBG</span><span class="p">(</span><span class="s">&quot;Deregister failure!&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">LWM2M_RD_CLIENT_EVENT_DISCONNECT</span><span class="p">:</span>
+<span class="w">                </span><span class="n">LOG_DBG</span><span class="p">(</span><span class="s">&quot;Disconnected&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">LWM2M_RD_CLIENT_EVENT_REG_UPDATE</span><span class="p">:</span>
+<span class="w">                </span><span class="n">LOG_DBG</span><span class="p">(</span><span class="s">&quot;Registration update&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">LWM2M_RD_CLIENT_EVENT_DEREGISTER</span><span class="p">:</span>
+<span class="w">                </span><span class="n">LOG_DBG</span><span class="p">(</span><span class="s">&quot;Deregistration client&quot;</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">LWM2M_RD_CLIENT_EVENT_SERVER_DISABLED</span><span class="p">:</span>
+<span class="w">                </span><span class="n">LOG_DBG</span><span class="p">(</span><span class="s">&quot;LwM2M server disabled&quot;</span><span class="p">);</span>
+<span class="w">          </span><span class="k">break</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Next we assign <code class="docutils literal notranslate"><span class="pre">Security</span></code> resource values to let the client know where and how
+to connect as well as set the <code class="docutils literal notranslate"><span class="pre">Manufacturer</span></code> and <code class="docutils literal notranslate"><span class="pre">Reboot</span></code> resources in the
+<code class="docutils literal notranslate"><span class="pre">Device</span></code> object with some data and the callback we defined above:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * Server URL of default Security object = 0/0/0</span>
+<span class="cm"> * Use leshan.eclipse.org server IP (5.39.83.206) for connection</span>
+<span class="cm"> */</span>
+<span class="n">lwm2m_set_string</span><span class="p">(</span><span class="o">&amp;</span><span class="n">LWM2M_OBJ</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;coap://5.39.83.206&quot;</span><span class="p">);</span>
+
+<span class="cm">/*</span>
+<span class="cm"> * Security Mode of default Security object = 0/0/2</span>
+<span class="cm"> * 3 = NoSec mode (no security beware!)</span>
+<span class="cm"> */</span>
+<span class="n">lwm2m_set_u8</span><span class="p">(</span><span class="o">&amp;</span><span class="n">LWM2M_OBJ</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">),</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span>
+
+<span class="cp">#define CLIENT_MANUFACTURER &quot;Zephyr Manufacturer&quot;</span>
+
+<span class="cm">/*</span>
+<span class="cm"> * Manufacturer resource of Device object = 3/0/0</span>
+<span class="cm"> * We use lwm2m_set_res_data() function to set a pointer to the</span>
+<span class="cm"> * CLIENT_MANUFACTURER string.</span>
+<span class="cm"> * Note the LWM2M_RES_DATA_FLAG_RO flag which stops the engine from</span>
+<span class="cm"> * trying to assign a new value to the buffer.</span>
+<span class="cm"> */</span>
+<span class="n">lwm2m_set_res_data</span><span class="p">(</span><span class="o">&amp;</span><span class="n">LWM2M_OBJ</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">CLIENT_MANUFACTURER</span><span class="p">,</span>
+<span class="w">                   </span><span class="k">sizeof</span><span class="p">(</span><span class="n">CLIENT_MANUFACTURER</span><span class="p">),</span>
+<span class="w">                   </span><span class="n">LWM2M_RES_DATA_FLAG_RO</span><span class="p">);</span>
+
+<span class="cm">/* Reboot resource of Device object = 3/0/4 */</span>
+<span class="n">lwm2m_register_exec_callback</span><span class="p">(</span><span class="o">&amp;</span><span class="n">LWM2M_OBJ</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">),</span><span class="w"> </span><span class="n">device_reboot_cb</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Lastly, we start the LwM2M RD client (which in turn starts the LwM2M engine).
+The second parameter of <a class="reference internal" href="../../../doxygen/html/group__lwm2m__api.html#ga9dfd46b8a535b1f28e644dc18f57fd79" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">lwm2m_rd_client_start()</span></code></a> is the client
+endpoint name.  This is important as it needs to be unique per LwM2M server:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="mh">0x0</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">client</span><span class="p">));</span>
+<span class="n">lwm2m_rd_client_start</span><span class="p">(</span><span class="o">&amp;</span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;unique-endpoint-name&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">rd_client_event</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="lwm2m-security-modes">
+<span id="lwm2m-security"></span><h2><a class="toc-backref" href="#id11" role="doc-backlink">LwM2M security modes</a><a class="headerlink" href="#lwm2m-security-modes" title="Link to this heading"></a></h2>
+<p>The Zephyr LwM2M library can be used either without security or use DTLS to secure the communication channel.
+When using DTLS with the LwM2M engine, PSK (Pre-Shared Key) and X.509 certificates are the security modes that can be used to secure the communication.
+The engine uses LwM2M Security object (Id 0) to read the stored credentials and feed keys from the security object into
+the TLS credential subsystem, see <a class="reference internal" href="sockets.html#secure-sockets-interface"><span class="std std-ref">secure sockets documentation</span></a>.
+Enable the <a class="reference internal" href="../../../kconfig.html#CONFIG_LWM2M_DTLS_SUPPORT" title="CONFIG_LWM2M_DTLS_SUPPORT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LWM2M_DTLS_SUPPORT</span></code></a> Kconfig option to use the security.</p>
+<p>Depending on the selected mode, the security object must contain following data:</p>
+<dl class="simple">
+<dt>PSK</dt><dd><p>Security Mode (Resource ID 2) set to zero (Pre-Shared Key mode).
+Identity (Resource ID 3) contains PSK ID in binary form.
+Secret key (Resource ID 5) contains the PSK key in binary form.
+If the key or identity is provided as a hex string, it must be converted to binary before storing into the security object.</p>
+</dd>
+<dt>X509</dt><dd><p>When X509 certificates are used, set Security Mode (ID 2) to <code class="docutils literal notranslate"><span class="pre">2</span></code> (Certificate mode).
+Identity (ID 3) is used to store the client certificate and Secret key (ID 5) must have a private key associated with the certificate.
+Server Public Key resource (ID 4) must contain a server certificate or CA certificate used to sign the certificate chain.
+If the <a class="reference internal" href="../../../kconfig.html#CONFIG_MBEDTLS_PEM_PARSE_C" title="CONFIG_MBEDTLS_PEM_PARSE_C"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MBEDTLS_PEM_PARSE_C</span></code></a> / <a class="reference internal" href="../../../kconfig.html#CONFIG_MBEDTLS_PEM_WRITE_C" title="CONFIG_MBEDTLS_PEM_WRITE_C"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MBEDTLS_PEM_WRITE_C</span></code></a> Kconfig options are enabled, certificates and private keys can be entered in PEM format.
+Otherwise, they must be in binary DER format.</p>
+</dd>
+<dt>NoSec</dt><dd><p>When no security is used, set Security Mode (Resource ID 2) to <code class="docutils literal notranslate"><span class="pre">3</span></code> (NoSec).</p>
+</dd>
+</dl>
+<p>In all modes, Server URI resource (ID 0) must contain the full URI for the target server.
+When DNS names are used, the DNS resolver must be enabled.</p>
+<p>When DTLS is used, following options are recommended to reduce DTLS handshake traffic when connection is re-established:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_LWM2M_DTLS_CID" title="CONFIG_LWM2M_DTLS_CID"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LWM2M_DTLS_CID</span></code></a> enables DTLS Connection Identifier support. When server supports it, this completely removes the handshake when device resumes operation after long idle period. Greatly helps when NAT mappings have timed out.</p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_LWM2M_TLS_SESSION_CACHING" title="CONFIG_LWM2M_TLS_SESSION_CACHING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LWM2M_TLS_SESSION_CACHING</span></code></a> uses session cache when before falling back to full DTLS handshake. Reduces few packets from handshake, when session is still cached on server side. Most significant effect is to avoid full registration.</p></li>
+</ul>
+<p>LwM2M stack provides callbacks in the <a class="reference internal" href="../../../doxygen/html/structlwm2m__ctx.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">lwm2m_ctx</span></code></a> structure.
+They are used to feed keys from the LwM2M security object into the TLS credential subsystem.
+By default, these callbacks can be left as NULL pointers, in which case default callbacks are used.
+When an external TLS stack, or non-default socket options are required, you can overwrite the <code class="xref c c-func docutils literal notranslate"><span class="pre">lwm2m_ctx.load_credentials()</span></code> or <code class="xref c c-func docutils literal notranslate"><span class="pre">lwm2m_ctx.set_socketoptions()</span></code> callbacks.</p>
+<p>An example of setting up the security object for PSK mode:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* &quot;000102030405060708090a0b0c0d0e0f&quot; */</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">client_psk</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mh">0x01</span><span class="p">,</span><span class="w"> </span><span class="mh">0x02</span><span class="p">,</span><span class="w"> </span><span class="mh">0x03</span><span class="p">,</span><span class="w"> </span><span class="mh">0x04</span><span class="p">,</span><span class="w"> </span><span class="mh">0x05</span><span class="p">,</span><span class="w"> </span><span class="mh">0x06</span><span class="p">,</span><span class="w"> </span><span class="mh">0x07</span><span class="p">,</span>
+<span class="w">        </span><span class="mh">0x08</span><span class="p">,</span><span class="w"> </span><span class="mh">0x09</span><span class="p">,</span><span class="w"> </span><span class="mh">0x0a</span><span class="p">,</span><span class="w"> </span><span class="mh">0x0b</span><span class="p">,</span><span class="w"> </span><span class="mh">0x0c</span><span class="p">,</span><span class="w"> </span><span class="mh">0x0d</span><span class="p">,</span><span class="w"> </span><span class="mh">0x0e</span><span class="p">,</span><span class="w"> </span><span class="mh">0x0f</span>
+<span class="p">};</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">client_identity</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Client_identity&quot;</span><span class="p">;</span>
+
+<span class="n">lwm2m_set_string</span><span class="p">(</span><span class="o">&amp;</span><span class="n">LWM2M_OBJ</span><span class="p">(</span><span class="n">LWM2M_OBJECT_SECURITY_ID</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;coaps://lwm2m.example.com&quot;</span><span class="p">);</span>
+<span class="n">lwm2m_set_u8</span><span class="p">(</span><span class="o">&amp;</span><span class="n">LWM2M_OBJ</span><span class="p">(</span><span class="n">LWM2M_OBJECT_SECURITY_ID</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">),</span><span class="w"> </span><span class="n">LWM2M_SECURITY_PSK</span><span class="p">);</span>
+<span class="cm">/* Set the client identity as a string, but this could be binary as well */</span>
+<span class="n">lwm2m_set_string</span><span class="p">(</span><span class="o">&amp;</span><span class="n">LWM2M_OBJ</span><span class="p">(</span><span class="n">LWM2M_OBJECT_SECURITY_ID</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">),</span><span class="w"> </span><span class="n">client_identity</span><span class="p">);</span>
+<span class="cm">/* Set the client pre-shared key (PSK) */</span>
+<span class="n">lwm2m_set_opaque</span><span class="p">(</span><span class="o">&amp;</span><span class="n">LWM2M_OBJ</span><span class="p">(</span><span class="n">LWM2M_OBJECT_SECURITY_ID</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">),</span><span class="w"> </span><span class="n">client_psk</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">client_psk</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>An example of setting up the security object for X509 certificate mode:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">certificate</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;-----BEGIN CERTIFICATE-----</span><span class="se">\n</span><span class="s">MIIB6jCCAY+gAw...&quot;</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">key</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;-----BEGIN EC PRIVATE KEY-----</span><span class="se">\n</span><span class="s">MHcCAQ...&quot;</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">root_ca</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;-----BEGIN CERTIFICATE-----</span><span class="se">\n</span><span class="s">MIIBaz...&quot;</span><span class="p">;</span>
+
+<span class="n">lwm2m_set_string</span><span class="p">(</span><span class="o">&amp;</span><span class="n">LWM2M_OBJ</span><span class="p">(</span><span class="n">LWM2M_OBJECT_SECURITY_ID</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;coaps://lwm2m.example.com&quot;</span><span class="p">);</span>
+<span class="n">lwm2m_set_u8</span><span class="p">(</span><span class="o">&amp;</span><span class="n">LWM2M_OBJ</span><span class="p">(</span><span class="n">LWM2M_OBJECT_SECURITY_ID</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">),</span><span class="w"> </span><span class="n">LWM2M_SECURITY_CERT</span><span class="p">);</span>
+<span class="n">lwm2m_set_string</span><span class="p">(</span><span class="o">&amp;</span><span class="n">LWM2M_OBJ</span><span class="p">(</span><span class="n">LWM2M_OBJECT_SECURITY_ID</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">),</span><span class="w"> </span><span class="n">certificate</span><span class="p">);</span>
+<span class="n">lwm2m_set_string</span><span class="p">(</span><span class="o">&amp;</span><span class="n">LWM2M_OBJ</span><span class="p">(</span><span class="n">LWM2M_OBJECT_SECURITY_ID</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">),</span><span class="w"> </span><span class="n">key</span><span class="p">);</span>
+<span class="n">lwm2m_set_string</span><span class="p">(</span><span class="o">&amp;</span><span class="n">LWM2M_OBJ</span><span class="p">(</span><span class="n">LWM2M_OBJECT_SECURITY_ID</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">),</span><span class="w"> </span><span class="n">root_ca</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Before calling <a class="reference internal" href="../../../doxygen/html/group__lwm2m__api.html#ga9dfd46b8a535b1f28e644dc18f57fd79" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">lwm2m_rd_client_start()</span></code></a> assign the tls_tag # where the
+LwM2M library should store the DTLS information prior to connection (normally a
+value of 1 is ok here).</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="mh">0x0</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">client</span><span class="p">));</span>
+<span class="n">client</span><span class="p">.</span><span class="n">tls_tag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="cm">/* &lt;---- */</span>
+<span class="n">lwm2m_rd_client_start</span><span class="p">(</span><span class="o">&amp;</span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;endpoint-name&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">rd_client_event</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>For a more detailed LwM2M client sample see: <a class="reference internal" href="../../../samples/net/lwm2m_client/README.html#lwm2m-client" title="Implement a LwM2M client that connects to a LwM2M server.">LwM2M client</a>.</p>
+</section>
+<section id="multi-thread-usage">
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">Multi-thread usage</a><a class="headerlink" href="#multi-thread-usage" title="Link to this heading"></a></h2>
+<p>Writing a value to a resource can be done using functions like lwm2m_set_u8. When writing
+to multiple resources, the function lwm2m_registry_lock will ensure that the
+client halts until all writing operations are finished:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">lwm2m_registry_lock</span><span class="p">();</span>
+<span class="n">lwm2m_set_u32</span><span class="p">(</span><span class="o">&amp;</span><span class="n">LWM2M_OBJ</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="mi">60</span><span class="p">);</span>
+<span class="n">lwm2m_set_u8</span><span class="p">(</span><span class="o">&amp;</span><span class="n">LWM2M_OBJ</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">),</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="n">lwm2m_set_f64</span><span class="p">(</span><span class="o">&amp;</span><span class="n">LWM2M_OBJ</span><span class="p">(</span><span class="mi">3303</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">5700</span><span class="p">),</span><span class="w"> </span><span class="n">value</span><span class="p">);</span>
+<span class="n">lwm2m_registry_unlock</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>This is especially useful if the server is composite-observing the resources being
+written to. Locking will then ensure that the client only updates and sends notifications
+to the server after all operations are done, resulting in fewer messages in general.</p>
+</section>
+<section id="support-for-time-series-data">
+<h2><a class="toc-backref" href="#id13" role="doc-backlink">Support for time series data</a><a class="headerlink" href="#support-for-time-series-data" title="Link to this heading"></a></h2>
+<p>LwM2M version 1.1 adds support for SenML CBOR and SenML JSON data formats. These data formats add
+support for time series data. Time series formats can be used for READ, NOTIFY and SEND operations.
+When data cache is enabled for a resource, each write will create a timestamped entry in a cache,
+and its content is then returned as a content in READ, NOTIFY or SEND operation for a given
+resource.</p>
+<p>Data cache is only supported for resources with a fixed data size.</p>
+<p>Supported resource types:</p>
+<ul class="simple">
+<li><p>Signed and unsigned 8-64-bit integers</p></li>
+<li><p>Float</p></li>
+<li><p>Boolean</p></li>
+</ul>
+<section id="enabling-and-configuring">
+<h3><a class="toc-backref" href="#id14" role="doc-backlink">Enabling and configuring</a><a class="headerlink" href="#enabling-and-configuring" title="Link to this heading"></a></h3>
+<p>Enable data cache by selecting <a class="reference internal" href="../../../kconfig.html#CONFIG_LWM2M_RESOURCE_DATA_CACHE_SUPPORT" title="CONFIG_LWM2M_RESOURCE_DATA_CACHE_SUPPORT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LWM2M_RESOURCE_DATA_CACHE_SUPPORT</span></code></a>.
+Application needs to allocate an array of <a class="reference internal" href="../../../doxygen/html/structlwm2m__time__series__elem.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">lwm2m_time_series_elem</span></code></a> structures and then
+enable the cache by calling <a class="reference internal" href="../../../doxygen/html/group__lwm2m__api.html#ga6975c5c4825afaccc52741eb54aca4cb" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">lwm2m_enable_cache()</span></code></a> for a given resource. Each resource
+must be enabled separately and each resource needs their own storage.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Allocate data cache storage */</span>
+<span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">lwm2m_time_series_elem</span><span class="w"> </span><span class="n">temperature_cache</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="cm">/* Enable data cache */</span>
+<span class="n">lwm2m_enable_cache</span><span class="p">(</span><span class="n">LWM2M_OBJ</span><span class="p">(</span><span class="n">IPSO_OBJECT_TEMP_SENSOR_ID</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">SENSOR_VALUE_RID</span><span class="p">),</span>
+<span class="w">        </span><span class="n">temperature_cache</span><span class="p">,</span><span class="w"> </span><span class="n">ARRAY_SIZE</span><span class="p">(</span><span class="n">temperature_cache</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Applications can inspect the available space in a cached resource with
+<a class="reference internal" href="../../../doxygen/html/group__lwm2m__api.html#ga00d29a0c4935fc255e74b8c22ac49de1" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">lwm2m_cache_free_slots_get()</span></code></a>, which returns the number of samples that
+can still be stored or a negative errno value if the query fails.</p>
+<p>LwM2M engine have room for four resources that have cache enabled. Limit can be increased by
+changing <a class="reference internal" href="../../../kconfig.html#CONFIG_LWM2M_MAX_CACHED_RESOURCES" title="CONFIG_LWM2M_MAX_CACHED_RESOURCES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LWM2M_MAX_CACHED_RESOURCES</span></code></a>. This affects a static memory usage of
+engine.</p>
+<p>Data caches depends on one of the SenML data formats
+<a class="reference internal" href="../../../kconfig.html#CONFIG_LWM2M_RW_SENML_CBOR_SUPPORT" title="CONFIG_LWM2M_RW_SENML_CBOR_SUPPORT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LWM2M_RW_SENML_CBOR_SUPPORT</span></code></a> or
+<a class="reference internal" href="../../../kconfig.html#CONFIG_LWM2M_RW_SENML_JSON_SUPPORT" title="CONFIG_LWM2M_RW_SENML_JSON_SUPPORT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LWM2M_RW_SENML_JSON_SUPPORT</span></code></a> and needs <a class="reference internal" href="../../../kconfig.html#CONFIG_POSIX_TIMERS" title="CONFIG_POSIX_TIMERS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_POSIX_TIMERS</span></code></a>
+so it can request a timestamp from the system and <a class="reference internal" href="../../../kconfig.html#CONFIG_RING_BUFFER" title="CONFIG_RING_BUFFER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_RING_BUFFER</span></code></a> for ring
+buffer.</p>
+</section>
+<section id="read-and-write-operations">
+<h3><a class="toc-backref" href="#id15" role="doc-backlink">Read and Write operations</a><a class="headerlink" href="#read-and-write-operations" title="Link to this heading"></a></h3>
+<p>Full content of data cache is written into a payload when any READ, SEND or NOTIFY operation
+internally reads the content of a given resource. This has a side effect that any read callbacks
+registered for a that resource are ignored when cache is enabled.
+Data is written into a cache when any of the <code class="docutils literal notranslate"><span class="pre">lwm2m_set_*</span></code> functions are called. Applications can
+register a cache filter callback with <a class="reference internal" href="../../../doxygen/html/group__lwm2m__api.html#gac4e7da0353914601c3ec101415c2e110" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">lwm2m_set_cache_filter()</span></code></a> to drop otherwise valid samples
+based on application-specific rules.</p>
+</section>
+<section id="limitations">
+<h3><a class="toc-backref" href="#id16" role="doc-backlink">Limitations</a><a class="headerlink" href="#limitations" title="Link to this heading"></a></h3>
+<p>Cache size should be manually set so small that the content can fit normal packets sizes.
+When cache is full, new values are dropped.</p>
+</section>
+</section>
+<section id="send-scheduler-helper-objects">
+<h2><a class="toc-backref" href="#id17" role="doc-backlink">Send scheduler helper objects</a><a class="headerlink" href="#send-scheduler-helper-objects" title="Link to this heading"></a></h2>
+<p>The optional SEND scheduler extension exposes two objects (Send scheduler Control <code class="docutils literal notranslate"><span class="pre">10523</span></code> and
+Sampling Rules <code class="docutils literal notranslate"><span class="pre">10524</span></code>) that sit on top of cached resources to decide when samples should be kept
+and when the client should trigger a LWM2M SEND.</p>
+<section id="enabling-and-wiring">
+<h3><a class="toc-backref" href="#id18" role="doc-backlink">Enabling and wiring</a><a class="headerlink" href="#enabling-and-wiring" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Select <a class="reference internal" href="../../../kconfig.html#CONFIG_LWM2M_SEND_SCHEDULER" title="CONFIG_LWM2M_SEND_SCHEDULER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LWM2M_SEND_SCHEDULER</span></code></a> (requires LwM2M 1.1 SEND support and
+<a class="reference internal" href="../../../kconfig.html#CONFIG_LWM2M_RESOURCE_DATA_CACHE_SUPPORT" title="CONFIG_LWM2M_RESOURCE_DATA_CACHE_SUPPORT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LWM2M_RESOURCE_DATA_CACHE_SUPPORT</span></code></a>).</p></li>
+<li><p>Send-scheduler objects register automatically; ensure caches are configured before starting the
+RD client.</p></li>
+<li><p>Attach <a class="reference internal" href="../../../doxygen/html/lwm2m__send__scheduler_8h.html#acc3495441c7fb3391211a360d0602431" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">lwm2m_send_sched_cache_filter()</span></code></a> to every cached resource that should be governed by
+the scheduler using <a class="reference internal" href="../../../doxygen/html/group__lwm2m__api.html#gac4e7da0353914601c3ec101415c2e110" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">lwm2m_set_cache_filter()</span></code></a>.</p></li>
+<li><p>Call <a class="reference internal" href="../../../doxygen/html/lwm2m__send__scheduler_8h.html#a896f3773c77143e90858bdeab8ba326a" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">lwm2m_send_sched_handle_registration_event()</span></code></a> from the RD client callback when
+registration or registration-update completes (on
+<code class="docutils literal notranslate"><span class="pre">LWM2M_RD_CLIENT_EVENT_REGISTRATION_COMPLETE</span></code> and <code class="docutils literal notranslate"><span class="pre">LWM2M_RD_CLIENT_EVENT_REG_UPDATE_COMPLETE</span></code>)
+so cached samples are sent right after the registration exchange.</p></li>
+</ul>
+</section>
+<section id="scheduler-control-object-10523">
+<h3><a class="toc-backref" href="#id19" role="doc-backlink">Scheduler Control object (10523)</a><a class="headerlink" href="#scheduler-control-object-10523" title="Link to this heading"></a></h3>
+<p>The single-instance control object configures global behaviour:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">0:</span> <span class="pre">paused</span></code> – stop accepting samples in cache.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1:</span> <span class="pre">max-samples</span></code> – upper limit for cached samples across all resources; a SEND is forced when
+the limit is reached (<code class="docutils literal notranslate"><span class="pre">0</span></code> disables).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">2:</span> <span class="pre">max-age</span></code> – maximum age in seconds of the oldest cached sample before a SEND is triggered
+(<code class="docutils literal notranslate"><span class="pre">0</span></code> disables).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">3:</span> <span class="pre">flush</span></code> – Execute resource that immediately triggers a SEND for all configured rule paths.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">4:</span> <span class="pre">flush-on-update</span></code> – when enabled (default), a successful registration or registration-update
+event triggers a SEND of cached resources.</p></li>
+</ul>
+</section>
+<section id="sampling-rules-object-10524">
+<h3><a class="toc-backref" href="#id20" role="doc-backlink">Sampling Rules object (10524)</a><a class="headerlink" href="#sampling-rules-object-10524" title="Link to this heading"></a></h3>
+<p>Each instance describes one cached resource to watch. <code class="docutils literal notranslate"><span class="pre">/10524/X/0</span></code> holds the resource path
+and <code class="docutils literal notranslate"><span class="pre">/10524/X/1</span></code> contains up to four rule strings. Supported attributes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">gt=&lt;float&gt;</span></code> – trigger when the sample crosses above the threshold.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">lt=&lt;float&gt;</span></code> – trigger when the sample crosses below the threshold.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">st=&lt;float&gt;</span></code> – trigger when the absolute delta from the last reported value is greater than or
+equal to the threshold.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pmin=&lt;int&gt;</span></code> – minimum seconds between accepted samples.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pmax=&lt;int&gt;</span></code> – force a cached sample to be kept at least every <code class="docutils literal notranslate"><span class="pre">pmax</span></code> seconds, even without
+changes.</p></li>
+</ul>
+<p>When no rules are configured for an instance, every incoming sample is cached. The scheduler also
+forces a SEND when a cache for a controlled resource runs out of space or when the global
+<code class="docutils literal notranslate"><span class="pre">max-samples</span></code>/<code class="docutils literal notranslate"><span class="pre">max-age</span></code> limits are reached.</p>
+</section>
+</section>
+<section id="lwm2m-engine-and-application-events">
+<h2><a class="toc-backref" href="#id21" role="doc-backlink">LwM2M engine and application events</a><a class="headerlink" href="#lwm2m-engine-and-application-events" title="Link to this heading"></a></h2>
+<p>The Zephyr LwM2M engine defines events that can be sent back to the application through callback
+functions.
+The engine state machine shows when the events are spawned.
+Events depicted in the diagram are listed in the table.
+The events are prefixed with <code class="docutils literal notranslate"><span class="pre">LWM2M_RD_CLIENT_EVENT_</span></code>.</p>
+<figure class="align-default" id="id2">
+<img alt="LwM2M engine state machine" src="../../../_images/lwm2m_engine_state_machine.svg" />
+<figcaption>
+<p><span class="caption-text">State machine for the LwM2M engine</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">LwM2M RD Client events</span><a class="headerlink" href="#id3" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Event ID</p></th>
+<th class="head"><p>Event Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>NONE</p></td>
+<td><p>No event</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>BOOTSTRAP_REG_FAILURE</p></td>
+<td><p>Bootstrap registration failed.
+Occurs if there is a timeout or failure in bootstrap registration.</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>BOOTSTRAP_REG_COMPLETE</p></td>
+<td><p>Bootstrap registration complete.
+Occurs after successful bootstrap registration.</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>BOOTSTRAP_TRANSFER_COMPLETE</p></td>
+<td><p>Bootstrap finish command received from the server.</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>REGISTRATION_FAILURE</p></td>
+<td><p>Registration to LwM2M server failed.
+Occurs if server rejects the registration attempt.</p></td>
+</tr>
+<tr class="row-odd"><td><p>5</p></td>
+<td><p>REGISTRATION_COMPLETE</p></td>
+<td><p>Registration to LwM2M server successful.
+Occurs after a successful registration reply from the LwM2M server
+or when session resumption is used.</p></td>
+</tr>
+<tr class="row-even"><td><p>6</p></td>
+<td><p>REG_TIMEOUT</p></td>
+<td><p>Registration status lost.
+Occurs if there is socket errors or message timeouts. Client have lost connection to the server.</p></td>
+</tr>
+<tr class="row-odd"><td><p>7</p></td>
+<td><p>REG_UPDATE_COMPLETE</p></td>
+<td><p>Registration update completed.
+Occurs after successful registration update reply from the LwM2M server.</p></td>
+</tr>
+<tr class="row-even"><td><p>8</p></td>
+<td><p>DEREGISTER_FAILURE</p></td>
+<td><p>Deregistration to LwM2M server failed.
+Occurs if there is a timeout or failure in the deregistration.</p></td>
+</tr>
+<tr class="row-odd"><td><p>9</p></td>
+<td><p>DISCONNECT</p></td>
+<td><p>LwM2M client have de-registered from server and is now stopped.
+Triggered only if the application have requested the client to stop.</p></td>
+</tr>
+<tr class="row-even"><td><p>10</p></td>
+<td><p>QUEUE_MODE_RX_OFF</p></td>
+<td><p>Used only in queue mode, not actively listening for incoming packets.
+In queue mode the client is not required to actively listen for the incoming packets
+after a configured time period.</p></td>
+</tr>
+<tr class="row-odd"><td><p>11</p></td>
+<td><p>ENGINE_SUSPENDED</p></td>
+<td><p>Indicate that client has now paused as a result of calling <a class="reference internal" href="../../../doxygen/html/group__lwm2m__api.html#ga1a4dadb822a8241c5bdf339c21cc57a4" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">lwm2m_engine_pause()</span></code></a>.
+State machine is no longer running and the handler thread is suspended.
+All timers are stopped so notifications are not triggered.</p></td>
+</tr>
+<tr class="row-even"><td><p>12</p></td>
+<td><p>SERVER_DISABLED</p></td>
+<td><p>Server have executed the disable command.
+Client will deregister and stay idle for the disable period.</p></td>
+</tr>
+<tr class="row-odd"><td><p>13</p></td>
+<td><p>NETWORK_ERROR</p></td>
+<td><p>Sending messages to the network failed too many times.
+Client cannot reach any servers or fallback to bootstrap.
+LwM2M engine cannot recover and have stopped.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The LwM2M client engine handles most of the state transitions automatically. The application
+needs to handle only the events that indicate that the client have stopped or is in a state
+where it cannot recover.</p>
+<table class="docutils align-default" id="id4">
+<caption><span class="caption-text">How application should react to events</span><a class="headerlink" href="#id4" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Event Name</p></th>
+<th class="head"><p>How application should react</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>NONE</p></td>
+<td><p>Ignore the event.</p></td>
+</tr>
+<tr class="row-odd"><td><p>BOOTSTRAP_REG_FAILURE</p></td>
+<td><p>Try to recover network connection. Then restart the client by calling <a class="reference internal" href="../../../doxygen/html/group__lwm2m__api.html#ga9dfd46b8a535b1f28e644dc18f57fd79" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">lwm2m_rd_client_start()</span></code></a>.
+This might also indicate configuration issue.</p></td>
+</tr>
+<tr class="row-even"><td><p>BOOTSTRAP_REG_COMPLETE</p></td>
+<td><p>No actions needed</p></td>
+</tr>
+<tr class="row-odd"><td><p>BOOTSTRAP_TRANSFER_COMPLETE</p></td>
+<td><p>No actions needed</p></td>
+</tr>
+<tr class="row-even"><td><p>REGISTRATION_FAILURE</p></td>
+<td><p>No actions needed.
+Client proceeds re-registration automatically. Might need a bootstrap or configuration fix. Cannot send or receive data.</p></td>
+</tr>
+<tr class="row-odd"><td><p>REGISTRATION_COMPLETE</p></td>
+<td><p>No actions needed.
+Application can send or receive data.</p></td>
+</tr>
+<tr class="row-even"><td><p>REG_TIMEOUT</p></td>
+<td><p>No actions needed.
+Client proceeds to re-registration automatically. Cannot send or receive data.</p></td>
+</tr>
+<tr class="row-odd"><td><p>REG_UPDATE_COMPLETE</p></td>
+<td><p>No actions needed
+Application can send or receive data.</p></td>
+</tr>
+<tr class="row-even"><td><p>DEREGISTER_FAILURE</p></td>
+<td><p>No actions needed, client proceeds to idle state automatically. Cannot send or receive data.</p></td>
+</tr>
+<tr class="row-odd"><td><p>DISCONNECT</p></td>
+<td><p>Engine have stopped as a result of calling <a class="reference internal" href="../../../doxygen/html/group__lwm2m__api.html#gafd87e5d975c4d88973ac3e95e4d156ac" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">lwm2m_rd_client_stop()</span></code></a>.
+If connection is required, the application should restart the client by calling <a class="reference internal" href="../../../doxygen/html/group__lwm2m__api.html#ga9dfd46b8a535b1f28e644dc18f57fd79" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">lwm2m_rd_client_start()</span></code></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p>QUEUE_MODE_RX_OFF</p></td>
+<td><p>No actions needed.
+Application can send but cannot receive data.
+Any data transmission will trigger a registration update.</p></td>
+</tr>
+<tr class="row-odd"><td><p>ENGINE_SUSPENDED</p></td>
+<td><p>Engine can be resumed by calling <a class="reference internal" href="../../../doxygen/html/group__lwm2m__api.html#ga178fea0407a5e98c4f5d5ad69688853a" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">lwm2m_engine_resume()</span></code></a>.
+Cannot send or receive data.</p></td>
+</tr>
+<tr class="row-even"><td><p>SERVER_DISABLED</p></td>
+<td><p>No actions needed, client will re-register once the disable period is over.
+Cannot send or receive data.</p></td>
+</tr>
+<tr class="row-odd"><td><p>NETWORK_ERROR</p></td>
+<td><p>Try to recover network connection. Then restart the client by calling <a class="reference internal" href="../../../doxygen/html/group__lwm2m__api.html#ga9dfd46b8a535b1f28e644dc18f57fd79" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">lwm2m_rd_client_start()</span></code></a>.
+This might also indicate configuration issue.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Sending of data in the table above refers to calling <a class="reference internal" href="../../../doxygen/html/group__lwm2m__api.html#ga026cc9288d2de17ec557e08b9b987ebc" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">lwm2m_send_cb()</span></code></a> or by writing into one of the observed resources where observation would trigger a notify message.
+Receiving of data refers to receiving read, write or execute operations from the server. Application can register callbacks for these operations.</p>
+</section>
+<section id="configuring-lifetime-and-activity-period">
+<h2><a class="toc-backref" href="#id22" role="doc-backlink">Configuring lifetime and activity period</a><a class="headerlink" href="#configuring-lifetime-and-activity-period" title="Link to this heading"></a></h2>
+<p>In LwM2M engine, there are three Kconfig options and one runtime value that configures how often the
+client will send LwM2M Update message.</p>
+<table class="docutils align-default" id="id5">
+<caption><span class="caption-text">Update period variables</span><a class="headerlink" href="#id5" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Variable</p></th>
+<th class="head"><p>Effect</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>LwM2M registration lifetime</p></td>
+<td><p>The lifetime parameter in LwM2M specifies how long a device’s registration with an LwM2M server remains valid.
+Device is expected to send LwM2M Update message before the lifetime exprires.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../../kconfig.html#CONFIG_LWM2M_ENGINE_DEFAULT_LIFETIME" title="CONFIG_LWM2M_ENGINE_DEFAULT_LIFETIME"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LWM2M_ENGINE_DEFAULT_LIFETIME</span></code></a></p></td>
+<td><p>Default lifetime value, unless set by the bootstrap server.
+Also defines lower limit that client accepts as a lifetime.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../../kconfig.html#CONFIG_LWM2M_UPDATE_PERIOD" title="CONFIG_LWM2M_UPDATE_PERIOD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LWM2M_UPDATE_PERIOD</span></code></a></p></td>
+<td><p>How long the client can stay idle before sending a next update.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../../kconfig.html#CONFIG_LWM2M_SECONDS_TO_UPDATE_EARLY" title="CONFIG_LWM2M_SECONDS_TO_UPDATE_EARLY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LWM2M_SECONDS_TO_UPDATE_EARLY</span></code></a></p></td>
+<td><p>Minimum time margin to send the update message before the registration lifetime expires.</p></td>
+</tr>
+</tbody>
+</table>
+<figure class="align-default" id="id6">
+<img alt="LwM2M seconds to update early" src="../../../_images/lwm2m_lifetime_seconds_early.png" />
+<figcaption>
+<p><span class="caption-text">Default way of calculating when to update registration.</span><a class="headerlink" href="#id6" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>By default, the client uses <a class="reference internal" href="../../../kconfig.html#CONFIG_LWM2M_SECONDS_TO_UPDATE_EARLY" title="CONFIG_LWM2M_SECONDS_TO_UPDATE_EARLY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LWM2M_SECONDS_TO_UPDATE_EARLY</span></code></a> to calculate how
+many seconds before the expiration of lifetime it is going to send the registration update.
+The problem with default mode is when the server changes the lifetime of the registration.
+This is then affecting the period of updates the client is doing.
+If this is used with the QUEUE mode, which is typical in IPv4 networks, it is also affecting the
+period of when the device is reachable from the server.</p>
+<figure class="align-default" id="id7">
+<img alt="LwM2M update time when both values are set" src="../../../_images/lwm2m_lifetime_both.png" />
+<figcaption>
+<p><span class="caption-text">Update time is controlled by UPDATE_PERIOD.</span><a class="headerlink" href="#id7" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>When also the <a class="reference internal" href="../../../kconfig.html#CONFIG_LWM2M_UPDATE_PERIOD" title="CONFIG_LWM2M_UPDATE_PERIOD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LWM2M_UPDATE_PERIOD</span></code></a> is set, time to send the update message
+is the earliest when any of these values expire. This allows setting long lifetime for the
+registration and configure the period accurately, even if server changes the lifetime parameter.</p>
+<p>In runtime, the update frequency is limited to once in 15 seconds to avoid flooding.</p>
+</section>
+<section id="lwm2m-shell">
+<span id="id1"></span><h2><a class="toc-backref" href="#id23" role="doc-backlink">LwM2M shell</a><a class="headerlink" href="#lwm2m-shell" title="Link to this heading"></a></h2>
+<p>For testing the client it is possible to enable Zephyr’s shell and LwM2M specific commands which
+support changing the state of the client. Operations supported are read, write and execute
+resources. Client start, stop, pause and resume are also available. The feature is enabled by
+selecting <a class="reference internal" href="../../../kconfig.html#CONFIG_LWM2M_SHELL" title="CONFIG_LWM2M_SHELL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LWM2M_SHELL</span></code></a>. The shell is meant for testing so productions
+systems should not enable it.</p>
+<p>One imaginable scenario, where to use the shell, would be executing client side actions over UART
+when a server side tests would require those. It is assumed that not all tests are able to trigger
+required actions from the server side.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>lwm2m
+<span class="go">lwm2m - LwM2M commands</span>
+<span class="go">Subcommands:</span>
+<span class="go">  send    :send PATHS</span>
+<span class="go">          LwM2M SEND operation</span>
+
+<span class="go">  exec    :exec PATH [PARAM]</span>
+<span class="go">          Execute a resource</span>
+
+<span class="go">  read    :read PATH [OPTIONS]</span>
+<span class="go">          Read value from LwM2M resource</span>
+<span class="go">          -x   Read value as hex stream (default)</span>
+<span class="go">          -s   Read value as string</span>
+<span class="go">          -b   Read value as bool (1/0)</span>
+<span class="go">          -uX  Read value as uintX_t</span>
+<span class="go">          -sX  Read value as intX_t</span>
+<span class="go">          -f   Read value as float</span>
+<span class="go">          -t   Read value as time_t</span>
+
+<span class="go">  write   :write PATH [OPTIONS] VALUE</span>
+<span class="go">          Write into LwM2M resource</span>
+<span class="go">          -s   Write value as string (default)</span>
+<span class="go">          -b   Write value as bool</span>
+<span class="go">          -uX  Write value as uintX_t</span>
+<span class="go">          -sX  Write value as intX_t</span>
+<span class="go">          -f   Write value as float</span>
+<span class="go">          -t   Write value as time_t</span>
+
+<span class="go">  create  :create PATH</span>
+<span class="go">          Create object or resource instance</span>
+
+<span class="go">  delete  :delete PATH</span>
+<span class="go">          Delete object or resource instance</span>
+
+<span class="go">  cache   :cache PATH NUM</span>
+<span class="go">          Enable data cache for resource</span>
+<span class="go">          PATH is LwM2M path</span>
+<span class="go">          NUM how many elements to cache</span>
+
+<span class="go">  start   :start EP_NAME [BOOTSTRAP FLAG]</span>
+<span class="go">          Start the LwM2M RD (Registration / Discovery) Client</span>
+<span class="go">          -b   Set the bootstrap flag (default 0)</span>
+
+<span class="go">  stop    :stop [OPTIONS]</span>
+<span class="go">          Stop the LwM2M RD (De-register) Client</span>
+<span class="go">          -f   Force close the connection</span>
+
+<span class="go">  update  :Trigger Registration Update of the LwM2M RD Client</span>
+
+<span class="go">  pause   :LwM2M engine thread pause</span>
+<span class="go">  resume  :LwM2M engine thread resume</span>
+<span class="go">  lock    :Lock the LwM2M registry</span>
+<span class="go">  unlock  :Unlock the LwM2M registry</span>
+<span class="go">  obs     : List observations</span>
+<span class="go">  ls      : ls [PATH]</span>
+<span class="go">          List objects, instances, resources</span>
+</pre></div>
+</div>
+</section>
+<section id="api-reference">
+<span id="lwm2m-api-reference"></span><h2><a class="toc-backref" href="#id24" role="doc-backlink">API Reference</a><a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../doxygen/html/group__lwm2m__api.html" title=""><span class="pre">LwM2M</span> <span class="pre">high-level</span> <span class="pre">API</span></a></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/lwm2m_client/README.html#lwm2m-client" title="Implement a LwM2M client that connects to a LwM2M server.">LwM2M client</a></span><span class="code-sample-description">Implement a LwM2M client that connects to a LwM2M server.</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

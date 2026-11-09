@@ -1,0 +1,650 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="group__log__backend" kind="group">
+    <compoundname>log_backend</compoundname>
+    <title>Logger backend interface</title>
+    <innerclass refid="unionlog__backend__evt__arg" prot="public">log_backend_evt_arg</innerclass>
+    <innerclass refid="structlog__backend__api" prot="public">log_backend_api</innerclass>
+    <innerclass refid="structlog__backend__control__block" prot="public">log_backend_control_block</innerclass>
+    <innerclass refid="structlog__backend" prot="public">log_backend</innerclass>
+    <innergroup refid="group__log__backend__adsp__hda">Intel ADSP HDA log backend API</innergroup>
+    <innergroup refid="group__log__backend__adsp__mtrace">Intel ADSP mtrace log backend API</innergroup>
+    <innergroup refid="group__log__backend__ble">Bluetooth log backend API</innergroup>
+    <innergroup refid="group__log__backend__mqtt">MQTT log backend API</innergroup>
+    <innergroup refid="group__log__backend__net">Network log backend API</innergroup>
+    <innergroup refid="group__log__backend__ws">Websocket log backend API</innergroup>
+    <innergroup refid="group__log__backend__multidomain">Logger multidomain backend helpers</innergroup>
+    <sectiondef kind="enum">
+      <memberdef kind="enum" id="group__log__backend_1ga04ebbd4416c907e60e05f0364f3bd2f6" prot="public" static="no" strong="no">
+        <type></type>
+        <name>log_backend_evt</name>
+        <enumvalue id="group__log__backend_1gga04ebbd4416c907e60e05f0364f3bd2f6a559c37c58daf13a14f7b43440556f3d3" prot="public">
+          <name>LOG_BACKEND_EVT_PROCESS_THREAD_DONE</name>
+          <briefdescription>
+<para>Event when process thread finishes processing. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>This event is emitted when the process thread finishes processing pending log messages.</para>
+<para><simplesect kind="note"><para>This is not emitted when there are no pending log messages being processed.</para>
+</simplesect>
+<simplesect kind="note"><para>Deferred mode only. </para>
+</simplesect>
+</para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__log__backend_1gga04ebbd4416c907e60e05f0364f3bd2f6abbc925931ad8098f3cee651fadd5432a" prot="public">
+          <name>LOG_BACKEND_EVT_MAX</name>
+          <briefdescription>
+<para>Maximum number of backend events. </para>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+<para>Backend events. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/logging/log_backend.h" line="34" column="1" bodyfile="zephyr/logging/log_backend.h" bodystart="34" bodyend="50"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="group__log__backend_1ga017a2b54d367db037cce31b2693af98c" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void log_backend_init</definition>
+        <argsstring>(const struct log_backend *const backend)</argsstring>
+        <name>log_backend_init</name>
+        <param>
+          <type>const struct <ref refid="structlog__backend" kindref="compound">log_backend</ref> *const</type>
+          <declname>backend</declname>
+        </param>
+        <briefdescription>
+<para>Initialize or initiate the logging backend. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>If backend initialization takes longer time it could block logging thread if backend is autostarted. That is because all backends are initialized in the context of the logging thread. In that case, backend shall provide function for polling for readiness (<ref refid="group__log__backend_1gaf57e7a27a1337815338410db93603e0b" kindref="member">log_backend_is_ready</ref>).</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">backend</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the backend instance. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/logging/log_backend.h" line="138" column="20" bodyfile="zephyr/logging/log_backend.h" bodystart="138" bodyend="145"/>
+      </memberdef>
+      <memberdef kind="function" id="group__log__backend_1gaf57e7a27a1337815338410db93603e0b" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int log_backend_is_ready</definition>
+        <argsstring>(const struct log_backend *const backend)</argsstring>
+        <name>log_backend_is_ready</name>
+        <param>
+          <type>const struct <ref refid="structlog__backend" kindref="compound">log_backend</ref> *const</type>
+          <declname>backend</declname>
+        </param>
+        <briefdescription>
+<para>Poll for backend readiness. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>If backend is ready immediately after initialization then backend may not provide this function.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">backend</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the backend instance.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>0</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if backend is ready. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EBUSY</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if backend is not yet ready. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/logging/log_backend.h" line="158" column="19" bodyfile="zephyr/logging/log_backend.h" bodystart="158" bodyend="166"/>
+      </memberdef>
+      <memberdef kind="function" id="group__log__backend_1ga388b0f33208ef1389640836d0bc23d17" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void log_backend_msg_process</definition>
+        <argsstring>(const struct log_backend *const backend, union log_msg_generic *msg)</argsstring>
+        <name>log_backend_msg_process</name>
+        <param>
+          <type>const struct <ref refid="structlog__backend" kindref="compound">log_backend</ref> *const</type>
+          <declname>backend</declname>
+        </param>
+        <param>
+          <type>union <ref refid="unionlog__msg__generic" kindref="compound">log_msg_generic</ref> *</type>
+          <declname>msg</declname>
+        </param>
+        <briefdescription>
+<para>Process message. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Function is used in deferred and immediate mode. On return, message content is processed by the backend and memory can be freed.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">backend</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the backend instance. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">msg</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to message with log entry. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/logging/log_backend.h" line="177" column="20" bodyfile="zephyr/logging/log_backend.h" bodystart="177" bodyend="183"/>
+      </memberdef>
+      <memberdef kind="function" id="group__log__backend_1gab300348c43168de1e7eaae8c770b6950" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void log_backend_dropped</definition>
+        <argsstring>(const struct log_backend *const backend, uint32_t cnt)</argsstring>
+        <name>log_backend_dropped</name>
+        <param>
+          <type>const struct <ref refid="structlog__backend" kindref="compound">log_backend</ref> *const</type>
+          <declname>backend</declname>
+        </param>
+        <param>
+          <type><ref refid="stdint_8h_1a0a8582351ac627ee8bde2973c825e47f" kindref="member">uint32_t</ref></type>
+          <declname>cnt</declname>
+        </param>
+        <briefdescription>
+<para>Notify backend about dropped log messages. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Function is optional.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">backend</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the backend instance. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">cnt</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of dropped logs since last notification. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/logging/log_backend.h" line="193" column="20" bodyfile="zephyr/logging/log_backend.h" bodystart="193" bodyend="201"/>
+      </memberdef>
+      <memberdef kind="function" id="group__log__backend_1gad12906ffa810514c1d43cb26bba5ea4b" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void log_backend_panic</definition>
+        <argsstring>(const struct log_backend *const backend)</argsstring>
+        <name>log_backend_panic</name>
+        <param>
+          <type>const struct <ref refid="structlog__backend" kindref="compound">log_backend</ref> *const</type>
+          <declname>backend</declname>
+        </param>
+        <briefdescription>
+<para>Reconfigure backend to panic mode. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">backend</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the backend instance. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/logging/log_backend.h" line="208" column="20" bodyfile="zephyr/logging/log_backend.h" bodystart="208" bodyend="212"/>
+      </memberdef>
+      <memberdef kind="function" id="group__log__backend_1ga8f263b24140229e5cf8e98b322501bca" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void log_backend_id_set</definition>
+        <argsstring>(const struct log_backend *const backend, uint8_t id)</argsstring>
+        <name>log_backend_id_set</name>
+        <param>
+          <type>const struct <ref refid="structlog__backend" kindref="compound">log_backend</ref> *const</type>
+          <declname>backend</declname>
+        </param>
+        <param>
+          <type><ref refid="stdint_8h_1a3cb4a16b0e8d6af0af86d4fd6ba5fd9d" kindref="member">uint8_t</ref></type>
+          <declname>id</declname>
+        </param>
+        <briefdescription>
+<para>Set backend id. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>It is used internally by the logger.</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>backend</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the backend instance. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>ID. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/logging/log_backend.h" line="222" column="20" bodyfile="zephyr/logging/log_backend.h" bodystart="222" bodyend="227"/>
+      </memberdef>
+      <memberdef kind="function" id="group__log__backend_1gae3e1d6eaf21dcc1d0961e85271d5e5f3" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="stdint_8h_1a3cb4a16b0e8d6af0af86d4fd6ba5fd9d" kindref="member">uint8_t</ref></type>
+        <definition>static uint8_t log_backend_id_get</definition>
+        <argsstring>(const struct log_backend *const backend)</argsstring>
+        <name>log_backend_id_get</name>
+        <param>
+          <type>const struct <ref refid="structlog__backend" kindref="compound">log_backend</ref> *const</type>
+          <declname>backend</declname>
+        </param>
+        <briefdescription>
+<para>Get backend id. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>It is used internally by the logger.</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">backend</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the backend instance. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Id. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/logging/log_backend.h" line="237" column="23" bodyfile="zephyr/logging/log_backend.h" bodystart="237" bodyend="241"/>
+      </memberdef>
+      <memberdef kind="function" id="group__log__backend_1gaf419f3590f42893b7091beed57763c7c" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>const struct <ref refid="structlog__backend" kindref="compound">log_backend</ref> *</type>
+        <definition>static const struct log_backend * log_backend_get</definition>
+        <argsstring>(uint32_t idx)</argsstring>
+        <name>log_backend_get</name>
+        <param>
+          <type><ref refid="stdint_8h_1a0a8582351ac627ee8bde2973c825e47f" kindref="member">uint32_t</ref></type>
+          <declname>idx</declname>
+        </param>
+        <briefdescription>
+<para>Get backend. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">idx</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the backend instance.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Pointer to the backend instance. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/logging/log_backend.h" line="250" column="38" bodyfile="zephyr/logging/log_backend.h" bodystart="250" bodyend="257"/>
+      </memberdef>
+      <memberdef kind="function" id="group__log__backend_1gad055c1dc8e0236b604cb553df3e16a52" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int log_backend_count_get</definition>
+        <argsstring>(void)</argsstring>
+        <name>log_backend_count_get</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+<para>Get number of backends. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="return"><para>Number of backends. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/logging/log_backend.h" line="264" column="19" bodyfile="zephyr/logging/log_backend.h" bodystart="264" bodyend="271"/>
+      </memberdef>
+      <memberdef kind="function" id="group__log__backend_1ga3ef0b88b4118f7ee04749ace2646c99b" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void log_backend_activate</definition>
+        <argsstring>(const struct log_backend *const backend, void *ctx)</argsstring>
+        <name>log_backend_activate</name>
+        <param>
+          <type>const struct <ref refid="structlog__backend" kindref="compound">log_backend</ref> *const</type>
+          <declname>backend</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>ctx</declname>
+        </param>
+        <briefdescription>
+<para>Activate backend. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">backend</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the backend instance. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">ctx</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>User context. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/logging/log_backend.h" line="279" column="20" bodyfile="zephyr/logging/log_backend.h" bodystart="279" bodyend="285"/>
+      </memberdef>
+      <memberdef kind="function" id="group__log__backend_1ga1534fdfabce1e97c829aa79d57739589" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void log_backend_deactivate</definition>
+        <argsstring>(const struct log_backend *const backend)</argsstring>
+        <name>log_backend_deactivate</name>
+        <param>
+          <type>const struct <ref refid="structlog__backend" kindref="compound">log_backend</ref> *const</type>
+          <declname>backend</declname>
+        </param>
+        <briefdescription>
+<para>Deactivate backend. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">backend</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the backend instance. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/logging/log_backend.h" line="292" column="20" bodyfile="zephyr/logging/log_backend.h" bodystart="292" bodyend="297"/>
+      </memberdef>
+      <memberdef kind="function" id="group__log__backend_1ga54dd06d48edf92ef191dab946aead216" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="stdbool_8h_1abb452686968e48b67397da5f97445f5b" kindref="member">bool</ref></type>
+        <definition>static bool log_backend_is_active</definition>
+        <argsstring>(const struct log_backend *const backend)</argsstring>
+        <name>log_backend_is_active</name>
+        <param>
+          <type>const struct <ref refid="structlog__backend" kindref="compound">log_backend</ref> *const</type>
+          <declname>backend</declname>
+        </param>
+        <briefdescription>
+<para>Check state of the backend. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">backend</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the backend instance.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>True if backend is active, false otherwise. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/logging/log_backend.h" line="306" column="20" bodyfile="zephyr/logging/log_backend.h" bodystart="306" bodyend="311"/>
+      </memberdef>
+      <memberdef kind="function" id="group__log__backend_1gac0a4dc476c3b641ab570ca2dd4f2096f" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int log_backend_format_set</definition>
+        <argsstring>(const struct log_backend *backend, uint32_t log_type)</argsstring>
+        <name>log_backend_format_set</name>
+        <param>
+          <type>const struct <ref refid="structlog__backend" kindref="compound">log_backend</ref> *</type>
+          <declname>backend</declname>
+        </param>
+        <param>
+          <type><ref refid="stdint_8h_1a0a8582351ac627ee8bde2973c825e47f" kindref="member">uint32_t</ref></type>
+          <declname>log_type</declname>
+        </param>
+        <briefdescription>
+<para>Set logging format. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>backend</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the backend instance. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>log_type</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Log format.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>-ENOTSUP</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>If the backend does not support changing format types. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EINVAL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>If the input is invalid. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>0</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>for success. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/logging/log_backend.h" line="322" column="19" bodyfile="zephyr/logging/log_backend.h" bodystart="322" bodyend="343"/>
+      </memberdef>
+      <memberdef kind="function" id="group__log__backend_1gae8203fcde52fee405a4b2e973c989ec7" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void log_backend_notify</definition>
+        <argsstring>(const struct log_backend *const backend, enum log_backend_evt event, union log_backend_evt_arg *arg)</argsstring>
+        <name>log_backend_notify</name>
+        <param>
+          <type>const struct <ref refid="structlog__backend" kindref="compound">log_backend</ref> *const</type>
+          <declname>backend</declname>
+        </param>
+        <param>
+          <type>enum <ref refid="group__log__backend_1ga04ebbd4416c907e60e05f0364f3bd2f6" kindref="member">log_backend_evt</ref></type>
+          <declname>event</declname>
+        </param>
+        <param>
+          <type>union <ref refid="unionlog__backend__evt__arg" kindref="compound">log_backend_evt_arg</ref> *</type>
+          <declname>arg</declname>
+        </param>
+        <briefdescription>
+<para>Notify a backend of an event. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>backend</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the backend instance. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>event</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Event to be notified. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>arg</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the argument(s). </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/logging/log_backend.h" line="352" column="20" bodyfile="zephyr/logging/log_backend.h" bodystart="352" bodyend="361"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="group__log__backend_1ga3a4cc530530d1a8b33dc787842bba119" prot="public" static="no">
+        <name>LOG_BACKEND_DEFINE</name>
+        <param><defname>_name</defname></param>
+        <param><defname>_api</defname></param>
+        <param><defname>_autostart</defname></param>
+        <param><defname>...</defname></param>
+        <initializer>        static struct <ref refid="structlog__backend__control__block" kindref="compound">log_backend_control_block</ref> <ref refid="util__internal_8h_1a7e7766e792d1638bfbbc9d0f328d3d0d" kindref="member">UTIL_CAT</ref>(backend_cb_, _name) = \
+        {                                                                      \
+                <ref refid="group__sys-util_1ga5483ea38af79bc6c4509936288705377" kindref="member">COND_CODE_0</ref>(<ref refid="group__sys-util_1ga8a0e9835e0a8f864ffc2359b9c419cc2" kindref="member">NUM_VA_ARGS_LESS_1</ref>(_, ##__VA_ARGS__),              \
+                                (), (.ctx = __VA_ARGS__,))                     \
+                .id = 0,                                                       \
+                .active = <ref refid="stdbool_8h_1a65e9886d74aaee76545e83dd09011727" kindref="member">false</ref>,                                               \
+        };                                                                     \
+        static const <ref refid="group__iterable__section__apis_1ga9104f42cbe4a67a931bed7f7cc8f600f" kindref="member">STRUCT_SECTION_ITERABLE</ref>(<ref refid="structlog__backend" kindref="compound">log_backend</ref>, _name) =             \
+        {                                                                      \
+                .<ref refid="structlog__backend_1a87067e427a94d3543c7c50b950649b33" kindref="member">api</ref> = &amp;_api,                                                  \
+                .<ref refid="structlog__backend_1ab8c377e796af0ef81dcf459eeee56a1d" kindref="member">cb</ref> = &amp;<ref refid="util__internal_8h_1a7e7766e792d1638bfbbc9d0f328d3d0d" kindref="member">UTIL_CAT</ref>(backend_cb_, _name),                           \
+                .<ref refid="structlog__backend_1a22b343a8fc32b9aa05f5f4649d78f7d4" kindref="member">name</ref> = <ref refid="include_2zephyr_2toolchain_2common_8h_1a4689212d5a549893cabb9d7782eecfb6" kindref="member">STRINGIFY</ref>(_name),                                      \
+                .<ref refid="structlog__backend_1afe5ce6ac891bef0264dabafe18db88a2" kindref="member">autostart</ref> = _autostart                                        \
+        }</initializer>
+        <briefdescription>
+<para>Macro for creating a logger backend instance. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>_name</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Name of the backend instance. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>_api</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Logger backend API. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>_autostart</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>If true backend is initialized and activated together with the logger subsystem. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>...</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Optional context. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/logging/log_backend.h" line="111" column="9" bodyfile="zephyr/logging/log_backend.h" bodystart="111" bodyend="125"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Logger backend interface. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

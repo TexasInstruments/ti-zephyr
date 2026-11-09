@@ -1,0 +1,679 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LE Host &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/connectivity/bluetooth/bluetooth-le-host.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="LE Audio Stack" href="api/audio/bluetooth-le-audio-arch.html" />
+    <link rel="prev" title="Stack Architecture" href="bluetooth-arch.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Connectivity</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Bluetooth</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="features.html">Supported features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bluetooth-qual.html">Qualification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bluetooth-arch.html">Stack Architecture</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">LE Host</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#peripheral-role">Peripheral role</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#central-role">Central role</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#observer-role">Observer role</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#broadcaster-role">Broadcaster role</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#connections">Connections</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#security">Security</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#l2cap">L2CAP</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#terminology">Terminology</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pdu-types">PDU Types</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#relevant-kconfig">Relevant Kconfig</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#gatt">GATT</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#att-timeout">ATT timeout</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#mesh">Mesh</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#le-audio">LE Audio</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#persistent-storage">Persistent storage</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/audio/bluetooth-le-audio-arch.html">LE Audio Stack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/audio/bluetooth-le-audio-arch.html#le-audio-resources">LE Audio resources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bluetooth-ctlr-arch.html">LE Controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bluetooth-dev.html">Application Development</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/index.html">API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bluetooth-tools.html">Tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bluetooth-shell.html">Shell</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../canbus/index.html">Controller Area Network (CAN) Bus Protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../networking/index.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lora_lorawan/index.html">LoRa and LoRaWAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usb/index.html">USB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modbus/index.html">Modbus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Connectivity</a> &raquo;</li>
+  
+     <li><a href="index.html">Bluetooth</a> &raquo;</li>
+  
+  <li>LE Host</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/connectivity/bluetooth/bluetooth-le-host.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27connectivity%2Fbluetooth%2Fbluetooth-le-host%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Bluetooth+Host%2Carea%3A+Bluetooth&env=-+Page%3A+connectivity%2Fbluetooth%2Fbluetooth-le-host%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="le-host">
+<span id="bluetooth-le-host"></span><h1>LE Host<a class="headerlink" href="#le-host" title="Link to this heading"></a></h1>
+<p>The Bluetooth Host implements all the higher-level protocols and
+profiles, and most importantly, provides a high-level API for
+applications. The following diagram depicts the main protocol &amp; profile
+layers of the host.</p>
+<figure class="align-center" id="id1">
+<img alt="Bluetooth Host protocol &amp; profile layers" src="../../_images/ble_host_layers.png" />
+<figcaption>
+<p><span class="caption-text">Bluetooth Host protocol &amp; profile layers.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Lowest down in the host stack sits a so-called HCI driver, which is
+responsible for abstracting away the details of the HCI transport. It
+provides a basic API for delivering data from the controller to the
+host, and vice-versa.</p>
+<p>Perhaps the most important block above the HCI handling is the Generic
+Access Profile (GAP). GAP simplifies Bluetooth LE access by defining
+four distinct roles of Bluetooth usage:</p>
+<ul class="simple">
+<li><p>Connection-oriented roles</p>
+<ul>
+<li><p>Peripheral (e.g. a smart sensor, often with a limited user interface)</p></li>
+<li><p>Central (typically a mobile phone or a PC)</p></li>
+</ul>
+</li>
+<li><p>Connection-less roles</p>
+<ul>
+<li><p>Broadcaster (sending out Bluetooth LE advertisements, e.g. a smart beacon)</p></li>
+<li><p>Observer (scanning for Bluetooth LE advertisements)</p></li>
+</ul>
+</li>
+</ul>
+<p>Each role comes with its own build-time configuration option:
+<a class="reference internal" href="../../kconfig.html#CONFIG_BT_PERIPHERAL" title="CONFIG_BT_PERIPHERAL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_PERIPHERAL</span></code></a>, <a class="reference internal" href="../../kconfig.html#CONFIG_BT_CENTRAL" title="CONFIG_BT_CENTRAL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_CENTRAL</span></code></a>,
+<a class="reference internal" href="../../kconfig.html#CONFIG_BT_BROADCASTER" title="CONFIG_BT_BROADCASTER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_BROADCASTER</span></code></a> &amp; <a class="reference internal" href="../../kconfig.html#CONFIG_BT_OBSERVER" title="CONFIG_BT_OBSERVER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_OBSERVER</span></code></a>. Of the
+connection-oriented roles central implicitly enables observer role, and
+peripheral implicitly enables broadcaster role. Usually the first step
+when creating an application is to decide which roles are needed and go
+from there. Bluetooth Mesh is a slightly special case, requiring at
+least the observer and broadcaster roles, and possibly also the
+Peripheral role. This will be described in more detail in a later
+section.</p>
+<section id="peripheral-role">
+<h2>Peripheral role<a class="headerlink" href="#peripheral-role" title="Link to this heading"></a></h2>
+<p>Most Zephyr-based Bluetooth LE devices will most likely be peripheral-role
+devices. This means that they perform connectable advertising and expose
+one or more GATT services. After registering services using the
+<a class="reference internal" href="../../doxygen/html/group__bt__gatt__server.html#gab4d9cfea04e44445d5dc30ad52842b64" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_gatt_service_register()</span></code></a> API the application will typically
+start connectable advertising using the <a class="reference internal" href="../../doxygen/html/group__bt__gap.html#gad2e3caef88d52d720e8e4d21df767b02" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_le_adv_start()</span></code></a> API.</p>
+<p>There are several peripheral sample applications available in the tree,
+such as <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/samples/bluetooth/peripheral_hr">samples/bluetooth/peripheral_hr</a>.</p>
+</section>
+<section id="central-role">
+<h2>Central role<a class="headerlink" href="#central-role" title="Link to this heading"></a></h2>
+<p>Central role may not be as common for Zephyr-based devices as peripheral
+role, but it is still a plausible one and equally well supported in
+Zephyr. Rather than accepting connections from other devices a central
+role device will scan for available peripheral device and choose one to
+connect to. Once connected, a central will typically act as a GATT
+client, first performing discovery of available services and then
+accessing one or more supported services.</p>
+<p>To initially discover a device to connect to the application will likely
+use the <a class="reference internal" href="../../doxygen/html/group__bt__gap.html#gac5e19c26b53a08dadb8efa7ecc692ad6" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_le_scan_start()</span></code></a> API, wait for an appropriate device
+to be found (using the scan callback), stop scanning using
+<a class="reference internal" href="../../doxygen/html/group__bt__gap.html#gaa2de1a1ab523606b36a4c445fb0c3b84" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_le_scan_stop()</span></code></a> and then connect to the device using
+<a class="reference internal" href="../../doxygen/html/group__bt__conn.html#ga8d66f3e0262a51279e9fa8b3139252e6" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_conn_le_create()</span></code></a>.</p>
+<p>There are some sample applications for the central role available in the
+tree, such as <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/samples/bluetooth/central_hr">samples/bluetooth/central_hr</a>.</p>
+</section>
+<section id="observer-role">
+<h2>Observer role<a class="headerlink" href="#observer-role" title="Link to this heading"></a></h2>
+<p>An observer role device will use the <a class="reference internal" href="../../doxygen/html/group__bt__gap.html#gac5e19c26b53a08dadb8efa7ecc692ad6" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_le_scan_start()</span></code></a> API to
+scan for device, but it will not connect to any of them. Instead it will
+simply utilize the advertising data of found devices, combining it
+optionally with the received signal strength (RSSI).</p>
+</section>
+<section id="broadcaster-role">
+<h2>Broadcaster role<a class="headerlink" href="#broadcaster-role" title="Link to this heading"></a></h2>
+<p>A broadcaster role device will use the <a class="reference internal" href="../../doxygen/html/group__bt__gap.html#gad2e3caef88d52d720e8e4d21df767b02" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_le_adv_start()</span></code></a> API to
+advertise specific advertising data, but the type of advertising will be
+non-connectable, i.e. other device will not be able to connect to it.</p>
+</section>
+<section id="connections">
+<h2>Connections<a class="headerlink" href="#connections" title="Link to this heading"></a></h2>
+<p>Connection handling and the related APIs can be found in the
+<a class="reference internal" href="api/connection_mgmt.html#bluetooth-connection-mgmt"><span class="std std-ref">Connection Management</span></a> section.</p>
+</section>
+<section id="security">
+<h2>Security<a class="headerlink" href="#security" title="Link to this heading"></a></h2>
+<p>To achieve a secure relationship between two Bluetooth devices a process
+called pairing is used. This process can either be triggered implicitly
+through the security properties of GATT services, or explicitly using
+the <a class="reference internal" href="../../doxygen/html/group__bt__conn.html#gae001f1268e1ff42c3c974c95dcb6735d" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_conn_set_security()</span></code></a> API on a connection object.</p>
+<p>To achieve a higher security level, and protect against
+Man-In-The-Middle (MITM) attacks, it is recommended to use some
+out-of-band channel during the pairing. If the devices have a sufficient
+user interface this “channel” is the user itself. The capabilities of
+the device are registered using the <a class="reference internal" href="../../doxygen/html/group__bt__conn.html#ga1bf13d2dfdbdf0a72f9b1c759ef23f60" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_conn_auth_cb_register()</span></code></a>
+API.  The <a class="reference internal" href="../../doxygen/html/structbt__conn__auth__cb.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">bt_conn_auth_cb</span></code></a> struct that’s passed to this API has
+a set of optional callbacks that can be used during the pairing - if the
+device lacks some feature the corresponding callback may be set to NULL.
+For example, if the device does not have an input method but does have a
+display, the <code class="docutils literal notranslate"><span class="pre">passkey_entry</span></code> and <code class="docutils literal notranslate"><span class="pre">passkey_confirm</span></code> callbacks would
+be set to NULL, but the <code class="docutils literal notranslate"><span class="pre">passkey_display</span></code> would be set to a callback
+capable of displaying a passkey to the user.</p>
+<p>Depending on the local and remote security requirements &amp; capabilities,
+there are four possible security levels that can be reached:</p>
+<blockquote>
+<div><dl class="simple">
+<dt><a class="reference internal" href="../../doxygen/html/group__bt__conn.html#ggaf0c56cd26c4147f6c9f0faa11fa01783ab206382e5417c7513fa57ef43c0b8f1b" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">BT_SECURITY_L1</span></code></a></dt><dd><p>No encryption and no authentication.</p>
+</dd>
+<dt><a class="reference internal" href="../../doxygen/html/group__bt__conn.html#ggaf0c56cd26c4147f6c9f0faa11fa01783ab41339994f194ae5b56f496e5ad9015a" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">BT_SECURITY_L2</span></code></a></dt><dd><p>Encryption but no authentication (no MITM protection).</p>
+</dd>
+<dt><a class="reference internal" href="../../doxygen/html/group__bt__conn.html#ggaf0c56cd26c4147f6c9f0faa11fa01783a5f2688ea3a3dd1c1ffb1df8f01dc3631" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">BT_SECURITY_L3</span></code></a></dt><dd><p>Encryption and authentication using the legacy pairing method
+from Bluetooth 4.0 and 4.1.</p>
+</dd>
+<dt><a class="reference internal" href="../../doxygen/html/group__bt__conn.html#ggaf0c56cd26c4147f6c9f0faa11fa01783a199d97cd8f5283114164e673e4f46d81" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">BT_SECURITY_L4</span></code></a></dt><dd><p>Encryption and authentication using the LE Secure Connections
+feature available since Bluetooth 4.2.</p>
+</dd>
+</dl>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Mesh has its own security solution through a process called
+provisioning. It follows a similar procedure as pairing, but is done
+using separate mesh-specific APIs.</p>
+</div>
+</section>
+<section id="l2cap">
+<h2>L2CAP<a class="headerlink" href="#l2cap" title="Link to this heading"></a></h2>
+<p>L2CAP stands for the Logical Link Control and Adaptation Protocol. It is
+a common layer for all communication over Bluetooth connections, however
+an application comes in direct contact with it only when using it in the
+so-called Connection-oriented Channels (CoC) mode. More information on
+this can be found in the <a class="reference internal" href="api/l2cap.html#bt-l2cap"><span class="std std-ref">L2CAP API section</span></a>.</p>
+<section id="terminology">
+<h3>Terminology<a class="headerlink" href="#terminology" title="Link to this heading"></a></h3>
+<p>The definitions are from the Core Specification version 5.4, volume 3, part A
+1.4.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Term</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Upper layer</p></td>
+<td><p>Layer above L2CAP, it exchanges data in form of SDUs. It may be an
+application or a higher level protocol.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lower layer</p></td>
+<td><p>Layer below L2CAP, it exchanges data in form of PDUs (or fragments). It is
+usually the HCI.</p></td>
+</tr>
+<tr class="row-even"><td><p>Service Data Unit (SDU)</p></td>
+<td><p>Packet of data that L2CAP exchanges with the upper layer.</p>
+<p>This term is relevant only in Enhanced Retransmission mode, Streaming
+mode, Retransmission mode and Flow Control Mode, not in Basic L2CAP mode.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Protocol Data Unit (PDU)</p></td>
+<td><p>Packet of data containing L2CAP data. PDUs always start with Basic L2CAP
+header.</p>
+<p>Types of PDUs for LE: <a class="reference internal" href="#bluetooth-l2cap-b-frame"><span class="std std-ref">B-frames</span></a> and
+<a class="reference internal" href="#bluetooth-l2cap-k-frame"><span class="std std-ref">K-frames</span></a>.</p>
+<p>Types of PDUs for BR/EDR: I-frames, S-frames, C-frames and G-frames.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>Maximum Transmission Unit (MTU)</p></td>
+<td><p>Maximum size of an SDU that the upper layer is capable of accepting.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Maximum Payload Size (MPS)</p></td>
+<td><p>Maximum payload size that the L2CAP layer is capable of accepting.</p>
+<p>In Basic L2CAP mode, the MTU size is equal to MPS. In credit-based
+channels without segmentation, the MTU is MPS minus 2.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>Basic L2CAP header</p></td>
+<td><p>Present at the beginning of each PDU. It contains two fields, the PDU
+length and the Channel Identifier (CID).</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pdu-types">
+<h3>PDU Types<a class="headerlink" href="#pdu-types" title="Link to this heading"></a></h3>
+<section id="b-frame-basic-information-frame">
+<span id="bluetooth-l2cap-b-frame"></span><h4>B-frame: Basic information frame<a class="headerlink" href="#b-frame-basic-information-frame" title="Link to this heading"></a></h4>
+<p>PDU used in Basic L2CAP mode. It contains the payload received from the upper
+layer or delivered to the upper layer as its payload.</p>
+<a class="reference internal image-reference" href="../../_images/l2cap_b_frame.drawio.svg"><img alt="Representation of a B-frame PDU. The PDU is split into two rectangles, the first one being the L2CAP header, its size is 4 octets and its made of the PDU length and the channel ID. The second rectangle represents the information payload and its size is less or equal to MPS." class="align-center" src="../../_images/l2cap_b_frame.drawio.svg" style="width: 45%;" />
+</a>
+</section>
+<section id="k-frame-credit-based-frame">
+<span id="bluetooth-l2cap-k-frame"></span><h4>K-frame: Credit-based frame<a class="headerlink" href="#k-frame-credit-based-frame" title="Link to this heading"></a></h4>
+<p>PDU used in LE Credit Based Flow Control mode and Enhanced Credit Based Flow
+Control mode. It contains a SDU segment and additional protocol information.</p>
+<a class="reference internal image-reference" href="../../_images/l2cap_k_frame_1.drawio.svg"><img alt="Representation of a starting K-frame PDU. The PDU is split into three rectangles, the first one being the L2CAP header, its size is 4 octets and its made of the PDU length and the channel ID. The second rectangle represents the L2CAP SDU length, its size is 2 octets. The third rectangle represents the information payload and its size is less or equal to MPS minus 2 octets. The information payload contains the L2CAP SDU." src="../../_images/l2cap_k_frame_1.drawio.svg" style="width: 45%;" />
+</a>
+<a class="reference internal image-reference" href="../../_images/l2cap_k_frame.drawio.svg"><img alt="Representation of K-frames PDUs after the starting one. The PDU is split into two rectangles, the first one being the L2CAP header, its size is 4 octets and its made of the PDU length and the channel ID. The second rectangle represents the information payload and its size is less or equal to MPS. The information payload contains the L2CAP SDU." class="align-right" src="../../_images/l2cap_k_frame.drawio.svg" style="width: 45%;" />
+</a>
+</section>
+</section>
+<section id="relevant-kconfig">
+<h3>Relevant Kconfig<a class="headerlink" href="#relevant-kconfig" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Kconfig symbol</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="../../kconfig.html#CONFIG_BT_BUF_ACL_RX_SIZE" title="CONFIG_BT_BUF_ACL_RX_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_BUF_ACL_RX_SIZE</span></code></a></p></td>
+<td><p>Represents the MPS</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../kconfig.html#CONFIG_BT_L2CAP_TX_MTU" title="CONFIG_BT_L2CAP_TX_MTU"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_L2CAP_TX_MTU</span></code></a></p></td>
+<td><p>Represents the L2CAP MTU</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../kconfig.html#CONFIG_BT_L2CAP_DYNAMIC_CHANNEL" title="CONFIG_BT_L2CAP_DYNAMIC_CHANNEL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_L2CAP_DYNAMIC_CHANNEL</span></code></a></p></td>
+<td><p>Enables LE Credit Based Flow Control and thus the stack may use
+<a class="reference internal" href="#bluetooth-l2cap-k-frame"><span class="std std-ref">K-frame</span></a> PDUs</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="gatt">
+<h2>GATT<a class="headerlink" href="#gatt" title="Link to this heading"></a></h2>
+<p>The Generic Attribute Profile is the most common means of communication
+over LE connections. A more detailed description of this layer and the
+API reference can be found in the
+<a class="reference internal" href="api/gatt.html#bt-gatt"><span class="std std-ref">GATT API reference section</span></a>.</p>
+<section id="att-timeout">
+<h3>ATT timeout<a class="headerlink" href="#att-timeout" title="Link to this heading"></a></h3>
+<p>If the peer device does not respond to an ATT request (such as read or write)
+within the ATT timeout, the host will automatically initiate a disconnect. This
+simplifies error handling by reducing rare failure conditions to a common
+disconnection, allowing developers to manage unexpected disconnects without
+special cases for ATT timeouts.</p>
+<img alt="ATT timeout" class="align-center" src="../../_images/att_timeout.svg" />
+</section>
+</section>
+<section id="mesh">
+<h2>Mesh<a class="headerlink" href="#mesh" title="Link to this heading"></a></h2>
+<p>Mesh is a little bit special when it comes to the needed GAP roles. By
+default, mesh requires both observer and broadcaster role to be enabled.
+If the optional GATT Proxy feature is desired, then peripheral role
+should also be enabled.</p>
+<p>The API reference for mesh can be found in the
+<a class="reference internal" href="api/mesh.html#bluetooth-mesh"><span class="std std-ref">Mesh API reference section</span></a>.</p>
+</section>
+<section id="le-audio">
+<h2>LE Audio<a class="headerlink" href="#le-audio" title="Link to this heading"></a></h2>
+<p>The LE audio is a set of profiles and services that utilizes GATT and
+Isochronous Channel to provide audio over Bluetooth Low Energy.
+The architecture and API references can be found in
+<a class="reference internal" href="api/audio/bluetooth-le-audio-arch.html#bluetooth-le-audio-arch"><span class="std std-ref">Bluetooth Audio Architecture</span></a>.</p>
+</section>
+<section id="persistent-storage">
+<span id="bluetooth-persistent-storage"></span><h2>Persistent storage<a class="headerlink" href="#persistent-storage" title="Link to this heading"></a></h2>
+<p>The Bluetooth host stack uses the settings subsystem to implement
+persistent storage to flash. This requires the presence of a flash
+driver and a designated “storage” partition on flash. A typical set of
+configuration options needed will look something like the following:</p>
+<blockquote>
+<div><div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_BT_SETTINGS</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_FLASH</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_FLASH_PAGE_LAYOUT</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_FLASH_MAP</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_NVS</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_SETTINGS</span><span class="o">=</span><span class="s">y</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Once enabled, it is the responsibility of the application to call
+settings_load() after having initialized Bluetooth (using the
+<a class="reference internal" href="../../doxygen/html/group__bt__gap.html#gac45d16bfe21c3c38e834c293e5ebc42b" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_enable()</span></code></a> API).</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

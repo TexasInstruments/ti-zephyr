@@ -1,0 +1,581 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stack Architecture &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/connectivity/bluetooth/bluetooth-arch.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="LE Host" href="bluetooth-le-host.html" />
+    <link rel="prev" title="AutoPTS on Linux" href="autopts/autopts-linux.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Connectivity</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Bluetooth</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="features.html">Supported features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bluetooth-qual.html">Qualification</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Stack Architecture</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#bluetooth-le-layers">Bluetooth LE Layers</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#host-controller-interface">Host Controller Interface</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#configurations">Configurations</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#build-types">Build Types</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#source-tree-layout">Source tree layout</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="bluetooth-le-host.html">LE Host</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/audio/bluetooth-le-audio-arch.html">LE Audio Stack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/audio/bluetooth-le-audio-arch.html#le-audio-resources">LE Audio resources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bluetooth-ctlr-arch.html">LE Controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bluetooth-dev.html">Application Development</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/index.html">API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bluetooth-tools.html">Tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bluetooth-shell.html">Shell</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../canbus/index.html">Controller Area Network (CAN) Bus Protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../networking/index.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lora_lorawan/index.html">LoRa and LoRaWAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usb/index.html">USB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modbus/index.html">Modbus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Connectivity</a> &raquo;</li>
+  
+     <li><a href="index.html">Bluetooth</a> &raquo;</li>
+  
+  <li>Stack Architecture</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/connectivity/bluetooth/bluetooth-arch.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27connectivity%2Fbluetooth%2Fbluetooth-arch%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Bluetooth+Host%2Carea%3A+Bluetooth&env=-+Page%3A+connectivity%2Fbluetooth%2Fbluetooth-arch%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="stack-architecture">
+<span id="bluetooth-arch"></span><h1>Stack Architecture<a class="headerlink" href="#stack-architecture" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>This page describes the software architecture of Zephyr’s Bluetooth protocol
+stack.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Zephyr supports mainly Bluetooth Low Energy (LE), the low-power
+version of the Bluetooth specification. Zephyr also has limited support
+for portions of the BR/EDR Host.</p>
+</div>
+<section id="bluetooth-le-layers">
+<span id="bluetooth-layers"></span><h3>Bluetooth LE Layers<a class="headerlink" href="#bluetooth-le-layers" title="Link to this heading"></a></h3>
+<p>There are 3 main layers that together constitute a full Bluetooth Low Energy
+protocol stack:</p>
+<ul class="simple">
+<li><p><strong>Host</strong>: This layer sits right below the application, and is comprised of
+multiple (non real-time) network and transport protocols enabling
+applications to communicate with peer devices in a standard and interoperable
+way.</p></li>
+<li><p><strong>Controller</strong>: The Controller implements the Link Layer (LE LL), the
+low-level, real-time protocol which provides, in conjunction with the Radio
+Hardware, standard-interoperable over-the-air communication. The LL schedules
+packet reception and transmission, guarantees the delivery of data, and
+handles all the LL control procedures.</p></li>
+<li><p><strong>Radio Hardware</strong>: Hardware implements the required analog and digital
+baseband functional blocks that permit the Link Layer firmware to send and
+receive in the 2.4GHz band of the spectrum.</p></li>
+</ul>
+</section>
+<section id="host-controller-interface">
+<span id="bluetooth-hci"></span><h3>Host Controller Interface<a class="headerlink" href="#host-controller-interface" title="Link to this heading"></a></h3>
+<p>The <a class="reference external" href="https://www.bluetooth.com/specifications/bluetooth-core-specification">Bluetooth Specification</a> describes the format in which a Host must
+communicate with a Controller. This is called the Host Controller Interface
+(HCI) protocol. HCI can be implemented over a range of different physical
+transports like UART, SPI, or USB. This protocol defines the commands that a Host
+can send to a Controller and the events that it can expect in return, and also
+the format for user and protocol data that needs to go over the air. The HCI
+ensures that different Host and Controller implementations can communicate
+in a standard way making it possible to combine Hosts and Controllers from
+different vendors.</p>
+</section>
+<section id="configurations">
+<span id="bluetooth-configs"></span><h3>Configurations<a class="headerlink" href="#configurations" title="Link to this heading"></a></h3>
+<p>The three separate layers of the protocol and the standardized interface make
+it possible to implement the Host and Controller on different platforms. The two
+following configurations are commonly used:</p>
+<ul class="simple">
+<li><p><strong>Single-chip configuration</strong>: In this configuration, a single microcontroller
+implements all three layers and the application itself. This can also be called a
+system-on-chip (SoC) implementation. In this case the Bluetooth Host and the Bluetooth
+Controller communicate directly through function calls and queues in RAM. The
+Bluetooth specification does not specify how HCI is implemented in this
+single-chip configuration and so how HCI commands, events, and data flows between
+the two can be implementation-specific. This configuration is well suited for
+those applications and designs that require a small footprint and the lowest
+possible power consumption, since everything runs on a single IC.</p></li>
+<li><p><strong>Dual-chip configuration</strong>: This configuration uses two separate ICs,
+one running the Application and the Host, and a second one with the Controller
+and the Radio Hardware. This is sometimes also called a connectivity-chip
+configuration. This configuration allows for a wider variety of combinations of
+Hosts when using the Zephyr OS as a Controller. Since HCI ensures
+interoperability among Host and Controller implementations, including of course
+Zephyr’s very own Bluetooth Host and Controller, users of the Zephyr Controller can
+choose to use whatever Host running on any platform they prefer. For example,
+the host can be the Linux Bluetooth Host stack (BlueZ) running on any processor
+capable of supporting Linux. The Host processor may of course also run Zephyr
+and the Zephyr OS Bluetooth Host. Conversely, combining an IC running the Zephyr
+Host with an external Controller that does not run Zephyr is also supported.</p></li>
+</ul>
+</section>
+<section id="build-types">
+<span id="bluetooth-build-types"></span><h3>Build Types<a class="headerlink" href="#build-types" title="Link to this heading"></a></h3>
+<p>The Zephyr software stack as an RTOS is highly configurable, and in particular,
+the Bluetooth subsystem can be configured in multiple ways during the build process to
+include only the features and layers that are required to reduce RAM and ROM
+footprint as well as power consumption. Here’s a short list of the different
+Bluetooth-enabled builds that can be produced from the Zephyr project codebase:</p>
+<ul>
+<li><p><strong>Controller-only build</strong>: When built as a Bluetooth Controller, Zephyr includes
+the Link Layer and a special application. This application is different
+depending on the physical transport chosen for HCI:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../samples/bluetooth/hci_uart/README.html#bluetooth_hci_uart" title="Expose a Bluetooth controller to another device or CPU over UART.">HCI UART</a></p></li>
+<li><p><a class="reference internal" href="../../samples/bluetooth/hci_usb/README.html#bluetooth_hci_usb" title="Turn a Zephyr board into a USB Bluetooth dongle (compatible with all operating systems).">HCI USB</a></p></li>
+<li><p><a class="reference internal" href="../../samples/bluetooth/hci_spi/README.html#bluetooth_hci_spi" title="Expose a Bluetooth controller to another device or CPU over SPI.">HCI SPI</a></p></li>
+</ul>
+<p>This application acts as a bridge between the UART, SPI or USB peripherals and
+the Controller subsystem, listening for HCI commands, sending application data
+and responding with events and received data.  A build of this type sets the
+following Kconfig option values:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_BT" title="CONFIG_BT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT</span></code></a> <code class="docutils literal notranslate"><span class="pre">=y</span></code></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_BT_HCI" title="CONFIG_BT_HCI"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_HCI</span></code></a> <code class="docutils literal notranslate"><span class="pre">=y</span></code></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_BT_HCI_RAW" title="CONFIG_BT_HCI_RAW"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_HCI_RAW</span></code></a> <code class="docutils literal notranslate"><span class="pre">=y</span></code></p></li>
+</ul>
+<p>The controller itself needs to be enabled as well, typically by making sure the
+corresponding device tree node is enabled.</p>
+</li>
+<li><p><strong>Host-only build</strong>: A Zephyr OS Host build will contain the Application and
+the Bluetooth Host, along with an HCI driver (UART or SPI) to interface with an
+external Controller chip.
+A build of this type sets the following Kconfig option values:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_BT" title="CONFIG_BT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT</span></code></a> <code class="docutils literal notranslate"><span class="pre">=y</span></code></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_BT_HCI" title="CONFIG_BT_HCI"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_HCI</span></code></a> <code class="docutils literal notranslate"><span class="pre">=y</span></code></p></li>
+</ul>
+<p>Additionally, if the platform supports also a local controller, it needs to be
+disabled, typically by disabling the corresponding device tree node. This is done
+together with enabling the device tree node for some other HCI driver and making
+sure that the <code class="docutils literal notranslate"><span class="pre">zephyr,bt-hci</span></code> device tree chosen property points at it.</p>
+<p>All of the samples located in <code class="docutils literal notranslate"><span class="pre">samples/bluetooth</span></code> except for the ones
+used for Controller-only builds can be built as Host-only</p>
+</li>
+<li><p><strong>Combined build</strong>: This includes the Application, the Host and the
+Controller, and it is used exclusively for single-chip (SoC) configurations.
+A build of this type sets the following Kconfig option values:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_BT" title="CONFIG_BT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT</span></code></a> <code class="docutils literal notranslate"><span class="pre">=y</span></code></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_BT_HCI" title="CONFIG_BT_HCI"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_HCI</span></code></a> <code class="docutils literal notranslate"><span class="pre">=y</span></code></p></li>
+</ul>
+<p>The controller itself needs to be enabled as well, typically by making sure the
+corresponding device tree node is enabled.</p>
+<p>All of the samples located in <code class="docutils literal notranslate"><span class="pre">samples/bluetooth</span></code> except for the ones
+used for Controller-only builds can be built as Combined</p>
+</li>
+</ul>
+<p>The picture below shows the SoC or single-chip configuration when using a Zephyr
+combined build (a build that includes both a Bluetooth Host and a Controller in the
+same firmware image that is programmed onto the chip):</p>
+<figure class="align-center" id="id1">
+<img alt="Bluetooth Combined build on a single chip" src="../../_images/ble_cfg_single.png" />
+<figcaption>
+<p><span class="caption-text">A Combined build on a Single-Chip configuration</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>When using connectivity or dual-chip configurations, several Host and Controller
+combinations are possible, some of which are depicted below:</p>
+<figure class="align-center" id="id2">
+<img alt="Bluetooth dual-chip configuration builds" src="../../_images/ble_cfg_dual.png" />
+<figcaption>
+<p><span class="caption-text">Host-only and Controller-only builds on dual-chip configurations</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>When using a Zephyr Host (left side of image), two instances of Zephyr OS
+must be built with different configurations, yielding two separate images that
+must be programmed into each of the chips respectively. The Host build image
+contains the application, the Bluetooth Host and the selected HCI driver (UART or
+SPI), while the Controller build runs either the
+<a class="reference internal" href="../../samples/bluetooth/hci_uart/README.html#bluetooth_hci_uart" title="Expose a Bluetooth controller to another device or CPU over UART.">HCI UART</a>, or the
+<a class="reference internal" href="../../samples/bluetooth/hci_spi/README.html#bluetooth_hci_spi" title="Expose a Bluetooth controller to another device or CPU over SPI.">HCI SPI</a> app to provide an interface to
+the Bluetooth Controller.</p>
+<p>This configuration is not limited to using a Zephyr OS Host, as the right side
+of the image shows. One can indeed take one of the many existing GNU/Linux
+distributions, most of which include Linux’s own Bluetooth Host (BlueZ), to connect it
+via UART or USB to one or more instances of the Zephyr OS Controller build.
+BlueZ as a Host supports multiple Controllers simultaneously for applications
+that require more than one Bluetooth radio operating at the same time but sharing the
+same Host stack.</p>
+</section>
+</section>
+<section id="source-tree-layout">
+<h2>Source tree layout<a class="headerlink" href="#source-tree-layout" title="Link to this heading"></a></h2>
+<p>The stack is split up as follows in the source tree:</p>
+<dl class="simple">
+<dt><a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/subsys/bluetooth/host">subsys/bluetooth/host</a></dt><dd><p><a class="reference internal" href="bluetooth-le-host.html#bluetooth-le-host"><span class="std std-ref">The host stack</span></a>. This is where the HCI command and
+event handling as well as connection tracking happens. The implementation of
+the core protocols such as L2CAP, ATT, and SMP is also here.</p>
+</dd>
+<dt><a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/subsys/bluetooth/controller">subsys/bluetooth/controller</a></dt><dd><p><a class="reference internal" href="bluetooth-ctlr-arch.html#bluetooth-ctlr-arch"><span class="std std-ref">Bluetooth LE Controller</span></a> implementation.
+Implements the controller-side of HCI, the Link Layer as well as access to the
+radio transceiver.</p>
+</dd>
+<dt><a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/bluetooth/">include/zephyr/bluetooth/</a></dt><dd><p><a class="reference internal" href="api/index.html#bluetooth-api"><span class="std std-ref">Public API</span></a> header files. These are the header files
+applications need to include in order to use Bluetooth functionality.</p>
+</dd>
+<dt><a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/drivers/bluetooth/">drivers/bluetooth/</a></dt><dd><p>HCI transport drivers. Every HCI transport needs its own driver. For example,
+the two common types of UART transport protocols (3-Wire and 5-Wire)
+have their own drivers.</p>
+</dd>
+<dt><a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/samples/bluetooth/">samples/bluetooth/</a></dt><dd><p><a class="reference internal" href="../../samples/bluetooth/bluetooth.html#bluetooth"><span class="xref zephyr zephyr-code-sample-category">Sample Bluetooth code</span></a>. This is a good reference to
+get started with Bluetooth application development.</p>
+</dd>
+<dt><a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/tests/bluetooth/">tests/bluetooth/</a></dt><dd><p>Test applications. These applications are used to verify the
+functionality of the Bluetooth stack, but are not necessary the best
+source for sample code (see <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/samples/bluetooth">samples/bluetooth</a> instead).</p>
+</dd>
+<dt><a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/doc/connectivity/bluetooth/">doc/connectivity/bluetooth/</a></dt><dd><p>Extra documentation, such as PICS documents.</p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

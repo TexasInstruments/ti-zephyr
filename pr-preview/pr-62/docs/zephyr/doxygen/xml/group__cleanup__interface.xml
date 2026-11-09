@@ -1,0 +1,370 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="group__cleanup__interface" kind="group">
+    <compoundname>cleanup_interface</compoundname>
+    <title>Cleanup Helper Interface</title>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="group__cleanup__interface_1ga4faf2c585a3fa2ce28480a5e2805ca8b" prot="public" static="no">
+        <name>SCOPE_VAR_DEFINE</name>
+        <param><defname>_name</defname></param>
+        <param><defname>_type</defname></param>
+        <param><defname>_exit_fn</defname></param>
+        <param><defname>_init_fn</defname></param>
+        <param><defname>...</defname></param>
+        <initializer>        static inline void __maybe_unused cleanup_##_name##_exit(_type *p)                         \
+        {                                                                                          \
+                _type _T = *p;                                                                     \
+                _exit_fn;                                                                          \
+        }                                                                                          \
+        static inline _type __maybe_unused cleanup_##_name##_init(__VA_ARGS__)                     \
+        {                                                                                          \
+                _type t = _init_fn;                                                                \
+                return t;                                                                          \
+        }                                                                                          \
+        typedef _type cleanup_##_name##_t</initializer>
+        <briefdescription>
+<para>Define a scoped variable type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This macro defines a new cleanup helper that can be used with the <computeroutput>__cleanup</computeroutput> attribute to automatically execute cleanup code when a variable goes out of scope.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>_name</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Name of the cleanup helper </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>_type</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Type of the variable to be cleaned up </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>_exit_fn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Cleanup code to execute when variable goes out of scope (can reference <computeroutput>_T</computeroutput>) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>_init_fn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Initialization expression for the variable </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>...</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Initialization arguments (variadic)</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+The macro creates:<itemizedlist>
+<listitem><para>An exit function <computeroutput>cleanup_&lt;name&gt;_exit</computeroutput> that executes cleanup code</para>
+</listitem><listitem><para>An init function <computeroutput>cleanup_&lt;name&gt;_init</computeroutput> that initializes the variable</para>
+</listitem><listitem><para>A typedef <computeroutput>cleanup_&lt;name&gt;_t</computeroutput> for the type</para>
+</listitem></itemizedlist>
+</para>
+<para><simplesect kind="attention"><para>Available only when the following Kconfig option is enabled: <computeroutput>CONFIG_SCOPE_CLEANUP_HELPERS</computeroutput>.</para>
+</simplesect>
+Usage: <programlisting filename=".c"><codeline><highlight class="keyword">struct<sp/></highlight><highlight class="normal">foo<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>value;</highlight></codeline>
+<codeline><highlight class="normal">};</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">foo<sp/>*foo_constructor(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>value)</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">struct<sp/></highlight><highlight class="normal">foo<sp/>*ptr<sp/>=<sp/><ref refid="group__heap__apis_1gaa8edf1e63e5d5dd78d7adcfd787394ee" kindref="member">k_malloc</ref>(</highlight><highlight class="keyword">sizeof</highlight><highlight class="normal">(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>foo));</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(ptr<sp/>!=<sp/><ref refid="iar__missing__defs_8h_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ptr-&gt;value<sp/>=<sp/>value;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>ptr;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">inline</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>foo_destructor(</highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>foo<sp/>*ptr)</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__heap__apis_1ga79b63cc93b3358cf82d74f40e73b69d5" kindref="member">k_free</ref>(ptr);</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="comment">//<sp/>Define<sp/>the<sp/>cleanup<sp/>helper</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><ref refid="group__cleanup__interface_1ga4faf2c585a3fa2ce28480a5e2805ca8b" kindref="member">SCOPE_VAR_DEFINE</ref>(foo,<sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/>foo<sp/>*,<sp/>foo_destructor(_T),<sp/>foo_constructor(val),<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>val);</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>some_function(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>The<sp/>scope_var<sp/>macro<sp/>declares<sp/>&apos;f&apos;<sp/>with<sp/>automatic<sp/>cleanup</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="group__cleanup__interface_1ga62362f13860dbea4361e7cf149801d3f" kindref="member">scope_var</ref>(foo,<sp/>f)(42);</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">if</highlight><highlight class="normal"><sp/>(f<sp/>==<sp/><ref refid="iar__missing__defs_8h_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>)<sp/>{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>-<ref refid="group__system__errno_1ga6a05c923dad0c1208043e9c20a58c8e5" kindref="member">ENOMEM</ref>;</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>Use<sp/>f<sp/>normally<sp/>-<sp/>it<sp/>points<sp/>to<sp/>an<sp/>allocated<sp/>and<sp/>initialized<sp/>struct<sp/>foo</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><ref refid="printk_8h_1a768a7dff8592b69f327a08f96b00fa54" kindref="member">printk</ref>(</highlight><highlight class="stringliteral">&quot;Value:<sp/>%d\n&quot;</highlight><highlight class="normal">,<sp/>f-&gt;value);</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>No<sp/>need<sp/>to<sp/>manually<sp/>free<sp/>-<sp/>foo_destructor<sp/>is<sp/>called<sp/>automatically</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="comment">//<sp/>when<sp/>&apos;f&apos;<sp/>goes<sp/>out<sp/>of<sp/>scope</highlight><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/cleanup.h" line="85" column="9" bodyfile="zephyr/cleanup.h" bodystart="85" bodyend="96"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cleanup__interface_1gab584b9adf45e13376c0f8e0b817a6213" prot="public" static="no">
+        <name>SCOPE_GUARD_DEFINE</name>
+        <param><defname>_name</defname></param>
+        <param><defname>_type</defname></param>
+        <param><defname>_lock</defname></param>
+        <param><defname>_unlock</defname></param>
+        <initializer>        <ref refid="group__cleanup__interface_1ga4faf2c585a3fa2ce28480a5e2805ca8b" kindref="member">SCOPE_VAR_DEFINE</ref>(                                                                          \
+                guard_##_name, _type, if (_T != <ref refid="iar__missing__defs_8h_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>) { _unlock; }, ({                             \
+                        _lock;                                                                     \
+                        _T;                                                                        \
+                }),                                                                                \
+                _type _T)</initializer>
+        <briefdescription>
+<para>Define a scoped guard type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This macro defines a guard that automatically acquires a lock on initialization and releases it when going out of scope.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>_name</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Name of the guard (will be prefixed with guard_) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>_type</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Type of the lock object (typically a pointer) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>_lock</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Expression to acquire the lock (can reference <computeroutput>_T</computeroutput>) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>_unlock</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Expression to release the lock (can reference <computeroutput>_T</computeroutput>)</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="attention"><para>Available only when the following Kconfig option is enabled: <computeroutput>CONFIG_SCOPE_CLEANUP_HELPERS</computeroutput>.</para>
+</simplesect>
+Usage: <programlisting filename=".c"><codeline><highlight class="normal"><ref refid="group__cleanup__interface_1gab584b9adf45e13376c0f8e0b817a6213" kindref="member">SCOPE_GUARD_DEFINE</ref>(<ref refid="structk__mutex" kindref="compound">k_mutex</ref>,<sp/></highlight><highlight class="keyword">struct</highlight><highlight class="normal"><sp/><ref refid="structk__mutex" kindref="compound">k_mutex</ref><sp/>*,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)<ref refid="group__mutex__apis_1ga850549358645249c285669baa49c33b0" kindref="member">k_mutex_lock</ref>(_T,<sp/><ref refid="group__clock__apis_1ga0bb4b83f0222193b21a8910311bab0ca" kindref="member">K_FOREVER</ref>),</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal">)<ref refid="group__mutex__apis_1ga360f4c0e7258b0d7030cdb1f452b2c31" kindref="member">k_mutex_unlock</ref>(_T));</highlight></codeline>
+</programlisting> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/cleanup.h" line="118" column="9" bodyfile="zephyr/cleanup.h" bodystart="118" bodyend="124"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cleanup__interface_1ga07847cc6bb3cd5f63b4d05e084eb9203" prot="public" static="no">
+        <name>SCOPE_DEFER_DEFINE</name>
+        <param><defname>_func</defname></param>
+        <param><defname>...</defname></param>
+        <initializer>        <ref refid="group__sys-util_1ga5483ea38af79bc6c4509936288705377" kindref="member">COND_CODE_0</ref>(<ref refid="group__sys-util_1ga1e5b59140ab2bf4471a512b689eda2cb" kindref="member">NUM_VA_ARGS</ref>(__VA_ARGS__),                                                      \
+                    (Z_SCOPE_DEFER_DEFINE_VOID(_func)),                                            \
+                    (Z_SCOPE_DEFER_DEFINE_N(_func, __VA_ARGS__)))</initializer>
+        <briefdescription>
+<para>Define a scoped defer type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This macro defines a defer that executes a cleanup function when the variable goes out of scope. Unlike guards, defers don&apos;t acquire a resource on initialization.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>_func</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The function to call at cleanup </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>...</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The argument types to pass to the cleanup function</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="attention"><para>Available only when the following Kconfig option is enabled: <computeroutput>CONFIG_SCOPE_CLEANUP_HELPERS</computeroutput>.</para>
+</simplesect>
+Usage: <programlisting filename=".c"><codeline><highlight class="normal"><ref refid="group__cleanup__interface_1ga07847cc6bb3cd5f63b4d05e084eb9203" kindref="member">SCOPE_DEFER_DEFINE</ref>(<ref refid="group__heap__apis_1ga79b63cc93b3358cf82d74f40e73b69d5" kindref="member">k_free</ref>,<sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*);</highlight></codeline>
+</programlisting> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/cleanup.h" line="164" column="9" bodyfile="zephyr/cleanup.h" bodystart="164" bodyend="167"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cleanup__interface_1ga62362f13860dbea4361e7cf149801d3f" prot="public" static="no">
+        <name>scope_var</name>
+        <param><defname>_name</defname></param>
+        <param><defname>_var</defname></param>
+        <initializer>        cleanup_##_name##_t _var __cleanup(cleanup_##_name##_exit) = cleanup_##_name##_init</initializer>
+        <briefdescription>
+<para>Declare a variable with automatic cleanup. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This macro declares a variable with automatic cleanup using a previously defined cleanup helper. The variable will be automatically cleaned up when it goes out of scope.</para>
+<para>The variable is initialized by calling the init function defined in <ref refid="group__cleanup__interface_1ga4faf2c585a3fa2ce28480a5e2805ca8b" kindref="member">SCOPE_VAR_DEFINE</ref>. Use <ref refid="group__cleanup__interface_1ga096c421f2ba9d7acd68039d493a80b63" kindref="member">scope_var_init</ref> if you want to initialize the variable with a direct expression instead of calling the init function.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>_name</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Name of the cleanup helper (defined by <ref refid="group__cleanup__interface_1ga4faf2c585a3fa2ce28480a5e2805ca8b" kindref="member">SCOPE_VAR_DEFINE</ref>) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>_var</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Name of the variable to declare</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="attention"><para>Available only when the following Kconfig option is enabled: <computeroutput>CONFIG_SCOPE_CLEANUP_HELPERS</computeroutput>.</para>
+</simplesect>
+Usage: <programlisting filename=".c"><codeline><highlight class="normal"><ref refid="group__cleanup__interface_1ga62362f13860dbea4361e7cf149801d3f" kindref="member">scope_var</ref>(some_type,<sp/>my_var)(init_args);<sp/></highlight></codeline>
+</programlisting></para>
+<para><simplesect kind="see"><para><ref refid="group__cleanup__interface_1ga096c421f2ba9d7acd68039d493a80b63" kindref="member">scope_var_init</ref> for direct initialization without calling the init function </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/cleanup.h" line="199" column="9" bodyfile="zephyr/cleanup.h" bodystart="199" bodyend="200"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cleanup__interface_1ga096c421f2ba9d7acd68039d493a80b63" prot="public" static="no">
+        <name>scope_var_init</name>
+        <param><defname>_name</defname></param>
+        <param><defname>_var</defname></param>
+        <param><defname>_init_expr</defname></param>
+        <initializer>        cleanup_##_name##_t _var __cleanup(cleanup_##_name##_exit) = (_init_expr)</initializer>
+        <briefdescription>
+<para>Declare a variable with automatic cleanup using direct initialization. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This macro declares a variable with automatic cleanup using a previously defined cleanup helper. The variable will be automatically cleaned up when it goes out of scope.</para>
+<para>Unlike <ref refid="group__cleanup__interface_1ga62362f13860dbea4361e7cf149801d3f" kindref="member">scope_var</ref>, this macro accepts a direct initialization expression instead of calling the init function defined in <ref refid="group__cleanup__interface_1ga4faf2c585a3fa2ce28480a5e2805ca8b" kindref="member">SCOPE_VAR_DEFINE</ref>. Use this when you need to bypass the init function and initialize the variable directly (e.g., with a struct initializer, a different function, or a literal value).</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>_name</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Name of the cleanup helper (defined by <ref refid="group__cleanup__interface_1ga4faf2c585a3fa2ce28480a5e2805ca8b" kindref="member">SCOPE_VAR_DEFINE</ref>) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>_var</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Name of the variable to declare </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>_init_expr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Direct initialization expression for the variable (e.g., <computeroutput>{0}</computeroutput>, <computeroutput><ref refid="iar__missing__defs_8h_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref></computeroutput>, or a function call)</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="attention"><para>Available only when the following Kconfig option is enabled: <computeroutput>CONFIG_SCOPE_CLEANUP_HELPERS</computeroutput>.</para>
+</simplesect>
+Usage: <programlisting filename=".c"><codeline><highlight class="normal"><ref refid="group__cleanup__interface_1ga096c421f2ba9d7acd68039d493a80b63" kindref="member">scope_var_init</ref>(some_type,<sp/>my_var,<sp/>{0});<sp/></highlight></codeline>
+</programlisting></para>
+<para><simplesect kind="see"><para><ref refid="group__cleanup__interface_1ga62362f13860dbea4361e7cf149801d3f" kindref="member">scope_var</ref> for initialization using the init function </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/cleanup.h" line="224" column="9" bodyfile="zephyr/cleanup.h" bodystart="224" bodyend="225"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cleanup__interface_1ga3905160905199178d29b66084f237f4e" prot="public" static="no">
+        <name>scope_guard</name>
+        <param><defname>_name</defname></param>
+        <initializer><ref refid="group__cleanup__interface_1ga62362f13860dbea4361e7cf149801d3f" kindref="member">scope_var</ref>(guard_##_name, Z_UNIQUE_ID(guard))</initializer>
+        <briefdescription>
+<para>Acquire a scoped guard lock. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This macro creates a guard variable with an automatically generated unique name. The guard will acquire the lock on initialization and release it when going out of scope.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>_name</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Name of the guard type (defined by <ref refid="group__cleanup__interface_1gab584b9adf45e13376c0f8e0b817a6213" kindref="member">SCOPE_GUARD_DEFINE</ref> or <ref refid="group__cleanup__interface_1ga4faf2c585a3fa2ce28480a5e2805ca8b" kindref="member">SCOPE_VAR_DEFINE</ref> with <computeroutput>guard_</computeroutput> prefix)</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="attention"><para>Available only when the following Kconfig option is enabled: <computeroutput>CONFIG_SCOPE_CLEANUP_HELPERS</computeroutput>.</para>
+</simplesect>
+Usage: <programlisting filename=".c"><codeline><highlight class="normal"><ref refid="group__cleanup__interface_1ga3905160905199178d29b66084f237f4e" kindref="member">scope_guard</ref>(<ref refid="structk__mutex" kindref="compound">k_mutex</ref>)(&amp;my_mutex);<sp/></highlight></codeline>
+</programlisting> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/cleanup.h" line="240" column="9" bodyfile="zephyr/cleanup.h" bodystart="240" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__cleanup__interface_1ga5ea0ef9eed956fa112b069d87f8b05e5" prot="public" static="no">
+        <name>scope_defer</name>
+        <param><defname>_name</defname></param>
+        <initializer><ref refid="group__cleanup__interface_1ga62362f13860dbea4361e7cf149801d3f" kindref="member">scope_var</ref>(defer_##_name, Z_UNIQUE_ID(defer))</initializer>
+        <briefdescription>
+<para>Register a scoped deferred call. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This macro creates a defer variable with an automatically generated unique name. The defer will execute its cleanup action when going out of scope.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>_name</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Name of the defer type (defined by <ref refid="group__cleanup__interface_1ga07847cc6bb3cd5f63b4d05e084eb9203" kindref="member">SCOPE_DEFER_DEFINE</ref> or <ref refid="group__cleanup__interface_1ga4faf2c585a3fa2ce28480a5e2805ca8b" kindref="member">SCOPE_VAR_DEFINE</ref> with <computeroutput>defer_</computeroutput> prefix)</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="attention"><para>Available only when the following Kconfig option is enabled: <computeroutput>CONFIG_SCOPE_CLEANUP_HELPERS</computeroutput>.</para>
+</simplesect>
+Usage: <programlisting filename=".c"><codeline><highlight class="normal"><ref refid="group__cleanup__interface_1ga5ea0ef9eed956fa112b069d87f8b05e5" kindref="member">scope_defer</ref>(<ref refid="group__mutex__apis_1ga360f4c0e7258b0d7030cdb1f452b2c31" kindref="member">k_mutex_unlock</ref>)(&amp;my_mutex);<sp/></highlight></codeline>
+</programlisting> </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/cleanup.h" line="255" column="9" bodyfile="zephyr/cleanup.h" bodystart="255" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

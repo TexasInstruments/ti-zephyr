@@ -1,0 +1,1092 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Device Power Management &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/services/pm/device.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Device Runtime Power Management" href="device_runtime.html" />
+    <link rel="prev" title="System Power Management" href="system.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">OS Services</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../binary_descriptors/index.html">Binary Descriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../console.html">Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cpu_freq/index.html">CPU Frequency Scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cpu_load/index.html">CPU Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../crc/index.html">CRC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../crypto/index.html">Cryptography</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debugging/index.html">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">Device Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dsp/index.html">Digital Signal Processing (DSP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../formatted_output.html">Formatted Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../input/index.html">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../instrumentation/index.html">Instrumentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ipc/index.html">Interprocessor Communication (IPC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../jwt/index.html">JSON Web Token (JWT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../llext/index.html">Linkable Loadable Extensions (LLEXT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../logging/index.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tracing/index.html">Tracing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resource_management/index.html">Resource Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mem_mgmt/index.html">Memory Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../net_buf/index.html">Network Buffers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modem/index.html">Modem modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notify.html">Asynchronous Notifications</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Power Management</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">System Power Management</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Device Power Management</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#introduction">Introduction</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#device-runtime-power-management">Device Runtime Power Management</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#system-managed-device-power-management">System-Managed Device Power Management</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#device-power-management-states">Device Power Management States</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#device-model-with-device-power-management-support">Device Model with Device Power Management Support</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#device-model-with-partial-device-power-management-support">Device Model with Partial Device Power Management Support</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#shell-commands">Shell Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#busy-status-indication">Busy Status Indication</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#device-power-management-x-system-power-management">Device Power Management X System Power Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#wakeup-capability">Wakeup capability</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="device_runtime.html">Device Runtime Power Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="power_domain.html">Power Domain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/index.html">Power Management APIs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">OS Abstraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../poweroff.html">Power off</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../profiling/index.html">Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../shell/index.html">Shell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../serialization/index.html">Serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../smf/index.html">State Machine Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sensing/index.html">Sensing Subsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../task_wdt/index.html">Task Watchdog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tfm/index.html">Trusted Firmware-M (TF-M)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../uuid/index.html">UUID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rtio/index.html">Real Time I/O (RTIO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../zbus/index.html">Zephyr bus (zbus)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">OS Services</a> &raquo;</li>
+  
+     <li><a href="index.html">Power Management</a> &raquo;</li>
+  
+  <li>Device Power Management</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/services/pm/device.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27services%2Fpm%2Fdevice%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Power+Management&env=-+Page%3A+services%2Fpm%2Fdevice%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="device-power-management">
+<h1>Device Power Management<a class="headerlink" href="#device-power-management" title="Link to this heading"></a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
+<p>Device Power Management in Zephyr is a feature which presents mechanisms
+to coherently affect the control of power management actions to be taken
+by device drivers. This control is based on unambiguous expectations
+which could be set by any component of the system, and on power-related
+dependencies that devices may have on each other.</p>
+<p>Zephyr supports two methods of device power management:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="#pm-device-runtime-pm"><span class="std std-ref">Device Runtime Power Management</span></a></p></li>
+<li><p><a class="reference internal" href="#pm-device-system-pm"><span class="std std-ref">System-Managed Device Power Management</span></a></p></li>
+</ul>
+</div></blockquote>
+<section id="device-runtime-power-management">
+<span id="pm-device-runtime-pm"></span><h3>Device Runtime Power Management<a class="headerlink" href="#device-runtime-power-management" title="Link to this heading"></a></h3>
+<p>Device runtime power management involves coordinated interaction between
+device drivers, subsystems, and applications. While device drivers
+play a crucial role in directly controlling the power state of
+devices, the decision to suspend or resume a device can also be
+influenced by higher layers of the software stack.</p>
+<p>Each layer—device drivers, subsystems, and applications—can operate
+independently without needing to know about the specifics of the other
+layers because the subsystem uses reference count to check when it needs
+to suspend or resume a device.</p>
+<ul class="simple">
+<li><p><strong>Device drivers</strong> are responsible for managing the
+power state of devices. They interact directly with the hardware to
+put devices into low-power states (suspend) when they are not in
+use, and bring them back (resume) when needed. Drivers should use the
+<a class="reference internal" href="api/index.html#device-runtime-apis"><span class="std std-ref">device runtime power management APIs</span></a> provided
+by Zephyr to control the power state of devices.</p></li>
+<li><p><strong>Subsystems</strong>, such as sensors, file systems,
+and network, can also influence device power management.
+Subsystems may have better knowledge about the overall system
+state and workload, allowing them to make informed decisions about
+when to suspend or resume devices. For example, a networking
+subsystem may decide to keep a network interface powered on if it
+expects network activity in the near future.</p></li>
+<li><p><strong>Applications</strong> running on Zephyr can impact device
+power management as well. An application may have specific
+requirements regarding device usage and power consumption. For
+example, an application that streams data over a network may need
+to keep the network interface powered on continuously.</p></li>
+</ul>
+<p>Coordination between device drivers, subsystems, and applications is
+key to efficient device power management. For example, a device driver
+may not know that a subsystem will perform a series of sequential
+operations that require a device to remain powered on. In such cases,
+the subsystem can use device runtime power management to ensure that
+the device remains in an active state until the operations are
+complete.</p>
+<p>When using this Device Runtime Power Management, the System Power
+Management subsystem is able to change power states quickly because it
+does not need to spend time suspending and resuming devices that are
+runtime enabled.</p>
+<p>For more information, see <a class="reference internal" href="device_runtime.html#pm-device-runtime"><span class="std std-ref">Device Runtime Power Management</span></a>.</p>
+</section>
+<section id="system-managed-device-power-management">
+<span id="pm-device-system-pm"></span><h3>System-Managed Device Power Management<a class="headerlink" href="#system-managed-device-power-management" title="Link to this heading"></a></h3>
+<p>The system managed device power management (PM) framework is a method where
+devices are suspended along with the system entering a CPU (or SoC) power state.
+It can be enabled by setting <a class="reference internal" href="../../kconfig.html#CONFIG_PM_DEVICE_SYSTEM_MANAGED" title="CONFIG_PM_DEVICE_SYSTEM_MANAGED"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PM_DEVICE_SYSTEM_MANAGED</span></code></a>.
+When using this method, device power management is mostly done inside
+<code class="xref c c-func docutils literal notranslate"><span class="pre">pm_system_suspend()</span></code>.</p>
+<p>If a decision to enter a CPU lower power state is made, the power management
+subsystem will check if the selected low power state triggers device power
+management and then suspend devices before changing state. The subsystem takes
+care of suspending devices following their initialization order, ensuring that
+possible dependencies between them are satisfied. As soon as the CPU wakes up
+from a sleep state, devices are resumed in the opposite order that they were
+suspended.</p>
+<p>The decision about suspending devices when entering a low power state is done based on the
+state and if it has set the property <code class="docutils literal notranslate"><span class="pre">zephyr,pm-device-disabled</span></code>. Here is
+an example of a target with two low power states with only one triggering device power
+management:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Node in a DTS file */</span>
+<span class="nf">cpus</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="nf">power-states</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">             </span><span class="nl">state0</span><span class="p">:</span><span class="w"> </span><span class="nf">state0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                     </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,power-state&quot;</span><span class="p">;</span>
+<span class="w">                     </span><span class="n">power-state-name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;standby&quot;</span><span class="p">;</span>
+<span class="w">                     </span><span class="n">min-residency-us</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">5000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                     </span><span class="n">exit-latency-us</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">240</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                     </span><span class="n">zephyr</span><span class="p">,</span><span class="n">pm-device-disabled</span><span class="p">;</span>
+<span class="w">             </span><span class="p">};</span>
+<span class="w">             </span><span class="nl">state1</span><span class="p">:</span><span class="w"> </span><span class="nf">state1</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                     </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,power-state&quot;</span><span class="p">;</span>
+<span class="w">                     </span><span class="n">power-state-name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;suspend-to-ram&quot;</span><span class="p">;</span>
+<span class="w">                     </span><span class="n">min-residency-us</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">8000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                     </span><span class="n">exit-latency-us</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">360</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">             </span><span class="p">};</span>
+<span class="w">     </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When using <a class="reference internal" href="system.html#pm-system"><span class="std std-ref">System Power Management</span></a>, device transitions can be run from the idle thread.
+As functions in this context cannot block, transitions that intend to use blocking
+APIs <strong>must</strong> check whether they can do so with <a class="reference internal" href="../../doxygen/html/group__thread__apis.html#ga366b9daa0be65b0a69dbc9f146064b68" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_can_yield()</span></code></a>.</p>
+</div>
+<p>This method of device power management can be useful in the following scenarios:</p>
+<ul class="simple">
+<li><p>Systems with no device requiring any blocking operations when suspending and
+resuming. This implementation is reasonably simpler than device runtime
+power management.</p></li>
+<li><p>For devices that can not make any power management decision and have to be
+always active. For example a firmware using Zephyr that is controlled by an
+external entity (e.g Host CPU). In this scenario, some devices have to be
+always active and should be suspended together with the SoC when requested by
+this external entity.</p></li>
+</ul>
+<p>It is important to emphasize that this method has drawbacks (see above) and
+<a class="reference internal" href="#pm-device-runtime-pm"><span class="std std-ref">Device Runtime Power Management</span></a> is the
+<strong>preferred</strong> method for implementing device power management.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When using this method of device power management, the CPU will not
+enter a low-power state if a device cannot be suspended. For example,
+if a device returns an error such as <code class="docutils literal notranslate"><span class="pre">-EBUSY</span></code> in response to the
+<code class="docutils literal notranslate"><span class="pre">PM_DEVICE_ACTION_SUSPEND</span></code> action, indicating it is in the middle of
+a transaction that cannot be interrupted. Another condition that
+prevents the CPU from entering a low-power state is if the option
+<a class="reference internal" href="../../kconfig.html#CONFIG_PM_NEED_ALL_DEVICES_IDLE" title="CONFIG_PM_NEED_ALL_DEVICES_IDLE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PM_NEED_ALL_DEVICES_IDLE</span></code></a> is set and a device
+is marked as busy.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Devices are suspended only when the last active core is entering a low power
+state and devices are resumed by the first core that becomes active.</p>
+</div>
+</section>
+</section>
+<section id="device-power-management-states">
+<h2>Device Power Management States<a class="headerlink" href="#device-power-management-states" title="Link to this heading"></a></h2>
+<p>The power management subsystem defines device states in
+<a class="reference internal" href="../../doxygen/html/group__subsys__pm__device.html#ga561c0789071e3c3963f21f4c4a1bb2c6" title=""><code class="xref c c-enum docutils literal notranslate"><span class="pre">pm_device_state</span></code></a>. This method is used to track power states of
+a particular device. It is important to emphasize that, although the
+state is tracked by the subsystem, it is the responsibility of each device driver
+to handle device actions(<a class="reference internal" href="../../doxygen/html/group__subsys__pm__device.html#gaee5546eacb9be7caa9d59ab63926cc4c" title=""><code class="xref c c-enum docutils literal notranslate"><span class="pre">pm_device_action</span></code></a>) which change device state.</p>
+<p>Device drivers implement the <code class="xref c c-func docutils literal notranslate"><span class="pre">pm_device_action_cb_t()</span></code> hook internally
+which receives the <a class="reference internal" href="../../doxygen/html/group__subsys__pm__device.html#gaee5546eacb9be7caa9d59ab63926cc4c" title=""><code class="xref c c-enum docutils literal notranslate"><span class="pre">pm_device_action</span></code></a> for the device driver to handle.
+If the <a class="reference internal" href="../../kconfig.html#CONFIG_PM_DEVICE" title="CONFIG_PM_DEVICE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PM_DEVICE</span></code></a> option is selected, the device
+drivers implementations of the hooks are exposed to the PM subsystem, enabling
+runtime power management of the devices.</p>
+<p><a class="reference internal" href="../../doxygen/html/group__subsys__pm__device.html#gaee5546eacb9be7caa9d59ab63926cc4c" title=""><code class="xref c c-enum docutils literal notranslate"><span class="pre">pm_device_action</span></code></a> actions have direct and unambiguous relationships with
+<a class="reference internal" href="../../doxygen/html/group__subsys__pm__device.html#ga561c0789071e3c3963f21f4c4a1bb2c6" title=""><code class="xref c c-enum docutils literal notranslate"><span class="pre">pm_device_state</span></code></a> states:</p>
+<figure class="align-default" id="id1">
+<div class="graphviz"><object data="../../_images/graphviz-36360d519b4e0ab984c60ce3bf1b6a4512328d39.svg" type="image/svg+xml" class="graphviz">
+<p class="warning">digraph {
+     node [shape=circle];
+     rankdir=LR;
+     subgraph {
+
+         SUSPENDED [label=PM_DEVICE_STATE_SUSPENDED];
+         SUSPENDING [label=PM_DEVICE_STATE_SUSPENDING];
+         ACTIVE [label=PM_DEVICE_STATE_ACTIVE];
+         OFF [label=PM_DEVICE_STATE_OFF];
+
+         ACTIVE -&gt; SUSPENDING;
+         SUSPENDING -&gt; ACTIVE;
+         SUSPENDING -&gt; SUSPENDED [&quot;label&quot;=&quot;PM_DEVICE_ACTION_SUSPEND&quot;];
+
+         ACTIVE -&gt; SUSPENDED [&quot;label&quot;=&quot;PM_DEVICE_ACTION_SUSPEND&quot;];
+         SUSPENDED -&gt; ACTIVE [&quot;label&quot;=&quot;PM_DEVICE_ACTION_RESUME&quot;];
+
+         {rank = same; SUSPENDED; SUSPENDING;}
+
+         OFF -&gt; SUSPENDED [&quot;label&quot;=&quot;PM_DEVICE_ACTION_TURN_ON&quot;];
+         SUSPENDED -&gt; OFF [&quot;label&quot;=&quot;PM_DEVICE_ACTION_TURN_OFF&quot;];
+     }
+ }</p></object></div>
+<figcaption>
+<p><span class="caption-text">Device actions x states</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>As mentioned above, device drivers do not directly change between these states.
+This is entirely done by the power management subsystem. Instead, drivers are
+responsible for implementing any hardware-specific tasks needed to handle state
+changes.</p>
+</section>
+<section id="device-model-with-device-power-management-support">
+<h2>Device Model with Device Power Management Support<a class="headerlink" href="#device-model-with-device-power-management-support" title="Link to this heading"></a></h2>
+<p>Drivers initialize devices using macros. See <a class="reference internal" href="../../kernel/drivers/index.html#device-model-api"><span class="std std-ref">Device Driver Model</span></a> for
+details on how these macros are used. A driver which implements device power
+management support must provide these macros with arguments that describe its
+power management implementation.</p>
+<p>Use <a class="reference internal" href="../../doxygen/html/group__subsys__pm__device.html#gae85fb5a7c31863a3663cef8dd7229c6c" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">PM_DEVICE_DEFINE</span></code></a> or <a class="reference internal" href="../../doxygen/html/group__subsys__pm__device.html#gaa2bd2c490fee99a6fc2b23605e799ef0" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">PM_DEVICE_DT_DEFINE</span></code></a> to define the
+power management resources required by a driver. These macros allocate the
+driver-specific context which is required by the power management subsystem.</p>
+<p>Drivers can use <a class="reference internal" href="../../doxygen/html/group__subsys__pm__device.html#gaa94d19d0590659b7aba83566de9bd0c5" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">PM_DEVICE_GET</span></code></a> or
+<a class="reference internal" href="../../doxygen/html/group__subsys__pm__device.html#gad244d742bc6b9874bfb90a2c3c87c4e8" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">PM_DEVICE_DT_GET</span></code></a> to get a pointer to this context. These
+pointers should be passed to <code class="docutils literal notranslate"><span class="pre">DEVICE_DEFINE</span></code> or <code class="docutils literal notranslate"><span class="pre">DEVICE_DT_DEFINE</span></code>
+to initialize the power management field in each <a class="reference internal" href="../../doxygen/html/structdevice.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">device</span></code></a>.</p>
+<p>The following example code shows how to implement device power management
+support in a device driver. Note that return values are explicitly ignored
+for brevity, in real drivers they must be handled.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/pm/device.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/pm/device_runtime.h&gt;</span>
+
+<span class="cp">#define DT_DRV_COMPAT dummy_device</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">dummy_driver_data</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">struct</span><span class="w"> </span><span class="nc">gpio_callback</span><span class="w"> </span><span class="n">int_pin_callback</span><span class="p">;</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">dummy_driver_config</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">bus</span><span class="p">;</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">gpio_dt_spec</span><span class="w"> </span><span class="n">int_gpio</span><span class="p">;</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">gpio_dt_spec</span><span class="w"> </span><span class="n">enable_pin</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">dummy_driver_int_pin_handler</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span>
+<span class="w">                                         </span><span class="k">struct</span><span class="w"> </span><span class="nc">gpio_callback</span><span class="w"> </span><span class="o">*</span><span class="n">cb</span><span class="p">,</span>
+<span class="w">                                         </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">pins</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">struct</span><span class="w"> </span><span class="nc">dummy_driver_data</span><span class="w"> </span><span class="o">*</span><span class="n">dev_data</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="n">CONTAINER_OF</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">dummy_driver_data</span><span class="p">,</span><span class="w"> </span><span class="n">int_pin_callback</span><span class="p">);</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dev_data</span><span class="o">-&gt;</span><span class="n">dev</span><span class="p">;</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">dummy_driver_config</span><span class="w"> </span><span class="o">*</span><span class="n">dev_config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">config</span><span class="p">;</span>
+
+<span class="w">        </span><span class="cm">/* ... */</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">dummy_driver_pm_suspend</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">struct</span><span class="w"> </span><span class="nc">dummy_driver_data</span><span class="w"> </span><span class="o">*</span><span class="n">dev_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">dummy_driver_config</span><span class="w"> </span><span class="o">*</span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">config</span><span class="p">;</span>
+
+<span class="w">        </span><span class="cm">/* Request devices needed by device */</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">pm_device_runtime_get</span><span class="p">(</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">enable_pin</span><span class="p">.</span><span class="n">port</span><span class="p">);</span>
+
+<span class="w">        </span><span class="cm">/* Disable and remove interrupt pin interrupt */</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">gpio_pin_interrupt_configure_dt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">int_gpio</span><span class="p">,</span><span class="w"> </span><span class="n">GPIO_INT_DISABLED</span><span class="p">);</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">gpio_remove_callback</span><span class="p">(</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">int_pin</span><span class="p">.</span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">int_pin_callback</span><span class="p">);</span>
+
+<span class="w">        </span><span class="cm">/* Disable the device. In this case, we use the enable pin */</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">gpio_pin_set_dt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">enable_pin</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+
+<span class="w">        </span><span class="cm">/* Release devices currently not needed by device */</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">pm_device_runtime_put</span><span class="p">(</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">enable_pin</span><span class="p">.</span><span class="n">port</span><span class="p">);</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">pm_device_runtime_put</span><span class="p">(</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">int_pin</span><span class="p">.</span><span class="n">port</span><span class="p">);</span>
+
+<span class="w">        </span><span class="cm">/*</span>
+<span class="cm">         * Note that we now have suspended the device and released all the</span>
+<span class="cm">         * devices this device depends on. We are ready for the power</span>
+<span class="cm">         * domain being suspended, the device being resumed again, or the</span>
+<span class="cm">         * device driver being deinitialized.</span>
+<span class="cm">         */</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">dummy_driver_pm_resume</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">struct</span><span class="w"> </span><span class="nc">dummy_driver_data</span><span class="w"> </span><span class="o">*</span><span class="n">dev_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">dummy_driver_config</span><span class="w"> </span><span class="o">*</span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">config</span><span class="p">;</span>
+
+<span class="w">        </span><span class="cm">/* Request devices needed by device */</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">pm_device_runtime_get</span><span class="p">(</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">enable_pin</span><span class="p">.</span><span class="n">port</span><span class="p">);</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">pm_device_runtime_get</span><span class="p">(</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">int_pin</span><span class="p">.</span><span class="n">port</span><span class="p">);</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">pm_device_runtime_get</span><span class="p">(</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">bus</span><span class="p">);</span>
+
+<span class="w">        </span><span class="cm">/* Enable the device. In this case, we use the enable pin */</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">gpio_pin_set_dt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">enable_pin</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+
+<span class="w">        </span><span class="cm">/*</span>
+<span class="cm">         * Write initial commands to device, in this case configuring</span>
+<span class="cm">         * the device&#39;s interrupt output pin using the bus</span>
+<span class="cm">         */</span>
+
+<span class="w">        </span><span class="cm">/* ... */</span>
+
+<span class="w">        </span><span class="cm">/* Add and enable interrupt pin interrupt */</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">gpio_add_callback</span><span class="p">(</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">int_pin</span><span class="p">.</span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">int_pin_callback</span><span class="p">);</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">gpio_pin_interrupt_configure_dt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">int_gpio</span><span class="p">,</span><span class="w"> </span><span class="n">GPIO_INT_EDGE_TO_ACTIVE</span><span class="p">);</span>
+
+<span class="w">        </span><span class="cm">/*</span>
+<span class="cm">         * Release devices currently not needed by device. In this case, we</span>
+<span class="cm">         * are releasing the bus and the enable pin.</span>
+<span class="cm">         *</span>
+<span class="cm">         * The device driver would keep the bus ACTIVE while the device is</span>
+<span class="cm">         * ACTIVE in cases of high throughput or unsolicitet data on the</span>
+<span class="cm">         * bus, to avoid inefficient RESUME/SUSPEND cycles of the bus</span>
+<span class="cm">         * for every transaction, and allowing reception of unsolicited</span>
+<span class="cm">         * data on buses like UART.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">pm_device_runtime_put</span><span class="p">(</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">bus</span><span class="p">);</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">pm_device_runtime_put</span><span class="p">(</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">enable_pin</span><span class="p">.</span><span class="n">port</span><span class="p">);</span>
+
+<span class="w">        </span><span class="cm">/*</span>
+<span class="cm">         * Note that the interrupt pin&#39;s port is kept resumed as it</span>
+<span class="cm">         * it needs to service the GPIO interrupt we enabled.</span>
+<span class="cm">         */</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">dummy_driver_pm_turn_off</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">dummy_driver_config</span><span class="w"> </span><span class="o">*</span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">config</span><span class="p">;</span>
+
+<span class="w">        </span><span class="cm">/* Request devices needed for configuring device */</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">pm_device_runtime_get</span><span class="p">(</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">enable_pin</span><span class="p">.</span><span class="n">port</span><span class="p">);</span>
+
+<span class="w">        </span><span class="cm">/*</span>
+<span class="cm">         * We prepare the device for being powered off. In this case, we</span>
+<span class="cm">         * have an active low enable pin, which could back power the device</span>
+<span class="cm">         * once the power domain is suspended, so we configure it as</span>
+<span class="cm">         * disconnected if supported, input otherwise.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">gpio_pin_configure_dt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">enable_pin</span><span class="p">,</span><span class="w"> </span><span class="n">GPIO_DISCONNECTED</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">gpio_pin_configure_dt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">enable_pin</span><span class="p">,</span><span class="w"> </span><span class="n">GPIO_INPUT</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/* Release devices needed for configuring device */</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">pm_device_runtime_put</span><span class="p">(</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">enable_pin</span><span class="p">.</span><span class="n">port</span><span class="p">);</span>
+
+<span class="w">        </span><span class="cm">/*</span>
+<span class="cm">         * We have now prepared the device for being powered off and have</span>
+<span class="cm">         * released all the devices this device depends on. We assume that</span>
+<span class="cm">         * the enable pin will retain its configuration, even as we have</span>
+<span class="cm">         * released the enable pin&#39;s port.</span>
+<span class="cm">         */</span>
+
+<span class="w">         </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">dummy_driver_pm_turn_on</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">dummy_driver_config</span><span class="w"> </span><span class="o">*</span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">config</span><span class="p">;</span>
+
+<span class="w">        </span><span class="cm">/* Request devices needed for configuring device */</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">pm_device_runtime_get</span><span class="p">(</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">enable_pin</span><span class="p">.</span><span class="n">port</span><span class="p">);</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">pm_device_runtime_get</span><span class="p">(</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">int_gpio</span><span class="p">.</span><span class="n">port</span><span class="p">);</span>
+
+<span class="w">        </span><span class="cm">/*</span>
+<span class="cm">         * We ensure the device is suspended, and if possible in its reset</span>
+<span class="cm">         * state. In this case we are using an enable pin, for other devices</span>
+<span class="cm">         * we may need to reset them by toggling a reset pin, using an SoC</span>
+<span class="cm">         * reset controller, or writing a reset command to them using their</span>
+<span class="cm">         * bus.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">gpio_pin_configure_dt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">enable_pin</span><span class="p">,</span><span class="w"> </span><span class="n">GPIO_OUTPUT_INACTIVE</span><span class="p">);</span>
+
+<span class="w">        </span><span class="cm">/* We configure pins for suspended */</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">gpio_pin_configure_dt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">int_gpio</span><span class="p">,</span><span class="w"> </span><span class="n">GPIO_INPUT</span><span class="p">);</span>
+
+<span class="w">        </span><span class="cm">/* Release devices needed for configuring device */</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">pm_device_runtime_put</span><span class="p">(</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">int_gpio</span><span class="p">.</span><span class="n">port</span><span class="p">);</span>
+<span class="w">        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">pm_device_runtime_put</span><span class="p">(</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">enable_pin</span><span class="p">.</span><span class="n">port</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">dummy_driver_pm_action</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span>
+<span class="w">                                  </span><span class="k">enum</span><span class="w"> </span><span class="n">pm_device_action</span><span class="w"> </span><span class="n">action</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">action</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">PM_DEVICE_ACTION_SUSPEND</span><span class="p">:</span>
+<span class="w">                </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dummy_driver_pm_suspend</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">PM_DEVICE_ACTION_RESUME</span><span class="p">:</span>
+<span class="w">                </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dummy_driver_pm_resume</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">PM_DEVICE_ACTION_TURN_OFF</span><span class="p">:</span>
+<span class="w">                </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dummy_driver_pm_turn_off</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">PM_DEVICE_ACTION_TURN_ON</span><span class="p">:</span>
+<span class="w">                </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dummy_driver_pm_turn_on</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">        </span><span class="k">default</span><span class="o">:</span>
+<span class="w">                </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">EINVAL</span><span class="p">;</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">dummy_init</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">struct</span><span class="w"> </span><span class="nc">dummy_driver_data</span><span class="w"> </span><span class="o">*</span><span class="n">dev_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">dummy_driver_config</span><span class="w"> </span><span class="o">*</span><span class="n">dev_config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">config</span><span class="p">;</span>
+
+<span class="w">        </span><span class="cm">/*</span>
+<span class="cm">         * We must ensure all devices we depend on, excluding a potential</span>
+<span class="cm">         * power domain, are initialized.</span>
+<span class="cm">         *</span>
+<span class="cm">         * If CONFIG_PM_DEVICE=n, this also ensures the devices are ACTIVE.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">device_is_ready</span><span class="p">(</span><span class="n">dev_config</span><span class="o">-&gt;</span><span class="n">bus</span><span class="p">)</span><span class="w"> </span><span class="o">||</span>
+<span class="w">            </span><span class="o">!</span><span class="n">gpio_is_ready_dt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dev_config</span><span class="o">-&gt;</span><span class="n">int_pin</span><span class="p">)</span><span class="w"> </span><span class="o">||</span>
+<span class="w">            </span><span class="o">!</span><span class="n">gpio_is_ready_dt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dev_config</span><span class="o">-&gt;</span><span class="n">enable_pin</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="n">ENODEV</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/* We then initialize the device driver data structure */</span>
+<span class="w">        </span><span class="n">gpio_init_callback</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dev_data</span><span class="o">-&gt;</span><span class="n">int_pin_callback</span><span class="p">,</span>
+<span class="w">                           </span><span class="n">dummy_driver_int_pin_handler</span><span class="p">,</span>
+<span class="w">                           </span><span class="n">BIT</span><span class="p">(</span><span class="n">dev_config</span><span class="o">-&gt;</span><span class="n">int_pin</span><span class="p">.</span><span class="n">pin</span><span class="p">));</span>
+
+<span class="w">        </span><span class="n">dev_data</span><span class="o">-&gt;</span><span class="n">dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dev</span><span class="p">;</span>
+
+<span class="w">       </span><span class="cm">/*</span>
+<span class="cm">        * This call must be the last call of the device init function.</span>
+<span class="cm">        * It will initialize the device&#39;s PM_DEVICE context and use the</span>
+<span class="cm">        * dummy_driver_pm_action callback to initialize the device into</span>
+<span class="cm">        * the appropriate state.</span>
+<span class="cm">         *</span>
+<span class="cm">         * On success, :c:func:`pm_device_driver_init` returns 0.</span>
+<span class="cm">         * If the callback fails (for example on ``PM_DEVICE_ACTION_RESUME``),</span>
+<span class="cm">         * the error is propagated and the device is not marked ``ACTIVE``.</span>
+<span class="cm">        */</span>
+<span class="w">       </span><span class="k">return</span><span class="w"> </span><span class="n">pm_device_driver_init</span><span class="p">(</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="n">dummy_driver_pm_action</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cp">#ifdef CONFIG_DEVICE_DEINIT_SUPPORT</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">dummy_deinit</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+
+<span class="w">        </span><span class="cm">/*</span>
+<span class="cm">         * This call must be the first call of the device deinit function.</span>
+<span class="cm">         * It will use the dummy_driver_pm_action callback to move the</span>
+<span class="cm">         * device into, or verify the device is already in, an appropriate</span>
+<span class="cm">         * state for deinitialization, and deinitialize the device&#39;s</span>
+<span class="cm">         * PM_DEVICE context.</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pm_device_driver_deinit</span><span class="p">(</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="n">dummy_driver_pm_action</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/*</span>
+<span class="cm">         * The device is now either SUSPENDED or OFF, all the devices this</span>
+<span class="cm">         * device depends on have been released, and devices with persistent</span>
+<span class="cm">         * configurations like GPIO pins have been configured to match the</span>
+<span class="cm">         * device state.</span>
+<span class="cm">         *</span>
+<span class="cm">         * The device will be left in this state until a new &quot;owner&quot; takes</span>
+<span class="cm">         * over.</span>
+<span class="cm">         */</span>
+
+<span class="w">        </span><span class="cm">/*</span>
+<span class="cm">         * If we had allocated memory, DMA channels or other resources, we would</span>
+<span class="cm">         * release them here.</span>
+<span class="cm">         */</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cp">#endif</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">dummy_driver_data</span><span class="w"> </span><span class="n">data0</span><span class="p">;</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">dummy_driver_config</span><span class="w"> </span><span class="n">config0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">bus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEVICE_DT_GET</span><span class="p">(</span><span class="n">DT_INST_PARENT</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span>
+<span class="w">        </span><span class="p">.</span><span class="n">int_pin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GPIO_DT_SPEC_INST_GET</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">int_gpios</span><span class="p">),</span>
+<span class="w">        </span><span class="p">.</span><span class="n">enable_pin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GPIO_DT_SPEC_INST_GET</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">enable_gpios</span><span class="p">),</span>
+<span class="p">};</span>
+
+<span class="cm">/* Define the device&#39;s PM DEVICE context */</span>
+<span class="n">PM_DEVICE_DT_INST_DEFINE</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">dummy_driver_pm_action</span><span class="p">);</span>
+
+<span class="cm">/* Define the device, pointing to the device&#39;s PM DEVICE context */</span>
+<span class="n">DEVICE_DT_INST_DEINIT_DEFINE</span><span class="p">(</span>
+<span class="w">        </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="o">&amp;</span><span class="n">dummy_init</span><span class="p">,</span>
+<span class="w">        </span><span class="o">&amp;</span><span class="n">dummy_deinit</span><span class="p">,</span>
+<span class="w">        </span><span class="n">PM_DEVICE_DT_INST_GET</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+<span class="w">        </span><span class="o">&amp;</span><span class="n">data0</span><span class="p">,</span>
+<span class="w">        </span><span class="o">&amp;</span><span class="n">config0</span><span class="p">,</span>
+<span class="w">        </span><span class="n">POST_KERNEL</span><span class="p">,</span>
+<span class="w">        </span><span class="n">CONFIG_KERNEL_INIT_PRIORITY_DEFAULT</span><span class="p">,</span>
+<span class="w">        </span><span class="nb">NULL</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="device-model-with-partial-device-power-management-support">
+<h2>Device Model with Partial Device Power Management Support<a class="headerlink" href="#device-model-with-partial-device-power-management-support" title="Link to this heading"></a></h2>
+<p>If <a class="reference internal" href="../../kconfig.html#CONFIG_PM_DEVICE" title="CONFIG_PM_DEVICE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PM_DEVICE</span></code></a> is not enabled, the device
+power state is tied to the devices initialization state.</p>
+<p>Once a device is initialized, the device driver PM action hook is
+used to move the device to the expected initial state through calling
+<a class="reference internal" href="../../doxygen/html/group__subsys__pm__device.html#gad563094c2d4ad066bc4ce30586e13fb3" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pm_device_driver_init()</span></code></a>. Following the
+<code class="docutils literal notranslate"><span class="pre">Device</span> <span class="pre">actions</span> <span class="pre">x</span> <span class="pre">states</span></code> graph and the definition of the <code class="docutils literal notranslate"><span class="pre">OFF</span></code>
+state, this results in a call to <code class="docutils literal notranslate"><span class="pre">PM_DEVICE_ACTION_TURN_ON</span></code>
+followed by <code class="docutils literal notranslate"><span class="pre">PM_DEVICE_ACTION_RESUME</span></code>.</p>
+<p>If the driver’s PM hook returns an error, initialization fails and the
+device is left in its previous state (for devices that support PM this is
+typically <code class="docutils literal notranslate"><span class="pre">SUSPENDED</span></code> or <code class="docutils literal notranslate"><span class="pre">OFF</span></code>).</p>
+<p>Given power domains and buses are “just devices”, every power
+domain and bus will be resumed before its child devices as they
+are initialized according to the devicetree dependency ordinals.
+Every device is assumed to be powered, and the devices a device
+depends on are assumed to be <code class="docutils literal notranslate"><span class="pre">ACTIVE</span></code>, when device is initialized.</p>
+<p>Once a device is deinitialized, the device driver PM action hook
+is used to move the device to the <code class="docutils literal notranslate"><span class="pre">SUSPENDED</span></code> state through
+calling <a class="reference internal" href="../../doxygen/html/group__subsys__pm__device.html#gadf145eb83c32eac741ab08fb7b262a55" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pm_device_driver_deinit()</span></code></a>. Following the
+<code class="docutils literal notranslate"><span class="pre">Device</span> <span class="pre">actions</span> <span class="pre">x</span> <span class="pre">states</span></code>, and assuming power domains are “always
+on” this results in a call to <code class="docutils literal notranslate"><span class="pre">PM_DEVICE_ACTION_SUSPEND</span></code>.</p>
+</section>
+<section id="shell-commands">
+<span id="pm-device-shell"></span><h2>Shell Commands<a class="headerlink" href="#shell-commands" title="Link to this heading"></a></h2>
+<p>Power management actions can be triggered from shell commands for testing
+purposes. To do that, enable the <a class="reference internal" href="../../kconfig.html#CONFIG_PM_DEVICE_SHELL" title="CONFIG_PM_DEVICE_SHELL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PM_DEVICE_SHELL</span></code></a>
+option and issue a <code class="docutils literal notranslate"><span class="pre">pm</span></code> command on a device from the shell, for example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>device<span class="w"> </span>list
+<span class="go">- buttons (active)</span>
+<span class="gp">uart:~$ </span>pm<span class="w"> </span><span class="nb">suspend</span><span class="w"> </span>buttons
+<span class="gp">uart:~$ </span>device<span class="w"> </span>list
+<span class="go">devices:</span>
+<span class="go">- buttons (suspended)</span>
+</pre></div>
+</div>
+<p>To print the power management state of a device, enable
+<a class="reference internal" href="../../kconfig.html#CONFIG_DEVICE_SHELL" title="CONFIG_DEVICE_SHELL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DEVICE_SHELL</span></code></a> and use the <code class="docutils literal notranslate"><span class="pre">device</span> <span class="pre">list</span></code> command, for
+example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>device<span class="w"> </span>list
+<span class="go">devices:</span>
+<span class="go">- i2c@40003000 (active)</span>
+<span class="go">- buttons (active, usage=1)</span>
+<span class="go">- leds (READY)</span>
+</pre></div>
+</div>
+<p>In this case, <code class="docutils literal notranslate"><span class="pre">leds</span></code> does not support PM, <code class="docutils literal notranslate"><span class="pre">i2c</span></code> supports PM with manual
+suspend and resume actions and it’s currently active, <code class="docutils literal notranslate"><span class="pre">buttons</span></code> supports
+runtime PM and it’s currently active with one user.</p>
+</section>
+<section id="busy-status-indication">
+<span id="pm-device-busy"></span><h2>Busy Status Indication<a class="headerlink" href="#busy-status-indication" title="Link to this heading"></a></h2>
+<p>When the system is idle and the SoC is going to sleep, the power management
+subsystem can suspend devices, as described in <a class="reference internal" href="#pm-device-system-pm"><span class="std std-ref">System-Managed Device Power Management</span></a>. This
+can cause device hardware to lose some states. Suspending a device which is in
+the middle of a hardware transaction, such as writing to a flash memory, may
+lead to undefined behavior or inconsistent states. This API guards such
+transactions by indicating to the kernel that the device is in the middle of an
+operation and should not be suspended.</p>
+<p>When <a class="reference internal" href="../../doxygen/html/group__subsys__pm__device.html#ga7ea002352f3d1c90aecff1d54c255a06" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pm_device_busy_set()</span></code></a> is called, the device is marked as busy and
+the system will not do power management on it. After the device is no
+longer doing an operation and can be suspended, it should call
+<a class="reference internal" href="../../doxygen/html/group__subsys__pm__device.html#ga8b527314f0c61b85602876b4f5a52275" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pm_device_busy_clear()</span></code></a>.</p>
+</section>
+<section id="device-power-management-x-system-power-management">
+<span id="pm-device-constraint"></span><h2>Device Power Management X System Power Management<a class="headerlink" href="#device-power-management-x-system-power-management" title="Link to this heading"></a></h2>
+<p>When managing power in embedded systems, it’s crucial to understand
+the interplay between device power state and the overall system power
+state. Some devices may have dependencies on the system power
+state. For example, certain low-power states of the SoC might not
+supply power to peripheral devices, leading to problems if the device
+is in the middle of an operation. Proper coordination is essential to
+maintain system stability and data integrity.</p>
+<p>To avoid this sort of problem, devices must <a class="reference internal" href="system.html#pm-policy-power-states"><span class="std std-ref">get and release lock</span></a>
+power states that cause power loss during an operation.</p>
+<p>Zephyr provides a mechanism for devices to declare which power states cause power
+loss and an API that automatically get and put lock on them. This feature is
+enabled setting <a class="reference internal" href="../../kconfig.html#CONFIG_PM_POLICY_DEVICE_CONSTRAINTS" title="CONFIG_PM_POLICY_DEVICE_CONSTRAINTS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PM_POLICY_DEVICE_CONSTRAINTS</span></code></a> to <code class="docutils literal notranslate"><span class="pre">y</span></code>.</p>
+<p>Once this feature is enabled, devices must declare in devicetree which
+states cause power loss. In the following example, device <code class="docutils literal notranslate"><span class="pre">test_dev</span></code>
+says that power states <code class="docutils literal notranslate"><span class="pre">state1</span></code> and <code class="docutils literal notranslate"><span class="pre">state2</span></code> cause power loss.</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">power-states</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nl">state0</span><span class="p">:</span><span class="w"> </span><span class="nf">state0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,power-state&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="n">power-state-name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;suspend-to-idle&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="n">min-residency-us</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">10000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                </span><span class="n">exit-latency-us</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">100</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="nl">state1</span><span class="p">:</span><span class="w"> </span><span class="nf">state1</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,power-state&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="n">power-state-name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;standby&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="n">min-residency-us</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">20000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                </span><span class="n">exit-latency-us</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">200</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="nl">state2</span><span class="p">:</span><span class="w"> </span><span class="nf">state2</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,power-state&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="n">power-state-name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;suspend-to-ram&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="n">min-residency-us</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">50000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                </span><span class="n">exit-latency-us</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">500</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="nl">state3</span><span class="p">:</span><span class="w"> </span><span class="nf">state3</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,power-state&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="n">power-state-name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;suspend-to-ram&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;disabled&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="nl">test_dev</span><span class="p">:</span><span class="w"> </span><span class="nf">test_dev</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;test-device-pm&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">zephyr</span><span class="p">,</span><span class="n">disabling-power-states</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">state1</span><span class="w"> </span><span class="o">&amp;</span><span class="na">state2</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>After that devices can lock these state calling
+<a class="reference internal" href="../../doxygen/html/group__subsys__pm__sys__policy.html#ga708b7d2f8cb5f09738e3c6e5937c475e" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pm_policy_device_power_lock_get()</span></code></a> and release with
+<a class="reference internal" href="../../doxygen/html/group__subsys__pm__sys__policy.html#gafb90036c42bce2cc44466427b2907a81" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pm_policy_device_power_lock_put()</span></code></a>. For example:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">timer_expire_cb</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_timer</span><span class="w"> </span><span class="o">*</span><span class="n">timer</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">       </span><span class="k">struct</span><span class="w"> </span><span class="nc">test_driver_data</span><span class="w"> </span><span class="o">*</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k_timer_user_data_get</span><span class="p">(</span><span class="n">timer</span><span class="p">);</span>
+
+<span class="w">       </span><span class="n">data</span><span class="o">-&gt;</span><span class="n">ongoing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">       </span><span class="n">k_timer_stop</span><span class="p">(</span><span class="n">timer</span><span class="p">);</span>
+<span class="w">       </span><span class="n">pm_policy_device_power_lock_put</span><span class="p">(</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">self</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">test_driver_async_operation</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">       </span><span class="k">struct</span><span class="w"> </span><span class="nc">test_driver_data</span><span class="w"> </span><span class="o">*</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span>
+
+<span class="w">       </span><span class="n">data</span><span class="o">-&gt;</span><span class="n">ongoing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">       </span><span class="n">pm_policy_device_power_lock_get</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+
+<span class="w">       </span><span class="cm">/** Lets set a timer big enough to ensure that any deep</span>
+<span class="cm">        *  sleep state would be suitable but constraints will</span>
+<span class="cm">        *  make only state0 (suspend-to-idle) will be used.</span>
+<span class="cm">        */</span>
+<span class="w">       </span><span class="n">k_timer_start</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">timer</span><span class="p">,</span><span class="w"> </span><span class="n">K_MSEC</span><span class="p">(</span><span class="mi">500</span><span class="p">),</span><span class="w"> </span><span class="n">K_NO_WAIT</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="wakeup-capability">
+<h2>Wakeup capability<a class="headerlink" href="#wakeup-capability" title="Link to this heading"></a></h2>
+<p>Some devices are capable of waking the system up from a sleep state.
+When a device has such capability, applications can enable or disable
+this feature on a device dynamically using
+<a class="reference internal" href="../../doxygen/html/group__subsys__pm__device.html#ga74fde62f71393fb9863916b3a2e5c460" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pm_device_wakeup_enable()</span></code></a>.</p>
+<p>This property can be set on device declaring the property <code class="docutils literal notranslate"><span class="pre">wakeup-source</span></code> in
+the device node in devicetree. For example, this devicetree fragment sets the
+<code class="docutils literal notranslate"><span class="pre">gpio0</span></code> device as a “wakeup” source:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nl">gpio0</span><span class="p">:</span><span class="w"> </span><span class="nf">gpio</span><span class="o">@</span><span class="mi">40022000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ti,cc13xx-cc26xx-gpio&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x40022000</span><span class="w"> </span><span class="mh">0x400</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">interrupts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;disabled&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;GPIO_0&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">gpio-controller</span><span class="p">;</span>
+<span class="w">        </span><span class="n">wakeup-source</span><span class="p">;</span>
+<span class="w">        </span><span class="o">#</span><span class="n">gpio-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>By default, “wakeup” capable devices do not have this functionality enabled
+during the device initialization. Applications can enable this functionality
+later calling <a class="reference internal" href="../../doxygen/html/group__subsys__pm__device.html#ga74fde62f71393fb9863916b3a2e5c460" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pm_device_wakeup_enable()</span></code></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This property is <strong>only</strong> used by the system power management to identify
+devices that should not be suspended.
+It is responsibility of driver or the application to do any additional
+configuration required by the device to support it.</p>
+</div>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<p>Some helpful examples showing device power management features:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/samples/subsys/pm/device_pm/">samples/subsys/pm/device_pm/</a></p></li>
+<li><p><a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/tests/subsys/pm/power_mgmt/">tests/subsys/pm/power_mgmt/</a></p></li>
+<li><p><a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/tests/subsys/pm/device_wakeup_api/">tests/subsys/pm/device_wakeup_api/</a></p></li>
+<li><p><a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/tests/subsys/pm/device_driver_init/">tests/subsys/pm/device_driver_init/</a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

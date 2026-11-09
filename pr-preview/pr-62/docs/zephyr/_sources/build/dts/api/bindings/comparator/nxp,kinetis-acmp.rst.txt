@@ -1,0 +1,652 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: nxp,kinetis-acmp
+.. _dtbinding_nxp_kinetis_acmp:
+
+nxp,kinetis-acmp
+################
+
+.. sidebar:: Overview
+
+   :Name: ``nxp,kinetis-acmp``
+   :Vendor: :ref:`NXP Semiconductors <dt_vendor_nxp>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=nxp,kinetis-acmp>` using
+               this compatible
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   NXP Kinetis ACMP (Analog CoMParator)
+
+   The following example displays the minimum node layout:
+
+     acmp0: acmp@deadbeef {
+             compatible = "nxp,kinetis-acmp";
+             reg = <0xdeadbeef 0x1000>;
+             interrupts = <0 0>;
+             clocks = <&scg KINETIS_SCG_BUS_CLK>;
+             status = "disabled";
+     };
+
+   Enabling the comparator node requires setting the minimum default
+   configuration of the comparator. This includes selecting the
+   positive and negative inputs, and routing them using pinctrl:
+
+     &pinctrl {
+             acmp0_default: acmp0_default {
+                     group0 {
+                             ...
+                     };
+             };
+     };
+
+     &acmp0 {
+             status = "okay";
+             pinctrl-0 = <&acmp0_default>;
+             pinctrl-names = "default";
+
+             positive-mux-input = "IN0";
+             negative-mux-input = "IN1";
+     };
+
+Properties
+**********
+
+.. tabs::
+
+   .. group-tab:: Node specific properties
+
+      Properties not inherited from the base binding file.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``offset-mode``
+           - ``string``
+           - Legal values: ``LEVEL0``, ``LEVEL1``
+
+         * - ``hysteresis-mode``
+           - ``string``
+           - Legal values: ``LEVEL0``, ``LEVEL1``, ``LEVEL2``, ``LEVEL3``
+
+         * - ``enable-high-speed-mode``
+           - ``boolean``
+           - 
+
+         * - ``invert-output``
+           - ``boolean``
+           - 
+
+         * - ``use-unfiltered-output``
+           - ``boolean``
+           - 
+
+         * - ``enable-pin-out``
+           - ``boolean``
+           - 
+
+         * - ``enable-window-mode``
+           - ``boolean``
+           - 
+
+         * - ``positive-mux-input``
+           - ``string``
+           - Legal values: ``IN0``, ``IN1``, ``IN2``, ``IN3``, ``IN4``, ``IN5``, ``IN6``, ``IN7``
+
+         * - ``negative-mux-input``
+           - ``string``
+           - Legal values: ``IN0``, ``IN1``, ``IN2``, ``IN3``, ``IN4``, ``IN5``, ``IN6``, ``IN7``
+
+         * - ``positive-port-input``
+           - ``string``
+           - Legal values: ``DAC``, ``MUX``
+
+         * - ``negative-port-input``
+           - ``string``
+           - Legal values: ``DAC``, ``MUX``
+
+         * - ``filter-enable-sample``
+           - ``boolean``
+           - 
+
+         * - ``filter-count``
+           - ``int``
+           - .. code-block:: none
+
+                Filter sample count (0 to 7).
+
+
+         * - ``filter-period``
+           - ``int``
+           - .. code-block:: none
+
+                Filter sample period in bus clock cycles (0 to 255).
+
+
+         * - ``dac-vref-source``
+           - ``string``
+           - Legal values: ``VIN1``, ``VIN2``
+
+         * - ``dac-value``
+           - ``int``
+           - 
+
+         * - ``dac-enable``
+           - ``boolean``
+           - 
+
+         * - ``dac-enable-high-speed``
+           - ``boolean``
+           - 
+
+         * - ``discrete-mode-enable-positive-channel``
+           - ``boolean``
+           - 
+
+         * - ``discrete-mode-enable-negative-channel``
+           - ``boolean``
+           - 
+
+         * - ``discrete-mode-enable-resistor-divider``
+           - ``boolean``
+           - 
+
+         * - ``discrete-mode-clock-source``
+           - ``string``
+           - Legal values: ``SLOW``, ``FAST``
+
+         * - ``discrete-mode-sample-time``
+           - ``string``
+           - Legal values: ``T1``, ``T2``, ``T4``, ``T8``, ``T16``, ``T32``, ``T64``, ``T256``
+
+         * - ``discrete-mode-phase1-time``
+           - ``string``
+           - Legal values: ``ALT0``, ``ALT1``, ``ALT2``, ``ALT3``, ``ALT4``, ``ALT5``, ``ALT6``, ``ALT7``
+
+         * - ``discrete-mode-phase2-time``
+           - ``string``
+           - Legal values: ``ALT0``, ``ALT1``, ``ALT2``, ``ALT3``, ``ALT4``, ``ALT5``, ``ALT6``, ``ALT7``
+
+         * - ``pinctrl-0``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the first state. Content is specific to the
+                selected pin controller driver implementation.
+
+
+
+         * - ``pinctrl-1``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the second state. See pinctrl-0.
+
+
+
+         * - ``pinctrl-2``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the third state. See pinctrl-0.
+
+
+
+         * - ``pinctrl-3``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the fourth state. See pinctrl-0.
+
+
+
+         * - ``pinctrl-4``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the fifth state. See pinctrl-0.
+
+
+
+         * - ``pinctrl-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Names for the provided states. The number of names needs to match the
+                number of states.
+
+
+
+
+
+   .. group-tab:: Deprecated node specific properties
+
+      Deprecated properties not inherited from the base binding file.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``nxp,enable-output-pin``
+           - ``boolean``
+           - .. code-block:: none
+
+                Deprecated. Please use enable-pin-out instead
+
+
+         * - ``nxp,use-unfiltered-output``
+           - ``boolean``
+           - .. code-block:: none
+
+                Deprecated. Please use use-unfiltered-output instead
+
+
+         * - ``nxp,high-speed-mode``
+           - ``boolean``
+           - .. code-block:: none
+
+                Deprecated. Please use enable-high-speed-mode instead
+
+
+         * - ``nxp,enable-sample``
+           - ``boolean``
+           - .. code-block:: none
+
+                Deprecated. Please use filter-enable-sample instead
+
+
+         * - ``nxp,filter-count``
+           - ``int``
+           - .. code-block:: none
+
+                Deprecated. Please use filter-count instead
+
+
+         * - ``nxp,filter-period``
+           - ``int``
+           - .. code-block:: none
+
+                Deprecated. Please use filter-period instead
+
+
+         * - ``nxp,window-mode``
+           - ``boolean``
+           - .. code-block:: none
+
+                Deprecated. Please use enable-window-mode instead
+
+
+
+
+   .. group-tab:: Base properties
+
+      Properties inherited from the base binding file, which defines
+      common properties that may be set on many nodes. Not all of these
+      may apply to the "nxp,kinetis-acmp" compatible.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``interrupts``
+           - ``array``
+           - .. code-block:: none
+
+                Information about interrupts generated by the device, encoded as an array
+                of one or more interrupt specifiers. The format of the data in this property
+                varies by where the device appears in the interrupt tree. Devices with the same
+                "interrupt-parent" will use the same format in their interrupts properties.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``reg``
+           - ``array``
+           - .. code-block:: none
+
+                Information used to address the device. The value is specific to
+                the device (i.e. is different depending on the compatible
+                property).
+
+                The "reg" property is typically a sequence of (address, length) pairs.
+                Each pair is called a "register block". Values are
+                conventionally written in hex.
+
+                For details, see "2.3.6 reg" in Devicetree Specification v0.4.
+
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``status``
+           - ``string``
+           - .. code-block:: none
+
+                Indicates the operational status of the hardware or other
+                resource that the node represents. In particular:
+
+                  - "okay" means the resource is operational and, for example,
+                    can be used by device drivers
+                  - "disabled" means the resource is not operational and the system
+                    should treat it as if it is not present
+
+                For details, see "2.3.4 status" in Devicetree Specification v0.4.
+
+
+
+             Legal values: ``okay``, ``disabled``, ``reserved``, ``fail``, ``fail-sss``
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``compatible``
+           - ``string-array``
+           - .. code-block:: none
+
+                This property is a list of strings that essentially define what
+                type of hardware or other resource this devicetree node
+                represents. Each device driver checks for specific compatible
+                property values to find the devicetree nodes that represent
+                resources that the driver should manage.
+
+                The recommended format is "vendor,device", The "vendor" part is
+                an abbreviated name of the vendor. The "device" is usually from
+                the datasheet.
+
+                The compatible property can have multiple values, ordered from
+                most- to least-specific. Having additional values is useful when the
+                device is a specific instance of a more general family, to allow the
+                system to match the most specific driver available.
+
+                For details, see "2.3.1 compatible" in Devicetree Specification v0.4.
+
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``reg-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each register block in the "reg" property.
+                For example:
+
+                  / {
+                       soc {
+                           #address-cells = <1>;
+                           #size-cells = <1>;
+
+                           uart@1000 {
+                               reg = <0x1000 0x2000>, <0x3000 0x4000>;
+                               reg-names = "foo", "bar";
+                           };
+                       };
+                  };
+
+                The uart@1000 node has two register blocks:
+
+                  - one with base address 0x1000, size 0x2000, and name "foo"
+                  - another with base address 0x3000, size 0x4000, and name "bar"
+
+
+
+         * - ``interrupts-extended``
+           - ``compound``
+           - .. code-block:: none
+
+                Extended interrupt specifier for device, used as an alternative to
+                the "interrupts" property.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each interrupt generated by a device.
+                The interrupts themselves are defined in either "interrupts" or
+                "interrupts-extended" properties.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-parent``
+           - ``phandle``
+           - .. code-block:: none
+
+                If present, this refers to the node which handles interrupts generated
+                by this device.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``label``
+           - ``string``
+           - .. code-block:: none
+
+                Human readable string describing the device. Use of this property is
+                deprecated except as needed on a case-by-case basis.
+
+                For details, see "4.1.2 Miscellaneous Properties" in Devicetree
+                Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``clocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Information about the device's clock providers. In general, this property
+                should follow conventions established in the dt-schema binding:
+
+                  https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/clock/clock.yaml
+
+
+
+         * - ``clock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each clock provider in the "clocks" property.
+
+
+
+         * - ``#address-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by address fields
+                in "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+         * - ``#size-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by size fields in
+                "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+         * - ``dmas``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                DMA channel specifiers relevant to the device.
+
+
+
+         * - ``dma-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the DMA channel specifiers in the "dmas" property.
+
+
+
+         * - ``io-channels``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                IO channel specifiers relevant to the device.
+
+
+
+         * - ``io-channel-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the IO channel specifiers in the "io-channels" property.
+
+
+
+         * - ``mboxes``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Mailbox / IPM channel specifiers relevant to the device.
+
+
+
+         * - ``mbox-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the mbox specifiers in the "mboxes" property.
+
+
+
+         * - ``power-domains``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Power domain specifiers relevant to the device.
+
+
+
+         * - ``power-domain-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the power domain specifiers in the "power-domains" property.
+
+
+
+         * - ``#power-domain-cells``
+           - ``int``
+           - .. code-block:: none
+
+                Number of cells in power-domains property
+
+
+
+         * - ``hwlocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                HW spinlock id relevant to the device.
+
+
+
+         * - ``hwlock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the hwlock specifiers in the "hwlocks" property.
+
+
+
+         * - ``zephyr,deferred-init``
+           - ``boolean``
+           - .. code-block:: none
+
+                Do not initialize device automatically on boot. Device should be manually
+                initialized using device_init().
+
+
+
+         * - ``wakeup-source``
+           - ``boolean``
+           - .. code-block:: none
+
+                Property to identify that a device can be used as wake up source.
+
+                When this property is provided a specific flag is set into the
+                device that tells the system that the device is capable of
+                wake up the system.
+
+                Wake up capable devices are disabled (interruptions will not wake up
+                the system) by default but they can be enabled at runtime if necessary.
+
+
+
+         * - ``zephyr,pm-device-runtime-auto``
+           - ``boolean``
+           - .. code-block:: none
+
+                Automatically configure the device for runtime power management after the
+                init function runs.
+
+
+
+         * - ``zephyr,disabling-power-states``
+           - ``phandles``
+           - .. code-block:: none
+
+                List of power states that will disable this device power.
+
+
+
+
+
+

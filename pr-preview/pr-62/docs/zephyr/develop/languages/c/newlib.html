@@ -1,0 +1,497 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Newlib &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/develop/languages/c/newlib.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Picolibc" href="picolibc.html" />
+    <link rel="prev" title="Minimal libc" href="minimal_libc.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Developing with Zephyr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/index.html">Getting Started Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../beyond-GSG.html">Beyond the Getting Started Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../env_vars.html">Environment Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../application/index.html">Application Development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../debug/index.html">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/index.html">API Status and Guidelines</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Language Support</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">C Language Support</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="index.html#language-standards">Language Standards</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html#standard-library">Standard Library</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="common_libc.html">Common C library code</a></li>
+<li class="toctree-l5"><a class="reference internal" href="minimal_libc.html">Minimal libc</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">Newlib</a></li>
+<li class="toctree-l5"><a class="reference internal" href="picolibc.html">Picolibc</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#formatted-output">Formatted Output</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#dynamic-memory-management">Dynamic Memory Management</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cpp/index.html">C++ Language Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../rust/index.html">Rust Language Support</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimizations/index.html">Optimizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../flash_debug/index.html">Flashing and Hardware Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html">Modules (External projects)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../west/index.html">West (Zephyr’s meta-tool)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../test/index.html">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sca/index.html">Static Code Analysis (SCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../toolchains/index.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/index.html">Tools and IDEs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Developing with Zephyr</a> &raquo;</li>
+  
+     <li><a href="../index.html">Language Support</a> &raquo;</li>
+  
+     <li><a href="index.html">C Language Support</a> &raquo;</li>
+  
+  <li>Newlib</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/develop/languages/c/newlib.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27develop%2Flanguages%2Fc%2Fnewlib%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Documentation&env=-+Page%3A+develop%2Flanguages%2Fc%2Fnewlib%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="newlib">
+<span id="c-library-newlib"></span><h1>Newlib<a class="headerlink" href="#newlib" title="Link to this heading"></a></h1>
+<p><a class="reference external" href="https://sourceware.org/newlib/">Newlib</a> is a complete C library implementation written for the embedded
+systems. It is a separate open source project and is not included in source
+code form with Zephyr. Instead, the <a class="reference internal" href="../../toolchains/zephyr_sdk.html#toolchain-zephyr-sdk"><span class="std std-ref">Zephyr SDK</span></a> includes a
+precompiled library for each supported architecture (<code class="file docutils literal notranslate"><span class="pre">libc.a</span></code> and
+<code class="file docutils literal notranslate"><span class="pre">libm.a</span></code>).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Other 3rd-party toolchains, such as <a class="reference internal" href="../../toolchains/gnu_arm_embedded.html#toolchain-gnuarmemb"><span class="std std-ref">GNU Arm Embedded</span></a>, also bundle
+the Newlib as a precompiled library.</p>
+</div>
+<p>Zephyr implements the “API hook” functions that are invoked by the C standard
+library functions in the Newlib. These hook functions are implemented in
+<code class="file docutils literal notranslate"><span class="pre">lib/libc/newlib/libc-hooks.c</span></code> and translate the library internal system
+calls to the equivalent Zephyr API calls.</p>
+<section id="types-of-newlib">
+<h2>Types of Newlib<a class="headerlink" href="#types-of-newlib" title="Link to this heading"></a></h2>
+<p>The Newlib included in the <a class="reference internal" href="../../toolchains/zephyr_sdk.html#toolchain-zephyr-sdk"><span class="std std-ref">Zephyr SDK</span></a> comes in two versions:
+‘full’ and ‘nano’ variants.</p>
+<section id="full-newlib">
+<h3>Full Newlib<a class="headerlink" href="#full-newlib" title="Link to this heading"></a></h3>
+<p>The Newlib full variant (<code class="file docutils literal notranslate"><span class="pre">libc.a</span></code> and <code class="file docutils literal notranslate"><span class="pre">libm.a</span></code>) is the most capable
+variant of the Newlib available in the Zephyr SDK, and supports almost all
+standard C library features. It is optimized for performance (prefers
+performance over code size) and its footprint is significantly larger than the
+nano variant.</p>
+<p>This variant can be enabled by selecting the
+<a class="reference internal" href="../../../kconfig.html#CONFIG_NEWLIB_LIBC" title="CONFIG_NEWLIB_LIBC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NEWLIB_LIBC</span></code></a> and de-selecting the
+<a class="reference internal" href="../../../kconfig.html#CONFIG_NEWLIB_LIBC_NANO" title="CONFIG_NEWLIB_LIBC_NANO"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NEWLIB_LIBC_NANO</span></code></a> in the application configuration
+file.</p>
+</section>
+<section id="nano-newlib">
+<h3>Nano Newlib<a class="headerlink" href="#nano-newlib" title="Link to this heading"></a></h3>
+<p>The Newlib nano variant (<code class="file docutils literal notranslate"><span class="pre">libc_nano.a</span></code> and <code class="file docutils literal notranslate"><span class="pre">libm_nano.a</span></code>) is the
+size-optimized version of the Newlib, and supports all features that the full
+variant supports except the new format specifiers introduced in C99, such as
+the <code class="docutils literal notranslate"><span class="pre">char</span></code>, <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span></code> type format specifiers (i.e. <code class="docutils literal notranslate"><span class="pre">%hhX</span></code> and
+<code class="docutils literal notranslate"><span class="pre">%llX</span></code>).</p>
+<p>This variant can be enabled by selecting the
+<a class="reference internal" href="../../../kconfig.html#CONFIG_NEWLIB_LIBC" title="CONFIG_NEWLIB_LIBC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NEWLIB_LIBC</span></code></a> and
+<a class="reference internal" href="../../../kconfig.html#CONFIG_NEWLIB_LIBC_NANO" title="CONFIG_NEWLIB_LIBC_NANO"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NEWLIB_LIBC_NANO</span></code></a> in the application configuration
+file.</p>
+<p>Note that the Newlib nano variant is not available for all architectures. The
+availability of the nano variant is specified by the
+<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HAS_NEWLIB_LIBC_NANO</span></code>.</p>
+</section>
+</section>
+<section id="formatted-output">
+<h2>Formatted Output<a class="headerlink" href="#formatted-output" title="Link to this heading"></a></h2>
+<p>Newlib supports all standard C formatted input and output functions, including
+<code class="docutils literal notranslate"><span class="pre">printf</span></code>, <code class="docutils literal notranslate"><span class="pre">fprintf</span></code>, <code class="docutils literal notranslate"><span class="pre">sprintf</span></code> and <code class="docutils literal notranslate"><span class="pre">sscanf</span></code>.</p>
+<p>The Newlib formatted input and output function implementation supports all
+format specifiers defined by the C standard with the following exceptions:</p>
+<ul class="simple">
+<li><p>Floating point format specifiers (e.g. <code class="docutils literal notranslate"><span class="pre">%f</span></code>) require
+<a class="reference internal" href="../../../kconfig.html#CONFIG_NEWLIB_LIBC_FLOAT_PRINTF" title="CONFIG_NEWLIB_LIBC_FLOAT_PRINTF"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NEWLIB_LIBC_FLOAT_PRINTF</span></code></a> and
+<a class="reference internal" href="../../../kconfig.html#CONFIG_NEWLIB_LIBC_FLOAT_SCANF" title="CONFIG_NEWLIB_LIBC_FLOAT_SCANF"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NEWLIB_LIBC_FLOAT_SCANF</span></code></a> to be enabled.</p></li>
+<li><p>C99 format specifiers are not supported in the Newlib nano variant (i.e.
+<code class="docutils literal notranslate"><span class="pre">%hhX</span></code> for <code class="docutils literal notranslate"><span class="pre">char</span></code>, <code class="docutils literal notranslate"><span class="pre">%llX</span></code> for <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span></code>, <code class="docutils literal notranslate"><span class="pre">%jX</span></code> for <code class="docutils literal notranslate"><span class="pre">intmax_t</span></code>,
+<code class="docutils literal notranslate"><span class="pre">%zX</span></code> for <code class="docutils literal notranslate"><span class="pre">size_t</span></code>, <code class="docutils literal notranslate"><span class="pre">%tX</span></code> for <code class="docutils literal notranslate"><span class="pre">ptrdiff_t</span></code>).</p></li>
+</ul>
+</section>
+<section id="dynamic-memory-management">
+<h2>Dynamic Memory Management<a class="headerlink" href="#dynamic-memory-management" title="Link to this heading"></a></h2>
+<p>Newlib implements an internal heap allocator to manage the memory blocks used
+by the standard dynamic memory management interface functions (for example,
+<a class="reference internal" href="../../../doxygen/html/stdlib_8h.html#a9c36d0fe3ec4675cbffdc9b52f5fb399" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">malloc()</span></code></a> and <a class="reference internal" href="../../../doxygen/html/stdlib_8h.html#afbedc913aa4651b3c3b4b3aecd9b4711" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">free()</span></code></a>).</p>
+<p>The internal heap allocator implemented by the Newlib may vary across the
+different types of the Newlib used. For example, the heap allocator implemented
+in the Full Newlib (<code class="file docutils literal notranslate"><span class="pre">libc.a</span></code> and <code class="file docutils literal notranslate"><span class="pre">libm.a</span></code>) of the Zephyr SDK
+requests larger memory chunks to the operating system and has a significantly
+higher minimum memory requirement compared to that of the Nano Newlib
+(<code class="file docutils literal notranslate"><span class="pre">libc_nano.a</span></code> and <code class="file docutils literal notranslate"><span class="pre">libm_nano.a</span></code>).</p>
+<p>The only interface between the Newlib dynamic memory management functions and
+the Zephyr-side libc hooks is the <code class="xref c c-func docutils literal notranslate"><span class="pre">sbrk()</span></code> function, which is used by the
+Newlib to manage the size of the memory pool reserved for its internal heap
+allocator.</p>
+<p>The <code class="xref c c-func docutils literal notranslate"><span class="pre">_sbrk()</span></code> hook function, implemented in <code class="file docutils literal notranslate"><span class="pre">libc-hooks.c</span></code>, handles
+the memory pool size change requests from the Newlib and ensures that the
+Newlib internal heap allocator memory pool size does not exceed the amount of
+available memory space by returning an error when the system is out of memory.</p>
+<p>When userspace is enabled, the Newlib internal heap allocator memory pool is
+placed in a dedicated memory partition called <code class="docutils literal notranslate"><span class="pre">z_malloc_partition</span></code>, which can
+be accessed from the user mode threads.</p>
+<p>The amount of memory space available for the Newlib heap depends on the system
+configurations:</p>
+<ul class="simple">
+<li><p>When MMU is enabled (<a class="reference internal" href="../../../kconfig.html#CONFIG_MMU" title="CONFIG_MMU"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MMU</span></code></a> is selected), the amount of
+memory space reserved for the Newlib heap is set by the size of the free
+memory space returned by the <a class="reference internal" href="../../../doxygen/html/group__kernel__memory__management.html#gabb315b4994193147e9f51b0c3268bfcd" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_free_get()</span></code></a> function or the
+<a class="reference internal" href="../../../kconfig.html#CONFIG_NEWLIB_LIBC_MAX_MAPPED_REGION_SIZE" title="CONFIG_NEWLIB_LIBC_MAX_MAPPED_REGION_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NEWLIB_LIBC_MAX_MAPPED_REGION_SIZE</span></code></a>, whichever is the
+smallest.</p></li>
+<li><p>When MPU is enabled and the MPU requires power-of-two partition size and
+address alignment (<a class="reference internal" href="../../../kconfig.html#CONFIG_NEWLIB_LIBC_ALIGNED_HEAP_SIZE" title="CONFIG_NEWLIB_LIBC_ALIGNED_HEAP_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NEWLIB_LIBC_ALIGNED_HEAP_SIZE</span></code></a> is
+set to a non-zero value), the amount of memory space reserved for the Newlib
+heap is set by the <a class="reference internal" href="../../../kconfig.html#CONFIG_NEWLIB_LIBC_ALIGNED_HEAP_SIZE" title="CONFIG_NEWLIB_LIBC_ALIGNED_HEAP_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NEWLIB_LIBC_ALIGNED_HEAP_SIZE</span></code></a>.</p></li>
+<li><p>Otherwise, the amount of memory space reserved for the Newlib heap is equal
+to the amount of free (unallocated) memory in the SRAM region.</p></li>
+</ul>
+<p>The standard dynamic memory management interface functions implemented by the
+Newlib are thread safe and may be simultaneously called by multiple threads.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,369 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="group__timeutil__sync__apis" kind="group">
+    <compoundname>timeutil_sync_apis</compoundname>
+    <title>Time Synchronization APIs</title>
+    <innerclass refid="structtimeutil__sync__config" prot="public">timeutil_sync_config</innerclass>
+    <innerclass refid="structtimeutil__sync__instant" prot="public">timeutil_sync_instant</innerclass>
+    <innerclass refid="structtimeutil__sync__state" prot="public">timeutil_sync_state</innerclass>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="group__timeutil__sync__apis_1gaa6926a23d1c4fbb61584e957d157bd62" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int timeutil_sync_state_update</definition>
+        <argsstring>(struct timeutil_sync_state *tsp, const struct timeutil_sync_instant *inst)</argsstring>
+        <name>timeutil_sync_state_update</name>
+        <param>
+          <type>struct <ref refid="structtimeutil__sync__state" kindref="compound">timeutil_sync_state</ref> *</type>
+          <declname>tsp</declname>
+        </param>
+        <param>
+          <type>const struct <ref refid="structtimeutil__sync__instant" kindref="compound">timeutil_sync_instant</ref> *</type>
+          <declname>inst</declname>
+        </param>
+        <briefdescription>
+<para>Record a new instant in the time synchronization state. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Note that this updates only the latest persisted instant. The skew is not adjusted automatically.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>tsp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>pointer to a <ref refid="structtimeutil__sync__state" kindref="compound">timeutil_sync_state</ref> object.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>inst</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the new instant to be recorded. This becomes the base instant if there is no base instant, otherwise the value must be strictly after the base instant in both the reference and local time scales.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>0</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if installation succeeded in providing a new base </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>1</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if installation provided a new latest instant </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EINVAL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if the new instant is not compatible with the base instant </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/timeutil.h" line="239" column="5" declfile="zephyr/sys/timeutil.h" declline="239" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__timeutil__sync__apis_1ga01142931b299e848b0642634a0922be5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int timeutil_sync_state_set_skew</definition>
+        <argsstring>(struct timeutil_sync_state *tsp, float skew, const struct timeutil_sync_instant *base)</argsstring>
+        <name>timeutil_sync_state_set_skew</name>
+        <param>
+          <type>struct <ref refid="structtimeutil__sync__state" kindref="compound">timeutil_sync_state</ref> *</type>
+          <declname>tsp</declname>
+        </param>
+        <param>
+          <type>float</type>
+          <declname>skew</declname>
+        </param>
+        <param>
+          <type>const struct <ref refid="structtimeutil__sync__instant" kindref="compound">timeutil_sync_instant</ref> *</type>
+          <declname>base</declname>
+        </param>
+        <briefdescription>
+<para>Update the state with a new skew and possibly base value. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Set the skew from a value retrieved from persistent storage, or calculated based on recent skew estimations including from <ref refid="group__timeutil__sync__apis_1gac4c25a1ed054a8a06c87d4df9c25ffc6" kindref="member">timeutil_sync_estimate_skew()</ref>.</para>
+<para>Optionally update the base timestamp. If the base is replaced the latest instant will be cleared until <ref refid="group__timeutil__sync__apis_1gaa6926a23d1c4fbb61584e957d157bd62" kindref="member">timeutil_sync_state_update()</ref> is invoked.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>tsp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>pointer to a time synchronization state.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>skew</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the skew to be used. The value must be positive and shouldn&apos;t be too far away from 1.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>base</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>optional new base to be set. If provided this becomes the base timestamp that will be used along with skew to convert between reference and local timescale instants. Setting the base clears the captured latest value.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 if skew was updated </para>
+</simplesect>
+<simplesect kind="return"><para>-EINVAL if skew was not valid </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/timeutil.h" line="266" column="5" declfile="zephyr/sys/timeutil.h" declline="266" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__timeutil__sync__apis_1gac4c25a1ed054a8a06c87d4df9c25ffc6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>float</type>
+        <definition>float timeutil_sync_estimate_skew</definition>
+        <argsstring>(const struct timeutil_sync_state *tsp)</argsstring>
+        <name>timeutil_sync_estimate_skew</name>
+        <param>
+          <type>const struct <ref refid="structtimeutil__sync__state" kindref="compound">timeutil_sync_state</ref> *</type>
+          <declname>tsp</declname>
+        </param>
+        <briefdescription>
+<para>Estimate the skew based on current state. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Using the base and latest syncpoints from the state determine the skew of the local clock relative to the reference clock. See <ref refid="structtimeutil__sync__state_1a39454807d207dddb2564d766c8ec2ea3" kindref="member">timeutil_sync_state::skew</ref>.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>tsp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>pointer to a time synchronization state. The base and latest syncpoints must be present and the latest syncpoint must be after the base point in the local time scale.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>the estimated skew, or zero if skew could not be estimated. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/timeutil.h" line="282" column="7" declfile="zephyr/sys/timeutil.h" declline="282" declcolumn="7"/>
+      </memberdef>
+      <memberdef kind="function" id="group__timeutil__sync__apis_1ga75361d2bfd219f1e8107d635eb4ecc16" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int timeutil_sync_ref_from_local</definition>
+        <argsstring>(const struct timeutil_sync_state *tsp, uint64_t local, uint64_t *refp)</argsstring>
+        <name>timeutil_sync_ref_from_local</name>
+        <param>
+          <type>const struct <ref refid="structtimeutil__sync__state" kindref="compound">timeutil_sync_state</ref> *</type>
+          <declname>tsp</declname>
+        </param>
+        <param>
+          <type><ref refid="stdint_8h_1a2095b9bffea4b2656950c6c0419edbf1" kindref="member">uint64_t</ref></type>
+          <declname>local</declname>
+        </param>
+        <param>
+          <type><ref refid="stdint_8h_1a2095b9bffea4b2656950c6c0419edbf1" kindref="member">uint64_t</ref> *</type>
+          <declname>refp</declname>
+        </param>
+        <briefdescription>
+<para>Interpolate a reference timescale instant from a local instant. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>tsp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>pointer to a time synchronization state. This must have a base and a skew installed.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>local</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>an instant measured in the local timescale. This may be before or after the base instant.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>refp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>where the corresponding instant in the reference timescale should be stored. A negative interpolated reference time produces an error. If interpolation fails the referenced object is not modified.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para>Clock skews are only applied with <computeroutput>CONFIG_TIMEUTIL_APPLY_SKEW</computeroutput> </para>
+</simplesect>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>0</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if interpolated using a skew of 1 </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>1</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if interpolated using a skew not equal to 1 </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EINVAL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para><itemizedlist>
+<listitem><para>the times synchronization state is not adequately initialized</para>
+</listitem><listitem><para><computeroutput>refp</computeroutput> is null </para>
+</listitem></itemizedlist>
+</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-ERANGE</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the interpolated reference time would be negative </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/timeutil.h" line="308" column="5" declfile="zephyr/sys/timeutil.h" declline="308" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__timeutil__sync__apis_1gad8ef92e5dc72bd26d765567134044400" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int timeutil_sync_local_from_ref</definition>
+        <argsstring>(const struct timeutil_sync_state *tsp, uint64_t ref, int64_t *localp)</argsstring>
+        <name>timeutil_sync_local_from_ref</name>
+        <param>
+          <type>const struct <ref refid="structtimeutil__sync__state" kindref="compound">timeutil_sync_state</ref> *</type>
+          <declname>tsp</declname>
+        </param>
+        <param>
+          <type><ref refid="stdint_8h_1a2095b9bffea4b2656950c6c0419edbf1" kindref="member">uint64_t</ref></type>
+          <declname>ref</declname>
+        </param>
+        <param>
+          <type><ref refid="stdint_8h_1ac714c0d2c1a4adb10e73cab29623314b" kindref="member">int64_t</ref> *</type>
+          <declname>localp</declname>
+        </param>
+        <briefdescription>
+<para>Interpolate a local timescale instant from a reference instant. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>tsp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>pointer to a time synchronization state. This must have a base and a skew installed.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>ref</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>an instant measured in the reference timescale. This may be before or after the base instant.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>localp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>where the corresponding instant in the local timescale should be stored. An interpolated value before local time 0 is provided without error. If interpolation fails the referenced object is not modified.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="note"><para>Clock skews are only applied with <computeroutput>CONFIG_TIMEUTIL_APPLY_SKEW</computeroutput> </para>
+</simplesect>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>0</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if successful with a skew of 1 </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>1</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if successful with a skew not equal to 1 </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EINVAL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para><itemizedlist>
+<listitem><para>the time synchronization state is not adequately initialized</para>
+</listitem><listitem><para><computeroutput>refp</computeroutput> is null </para>
+</listitem></itemizedlist>
+</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/timeutil.h" line="334" column="5" declfile="zephyr/sys/timeutil.h" declline="334" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__timeutil__sync__apis_1gabe374cf629ee64b850cc49e954666d8d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="stdint_8h_1a0c18914b3041c2f583aba76f418399c2" kindref="member">int32_t</ref></type>
+        <definition>int32_t timeutil_sync_skew_to_ppb</definition>
+        <argsstring>(float skew)</argsstring>
+        <name>timeutil_sync_skew_to_ppb</name>
+        <param>
+          <type>float</type>
+          <declname>skew</declname>
+        </param>
+        <briefdescription>
+<para>Convert from a skew to an error in parts-per-billion. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>A skew of 1.0 has zero error. A skew less than 1 has a positive error (clock is faster than it should be). A skew greater than one has a negative error (clock is slower than it should be).</para>
+<para>Note that due to the limited precision of <computeroutput>float</computeroutput> compared with <computeroutput>double</computeroutput> the smallest error that can be represented is about 120 ppb. A &quot;precise&quot; time source may have error on the order of 2000 ppb.</para>
+<para>A skew greater than 3.14748 may underflow the 32-bit representation; this represents a clock running at less than 1/3 its nominal rate.</para>
+<para><simplesect kind="return"><para>skew error represented as parts-per-billion, or INT32_MIN if the skew cannot be represented in the return type. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/timeutil.h" line="355" column="9" declfile="zephyr/sys/timeutil.h" declline="355" declcolumn="9"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

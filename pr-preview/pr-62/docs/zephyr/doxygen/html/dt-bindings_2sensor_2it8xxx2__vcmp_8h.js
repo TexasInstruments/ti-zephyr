@@ -1,0 +1,25 @@
+var dt_bindings_2sensor_2it8xxx2__vcmp_8h =
+[
+    [ "IT8XXX2_VCMP_GREATER", "dt-bindings_2sensor_2it8xxx2__vcmp_8h.html#a2f1ccc3b8b3d0ff5b1fab7d401adb2c7", null ],
+    [ "IT8XXX2_VCMP_LESS_OR_EQUAL", "dt-bindings_2sensor_2it8xxx2__vcmp_8h.html#a46e65d3ca651e9a75d90d0d456e6bc28", null ],
+    [ "IT8XXX2_VCMP_SCAN_PERIOD_100US", "dt-bindings_2sensor_2it8xxx2__vcmp_8h.html#afee8d841314119709484eeb1a7919fc4", null ],
+    [ "IT8XXX2_VCMP_SCAN_PERIOD_1_5MS", "dt-bindings_2sensor_2it8xxx2__vcmp_8h.html#a1aa53f56577acc7cbd34f9f37d166e7c", null ],
+    [ "IT8XXX2_VCMP_SCAN_PERIOD_1MS", "dt-bindings_2sensor_2it8xxx2__vcmp_8h.html#add00ffb6d51398fb9207d9709d35f294", null ],
+    [ "IT8XXX2_VCMP_SCAN_PERIOD_200US", "dt-bindings_2sensor_2it8xxx2__vcmp_8h.html#ac22de93d09665b40b736f638bb106143", null ],
+    [ "IT8XXX2_VCMP_SCAN_PERIOD_2_5MS", "dt-bindings_2sensor_2it8xxx2__vcmp_8h.html#aa702079843ff113a79589c6daca88587", null ],
+    [ "IT8XXX2_VCMP_SCAN_PERIOD_2MS", "dt-bindings_2sensor_2it8xxx2__vcmp_8h.html#a012e4fcc993d9aed16203e1cdbbeca05", null ],
+    [ "IT8XXX2_VCMP_SCAN_PERIOD_3MS", "dt-bindings_2sensor_2it8xxx2__vcmp_8h.html#aad950cc6bec74a685ec3d37f451e1a10", null ],
+    [ "IT8XXX2_VCMP_SCAN_PERIOD_400US", "dt-bindings_2sensor_2it8xxx2__vcmp_8h.html#ac4cd52baa765f7f9e148f49e3a5eb137", null ],
+    [ "IT8XXX2_VCMP_SCAN_PERIOD_4MS", "dt-bindings_2sensor_2it8xxx2__vcmp_8h.html#a4f296f81c2a751d53977abf2aff5d6dd", null ],
+    [ "IT8XXX2_VCMP_SCAN_PERIOD_5MS", "dt-bindings_2sensor_2it8xxx2__vcmp_8h.html#a7c31ca003dc472e5e567c6274f62dceb", null ],
+    [ "IT8XXX2_VCMP_SCAN_PERIOD_600US", "dt-bindings_2sensor_2it8xxx2__vcmp_8h.html#a3e98391265d430652e996798979d6e32", null ],
+    [ "IT8XXX2_VCMP_SCAN_PERIOD_800US", "dt-bindings_2sensor_2it8xxx2__vcmp_8h.html#ace0bbf4e49fe2e939926c8973b1d9e6c", null ],
+    [ "IT8XXX2_VCMP_UNDEFINED", "dt-bindings_2sensor_2it8xxx2__vcmp_8h.html#ac54b4d008105b4d2ad956cf076c29acc", null ],
+    [ "VCMP_CHANNEL_0", "dt-bindings_2sensor_2it8xxx2__vcmp_8h.html#a04c6b4af3a7fa2c266f9bc4cf8f580f8", null ],
+    [ "VCMP_CHANNEL_1", "dt-bindings_2sensor_2it8xxx2__vcmp_8h.html#ab284eddb8412223f865380f69311884c", null ],
+    [ "VCMP_CHANNEL_2", "dt-bindings_2sensor_2it8xxx2__vcmp_8h.html#abf666272da5df739c38349f8dc0673d7", null ],
+    [ "VCMP_CHANNEL_3", "dt-bindings_2sensor_2it8xxx2__vcmp_8h.html#aad5d65c9659dedf702b54d8a7d3857ea", null ],
+    [ "VCMP_CHANNEL_4", "dt-bindings_2sensor_2it8xxx2__vcmp_8h.html#a3148e4a63af5791c0d88e3ede54c1443", null ],
+    [ "VCMP_CHANNEL_5", "dt-bindings_2sensor_2it8xxx2__vcmp_8h.html#a1460631599e37050e844032297578d2c", null ],
+    [ "VCMP_CHANNEL_CNT", "dt-bindings_2sensor_2it8xxx2__vcmp_8h.html#ad7d3ef8e2a0157c43c68ef12f02b6181", null ]
+];

@@ -1,0 +1,27 @@
+var ast10x0__reset_8h =
+[
+    [ "ASPEED_RESET_ADC", "ast10x0__reset_8h.html#ac8cad68c9911554194574d460d3f3814", null ],
+    [ "ASPEED_RESET_ESPI", "ast10x0__reset_8h.html#a76bc43a3b57f919db372e4a79dc79b6f", null ],
+    [ "ASPEED_RESET_GRP_0_OFFSET", "ast10x0__reset_8h.html#a58f51601c877080d344167774969c9b4", null ],
+    [ "ASPEED_RESET_GRP_1_OFFSET", "ast10x0__reset_8h.html#af60cf3c19df220966fcc6aeb553677a8", null ],
+    [ "ASPEED_RESET_HACE", "ast10x0__reset_8h.html#a18a69d795a56e9077333b8d50fac36b0", null ],
+    [ "ASPEED_RESET_I2C", "ast10x0__reset_8h.html#a235bf82edd62f2f72fb9de4efa11c7f9", null ],
+    [ "ASPEED_RESET_I3C", "ast10x0__reset_8h.html#a49e0d2e074659166bb20ad0a9a603435", null ],
+    [ "ASPEED_RESET_I3C0", "ast10x0__reset_8h.html#a392ac704a9bbddcee588e9f52af8557e", null ],
+    [ "ASPEED_RESET_I3C1", "ast10x0__reset_8h.html#a792d63822aaf04bcf8670471c6f5cb5c", null ],
+    [ "ASPEED_RESET_I3C2", "ast10x0__reset_8h.html#a3e76867407846a68533e1ef13e5612e0", null ],
+    [ "ASPEED_RESET_I3C3", "ast10x0__reset_8h.html#a6eb1a65fee7f7d589e5c40acb06a59a7", null ],
+    [ "ASPEED_RESET_JTAG_M0", "ast10x0__reset_8h.html#a2000c2cd1474abe2acf6716293f9a656", null ],
+    [ "ASPEED_RESET_JTAG_M1", "ast10x0__reset_8h.html#a8e20719b17e4f21c9673a7e740362b8e", null ],
+    [ "ASPEED_RESET_LPC", "ast10x0__reset_8h.html#a93f2fc81c8a9cdfee97548fb48281bed", null ],
+    [ "ASPEED_RESET_MAC", "ast10x0__reset_8h.html#ae546e699360d23e89ddba7310d637c8a", null ],
+    [ "ASPEED_RESET_MII", "ast10x0__reset_8h.html#abb494d1ccc9ab01d50fc21bb7c2eb7de", null ],
+    [ "ASPEED_RESET_PECI", "ast10x0__reset_8h.html#a6cab61e115cc50636d3c5aa8b509f5c5", null ],
+    [ "ASPEED_RESET_PWM_TACH", "ast10x0__reset_8h.html#a49f53d3791ab6d0104837204c31eb1ad", null ],
+    [ "ASPEED_RESET_SRAM", "ast10x0__reset_8h.html#a54fbdaa166cf43dadb6a4d9777b581c3", null ],
+    [ "ASPEED_RESET_UART1", "ast10x0__reset_8h.html#ab7429f58459c26d3cf637e4d9e764d67", null ],
+    [ "ASPEED_RESET_UART2", "ast10x0__reset_8h.html#a67087547f237de76d2ab1e9c2fd774f1", null ],
+    [ "ASPEED_RESET_UART3", "ast10x0__reset_8h.html#a31e0692dd65c0adbe937daebee4477e2", null ],
+    [ "ASPEED_RESET_UART4", "ast10x0__reset_8h.html#a19e6207b2212a0a58b8dc5c736748df1", null ],
+    [ "ASPEED_RESET_USB", "ast10x0__reset_8h.html#aa63cefb88f641936f49389acaff04cbc", null ]
+];

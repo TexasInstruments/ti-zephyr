@@ -1,0 +1,45 @@
+var group__pcie__host__msi__interface =
+[
+    [ "msix_vector", "structmsix__vector.html", [
+      [ "msg_addr", "structmsix__vector.html#a2c09a989a9ed99536d85c0e800283743", null ],
+      [ "msg_data", "structmsix__vector.html#acd899f1dc388ef49f38d593083e0042d", null ],
+      [ "msg_up_addr", "structmsix__vector.html#a908e2d095b43713f0b9682716cd4ae85", null ],
+      [ "vector_ctrl", "structmsix__vector.html#ac4d0f7192cc8bcaffd4fac75589ca298", null ]
+    ] ],
+    [ "msi_vector", "structmsi__vector.html", [
+      [ "arch", "structmsi__vector.html#aec3f368bdbe75d9e53d6bc9b0f6a18a7", null ],
+      [ "bdf", "structmsi__vector.html#a643d712565f3464874efaab81b25b68a", null ]
+    ] ],
+    [ "PCIE_MSI_MAP0", "group__pcie__host__msi__interface.html#gaf5b03bc395082366b0f4d8a6860753a3", null ],
+    [ "PCIE_MSI_MAP1_64", "group__pcie__host__msi__interface.html#ga7dc1045e58e9e99029d2876adf373f61", null ],
+    [ "PCIE_MSI_MCR", "group__pcie__host__msi__interface.html#ga6363ff201cdaf89434be7f7976218132", null ],
+    [ "PCIE_MSI_MCR_64", "group__pcie__host__msi__interface.html#ga8496d1040f5f0388130f3550f27dbf67", null ],
+    [ "PCIE_MSI_MCR_EN", "group__pcie__host__msi__interface.html#ga6d4aa888ca0930998d49abfc21dfc4a0", null ],
+    [ "PCIE_MSI_MCR_MMC", "group__pcie__host__msi__interface.html#ga273df548ce103502c69a2aaf32940270", null ],
+    [ "PCIE_MSI_MCR_MMC_SHIFT", "group__pcie__host__msi__interface.html#gab0b4bed4d96cc135c38e1762922a6dfc", null ],
+    [ "PCIE_MSI_MCR_MME", "group__pcie__host__msi__interface.html#gae34c85b4346402d14ab7ade656f7874f", null ],
+    [ "PCIE_MSI_MCR_MME_SHIFT", "group__pcie__host__msi__interface.html#ga933abb134aec549761f835f84c0caf53", null ],
+    [ "PCIE_MSI_MDR_32", "group__pcie__host__msi__interface.html#ga72a3907f5cfba38103db25a8065efe5d", null ],
+    [ "PCIE_MSI_MDR_64", "group__pcie__host__msi__interface.html#ga599d70864c7a8a8d12c56c302f963c75", null ],
+    [ "PCIE_MSIR_TABLE_ENTRY_SIZE", "group__pcie__host__msi__interface.html#ga0a403e859ea16d24267fed463c214e22", null ],
+    [ "PCIE_MSIX_MCR", "group__pcie__host__msi__interface.html#ga3f684fa1e9eaf5aad844b7f5c5232adb", null ],
+    [ "PCIE_MSIX_MCR_EN", "group__pcie__host__msi__interface.html#gaf309bab15a0118cbc39b3a52354a8067", null ],
+    [ "PCIE_MSIX_MCR_FMASK", "group__pcie__host__msi__interface.html#ga7186a5d811ab5f486c7eddbb0b2ecffe", null ],
+    [ "PCIE_MSIX_MCR_TSIZE", "group__pcie__host__msi__interface.html#ga20e8351fd64d8308ff0c94ba02e7c688", null ],
+    [ "PCIE_MSIX_MCR_TSIZE_SHIFT", "group__pcie__host__msi__interface.html#gabb2e51e10229fe1b5953548a96892005", null ],
+    [ "PCIE_MSIX_PBA", "group__pcie__host__msi__interface.html#ga6e74db681568d7103100036233e3467d", null ],
+    [ "PCIE_MSIX_PBA_BIR", "group__pcie__host__msi__interface.html#gae259720d8a4af8b2aba0625b41d21d40", null ],
+    [ "PCIE_MSIX_PBA_OFFSET", "group__pcie__host__msi__interface.html#ga388b54bd3c60cb46940e1b1defc42dad", null ],
+    [ "PCIE_MSIX_TR", "group__pcie__host__msi__interface.html#ga701825e23994bdf4da4a86b8776c3248", null ],
+    [ "PCIE_MSIX_TR_BIR", "group__pcie__host__msi__interface.html#ga13e9132823fa2361ab25e53c75aa8896", null ],
+    [ "PCIE_MSIX_TR_OFFSET", "group__pcie__host__msi__interface.html#ga44875f9af4865a82438a6a4ec714c6a9", null ],
+    [ "PCIE_VTBL_MA", "group__pcie__host__msi__interface.html#ga33adc70c295b3ba887529fc8f73f6cb4", null ],
+    [ "PCIE_VTBL_MD", "group__pcie__host__msi__interface.html#gaf35ee6cb30ff29ae0f6804f3328a1d1d", null ],
+    [ "PCIE_VTBL_MUA", "group__pcie__host__msi__interface.html#ga5711b93de9c485b321a9dcd01ac53b05", null ],
+    [ "PCIE_VTBL_VCTRL", "group__pcie__host__msi__interface.html#gae354a23e4f62342cfd4e2572068b51a3", null ],
+    [ "msi_vector_t", "group__pcie__host__msi__interface.html#ga9ede6a7a472ee62f0975256a1b5f1231", null ],
+    [ "pcie_is_msi", "group__pcie__host__msi__interface.html#gac16ef7e19d7584aa2fc3a839b1b8fb01", null ],
+    [ "pcie_msi_enable", "group__pcie__host__msi__interface.html#ga57226ef41cee2008a2c92098dd52af6b", null ],
+    [ "pcie_msi_map", "group__pcie__host__msi__interface.html#ga2cdf2a32cb4c6e4d68290a1e9020f4ee", null ],
+    [ "pcie_msi_mdr", "group__pcie__host__msi__interface.html#gae89ee2177016ab1df94c7f453eb5c25d", null ]
+];

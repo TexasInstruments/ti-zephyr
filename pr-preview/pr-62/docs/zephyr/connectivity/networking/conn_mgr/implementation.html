@@ -1,0 +1,728 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connectivity Implementations &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/connectivity/networking/conn_mgr/implementation.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Distributed Switch Architecture (DSA)" href="../dsa.html" />
+    <link rel="prev" title="Overview" href="main.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Connectivity</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../canbus/index.html">Controller Area Network (CAN) Bus Protocols</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Networking</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../net-stack-architecture.html">Network Stack Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../net_config_guide.html">Network Configuration Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../networking_with_host.html">Networking with the host system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../network_monitoring.html">Monitor Network Traffic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../network_tracing.html">Network Tracing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/index.html">Networking APIs</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Connection Manager</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="main.html">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="main.html#connectivity-monitoring">Connectivity monitoring</a></li>
+<li class="toctree-l4"><a class="reference internal" href="main.html#connectivity-control">Connectivity control</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Connectivity Implementations</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#architecture">Architecture</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#context-pointer">Context Pointer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#defining-an-implementation">Defining an implementation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#declaring-an-implementation-publicly">Declaring an implementation publicly</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#declaring-a-context-type">Declaring a context type</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#binding-an-iface-to-an-implementation">Binding an iface to an implementation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#connectivity-implementation-guidelines">Connectivity implementation guidelines</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#implementing-timeouts-and-persistence">Implementing timeouts and persistence</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#implementation-api">Implementation API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../dsa.html">Distributed Switch Architecture (DSA)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa and LoRaWAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../usb/index.html">USB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Connectivity</a> &raquo;</li>
+  
+     <li><a href="../index.html">Networking</a> &raquo;</li>
+  
+     <li><a href="index.html">Connection Manager</a> &raquo;</li>
+  
+  <li>Connectivity Implementations</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/connectivity/networking/conn_mgr/implementation.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27connectivity%2Fnetworking%2Fconn_mgr%2Fimplementation%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Networking%2Carea%3A+Networking&env=-+Page%3A+connectivity%2Fnetworking%2Fconn_mgr%2Fimplementation%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="connectivity-implementations">
+<span id="conn-mgr-impl"></span><h1>Connectivity Implementations<a class="headerlink" href="#connectivity-implementations" title="Link to this heading"></a></h1>
+<section id="overview">
+<span id="conn-mgr-impl-overview"></span><h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>Connectivity implementations are technology-specific modules that allow specific Zephyr ifaces to support <a class="reference internal" href="main.html#conn-mgr-control"><span class="std std-ref">Connectivity Control</span></a>.
+They are responsible for translating generic <a class="reference internal" href="main.html#conn-mgr-control-api"><span class="std std-ref">connectivity control API</span></a> calls into hardware-specific operations.
+They are also responsible for implementing standardized <a class="reference internal" href="main.html#conn-mgr-control-persistence-timeouts"><span class="std std-ref">persistence and timeout</span></a> behaviors.</p>
+<p>See the <a class="reference internal" href="#conn-mgr-impl-guidelines"><span class="std std-ref">implementation guidelines</span></a> for details on writing conformant connectivity implementations.</p>
+</section>
+<section id="architecture">
+<span id="conn-mgr-impl-architecture"></span><h2>Architecture<a class="headerlink" href="#architecture" title="Link to this heading"></a></h2>
+<p>The <a class="reference internal" href="#conn-mgr-impl-api"><span class="std std-ref">implementation API</span></a> allows connectivity implementations to be <a class="reference internal" href="#conn-mgr-impl-defining"><span class="std std-ref">defined</span></a> at build time using <a class="reference internal" href="../../../doxygen/html/group__conn__mgr__connectivity__impl.html#ga3c2b01efd38ecbb9fbb33ac0fc7c88f3" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">CONN_MGR_CONN_DEFINE</span></code></a>.</p>
+<p>This creates a static instance of the <a class="reference internal" href="../../../doxygen/html/structconn__mgr__conn__impl.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">conn_mgr_conn_impl</span></code></a> struct, which then stores a reference to the passed in <a class="reference internal" href="../../../doxygen/html/structconn__mgr__conn__api.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">conn_mgr_conn_api</span></code></a> struct (which should be populated with implementation callbacks).</p>
+<p>Once defined, you can reference implementations by name and bind them to any unbound iface using <a class="reference internal" href="../../../doxygen/html/group__conn__mgr__connectivity__impl.html#ga16633bf29ebac6850b8c511b33bd189f" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">CONN_MGR_BIND_CONN</span></code></a>.
+Make sure not to accidentally bind two connectivity implementations to a single iface.</p>
+<p>Once the iface is bound, <a class="reference internal" href="main.html#conn-mgr-control-api"><span class="std std-ref">connectivity control API</span></a> functions can be called on the iface, and they will be translated to the corresponding implementation functions in <a class="reference internal" href="../../../doxygen/html/structconn__mgr__conn__api.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">conn_mgr_conn_api</span></code></a>.</p>
+<p>Binding an iface does not directly modify its <a class="reference internal" href="../../../doxygen/html/structnet__if.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">iface</span> <span class="pre">struct</span></code></a>.</p>
+<p>Instead, an instance of <a class="reference internal" href="../../../doxygen/html/structconn__mgr__conn__binding.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">conn_mgr_conn_binding</span></code></a> is created and appended an internal <a class="reference internal" href="../../../kernel/iterable_sections/index.html#iterable-sections-api"><span class="std std-ref">iterable section</span></a>.</p>
+<p>This binding structure will contain a reference to the bound iface, the connectivity implementation it is bound to, as well as a pointer to a per-iface <a class="reference internal" href="#conn-mgr-impl-ctx"><span class="std std-ref">context pointer</span></a>.</p>
+<p>This iterable section can then be iterated over to find out what (if any) connectivity implementation has been bound to a given iface.
+This search process is used by most of the functions in the <a class="reference internal" href="main.html#conn-mgr-control-api"><span class="std std-ref">connectivity control API</span></a>.
+As such, these functions should be called sparingly, due to their relatively high search cost.</p>
+<p>A single connectivity implementation may be bound to multiple ifaces.
+See <a class="reference internal" href="#conn-mgr-impl-guidelines-no-instancing"><span class="std std-ref">Do not instance implementations</span></a> for more details.</p>
+<figure class="align-center align-default" id="id1">
+<span id="conn-mgr-integration-diagram-detailed"></span><img alt="A detailed view of how Connection Manager integrates with Zephyr and the application." src="../../../_images/integration_diagram_detailed.svg" />
+<figcaption>
+<p><span class="caption-text">A detailed view of how Connection Manager integrates with Zephyr and the application.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+<div class="legend">
+<p>See <a class="reference internal" href="main.html#conn-mgr-integration-diagram-simple"><span class="std std-ref">here</span></a> for a simplified version.</p>
+</div>
+</figcaption>
+</figure>
+</section>
+<section id="context-pointer">
+<span id="conn-mgr-impl-ctx"></span><h2>Context Pointer<a class="headerlink" href="#context-pointer" title="Link to this heading"></a></h2>
+<p>Since a single connectivity implementation may be shared by several Zephyr ifaces, each binding instantiates a context container (of <a class="reference internal" href="#conn-mgr-impl-declaring"><span class="std std-ref">configurable type</span></a>) unique to that binding.
+Each binding is then instantiated with a reference to that container, which implementations can then use to access per-iface state information.</p>
+<p>See also <a class="reference internal" href="#conn-mgr-impl-guidelines-binding-access"><span class="std std-ref">Do not access bindings without locking them</span></a> and <a class="reference internal" href="#conn-mgr-impl-guidelines-no-instancing"><span class="std std-ref">Do not instance implementations</span></a>.</p>
+</section>
+<section id="defining-an-implementation">
+<span id="conn-mgr-impl-defining"></span><h2>Defining an implementation<a class="headerlink" href="#defining-an-implementation" title="Link to this heading"></a></h2>
+<p>A connectivity implementation may be defined as follows:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Create the API implementation functions */</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">my_connect_impl</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">conn_mgr_conn_binding</span><span class="w"> </span><span class="o">*</span><span class="k">const</span><span class="w"> </span><span class="n">binding</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* Cause your underlying technology to associate */</span>
+<span class="p">}</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">my_disconnect_impl</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">conn_mgr_conn_binding</span><span class="w"> </span><span class="o">*</span><span class="k">const</span><span class="w"> </span><span class="n">binding</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* Cause your underlying technology to disassociate */</span>
+<span class="p">}</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">my_init_impl</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">conn_mgr_conn_binding</span><span class="w"> </span><span class="o">*</span><span class="k">const</span><span class="w"> </span><span class="n">binding</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* Perform any required initialization for your underlying technology */</span>
+<span class="p">}</span>
+
+<span class="cm">/* Declare the API struct */</span>
+<span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">conn_mgr_conn_api</span><span class="w"> </span><span class="n">my_impl_api</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">connect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_connect_impl</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">disconnect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_disconnect_impl</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_init_impl</span><span class="p">,</span>
+<span class="w">        </span><span class="cm">/* ... so on */</span>
+<span class="p">};</span>
+
+<span class="cm">/* Define the implementation (named MY_CONNECTIVITY_IMPL) */</span>
+<span class="n">CONN_MGR_CONN_DEFINE</span><span class="p">(</span><span class="n">MY_CONNECTIVITY_IMPL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_impl_api</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This does not work unless you also <a class="reference internal" href="#conn-mgr-impl-declaring-ctx"><span class="std std-ref">declare the context pointer type</span></a>.</p>
+</div>
+</section>
+<section id="declaring-an-implementation-publicly">
+<span id="conn-mgr-impl-declaring"></span><h2>Declaring an implementation publicly<a class="headerlink" href="#declaring-an-implementation-publicly" title="Link to this heading"></a></h2>
+<p>Once defined, you can make a connectivity implementation available to other compilation units by declaring it (in a header file) as follows:</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">my_connectivity_header.h</span></code></span><a class="headerlink" href="#id2" title="Link to this code"></a></div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">CONN_MGR_CONN_DECLARE_PUBLIC</span><span class="p">(</span><span class="n">MY_CONNECTIVITY_IMPL</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<p>The header file that contains this declaration must be included in any compilation units that need to reference the implementation.</p>
+</section>
+<section id="declaring-a-context-type">
+<span id="conn-mgr-impl-declaring-ctx"></span><h2>Declaring a context type<a class="headerlink" href="#declaring-a-context-type" title="Link to this heading"></a></h2>
+<p>For <a class="reference internal" href="../../../doxygen/html/group__conn__mgr__connectivity__impl.html#ga3c2b01efd38ecbb9fbb33ac0fc7c88f3" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">CONN_MGR_CONN_DEFINE</span></code></a> to work, you must declare a corresponding context pointer type.
+This is because all connectivity bindings contain a <a class="reference internal" href="#conn-mgr-impl-ctx"><span class="std std-ref">Context Pointer</span></a> of their associated context pointer type.</p>
+<p>If you are using <a class="reference internal" href="../../../doxygen/html/group__conn__mgr__connectivity__impl.html#ga519cfa66e1a1f0b769ce2bf61a61887f" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">CONN_MGR_CONN_DECLARE_PUBLIC</span></code></a>, declare this type alongside the declaration:</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">my_connectivity_impl.h</span></code></span><a class="headerlink" href="#id3" title="Link to this code"></a></div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define MY_CONNECTIVITY_IMPL_CTX_TYPE struct my_context_type *</span>
+<span class="n">CONN_MGR_CONN_DECLARE_PUBLIC</span><span class="p">(</span><span class="n">MY_CONNECTIVITY_IMPL</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<p>Then, make sure to include the header file before calling <a class="reference internal" href="../../../doxygen/html/group__conn__mgr__connectivity__impl.html#ga3c2b01efd38ecbb9fbb33ac0fc7c88f3" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">CONN_MGR_CONN_DEFINE</span></code></a>:</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">my_connectivity_impl.c</span></code></span><a class="headerlink" href="#id4" title="Link to this code"></a></div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;my_connectivity_impl.h&quot;</span>
+
+<span class="n">CONN_MGR_CONN_DEFINE</span><span class="p">(</span><span class="n">MY_CONNECTIVITY_IMPL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_impl_api</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<p>Otherwise, it is sufficient to simply declare the context pointer type immediately before the call to <a class="reference internal" href="../../../doxygen/html/group__conn__mgr__connectivity__impl.html#ga3c2b01efd38ecbb9fbb33ac0fc7c88f3" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">CONN_MGR_CONN_DEFINE</span></code></a>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define MY_CONNECTIVITY_IMPL_CTX_TYPE struct my_context_type *</span>
+<span class="n">CONN_MGR_CONN_DEFINE</span><span class="p">(</span><span class="n">MY_CONNECTIVITY_IMPL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_impl_api</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Naming is important.
+Your context pointer type declaration must use the same name as your implementation declaration, but with <code class="docutils literal notranslate"><span class="pre">_CTX_TYPE</span></code> appended.</p>
+<p>In the previous example, the context type is named <code class="docutils literal notranslate"><span class="pre">MY_CONNECTIVITY_IMPL_CTX_TYPE</span></code>, because <code class="docutils literal notranslate"><span class="pre">MY_CONNECTIVITY_IMPL</span></code> was used as the connectivity implementation name.</p>
+</div>
+<p>If your connectivity implementation does not need a context pointer, simply declare the type as void:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define MY_CONNECTIVITY_IMPL_CTX_TYPE void *</span>
+</pre></div>
+</div>
+</section>
+<section id="binding-an-iface-to-an-implementation">
+<span id="conn-mgr-impl-binding"></span><h2>Binding an iface to an implementation<a class="headerlink" href="#binding-an-iface-to-an-implementation" title="Link to this heading"></a></h2>
+<p>A defined connectivity implementation may be bound to an iface by calling <a class="reference internal" href="../../../doxygen/html/group__conn__mgr__connectivity__impl.html#ga16633bf29ebac6850b8c511b33bd189f" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">CONN_MGR_BIND_CONN</span></code></a> anywhere after the iface’s device definition:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Define an iface */</span>
+<span class="n">NET_DEVICE_INIT</span><span class="p">(</span><span class="n">my_iface</span><span class="p">,</span>
+<span class="w">        </span><span class="cm">/* ... the specifics here don&#39;t matter ... */</span>
+<span class="p">);</span>
+
+<span class="cm">/* Now bind MY_CONNECTIVITY_IMPL to that iface --</span>
+<span class="cm"> * the name used should match with the above</span>
+<span class="cm"> */</span>
+<span class="n">CONN_MGR_BIND_CONN</span><span class="p">(</span><span class="n">my_iface</span><span class="p">,</span><span class="w"> </span><span class="n">MY_CONNECTIVITY_IMPL</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="connectivity-implementation-guidelines">
+<span id="conn-mgr-impl-guidelines"></span><h2>Connectivity implementation guidelines<a class="headerlink" href="#connectivity-implementation-guidelines" title="Link to this heading"></a></h2>
+<p>Rather than implement all features centrally, Connection Manager relies on each connectivity implementation to implement many behaviors and features individually.</p>
+<p>This approach allows Connection Manager to remain lean, and allows each connectivity implementation to choose the most appropriate approach to these behaviors for itself.
+However, it relies on trust that all connectivity implementations will faithfully implement the features that have been delegated to them.</p>
+<p>To maintain consistency between all connectivity implementations, observe the following guidelines when writing your own implementation:</p>
+<section id="completely-implement-timeout-and-persistence">
+<span id="conn-mgr-impl-guidelines-timeout-persistence"></span><h3><em>Completely implement timeout and persistence</em><a class="headerlink" href="#completely-implement-timeout-and-persistence" title="Link to this heading"></a></h3>
+<p>All connectivity implementations must offer complete support for <a class="reference internal" href="main.html#conn-mgr-control-persistence-timeouts"><span class="std std-ref">timeout and persistence</span></a>, such that a user can disable or enable these features, regardless of the inherent behavior of the underlying technology.
+In other words, no matter how the underlying technology behaves, your implementation must make it appear to the end user to behave exactly as specified in the <a class="reference internal" href="main.html#conn-mgr-control-persistence-timeouts"><span class="std std-ref">Timeouts and Persistence</span></a> section.</p>
+<p>See <a class="reference internal" href="#conn-mgr-impl-timeout-persistence"><span class="std std-ref">Implementing timeouts and persistence</span></a> for a detailed technical discussion on implementing timeouts and persistence.</p>
+</section>
+<section id="conform-to-api-specifications">
+<span id="conn-mgr-impl-guidelines-conformity"></span><h3><em>Conform to API specifications</em><a class="headerlink" href="#conform-to-api-specifications" title="Link to this heading"></a></h3>
+<p>Each <a class="reference internal" href="../../../doxygen/html/structconn__mgr__conn__api.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">implementation</span> <span class="pre">API</span> <span class="pre">function</span></code></a> you implement should behave as-described in the corresponding connectivity control API function.</p>
+<p>For example, your implementation of <a class="reference internal" href="../../../doxygen/html/structconn__mgr__conn__api.html#a92064a4752f0c9621c5c6a745708a66e" title=""><code class="xref c c-member docutils literal notranslate"><span class="pre">conn_mgr_conn_api.connect</span></code></a> should conform to the behavior described for <a class="reference internal" href="../../../doxygen/html/group__conn__mgr__connectivity.html#ga575d367c95592fd9f4ead694ff94543f" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">conn_mgr_if_connect()</span></code></a>.</p>
+</section>
+<section id="allow-connectivity-pre-configuration">
+<span id="conn-mgr-impl-guidelines-preconfig"></span><h3><em>Allow connectivity pre-configuration</em><a class="headerlink" href="#allow-connectivity-pre-configuration" title="Link to this heading"></a></h3>
+<p>Connectivity implementations should provide means for applications to pre-configure all necessary connection parameters (for example, network SSID, or PSK, if applicable), before the call to <a class="reference internal" href="../../../doxygen/html/group__conn__mgr__connectivity.html#ga575d367c95592fd9f4ead694ff94543f" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">conn_mgr_if_connect()</span></code></a>.
+It should not be necessary to provide this information as part of, or following the <a class="reference internal" href="../../../doxygen/html/group__conn__mgr__connectivity.html#ga575d367c95592fd9f4ead694ff94543f" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">conn_mgr_if_connect()</span></code></a> call, although implementations <a class="reference internal" href="#conn-mgr-impl-guidelines-await-config"><span class="std std-ref">should await this information if it is not provided</span></a>.</p>
+</section>
+<section id="await-valid-connectivity-configuration">
+<span id="conn-mgr-impl-guidelines-await-config"></span><h3><em>Await valid connectivity configuration</em><a class="headerlink" href="#await-valid-connectivity-configuration" title="Link to this heading"></a></h3>
+<p>If network association fails because the application pre-configured invalid connection parameters, or did not configure connection parameters at all, this should be treated as a network failure.</p>
+<p>In other words, the connectivity implementation should not give up on the connection attempt, even if valid connection parameters have not been configured.</p>
+<p>Instead, the connectivity implementation should asynchronously wait for valid connection parameters to be configured, either indefinitely, or until the configured <a class="reference internal" href="main.html#conn-mgr-control-timeouts"><span class="std std-ref">connectivity timeout</span></a> elapses.</p>
+</section>
+<section id="implement-iface-state-reporting">
+<span id="conn-mgr-impl-guidelines-iface-state-reporting"></span><h3><em>Implement iface state reporting</em><a class="headerlink" href="#implement-iface-state-reporting" title="Link to this heading"></a></h3>
+<p>All connectivity implementations must keep bound iface state up to date.</p>
+<p>To be specific:</p>
+<ul class="simple">
+<li><p>Set the iface to dormant, carrier-down, or both during <a class="reference internal" href="../../../doxygen/html/structconn__mgr__conn__api.html#ad2bb08d518e2f797002ca5257889a59e" title=""><code class="xref c c-member docutils literal notranslate"><span class="pre">binding</span> <span class="pre">init</span></code></a>.</p>
+<ul>
+<li><p>See <a class="reference internal" href="../api/net_if.html#net-if-interface-state-management"><span class="std std-ref">Network interface state management</span></a> for details regarding iface carrier and dormant states.</p></li>
+</ul>
+</li>
+<li><p>Update dormancy and carrier state so that the iface is non-dormant and carrier-up whenever (and only when) association is complete and connectivity is ready.</p></li>
+<li><p>Set the iface either to dormant or to carrier-down as soon as interruption of service is detected.</p>
+<ul>
+<li><p>It is acceptable to gate this behind a small timeout (separate from the connection timeout) for network technologies where service is commonly intermittent.</p></li>
+</ul>
+</li>
+<li><p>If the technology also handles IP assignment, ensure those IP addresses are <a class="reference internal" href="../api/net_if.html#net-if-interface-ip-management"><span class="std std-ref">assigned to the iface</span></a>.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>iface state updates do not necessarily need to be performed directly by connectivity implementations.</p>
+<p>For instance:</p>
+<ul class="simple">
+<li><p>IP assignment is not necessary if <a class="reference internal" href="../api/dhcpv4.html#dhcpv4-interface"><span class="std std-ref">DHCP</span></a> is used for the iface.</p></li>
+<li><p>The connectivity implementation does not need to update iface dormancy if the underlying <a class="reference internal" href="../api/net_l2.html#net-l2-interface"><span class="std std-ref">L2 implementation</span></a> already does so.</p></li>
+</ul>
+</div>
+</section>
+<section id="do-not-use-iface-state-as-implementation-state">
+<span id="conn-mgr-impl-guidelines-iface-state-writeonly"></span><h3><em>Do not use iface state as implementation state</em><a class="headerlink" href="#do-not-use-iface-state-as-implementation-state" title="Link to this heading"></a></h3>
+<p>Zephyr ifaces may be accessed from other threads without respecting the binding mutex.
+As such, Zephyr iface state may change unpredictably during connectivity implementation callbacks.</p>
+<p>Therefore, do not base implementation behaviors on iface state.</p>
+<p>Keep iface state updated to reflect network availability, but do not read iface state for any purpose.</p>
+<p>If you need to keep track of dormancy or IP assignment, use a separate state variable stored in the <a class="reference internal" href="#conn-mgr-impl-ctx"><span class="std std-ref">context pointer</span></a>.</p>
+</section>
+<section id="remain-non-interferent">
+<span id="conn-mgr-impl-guidelines-non-interference"></span><h3><em>Remain non-interferent</em><a class="headerlink" href="#remain-non-interferent" title="Link to this heading"></a></h3>
+<p>Connectivity implementations should not prevent applications from interacting directly with associated technology-specific APIs.</p>
+<p>In other words, it should be possible for an application to directly use your underlying technology without breaking your connectivity implementation.</p>
+<p>If exceptions to this are absolutely necessary, they should be constrained to specific API calls and should be documented.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>While connectivity implementations must not break, it is acceptable for implementations to have potentially unexpected behavior if applications attempt to directly control the association state.</p>
+<p>For instance, if an application directly instructs an underlying technology to disassociate, it would be acceptable for the connectivity implementation to interpret this as an unexpected connection loss and immediately attempt to re-associate.</p>
+</div>
+</section>
+<section id="remain-non-blocking">
+<span id="conn-mgr-impl-guidelines-non-blocking"></span><h3><em>Remain non-blocking</em><a class="headerlink" href="#remain-non-blocking" title="Link to this heading"></a></h3>
+<p>All connectivity implementation callbacks should be non-blocking.</p>
+<p>For instance, calls to <a class="reference internal" href="../../../doxygen/html/structconn__mgr__conn__api.html#a92064a4752f0c9621c5c6a745708a66e" title=""><code class="xref c c-member docutils literal notranslate"><span class="pre">conn_mgr_conn_api.connect</span></code></a> should initiate a connection process and return immediately.</p>
+<p>One exception is <a class="reference internal" href="../../../doxygen/html/structconn__mgr__conn__api.html#ad2bb08d518e2f797002ca5257889a59e" title=""><code class="xref c c-member docutils literal notranslate"><span class="pre">conn_mgr_conn_api.init</span></code></a>, whose implementations are permitted to block.</p>
+<p>However, bear in mind that blocking during this callback will delay system init, so still consider offloading time-consuming tasks to a background thread.</p>
+</section>
+<section id="make-api-immediately-ready">
+<span id="conn-mgr-impl-guidelines-immediate-api-readiness"></span><h3><em>Make API immediately ready</em><a class="headerlink" href="#make-api-immediately-ready" title="Link to this heading"></a></h3>
+<p>Connectivity implementations must be ready to receive API calls immediately after <a class="reference internal" href="../../../doxygen/html/structconn__mgr__conn__api.html#ad2bb08d518e2f797002ca5257889a59e" title=""><code class="xref c c-member docutils literal notranslate"><span class="pre">conn_mgr_conn_api.init</span></code></a>.</p>
+<p>For instance, a call to <a class="reference internal" href="../../../doxygen/html/structconn__mgr__conn__api.html#a92064a4752f0c9621c5c6a745708a66e" title=""><code class="xref c c-member docutils literal notranslate"><span class="pre">conn_mgr_conn_api.connect</span></code></a> must eventually lead to an association attempt, even if called immediately after <a class="reference internal" href="../../../doxygen/html/structconn__mgr__conn__api.html#ad2bb08d518e2f797002ca5257889a59e" title=""><code class="xref c c-member docutils literal notranslate"><span class="pre">conn_mgr_conn_api.init</span></code></a>.</p>
+<p>If the underlying technology cannot be made ready for connect commands immediately when <a class="reference internal" href="../../../doxygen/html/structconn__mgr__conn__api.html#ad2bb08d518e2f797002ca5257889a59e" title=""><code class="xref c c-member docutils literal notranslate"><span class="pre">conn_mgr_conn_api.init</span></code></a> is called, calls to <a class="reference internal" href="../../../doxygen/html/structconn__mgr__conn__api.html#a92064a4752f0c9621c5c6a745708a66e" title=""><code class="xref c c-member docutils literal notranslate"><span class="pre">conn_mgr_conn_api.connect</span></code></a> must be queued in a non-blocking fashion, and then executed later when ready.</p>
+</section>
+<section id="do-not-store-state-information-outside-the-context-pointer">
+<span id="conn-mgr-impl-guidelines-context-pointer"></span><h3><em>Do not store state information outside the context pointer</em><a class="headerlink" href="#do-not-store-state-information-outside-the-context-pointer" title="Link to this heading"></a></h3>
+<p>Connection Manager provides a context pointer to each binding.</p>
+<p>Connectivity implementations should store all state information in this context pointer.</p>
+<p>The only exception is connectivity implementations that are meant to be bound to only a single iface.
+Such implementations may use statically declared state instead.</p>
+<p>See also <a class="reference internal" href="#conn-mgr-impl-guidelines-no-instancing"><span class="std std-ref">Do not instance implementations</span></a>.</p>
+</section>
+<section id="access-ifaces-only-through-binding-structs">
+<span id="conn-mgr-impl-guidelines-iface-access"></span><h3><em>Access ifaces only through binding structs</em><a class="headerlink" href="#access-ifaces-only-through-binding-structs" title="Link to this heading"></a></h3>
+<p>Do not use statically declared ifaces or externally acquire references to ifaces.</p>
+<p>For example, do not use <a class="reference internal" href="../../../doxygen/html/group__net__if.html#ga55214771e462cbd4930ffa738813cb87" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">net_if_get_default()</span></code></a> under the assumption that the bound iface will be the default iface.</p>
+<p>Instead, always use the <a class="reference internal" href="../../../doxygen/html/structconn__mgr__conn__binding.html#a59bd71867b19e002c310d85496833e8f" title=""><code class="xref c c-member docutils literal notranslate"><span class="pre">iface</span> <span class="pre">pointer</span></code></a> provided by the relevant <a class="reference internal" href="../../../doxygen/html/structconn__mgr__conn__binding.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">binding</span> <span class="pre">struct</span></code></a>.
+See also <a class="reference internal" href="#conn-mgr-impl-guidelines-binding-access"><span class="std std-ref">Do not access bindings without locking them</span></a>.</p>
+</section>
+<section id="make-implementations-optional-at-compile-time">
+<span id="conn-mgr-impl-guidelines-bindings-optional"></span><h3><em>Make implementations optional at compile-time</em><a class="headerlink" href="#make-implementations-optional-at-compile-time" title="Link to this heading"></a></h3>
+<p>Connectivity implementations should provide a Kconfig option to enable or disable the implementation without affecting bound iface availability.</p>
+<p>In other words, it should be possible to configure builds that include Connectivity Manager, as well as the iface that would have been bound to the implementation, but not the implementation itself, nor its binding.</p>
+</section>
+<section id="do-not-instance-implementations">
+<span id="conn-mgr-impl-guidelines-no-instancing"></span><h3><em>Do not instance implementations</em><a class="headerlink" href="#do-not-instance-implementations" title="Link to this heading"></a></h3>
+<p>Do not declare a separate connectivity implementation for every iface you are going to bind to.</p>
+<p>Instead, bind one global connectivity implementation to all of your ifaces, and use the context pointer to store state relevant to individual ifaces.</p>
+<p>See also <a class="reference internal" href="#conn-mgr-impl-guidelines-binding-access"><span class="std std-ref">Do not access bindings without locking them</span></a> and <a class="reference internal" href="#conn-mgr-impl-guidelines-iface-access"><span class="std std-ref">Access ifaces only through binding structs</span></a>.</p>
+</section>
+<section id="do-not-access-bindings-without-locking-them">
+<span id="conn-mgr-impl-guidelines-binding-access"></span><h3><em>Do not access bindings without locking them</em><a class="headerlink" href="#do-not-access-bindings-without-locking-them" title="Link to this heading"></a></h3>
+<p>Bindings may be accessed and modified at random by multiple threads, so modifying or reading from a binding without first <a class="reference internal" href="../../../doxygen/html/group__conn__mgr__connectivity__impl.html#ga27be6dec40356facce7da18a31a2c12a" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">locking</span> <span class="pre">it</span></code></a> may lead to unpredictable behavior.</p>
+<p>This applies to all descendents of the binding, including anything in the <a class="reference internal" href="#conn-mgr-impl-ctx"><span class="std std-ref">context container</span></a>.</p>
+<p>Make sure to <a class="reference internal" href="../../../doxygen/html/group__conn__mgr__connectivity__impl.html#ga94a4930a6d7c4db4427dfdfad8f3c154" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">unlock</span></code></a> the binding when you are done accessing it.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A possible exception to this rule is if the resource in question is inherently thread-safe.</p>
+<p>However, be careful taking advantage of this exception.
+It may still be possible to create a race condition, for instance when accessing multiple thread-safe resources simultaneously.</p>
+<p>Therefore, it is recommended to simply always lock the binding, whether or not the resource being accessed is inherently thread-safe.</p>
+</div>
+</section>
+<section id="do-not-disable-built-in-features">
+<span id="conn-mgr-impl-guidelines-support-builtins"></span><h3><em>Do not disable built-in features</em><a class="headerlink" href="#do-not-disable-built-in-features" title="Link to this heading"></a></h3>
+<p>Do not attempt to prevent the use of built-in features (such as <a class="reference internal" href="main.html#conn-mgr-control-persistence-timeouts"><span class="std std-ref">Timeouts and Persistence</span></a> or <a class="reference internal" href="main.html#conn-mgr-control-automations"><span class="std std-ref">Automated behaviors</span></a>).</p>
+<p>All connectivity implementations must fully support these features.
+Implementations must not attempt to force certain features to be always enabled or always disabled.</p>
+</section>
+<section id="trigger-connectivity-control-events">
+<span id="conn-mgr-impl-guidelines-trigger-events"></span><h3><em>Trigger connectivity control events</em><a class="headerlink" href="#trigger-connectivity-control-events" title="Link to this heading"></a></h3>
+<p>Connectivity control <a class="reference internal" href="../api/net_mgmt.html#net-mgmt-interface"><span class="std std-ref">network management</span></a> events are not triggered automatically by Connection Manager.</p>
+<p>Connectivity implementations must trigger these events themselves.</p>
+<p>Trigger <code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_EVENT_CONN_CMD_IF_TIMEOUT</span></code> when a connection <a class="reference internal" href="main.html#conn-mgr-control-timeouts"><span class="std std-ref">timeout</span></a> occurs.
+See <a class="reference internal" href="main.html#conn-mgr-control-events-timeout"><span class="std std-ref">Timeout</span></a> for details.</p>
+<p>Trigger <a class="reference internal" href="../../../doxygen/html/group__conn__mgr__connectivity.html#gae8f207559a7123bd2eca5ef08086d377" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_EVENT_CONN_IF_FATAL_ERROR</span></code></a> when a fatal (non-recoverable) connection error occurs.
+See <a class="reference internal" href="main.html#conn-mgr-control-events-fatal-error"><span class="std std-ref">Fatal Error</span></a> for details.</p>
+<p>See <a class="reference internal" href="../api/net_mgmt.html#net-mgmt-interface"><span class="std std-ref">Network Management</span></a> for details on firing network management events.</p>
+</section>
+</section>
+<section id="implementing-timeouts-and-persistence">
+<span id="conn-mgr-impl-timeout-persistence"></span><h2>Implementing timeouts and persistence<a class="headerlink" href="#implementing-timeouts-and-persistence" title="Link to this heading"></a></h2>
+<p>First, see <a class="reference internal" href="main.html#conn-mgr-control-persistence-timeouts"><span class="std std-ref">Timeouts and Persistence</span></a> for a high-level description of the expected behavior of timeouts and persistence.</p>
+<p>Connectivity implementations must fully conform to that description, regardless of the behavior of the underlying connectivity technology.</p>
+<p>Sometimes this means writing extra logic in the connectivity implementation to fake certain behaviors.
+The following sections discuss various common edge-cases and nuances and how to handle them.</p>
+<section id="inherently-persistent-technologies">
+<span id="conn-mgr-impl-tp-inherent-persistence"></span><h3><em>Inherently persistent technologies</em><a class="headerlink" href="#inherently-persistent-technologies" title="Link to this heading"></a></h3>
+<p>If the underlying technology automatically attempts to reconnect or retry connection after connection loss or failure, the connectivity implementation must manually cancel such attempts when they are in conflict with timeout or persistence settings.</p>
+<p>For example:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>If the underlying technology automatically attempts to reconnect after losing connection, and persistence is disabled for the iface, the connectivity implementation should immediately cancel this reconnection attempt.</p></li>
+<li><p>If a connection attempt times out on an iface whose underlying technology does not have a built-in timeout, the connectivity implementation must simulate a timeout by cancelling the connection attempt manually.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="technologiess-that-give-up-on-connection-attempts">
+<span id="conn-mgr-impl-tp-inherent-nonpersistence"></span><h3><em>Technologiess that give up on connection attempts</em><a class="headerlink" href="#technologiess-that-give-up-on-connection-attempts" title="Link to this heading"></a></h3>
+<p>If the underlying technology has no mechanism to retry connection attempts, or would give up on them before the user-configured timeout, or would not reconnect after connection loss, the connectivity implementation must manually re-request connection to counteract these deviances.</p>
+<ul class="simple">
+<li><p>If your underlying technology is not persistent, you must manually trigger reconnect attempts when persistence is enabled.</p></li>
+<li><p>If your underlying technology does not support a timeout, you must manually cancel connection attempts if the timeout is enabled.</p></li>
+<li><p>If your underlying technology forces a timeout, you must manually trigger a new connection attempts if that timeout is shorter than the Connection Manager timeout.</p></li>
+</ul>
+</section>
+<section id="technologies-with-association-retry">
+<span id="conn-mgr-impl-tp-assoc-retry"></span><h3><em>Technologies with association retry</em><a class="headerlink" href="#technologies-with-association-retry" title="Link to this heading"></a></h3>
+<p>Many underlying technologies do not usually associate in a single attempt.</p>
+<p>Instead, these underlying technologies may need to make multiple back-to-back association attempts in a row, usually with a small delay.</p>
+<p>In these situations, the connectivity implementation should treat this series of back-to-back association sub-attempts as a single unified connection attempt.</p>
+<p>For instance, after a sub-attempt failure, persistence being disabled should not prevent further sub-attempts, since they all count as one single overall connection attempt.
+See also <a class="reference internal" href="#conn-mgr-impl-tp-persistence-during-connect"><span class="std std-ref">Persistence during connection attempts</span></a>.</p>
+<p>At which point a series of failed sub-attempts should be considered a failure of the connection attempt as a whole is up to each implementation to decide.</p>
+<p>If the connection attempt crosses this threshold, but the configured timeout has not yet elapsed, or there is no timeout, sub-attempts should continue.</p>
+</section>
+<section id="persistence-during-connection-attempts">
+<span id="conn-mgr-impl-tp-persistence-during-connect"></span><h3><em>Persistence during connection attempts</em><a class="headerlink" href="#persistence-during-connection-attempts" title="Link to this heading"></a></h3>
+<p>Persistence should not affect any aspect of implementation behavior during a connection attempt.
+Persistence should only affect whether or not connection attempts are automatically triggered after a connection loss.</p>
+<p>The configured timeout should fully determine whether connection retry should be performed.</p>
+</section>
+</section>
+<section id="implementation-api">
+<span id="conn-mgr-impl-api"></span><h2>Implementation API<a class="headerlink" href="#implementation-api" title="Link to this heading"></a></h2>
+<p>Include header file <code class="file docutils literal notranslate"><span class="pre">include/zephyr/net/conn_mgr_connectivity_impl.h</span></code> to access these.</p>
+<p>Only for use by connectivity implementations.</p>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../doxygen/html/group__conn__mgr__connectivity__impl.html" title=""><span class="pre">Connection</span> <span class="pre">Manager</span> <span class="pre">Connectivity</span> <span class="pre">Implementation</span> <span class="pre">API</span></a></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

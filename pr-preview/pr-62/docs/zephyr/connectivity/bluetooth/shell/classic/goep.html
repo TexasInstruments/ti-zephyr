@@ -1,0 +1,629 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bluetooth: Classic: GOEP Shell &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=b2ece5be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/tabs.css?v=a5c4661c" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/connectivity/bluetooth/shell/classic/goep.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script src="../../../../_static/tabs.js?v=3030b3cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Bluetooth: Classic: HFP Shell" href="hfp.html" />
+    <link rel="prev" title="Bluetooth: Classic: AVRCP Shell" href="avrcp.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">Connectivity</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">Bluetooth</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../features.html">Supported features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-qual.html">Qualification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-arch.html">Stack Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-le-host.html">LE Host</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/audio/bluetooth-le-audio-arch.html">LE Audio Stack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/audio/bluetooth-le-audio-arch.html#le-audio-resources">LE Audio resources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-ctlr-arch.html">LE Controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-dev.html">Application Development</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-tools.html">Tools</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../bluetooth-shell.html">Shell</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../audio/bap.html">Bluetooth: Basic Audio Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../audio/bap_broadcast_assistant.html">Bluetooth: Basic Audio Profile: Broadcast Assistant Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../audio/bap_scan_delegator.html">Bluetooth: Basic Audio Profile: Scan Delegator Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../audio/cap.html">Bluetooth: Common Audio Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../audio/ccp.html">Bluetooth: Call Control Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../audio/csip.html">Bluetooth: Coordinated Set Identification Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../audio/gmap.html">Bluetooth: Gaming Audio Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../audio/mcp.html">Bluetooth: Media Control Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../audio/tbs.html">Bluetooth: Telephone Bearer Service Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../audio/tmap.html">Bluetooth: Telephone and Media Audio Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../audio/pbp.html">Bluetooth: Public Broadcast Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="a2dp.html">Bluetooth: A2DP Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="avrcp.html">Bluetooth: Classic: AVRCP Shell</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Bluetooth: Classic: GOEP Shell</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#commands">Commands</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#connect-goep-transport">Connect GOEP Transport</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#disconnect-goep-transport">Disconnect GOEP transport</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#connect-to-obex-server">Connect to OBEX Server</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#disconnect-from-obex-server">Disconnect from OBEX Server</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#obex-put-operation">OBEX Put Operation</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#obex-get-operation">OBEX Get Operation</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="hfp.html">Bluetooth: Classic: HFP Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="l2cap.html">Bluetooth: Classic: L2CAP Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rfcomm.html">Bluetooth: Classic: RFCOMM Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../host/gap.html">Bluetooth: GAP Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../host/gatt.html">Bluetooth: GATT Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../host/iso.html">Bluetooth: Isochronous Channels Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../host/l2cap.html">Bluetooth: L2CAP Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-shell.html#bluetooth-shell-setup-and-usage">Bluetooth Shell Setup and Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-shell.html#logging">Logging</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../canbus/index.html">Controller Area Network (CAN) Bus Protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../networking/index.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lora_lorawan/index.html">LoRa and LoRaWAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usb/index.html">USB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modbus/index.html">Modbus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">Connectivity</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Bluetooth</a> &raquo;</li>
+  
+     <li><a href="../../bluetooth-shell.html">Shell</a> &raquo;</li>
+  
+  <li>Bluetooth: Classic: GOEP Shell</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/connectivity/bluetooth/shell/classic/goep.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27connectivity%2Fbluetooth%2Fshell%2Fclassic%2Fgoep%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Bluetooth+Classic%2Carea%3A+Bluetooth&env=-+Page%3A+connectivity%2Fbluetooth%2Fshell%2Fclassic%2Fgoep%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="bluetooth-classic-goep-shell">
+<h1>Bluetooth: Classic: GOEP Shell<a class="headerlink" href="#bluetooth-classic-goep-shell" title="Link to this heading"></a></h1>
+<p>This document describes how to run the Bluetooth Classic GOEP functionality.
+The <code class="code docutils literal notranslate"><span class="pre">goep</span></code> command exposes the Bluetooth Classic GOEP Shell commands.</p>
+<section id="commands">
+<h2>Commands<a class="headerlink" href="#commands" title="Link to this heading"></a></h2>
+<p>The <code class="code docutils literal notranslate"><span class="pre">goep</span></code> commands:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep
+<span class="go">goep - Bluetooth GOEP shell commands</span>
+<span class="go">Subcommands:</span>
+<span class="go">  register-rfcomm    : &lt;channel&gt;</span>
+<span class="go">  connect-rfcomm     : &lt;channel&gt;</span>
+<span class="go">  disconnect-rfcomm  :</span>
+<span class="go">  register-l2cap     : &lt;psm&gt;</span>
+<span class="go">  connect-l2cap      : &lt;psm&gt;</span>
+<span class="go">  disconnect-l2cap   :</span>
+<span class="go">  alloc-buf          : Alloc tx buffer</span>
+<span class="go">  release-buf        : Free allocated tx buffer</span>
+<span class="go">  add-header         : Adding header sets</span>
+<span class="go">  client             : Client sets</span>
+<span class="go">  server             : Server sets</span>
+</pre></div>
+</div>
+<p>The <code class="code docutils literal notranslate"><span class="pre">goep</span> <span class="pre">client</span></code> commands:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>client
+<span class="go">client - Client sets</span>
+<span class="go">Subcommands:</span>
+<span class="go">  conn     : &lt;mopl&gt;</span>
+<span class="go">  disconn  :</span>
+<span class="go">  put      : &lt;final: true, false&gt;</span>
+<span class="go">  get      : &lt;final: true, false&gt;</span>
+<span class="go">  abort    :</span>
+<span class="go">  setpath  : [parent] [create]</span>
+<span class="go">  action   : &lt;final: true, false&gt;</span>
+</pre></div>
+</div>
+<p>The <code class="code docutils literal notranslate"><span class="pre">goep</span> <span class="pre">server</span></code> commands:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>server
+<span class="go">server - Server sets</span>
+<span class="go">Subcommands:</span>
+<span class="go">  reg      : [UUID 128]</span>
+<span class="go">  unreg    :</span>
+<span class="go">  conn     : &lt;rsp: continue, success, error&gt; &lt;mopl&gt; [rsp_code]</span>
+<span class="go">  disconn  : &lt;rsp: continue, success, error&gt; [rsp_code]</span>
+<span class="go">  put      : &lt;rsp: continue, success, error&gt; [rsp_code]</span>
+<span class="go">  get      : &lt;rsp: continue, success, error&gt; [rsp_code]</span>
+<span class="go">  abort    : &lt;rsp: continue, success, error&gt; [rsp_code]</span>
+<span class="go">  setpath  : &lt;rsp: continue, success, error&gt; [rsp_code]</span>
+<span class="go">  action   : &lt;rsp: continue, success, error&gt; [rsp_code]</span>
+</pre></div>
+</div>
+</section>
+<section id="connect-goep-transport">
+<h2>Connect GOEP Transport<a class="headerlink" href="#connect-goep-transport" title="Link to this heading"></a></h2>
+<p>The ACL connection should be established before creating the GOEP transport connection.</p>
+<p>The transport is based on L2CAP Channel:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-TDJDQVAgU2VydmVy" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-TDJDQVAgU2VydmVy" name="TDJDQVAgU2VydmVy" role="tab" tabindex="0">L2CAP Server</button><button aria-controls="panel-0-TDJDQVAgQ2xpZW50" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-TDJDQVAgQ2xpZW50" name="TDJDQVAgQ2xpZW50" role="tab" tabindex="-1">L2CAP Client</button></div><div aria-labelledby="tab-0-TDJDQVAgU2VydmVy" class="sphinx-tabs-panel group-tab" id="panel-0-TDJDQVAgU2VydmVy" name="TDJDQVAgU2VydmVy" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>register-l2cap<span class="w"> </span><span class="m">0</span>
+<span class="go">L2CAP server (psm 1001) is registered</span>
+<span class="go">Security changed: XX:XX:XX:XX:XX:XX level 2</span>
+<span class="go">GOEP 0x20005600 transport connected on 0x20004dc8</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-TDJDQVAgQ2xpZW50" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-TDJDQVAgQ2xpZW50" name="TDJDQVAgQ2xpZW50" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>connect-l2cap<span class="w"> </span><span class="m">1001</span>
+<span class="go">GOEP L2CAP connection pending</span>
+<span class="go">Security changed: XX:XX:XX:XX:XX:XX level 2</span>
+<span class="go">GOEP 0x20005600 transport connected on 0x20004dc8</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div></div>
+<p>The transport is based on RFCOMM Channel:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-UkZDT01NIFNlcnZlcg==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-1-UkZDT01NIFNlcnZlcg==" name="UkZDT01NIFNlcnZlcg==" role="tab" tabindex="0">RFCOMM Server</button><button aria-controls="panel-1-UkZDT01NIENsaWVudA==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-UkZDT01NIENsaWVudA==" name="UkZDT01NIENsaWVudA==" role="tab" tabindex="-1">RFCOMM Client</button></div><div aria-labelledby="tab-1-UkZDT01NIFNlcnZlcg==" class="sphinx-tabs-panel group-tab" id="panel-1-UkZDT01NIFNlcnZlcg==" name="UkZDT01NIFNlcnZlcg==" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>register-rfcomm<span class="w"> </span><span class="m">0</span>
+<span class="go">RFCOMM server (channel 06) is registered</span>
+<span class="go">Security changed: XX:XX:XX:XX:XX:XX level 2</span>
+<span class="go">GOEP 0x20005600 transport connected on 0x20004dc8</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-1-UkZDT01NIENsaWVudA==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-1-UkZDT01NIENsaWVudA==" name="UkZDT01NIENsaWVudA==" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>connect-rfcomm<span class="w"> </span><span class="m">6</span>
+<span class="go">GOEP RFCOMM connection pending</span>
+<span class="go">Security changed: XX:XX:XX:XX:XX:XX level 2</span>
+<span class="go">GOEP 0x20005600 transport connected on 0x20004dc8</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="disconnect-goep-transport">
+<h2>Disconnect GOEP transport<a class="headerlink" href="#disconnect-goep-transport" title="Link to this heading"></a></h2>
+<p>The transport is based on L2CAP Channel:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-T25lIFNpZGU=" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-2-T25lIFNpZGU=" name="T25lIFNpZGU=" role="tab" tabindex="0">One Side</button><button aria-controls="panel-2-QW5vdGhlciBTaWRl" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-2-QW5vdGhlciBTaWRl" name="QW5vdGhlciBTaWRl" role="tab" tabindex="-1">Another Side</button></div><div aria-labelledby="tab-2-T25lIFNpZGU=" class="sphinx-tabs-panel group-tab" id="panel-2-T25lIFNpZGU=" name="T25lIFNpZGU=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">GOEP 0x20005600 transport disconnected</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-QW5vdGhlciBTaWRl" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-2-QW5vdGhlciBTaWRl" name="QW5vdGhlciBTaWRl" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>disconnect-l2cap
+<span class="go">GOEP L2CAP disconnection pending</span>
+<span class="go">GOEP 0x20005600 transport disconnected</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div></div>
+<p>The transport is based on RFCOMM Channel:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-T25lIFNpZGU=" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-3-T25lIFNpZGU=" name="T25lIFNpZGU=" role="tab" tabindex="0">One Side</button><button aria-controls="panel-3-QW5vdGhlciBTaWRl" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-3-QW5vdGhlciBTaWRl" name="QW5vdGhlciBTaWRl" role="tab" tabindex="-1">Another Side</button></div><div aria-labelledby="tab-3-T25lIFNpZGU=" class="sphinx-tabs-panel group-tab" id="panel-3-T25lIFNpZGU=" name="T25lIFNpZGU=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">GOEP 0x20005600 transport disconnected</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-3-QW5vdGhlciBTaWRl" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-3-QW5vdGhlciBTaWRl" name="QW5vdGhlciBTaWRl" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>disconnect-rfcomm
+<span class="go">GOEP RFCOMM disconnection pending</span>
+<span class="go">GOEP 0x20005600 transport disconnected</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="connect-to-obex-server">
+<h2>Connect to OBEX Server<a class="headerlink" href="#connect-to-obex-server" title="Link to this heading"></a></h2>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-T0JFWCBTZXJ2ZXI=" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-4-T0JFWCBTZXJ2ZXI=" name="T0JFWCBTZXJ2ZXI=" role="tab" tabindex="0">OBEX Server</button><button aria-controls="panel-4-T0JFWCBDbGllbnQ=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-4-T0JFWCBDbGllbnQ=" name="T0JFWCBDbGllbnQ=" role="tab" tabindex="-1">OBEX Client</button></div><div aria-labelledby="tab-4-T0JFWCBTZXJ2ZXI=" class="sphinx-tabs-panel group-tab" id="panel-4-T0JFWCBTZXJ2ZXI=" name="T0JFWCBTZXJ2ZXI=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>server<span class="w"> </span>reg
+<span class="gp">uart:~$</span>
+<span class="go">OBEX server 0x20005850 conn req, version 10, mopl 00ff</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>server<span class="w"> </span>conn<span class="w"> </span>success<span class="w"> </span><span class="m">255</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-4-T0JFWCBDbGllbnQ=" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-4-T0JFWCBDbGllbnQ=" name="T0JFWCBDbGllbnQ=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>client<span class="w"> </span>conn<span class="w"> </span><span class="m">255</span>
+<span class="go">OBEX client 0x20005818 conn rsp, rsp_code Success, version 10, mopl 00ff</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="disconnect-from-obex-server">
+<h2>Disconnect from OBEX Server<a class="headerlink" href="#disconnect-from-obex-server" title="Link to this heading"></a></h2>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-5-T0JFWCBTZXJ2ZXI=" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-5-T0JFWCBTZXJ2ZXI=" name="T0JFWCBTZXJ2ZXI=" role="tab" tabindex="0">OBEX Server</button><button aria-controls="panel-5-T0JFWCBDbGllbnQ=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-5-T0JFWCBDbGllbnQ=" name="T0JFWCBDbGllbnQ=" role="tab" tabindex="-1">OBEX Client</button></div><div aria-labelledby="tab-5-T0JFWCBTZXJ2ZXI=" class="sphinx-tabs-panel group-tab" id="panel-5-T0JFWCBTZXJ2ZXI=" name="T0JFWCBTZXJ2ZXI=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">OBEX server 0x20005850 disconn req</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>server<span class="w"> </span>disconn<span class="w"> </span>success
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-5-T0JFWCBDbGllbnQ=" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-5-T0JFWCBDbGllbnQ=" name="T0JFWCBDbGllbnQ=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>client<span class="w"> </span>disconn
+<span class="go">OBEX client 0x20005818 disconn rsp, rsp_code Success</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="obex-put-operation">
+<h2>OBEX Put Operation<a class="headerlink" href="#obex-put-operation" title="Link to this heading"></a></h2>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-6-T0JFWCBTZXJ2ZXI=" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-6-T0JFWCBTZXJ2ZXI=" name="T0JFWCBTZXJ2ZXI=" role="tab" tabindex="0">OBEX Server</button><button aria-controls="panel-6-T0JFWCBDbGllbnQ=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-6-T0JFWCBDbGllbnQ=" name="T0JFWCBDbGllbnQ=" role="tab" tabindex="-1">OBEX Client</button></div><div aria-labelledby="tab-6-T0JFWCBTZXJ2ZXI=" class="sphinx-tabs-panel group-tab" id="panel-6-T0JFWCBTZXJ2ZXI=" name="T0JFWCBTZXJ2ZXI=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$</span>
+<span class="go">OBEX server 0x20005850 put req, final false, data len 12</span>
+<span class="go">HI c3 Len 4</span>
+<span class="go">00000000: 00 00 00 09                                      |....             |</span>
+<span class="go">HI 48 Len 4</span>
+<span class="go">00000000: 12 34 56 78                                      |.4Vx             |</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>server<span class="w"> </span>put<span class="w"> </span><span class="k">continue</span>
+<span class="go">OBEX server 0x20005850 put req, final true, data len 8</span>
+<span class="go">HI 49 Len 5</span>
+<span class="go">00000000: 12 34 56 78 90                                   |.4Vx.            |</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>server<span class="w"> </span>put<span class="w"> </span>success
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-6-T0JFWCBDbGllbnQ=" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-6-T0JFWCBDbGllbnQ=" name="T0JFWCBDbGllbnQ=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>alloc-buf
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>add-header<span class="w"> </span>len<span class="w"> </span><span class="m">9</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>add-header<span class="w"> </span>body<span class="w"> </span><span class="m">12345678</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>client<span class="w"> </span>put<span class="w"> </span><span class="nb">false</span>
+<span class="go">OBEX client 0x20005818 put rsp, rsp_code Continue, data len 0</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>alloc-buf
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>add-header<span class="w"> </span>end_body<span class="w"> </span><span class="m">1234567890</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>client<span class="w"> </span>put<span class="w"> </span><span class="nb">true</span>
+<span class="go">OBEX client 0x20005818 put rsp, rsp_code Success, data len 0</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="obex-get-operation">
+<h2>OBEX Get Operation<a class="headerlink" href="#obex-get-operation" title="Link to this heading"></a></h2>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-7-T0JFWCBTZXJ2ZXI=" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-7-T0JFWCBTZXJ2ZXI=" name="T0JFWCBTZXJ2ZXI=" role="tab" tabindex="0">OBEX Server</button><button aria-controls="panel-7-T0JFWCBDbGllbnQ=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-7-T0JFWCBDbGllbnQ=" name="T0JFWCBDbGllbnQ=" role="tab" tabindex="-1">OBEX Client</button></div><div aria-labelledby="tab-7-T0JFWCBTZXJ2ZXI=" class="sphinx-tabs-panel group-tab" id="panel-7-T0JFWCBTZXJ2ZXI=" name="T0JFWCBTZXJ2ZXI=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>alloc-buf
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>add-header<span class="w"> </span>len<span class="w"> </span><span class="m">9</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>add-header<span class="w"> </span>body<span class="w"> </span><span class="m">12345678</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>server<span class="w"> </span>get<span class="w"> </span><span class="k">continue</span>
+<span class="go">OBEX server 0x20005850 get req, final true, data len 0</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>alloc-buf
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>add-header<span class="w"> </span>end_body<span class="w"> </span><span class="m">1234567890</span>
+<span class="gp">uart:~$</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>server<span class="w"> </span>get<span class="w"> </span>success
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-7-T0JFWCBDbGllbnQ=" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-7-T0JFWCBDbGllbnQ=" name="T0JFWCBDbGllbnQ=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>client<span class="w"> </span>get<span class="w"> </span><span class="nb">true</span>
+<span class="go">OBEX client 0x20005818 get rsp, rsp_code Continue, data len 12</span>
+<span class="go">HI c3 Len 4</span>
+<span class="go">00000000: 00 00 00 09                                      |....             |</span>
+<span class="go">HI 48 Len 4</span>
+<span class="go">00000000: 12 34 56 78                                      |.4Vx             |</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>client<span class="w"> </span>get<span class="w"> </span><span class="nb">true</span>
+<span class="go">OBEX client 0x20005818 get rsp, rsp_code Success, data len 8</span>
+<span class="go">HI 49 Len 5</span>
+<span class="go">00000000: 12 34 56 78 90                                   |.4Vx.            |</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

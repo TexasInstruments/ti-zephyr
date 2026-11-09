@@ -1,0 +1,836 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BSD Sockets &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/connectivity/networking/api/sockets.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Socket Services" href="socket_service.html" />
+    <link rel="prev" title="Network APIs" href="apis.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Connectivity</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../canbus/index.html">Controller Area Network (CAN) Bus Protocols</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Networking</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../net-stack-architecture.html">Network Stack Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../net_config_guide.html">Network Configuration Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../networking_with_host.html">Networking with the host system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../network_monitoring.html">Monitor Network Traffic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../network_tracing.html">Network Tracing</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Networking APIs</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="apis.html">Network APIs</a><ul class="current">
+<li class="toctree-l5 current"><a class="current reference internal" href="#">BSD Sockets</a></li>
+<li class="toctree-l5"><a class="reference internal" href="socket_service.html">Socket Services</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ip_4_6.html">IPv4/IPv6 Primitives and Helpers</a></li>
+<li class="toctree-l5"><a class="reference internal" href="dns_resolve.html">DNS Resolve</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_mgmt.html">Network Management</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_stats.html">Network Statistics</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_timeout.html">Network Timeout</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_context.html">Networking Context</a></li>
+<li class="toctree-l5"><a class="reference internal" href="promiscuous.html">Promiscuous Mode</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sntp.html">Simple Network Time Protocol Library</a></li>
+<li class="toctree-l5"><a class="reference internal" href="socks5.html">SOCKS5 Proxy Support</a></li>
+<li class="toctree-l5"><a class="reference internal" href="trickle.html">Trickle Timer Library</a></li>
+<li class="toctree-l5"><a class="reference internal" href="websocket.html">Websocket Client API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="capture.html">Network Packet Capture</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="buf_mgmt.html">Network Packet Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="net_tech.html">Networking Technologies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protocols.html">Protocols</a></li>
+<li class="toctree-l4"><a class="reference internal" href="system_mgmt.html">Network System Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tsn.html">Time Sensitive Networking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="zperf.html">zperf: Network Traffic Generator</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../conn_mgr/index.html">Connection Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dsa.html">Distributed Switch Architecture (DSA)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa and LoRaWAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../usb/index.html">USB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Connectivity</a> &raquo;</li>
+  
+     <li><a href="../index.html">Networking</a> &raquo;</li>
+  
+     <li><a href="index.html">Networking APIs</a> &raquo;</li>
+  
+     <li><a href="apis.html">Network APIs</a> &raquo;</li>
+  
+  <li>BSD Sockets</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/connectivity/networking/api/sockets.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27connectivity%2Fnetworking%2Fapi%2Fsockets%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Networking&env=-+Page%3A+connectivity%2Fnetworking%2Fapi%2Fsockets%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="bsd-sockets">
+<span id="bsd-sockets-interface"></span><h1>BSD Sockets<a class="headerlink" href="#bsd-sockets" title="Link to this heading"></a></h1>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id2">Overview</a></p></li>
+<li><p><a class="reference internal" href="#secure-sockets" id="id3">Secure Sockets</a></p>
+<ul>
+<li><p><a class="reference internal" href="#tls-credentials-subsystem" id="id4">TLS credentials subsystem</a></p></li>
+<li><p><a class="reference internal" href="#secure-socket-creation" id="id5">Secure Socket Creation</a></p></li>
+<li><p><a class="reference internal" href="#secure-sockets-options" id="id6">Secure Sockets options</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#socket-offloading" id="id7">Socket offloading</a></p>
+<ul>
+<li><p><a class="reference internal" href="#offloaded-socket-creation" id="id8">Offloaded socket creation</a></p></li>
+<li><p><a class="reference internal" href="#dealing-with-multiple-offloaded-interfaces" id="id9">Dealing with multiple offloaded interfaces</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#api-reference" id="id10">API Reference</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id1" id="id11">BSD Sockets</a></p></li>
+<li><p><a class="reference internal" href="#tls-credentials" id="id12">TLS Credentials</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Overview</a><a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>Zephyr offers an implementation of a subset of the BSD Sockets API (a part
+of the POSIX standard). This API allows to reuse existing programming experience
+and port existing simple networking applications to Zephyr.</p>
+<p>Here are the key requirements and concepts which governed BSD Sockets
+compatible API implementation for Zephyr:</p>
+<ul class="simple">
+<li><p>Has minimal overhead, similar to the requirement for other
+Zephyr subsystems.</p></li>
+<li><p>Is namespaced by default, to avoid name conflicts with well-known
+names like <code class="docutils literal notranslate"><span class="pre">close()</span></code>, which may be part of libc or other POSIX
+compatibility libraries.
+If enabled by <a class="reference internal" href="../../../kconfig.html#CONFIG_POSIX_API" title="CONFIG_POSIX_API"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_POSIX_API</span></code></a>, it will also
+expose POSIX compatible APIs.</p></li>
+</ul>
+<p>BSD Sockets compatible API is enabled using <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_SOCKETS" title="CONFIG_NET_SOCKETS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS</span></code></a>
+config option and implements the following operations: <code class="docutils literal notranslate"><span class="pre">socket()</span></code>, <code class="docutils literal notranslate"><span class="pre">close()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">recv()</span></code>, <code class="docutils literal notranslate"><span class="pre">recvfrom()</span></code>, <code class="docutils literal notranslate"><span class="pre">send()</span></code>, <code class="docutils literal notranslate"><span class="pre">sendto()</span></code>, <code class="docutils literal notranslate"><span class="pre">connect()</span></code>, <code class="docutils literal notranslate"><span class="pre">bind()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">listen()</span></code>, <code class="docutils literal notranslate"><span class="pre">accept()</span></code>, <code class="docutils literal notranslate"><span class="pre">fcntl()</span></code> (to set non-blocking mode),
+<code class="docutils literal notranslate"><span class="pre">getsockopt()</span></code>, <code class="docutils literal notranslate"><span class="pre">setsockopt()</span></code>, <code class="docutils literal notranslate"><span class="pre">poll()</span></code>, <code class="docutils literal notranslate"><span class="pre">select()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">getaddrinfo()</span></code>, <code class="docutils literal notranslate"><span class="pre">getnameinfo()</span></code>.</p>
+<p>Based on the namespacing requirements above, these operations are by
+default exposed as functions with <code class="docutils literal notranslate"><span class="pre">zsock_</span></code> prefix, e.g.
+<a class="reference internal" href="../../../doxygen/html/group__bsd__sockets.html#ga5693d19a0bdff45a5cb09227683d8631" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zsock_socket()</span></code></a> and <a class="reference internal" href="../../../doxygen/html/group__bsd__sockets.html#gae60d7ca486955dd79a2821d1f646c349" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zsock_close()</span></code></a>. If the config option
+<a class="reference internal" href="../../../kconfig.html#CONFIG_POSIX_API" title="CONFIG_POSIX_API"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_POSIX_API</span></code></a> is defined, all the functions
+will be also exposed as aliases without the prefix. This includes the
+functions like <code class="docutils literal notranslate"><span class="pre">close()</span></code> and <code class="docutils literal notranslate"><span class="pre">fcntl()</span></code> (which may conflict with
+functions in libc or other libraries, for example, with the filesystem
+libraries).</p>
+<p>Another entailment of the design requirements above is that the Zephyr
+API aggressively employs the short-read/short-write property of the POSIX API
+whenever possible (to minimize complexity and overheads). POSIX allows
+for calls like <code class="docutils literal notranslate"><span class="pre">recv()</span></code> and <code class="docutils literal notranslate"><span class="pre">send()</span></code> to actually process (receive
+or send) less data than requested by the user (on <code class="docutils literal notranslate"><span class="pre">SOCK_STREAM</span></code> type
+sockets). For example, a call <code class="docutils literal notranslate"><span class="pre">recv(sock,</span> <span class="pre">1000,</span> <span class="pre">0)</span></code> may return 100,
+meaning that only 100 bytes were read (short read), and the application
+needs to retry call(s) to receive the remaining 900 bytes.</p>
+<p>The BSD Sockets API uses file descriptors to represent sockets. File
+descriptors are small integers, consecutively assigned from zero, shared
+among sockets, files, special devices (like stdin/stdout), etc. Internally,
+there is a table mapping file descriptors to internal object pointers.
+The file descriptor table is used by the BSD Sockets API even if the rest
+of the POSIX subsystem (filesystem, stdin/stdout) is not enabled.</p>
+<p>Zephyr supports multiple types of BSD sockets, the following table summarizes
+what socket types are available:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Family</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Protocol</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td rowspan="5"><p>AF_INET <br />
+AF_INET6</p></td>
+<td rowspan="2"><p>SOCK_DGRAM</p></td>
+<td><p>IPPROTO_UDP</p></td>
+<td><p>Enabled if <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_UDP" title="CONFIG_NET_UDP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_UDP</span></code></a> is set. <br />
+Allows to send and receive UDP datagrams.</p></td>
+</tr>
+<tr class="row-odd"><td><p>IPPROTO_DTLS_1_x</p></td>
+<td><p>Enabled if <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_SOCKETS_ENABLE_DTLS" title="CONFIG_NET_SOCKETS_ENABLE_DTLS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_ENABLE_DTLS</span></code></a> is set. <br />
+Allows to send and receive DTLS datagrams.</p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><p>SOCK_STREAM</p></td>
+<td><p>IPPROTO_TCP</p></td>
+<td><p>Enabled if <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_TCP" title="CONFIG_NET_TCP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_TCP</span></code></a> is set. <br />
+Allows to send and receive TCP data stream.</p></td>
+</tr>
+<tr class="row-odd"><td><p>IPPROTO_TLS_1_x</p></td>
+<td><p>Enabled if <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_SOCKETS_SOCKOPT_TLS" title="CONFIG_NET_SOCKETS_SOCKOPT_TLS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_SOCKOPT_TLS</span></code></a> is set. <br />
+Allows to send and receive TLS data stream.</p></td>
+</tr>
+<tr class="row-even"><td><p>SOCK_RAW</p></td>
+<td><p>IPPROTO_IP <br />
+&lt;proto&gt;</p></td>
+<td><p>Enabled if <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_SOCKETS_INET_RAW" title="CONFIG_NET_SOCKETS_INET_RAW"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_INET_RAW</span></code></a> is set. <br />
+Allows to send and receive IPv4/IPv6 datagrams. <br />
+Packets are filtered by L4 protocol specified.
+IPPROTO_IP is a wildcard protocol to receive all IP datagrams.</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="2"><p>AF_PACKET</p></td>
+<td><p>SOCK_DGRAM</p></td>
+<td><p>ETH_P_ALL <br />
+&lt;proto&gt;</p></td>
+<td><p>Enabled if <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_SOCKETS_PACKET_DGRAM" title="CONFIG_NET_SOCKETS_PACKET_DGRAM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_PACKET_DGRAM</span></code></a> is set. <br />
+Allows to send and receive packets without L2 header. <br />
+Packets are filtered by L3 protocol specified.
+ETH_P_ALL is a wildcard protocol to receive all packets.</p></td>
+</tr>
+<tr class="row-even"><td><p>SOCK_RAW</p></td>
+<td><p>ETH_P_ALL</p></td>
+<td><p>Enabled if <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_SOCKETS_PACKET" title="CONFIG_NET_SOCKETS_PACKET"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_PACKET</span></code></a> is set. <br />
+Allows to send and receive packets with L2 header included.</p></td>
+</tr>
+<tr class="row-odd"><td><p>AF_CAN</p></td>
+<td><p>SOCK_RAW</p></td>
+<td><p>CAN_RAW</p></td>
+<td><p>Enabled if <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_SOCKETS_CAN" title="CONFIG_NET_SOCKETS_CAN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_CAN</span></code></a> is set. <br />
+Allows to send and receive CAN packets.</p></td>
+</tr>
+</tbody>
+</table>
+<p>See <a class="reference internal" href="../../../samples/net/sockets/echo_server/README.html#sockets-echo-server" title="Implement a UDP/TCP server that sends received packets back to the sender.">Echo server (advanced)</a> and <a class="reference internal" href="../../../samples/net/sockets/echo_client/README.html#sockets-echo-client" title="Implement a client that sends IP packets, waits for data to be sent back, and verifies it.">Echo client (advanced)</a>
+sample applications to learn how to create a simple server or client BSD socket based
+application.</p>
+</section>
+<section id="secure-sockets">
+<span id="secure-sockets-interface"></span><h2><a class="toc-backref" href="#id3" role="doc-backlink">Secure Sockets</a><a class="headerlink" href="#secure-sockets" title="Link to this heading"></a></h2>
+<p>Zephyr provides an extension of standard POSIX socket API, allowing to create
+and configure sockets with TLS protocol types, facilitating secure
+communication. Secure functions for the implementation are provided by
+mbedTLS library. Secure sockets implementation allows use of both TLS and DTLS
+protocols with standard socket calls. See <a class="reference internal" href="../../../doxygen/html/group__ip__4__6.html#ga721da18d2a3cfd9b3a56e9efc9f6e58b" title=""><code class="xref c c-enum docutils literal notranslate"><span class="pre">net_ip_protocol_secure</span></code></a> type
+for supported secure protocol versions.</p>
+<p>To enable secure sockets, set the <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_SOCKETS_SOCKOPT_TLS" title="CONFIG_NET_SOCKETS_SOCKOPT_TLS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_SOCKOPT_TLS</span></code></a>
+option. To enable DTLS support, use <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_SOCKETS_ENABLE_DTLS" title="CONFIG_NET_SOCKETS_ENABLE_DTLS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_ENABLE_DTLS</span></code></a>
+option.</p>
+<section id="tls-credentials-subsystem">
+<span id="sockets-tls-credentials-subsys"></span><h3><a class="toc-backref" href="#id4" role="doc-backlink">TLS credentials subsystem</a><a class="headerlink" href="#tls-credentials-subsystem" title="Link to this heading"></a></h3>
+<p>TLS credentials must be registered in the system before they can be used with
+secure sockets. See <a class="reference internal" href="../../../doxygen/html/group__tls__credentials.html#ga640ff6dd3eb4d5017feaab6fab2bb2f7" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">tls_credential_add()</span></code></a> for more information.</p>
+<p>When a specific TLS credential is registered in the system, it is assigned with
+numeric value of type <a class="reference internal" href="../../../doxygen/html/group__tls__credentials.html#gaadfe9694309e473f7be74ed98dfb36d3" title=""><code class="xref c c-type docutils literal notranslate"><span class="pre">sec_tag_t</span></code></a>, called a tag. This value can be used
+later on to reference the credential during secure socket configuration with
+socket options.</p>
+<p>The following TLS credential types can be registered in the system:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">TLS_CREDENTIAL_CA_CERTIFICATE</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TLS_CREDENTIAL_PUBLIC_CERTIFICATE</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TLS_CREDENTIAL_PRIVATE_KEY</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TLS_CREDENTIAL_PSK</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TLS_CREDENTIAL_PSK_ID</span></code></p></li>
+</ul>
+<p>An example registration of CA certificate (provided in <code class="docutils literal notranslate"><span class="pre">ca_certificate</span></code>
+array) looks like this:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tls_credential_add</span><span class="p">(</span><span class="n">CA_CERTIFICATE_TAG</span><span class="p">,</span><span class="w"> </span><span class="n">TLS_CREDENTIAL_CA_CERTIFICATE</span><span class="p">,</span>
+<span class="w">                         </span><span class="n">ca_certificate</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">ca_certificate</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>By default certificates in DER format are supported. PEM support can be enabled
+in mbedTLS settings.</p>
+</section>
+<section id="secure-socket-creation">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">Secure Socket Creation</a><a class="headerlink" href="#secure-socket-creation" title="Link to this heading"></a></h3>
+<p>A secure socket can be created by specifying secure protocol type, for instance:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">sock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">socket</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span><span class="w"> </span><span class="n">SOCK_STREAM</span><span class="p">,</span><span class="w"> </span><span class="n">IPPROTO_TLS_1_2</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The protocol version specified when creating the secure socket indicates the
+minimum TLS version used for the TLS session.</p>
+<p>Once created, it can be configured with socket options. For instance, the
+CA certificate and hostname can be set:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">sec_tag_t</span><span class="w"> </span><span class="n">sec_tag_opt</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">CA_CERTIFICATE_TAG</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">setsockopt</span><span class="p">(</span><span class="n">sock</span><span class="p">,</span><span class="w"> </span><span class="n">SOL_TLS</span><span class="p">,</span><span class="w"> </span><span class="n">TLS_SEC_TAG_LIST</span><span class="p">,</span>
+<span class="w">                 </span><span class="n">sec_tag_opt</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">sec_tag_opt</span><span class="p">));</span>
+</pre></div>
+</div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="w"> </span><span class="n">host</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;google.com&quot;</span><span class="p">;</span>
+
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">setsockopt</span><span class="p">(</span><span class="n">sock</span><span class="p">,</span><span class="w"> </span><span class="n">SOL_TLS</span><span class="p">,</span><span class="w"> </span><span class="n">TLS_HOSTNAME</span><span class="p">,</span><span class="w"> </span><span class="n">host</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">host</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Once configured, socket can be used just like a regular TCP socket.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Due to mbed TLS internal data buffering and <code class="docutils literal notranslate"><span class="pre">mbedtls_ssl_write()</span></code> function
+requirements, when a non-blocking <a class="reference internal" href="../../../doxygen/html/group__bsd__sockets.html#ga2d8c2173986f67dde6dc5721bf690855" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zsock_send()</span></code></a> returns <code class="docutils literal notranslate"><span class="pre">EAGAIN</span></code>, it is
+expected that the consecutive call to <a class="reference internal" href="../../../doxygen/html/group__bsd__sockets.html#ga2d8c2173986f67dde6dc5721bf690855" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zsock_send()</span></code></a> will contain the same
+data as the original call.</p>
+</div>
+<p>Several samples in Zephyr use secure sockets for communication. For a sample use
+see e.g. <a class="reference internal" href="../../../samples/net/sockets/echo_server/README.html#sockets-echo-server" title="Implement a UDP/TCP server that sends received packets back to the sender."><span class="xref zephyr zephyr-code-sample">echo-server sample application</span></a> or
+<a class="reference internal" href="../../../samples/net/sockets/http_get/README.html#sockets-http-get" title="Implement an HTTP(S) client using plain BSD sockets."><span class="xref zephyr zephyr-code-sample">HTTP GET sample application</span></a>.</p>
+</section>
+<section id="secure-sockets-options">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">Secure Sockets options</a><a class="headerlink" href="#secure-sockets-options" title="Link to this heading"></a></h3>
+<p>Secure sockets offer the following options for socket management:</p>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../doxygen/html/group__secure__sockets__options.html" title=""><span class="pre">Socket</span> <span class="pre">options</span> <span class="pre">for</span> <span class="pre">TLS</span></a></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/http_client/README.html#sockets-http-client" title="Implement an HTTP(S) client that issues a variety of HTTP requests.">HTTP Client</a></span><span class="code-sample-description">Implement an HTTP(S) client that issues a variety of HTTP requests.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/http_get/README.html#sockets-http-get" title="Implement an HTTP(S) client using plain BSD sockets.">HTTP GET using plain sockets</a></span><span class="code-sample-description">Implement an HTTP(S) client using plain BSD sockets.</span></li>
+</ul>
+</div>
+</section>
+</section>
+<section id="socket-offloading">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Socket offloading</a><a class="headerlink" href="#socket-offloading" title="Link to this heading"></a></h2>
+<p>Zephyr allows to register custom socket implementations (called offloaded
+sockets). This allows for seamless integration for devices which provide an
+external IP stack and expose socket-like API.</p>
+<p>Socket offloading can be enabled with <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_SOCKETS_OFFLOAD" title="CONFIG_NET_SOCKETS_OFFLOAD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_OFFLOAD</span></code></a>
+option. A network driver that wants to register a new socket implementation
+should use <code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_SOCKET_OFFLOAD_REGISTER</span></code> macro. The macro accepts the
+following parameters:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">socket_name</span></code></dt><dd><p>An arbitrary name for the socket implementation.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">prio</span></code></dt><dd><p>Socket implementation’s priority. The higher the priority, the earlier this
+particular implementation will be processed when creating a new socket.
+Lower numeric value indicates higher priority.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">_family</span></code></dt><dd><p>Socket family implemented by the offloaded socket. <code class="docutils literal notranslate"><span class="pre">AF_UNSPEC</span></code> indicates
+any family.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">_is_supported</span></code></dt><dd><p>A filtering function, used to verify whether a particular socket family,
+type and protocol are supported by the offloaded socket implementation.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">_handler</span></code></dt><dd><p>A function compatible with <a class="reference internal" href="../../../doxygen/html/posix_2sys_2socket_8h.html#a4dcc080bfb18d95d173bc205084f8b0a" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">socket()</span></code></a> API, used to create an
+offloaded socket.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>Every offloaded socket implementation should also implement a set of socket
+APIs, specified in <code class="xref c c-struct docutils literal notranslate"><span class="pre">socket_op_vtable</span></code> struct.</p>
+<p>The function registered for socket creation should allocate a new file
+descriptor using <a class="reference internal" href="../../../doxygen/html/fdtable_8h.html#a0805f751464ff9a51a463841ce35ff5f" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zvfs_reserve_fd()</span></code></a> function. Any additional actions,
+specific to the creation of a particular offloaded socket implementation,
+should take place after the file descriptor is allocated. As a final step,
+if the offloaded socket was created successfully, the file descriptor should
+be finalized with <a class="reference internal" href="../../../doxygen/html/fdtable_8h.html#a448172e130af96c11af2fe6511e6b262" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zvfs_finalize_typed_fd()</span></code></a>, or <a class="reference internal" href="../../../doxygen/html/fdtable_8h.html#a0bb7c530d69c9e5b1cfc61e7a11441af" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">zvfs_finalize_fd()</span></code></a>
+functions. The finalize function allows to register a
+<code class="xref c c-struct docutils literal notranslate"><span class="pre">socket_op_vtable</span></code> structure implementing socket APIs for an
+offloaded socket along with an optional socket context data pointer.</p>
+<p>Finally, when an offloaded network interface is initialized, it should indicate
+that the interface is offloaded with <a class="reference internal" href="../../../doxygen/html/group__net__if.html#ga9db52875580115c743b1f35cd6c46796" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">net_if_socket_offload_set()</span></code></a>
+function. The function registers the function used to create an offloaded socket
+(the same as the one provided in <code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_SOCKET_OFFLOAD_REGISTER</span></code>) at the
+network interface.</p>
+<section id="offloaded-socket-creation">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">Offloaded socket creation</a><a class="headerlink" href="#offloaded-socket-creation" title="Link to this heading"></a></h3>
+<p>When application creates a new socket with <a class="reference internal" href="../../../doxygen/html/posix_2sys_2socket_8h.html#a4dcc080bfb18d95d173bc205084f8b0a" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">socket()</span></code></a> function, the
+network stack iterates over all registered socket implementations (native and
+offloaded). Higher priority socket implementations are processed first.
+For each registered socket implementation, an address family is verified, and if
+it matches (or the socket was registered as <code class="docutils literal notranslate"><span class="pre">AF_UNSPEC</span></code>), the corresponding
+<code class="docutils literal notranslate"><span class="pre">_is_supported</span></code> function is called to verify the remaining socket parameters.
+The first implementation that fulfills the socket requirements (i. e.
+<code class="docutils literal notranslate"><span class="pre">_is_supported</span></code> returns true) will create a new socket with its <code class="docutils literal notranslate"><span class="pre">_handler</span></code>
+function.</p>
+<p>The above indicates the importance of the socket priority. If multiple socket
+implementations support the same set of socket family/type/protocol, the first
+implementation processed by the system will create a socket. Therefore it’s
+important to give the highest priority to the implementation that should be the
+system default.</p>
+<p>The socket priority for native socket implementation is configured with Kconfig.
+Use <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_SOCKETS_TLS_PRIORITY" title="CONFIG_NET_SOCKETS_TLS_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_TLS_PRIORITY</span></code></a> to set the priority for
+the native TLS sockets.
+Use <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_SOCKETS_PRIORITY_DEFAULT" title="CONFIG_NET_SOCKETS_PRIORITY_DEFAULT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_PRIORITY_DEFAULT</span></code></a> to set the priority
+for the remaining native sockets.</p>
+</section>
+<section id="dealing-with-multiple-offloaded-interfaces">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">Dealing with multiple offloaded interfaces</a><a class="headerlink" href="#dealing-with-multiple-offloaded-interfaces" title="Link to this heading"></a></h3>
+<p>As the <a class="reference internal" href="../../../doxygen/html/posix_2sys_2socket_8h.html#a4dcc080bfb18d95d173bc205084f8b0a" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">socket()</span></code></a> function does not allow to specify which network
+interface should be used by a socket, it’s not possible to choose a specific
+implementation in case multiple offloaded socket implementations, supporting the
+same type of sockets, are available. The same problem arises when both native
+and offloaded sockets are available in the system.</p>
+<p>To address this problem, a special socket implementation (called socket
+dispatcher) was introduced. The sole reason for this module is to postpone the
+socket creation for until the first operation on a socket is performed. This
+leaves an opening to use <code class="docutils literal notranslate"><span class="pre">SO_BINDTODEVICE</span></code> socket option, to bind a socket to
+a particular network interface (and thus offloaded socket implementation).
+The socket dispatcher can be enabled with <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_SOCKETS_OFFLOAD_DISPATCHER" title="CONFIG_NET_SOCKETS_OFFLOAD_DISPATCHER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_OFFLOAD_DISPATCHER</span></code></a>
+Kconfig option.</p>
+<p>When enabled, the application can specify the network interface to use with
+<a class="reference internal" href="../../../doxygen/html/posix_2sys_2socket_8h.html#a71c8788caef89a362e35ce5855e77077" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">setsockopt()</span></code></a> function:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* A &quot;dispatcher&quot; socket is created */</span>
+<span class="n">sock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">socket</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span><span class="w"> </span><span class="n">SOCK_DGRAM</span><span class="p">,</span><span class="w"> </span><span class="n">IPPROTO_UDP</span><span class="p">);</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">ifreq</span><span class="w"> </span><span class="n">ifreq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="p">.</span><span class="n">ifr_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;SimpleLink&quot;</span>
+<span class="p">};</span>
+
+<span class="cm">/* The socket is &quot;dispatched&quot; to a particular network interface</span>
+<span class="cm"> * (offloaded or not).</span>
+<span class="cm"> */</span>
+<span class="n">setsockopt</span><span class="p">(</span><span class="n">sock</span><span class="p">,</span><span class="w"> </span><span class="n">SOL_SOCKET</span><span class="p">,</span><span class="w"> </span><span class="n">SO_BINDTODEVICE</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ifreq</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">ifreq</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>Similarly, if TLS is supported by both native and offloaded sockets,
+<code class="docutils literal notranslate"><span class="pre">TLS_NATIVE</span></code> socket option can be used to indicate that a native TLS socket
+should be created. The underlying socket can then be bound to a particular
+network interface:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* A &quot;dispatcher&quot; socket is created */</span>
+<span class="n">sock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">socket</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span><span class="w"> </span><span class="n">SOCK_STREAM</span><span class="p">,</span><span class="w"> </span><span class="n">IPPROTO_TLS_1_2</span><span class="p">);</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="n">tls_native</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="cm">/* The socket is &quot;dispatched&quot; to a native TLS socket implmeentation.</span>
+<span class="cm"> * The underlying socket is a &quot;dispatcher&quot; socket now.</span>
+<span class="cm"> */</span>
+<span class="n">setsockopt</span><span class="p">(</span><span class="n">sock</span><span class="p">,</span><span class="w"> </span><span class="n">SOL_TLS</span><span class="p">,</span><span class="w"> </span><span class="n">TLS_NATIVE</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">tls_native</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">tls_native</span><span class="p">));</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">ifreq</span><span class="w"> </span><span class="n">ifreq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="p">.</span><span class="n">ifr_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;SimpleLink&quot;</span>
+<span class="p">};</span>
+
+<span class="cm">/* The underlying socket is &quot;dispatched&quot; to a particular network interface</span>
+<span class="cm"> * (offloaded or not).</span>
+<span class="cm"> */</span>
+<span class="n">setsockopt</span><span class="p">(</span><span class="n">sock</span><span class="p">,</span><span class="w"> </span><span class="n">SOL_SOCKET</span><span class="p">,</span><span class="w"> </span><span class="n">SO_BINDTODEVICE</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ifreq</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">ifreq</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>In case no <code class="docutils literal notranslate"><span class="pre">SO_BINDTODEVICE</span></code> socket option is used on a socket, the socket
+will be dispatched according to the default priority and filtering rules on a
+first socket API call.</p>
+</section>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">API Reference</a><a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<section id="id1">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">BSD Sockets</a><a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../doxygen/html/group__bsd__sockets.html" title=""><span class="pre">BSD</span> <span class="pre">Sockets</span> <span class="pre">compatible</span> <span class="pre">API</span></a></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/echo_async/README.html#async-sockets-echo" title="Implement an asynchronous IPv4/IPv6 TCP echo server using BSD sockets and poll()">Asynchronous echo server using poll()</a></span><span class="code-sample-description">Implement an asynchronous IPv4/IPv6 TCP echo server using BSD sockets and poll()</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/echo_async_select/README.html#async-sockets-echo-select" title="Implement an asynchronous IPv4/IPv6 TCP echo server using BSD sockets and select()">Asynchronous echo server using select()</a></span><span class="code-sample-description">Implement an asynchronous IPv4/IPv6 TCP echo server using BSD sockets and select()</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/cloud/aws_iot_mqtt/README.html#aws-iot-mqtt" title="Connect to AWS IoT Core and publish messages using MQTT.">AWS IoT Core MQTT</a></span><span class="code-sample-description">Connect to AWS IoT Core and publish messages using MQTT.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/dumb_http_server/README.html#socket-dumb-http-server" title="Implement a simple, portable, HTTP server using BSD sockets.">Dumb HTTP server</a></span><span class="code-sample-description">Implement a simple, portable, HTTP server using BSD sockets.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/dumb_http_server_mt/README.html#socket-dumb-http-server-mt" title="Implement a simple HTTP server supporting simultaneous connections using BSD sockets.">Dumb HTTP server (multi-threaded)</a></span><span class="code-sample-description">Implement a simple HTTP server supporting simultaneous connections using BSD sockets.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/echo_client/README.html#sockets-echo-client" title="Implement a client that sends IP packets, waits for data to be sent back, and verifies it.">Echo client (advanced)</a></span><span class="code-sample-description">Implement a client that sends IP packets, waits for data to be sent back, and verifies it.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/echo_server/README.html#sockets-echo-server" title="Implement a UDP/TCP server that sends received packets back to the sender.">Echo server (advanced)</a></span><span class="code-sample-description">Implement a UDP/TCP server that sends received packets back to the sender.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/echo_service/README.html#sockets-service-echo" title="Implements a simple IPv4/IPv6 TCP echo server using BSD sockets and socket service API.">Echo server (service)</a></span><span class="code-sample-description">Implements a simple IPv4/IPv6 TCP echo server using BSD sockets and socket service API.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/echo/README.html#sockets-echo" title="Implements a simple IPv4/IPv6 TCP echo server using BSD sockets.">Echo server (simple)</a></span><span class="code-sample-description">Implements a simple IPv4/IPv6 TCP echo server using BSD sockets.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/http_client/README.html#sockets-http-client" title="Implement an HTTP(S) client that issues a variety of HTTP requests.">HTTP Client</a></span><span class="code-sample-description">Implement an HTTP(S) client that issues a variety of HTTP requests.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/http_get/README.html#sockets-http-get" title="Implement an HTTP(S) client using plain BSD sockets.">HTTP GET using plain sockets</a></span><span class="code-sample-description">Implement an HTTP(S) client using plain BSD sockets.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/big_http_download/README.html#sockets-big-http-download" title="Download a large file from a web server using BSD sockets.">Large HTTP download</a></span><span class="code-sample-description">Download a large file from a web server using BSD sockets.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/mdns_responder/README.html#mdns-responder" title="Listen and respond to mDNS queries.">mDNS responder</a></span><span class="code-sample-description">Listen and respond to mDNS queries.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/cloud/mqtt_azure/README.html#mqtt-azure" title="Connect to Azure IoT Hub and publish messages using MQTT.">Microsoft Azure IoT Hub MQTT</a></span><span class="code-sample-description">Connect to Azure IoT Hub and publish messages using MQTT.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/subsys/modbus/tcp_server/README.html#modbus-tcp-server" title="Implement a Modbus TCP server exposing Modbus commands to control LEDs.">Modbus TCP server</a></span><span class="code-sample-description">Implement a Modbus TCP server exposing Modbus commands to control LEDs.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/subsys/modbus/tcp_gateway/README.html#modbus-gateway" title="Implement a gateway between an Ethernet TCP-IP network and a Modbus serial line.">Modbus TCP-to-serial gateway</a></span><span class="code-sample-description">Implement a gateway between an Ethernet TCP-IP network and a Modbus serial line.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/net_mgmt/README.html#sockets-net-mgmt" title="Listen to network management events using a network management socket.">Network management socket</a></span><span class="code-sample-description">Listen to network management events using a network management socket.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/packet/README.html#packet-socket" title="Use raw packet sockets over Ethernet.">Packet socket</a></span><span class="code-sample-description">Use raw packet sockets over Ethernet.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/sntp_client/README.html#sntp-client" title="Use SNTP to get the current time from the host.">SNTP client</a></span><span class="code-sample-description">Use SNTP to get the current time from the host.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/can/README.html#socket-can" title="Send and receive raw CAN frames using BSD sockets API.">SocketCAN</a></span><span class="code-sample-description">Send and receive raw CAN frames using BSD sockets API.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/socketpair/README.html#sockets-socketpair" title="Implement communication between threads using socket pairs.">Socketpair</a></span><span class="code-sample-description">Implement communication between threads using socket pairs.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/cloud/tagoio_http_post/README.html#tagoio-http-post" title="Send random temperature values to TagoIO IoT Cloud Platform using HTTP.">TagoIO HTTP Post</a></span><span class="code-sample-description">Send random temperature values to TagoIO IoT Cloud Platform using HTTP.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/tcp/README.html#sockets-tcp-sample" title="Use TTCN-3 to validate the functionality of the TCP stack.">TCP sample for TTCN-3 based sanity check</a></span><span class="code-sample-description">Use TTCN-3 to validate the functionality of the TCP stack.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/txtime/README.html#so_txtime" title="Control the transmission time of a packet using SO_TXTIME socket option.">UDP sender using SO_TXTIME</a></span><span class="code-sample-description">Control the transmission time of a packet using SO_TXTIME socket option.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/drivers/video/tcpserversink/README.html#video-tcpserversink" title="Capture video frames and send them over the network to a TCP client.">Video TCP server sink</a></span><span class="code-sample-description">Capture video frames and send them over the network to a TCP client.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/websocket_client/README.html#sockets-websocket-client" title="Implement a Websocket client that connects to a Websocket server.">WebSocket Client</a></span><span class="code-sample-description">Implement a Websocket client that connects to a Websocket server.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/wireguard/README.html#wireguard-vpn" title="Implement a echo-server application that sends received packets back to the sender over Wireguard VPN connection.">Wireguard VPN</a></span><span class="code-sample-description">Implement a echo-server application that sends received packets back to
+the sender over Wireguard VPN connection.</span></li>
+</ul>
+</div>
+</section>
+<section id="tls-credentials">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">TLS Credentials</a><a class="headerlink" href="#tls-credentials" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../doxygen/html/group__tls__credentials.html" title=""><span class="pre">TLS</span> <span class="pre">credentials</span> <span class="pre">management</span></a></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/cloud/aws_iot_mqtt/README.html#aws-iot-mqtt" title="Connect to AWS IoT Core and publish messages using MQTT.">AWS IoT Core MQTT</a></span><span class="code-sample-description">Connect to AWS IoT Core and publish messages using MQTT.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/dumb_http_server_mt/README.html#socket-dumb-http-server-mt" title="Implement a simple HTTP server supporting simultaneous connections using BSD sockets.">Dumb HTTP server (multi-threaded)</a></span><span class="code-sample-description">Implement a simple HTTP server supporting simultaneous connections using BSD sockets.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/echo_client/README.html#sockets-echo-client" title="Implement a client that sends IP packets, waits for data to be sent back, and verifies it.">Echo client (advanced)</a></span><span class="code-sample-description">Implement a client that sends IP packets, waits for data to be sent back, and verifies it.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/echo_server/README.html#sockets-echo-server" title="Implement a UDP/TCP server that sends received packets back to the sender.">Echo server (advanced)</a></span><span class="code-sample-description">Implement a UDP/TCP server that sends received packets back to the sender.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/http_client/README.html#sockets-http-client" title="Implement an HTTP(S) client that issues a variety of HTTP requests.">HTTP Client</a></span><span class="code-sample-description">Implement an HTTP(S) client that issues a variety of HTTP requests.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/http_get/README.html#sockets-http-get" title="Implement an HTTP(S) client using plain BSD sockets.">HTTP GET using plain sockets</a></span><span class="code-sample-description">Implement an HTTP(S) client using plain BSD sockets.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/http_server/README.html#sockets-http-server" title="Implement an HTTP(s) Server demonstrating various resource types.">HTTP Server</a></span><span class="code-sample-description">Implement an HTTP(s) Server demonstrating various resource types.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/big_http_download/README.html#sockets-big-http-download" title="Download a large file from a web server using BSD sockets.">Large HTTP download</a></span><span class="code-sample-description">Download a large file from a web server using BSD sockets.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/cloud/mqtt_azure/README.html#mqtt-azure" title="Connect to Azure IoT Hub and publish messages using MQTT.">Microsoft Azure IoT Hub MQTT</a></span><span class="code-sample-description">Connect to Azure IoT Hub and publish messages using MQTT.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/prometheus/README.html#prometheus" title="Implement a Prometheus Metric Server demonstrating various metric types.">Prometheus Sample</a></span><span class="code-sample-description">Implement a Prometheus Metric Server demonstrating various metric types.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/cloud/tagoio_http_post/README.html#tagoio-http-post" title="Send random temperature values to TagoIO IoT Cloud Platform using HTTP.">TagoIO HTTP Post</a></span><span class="code-sample-description">Send random temperature values to TagoIO IoT Cloud Platform using HTTP.</span></li>
+</ul>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

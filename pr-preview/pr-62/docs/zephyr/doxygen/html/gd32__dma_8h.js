@@ -1,0 +1,27 @@
+var gd32__dma_8h =
+[
+    [ "GD32_DMA_CH_CFG_DIRECTION", "gd32__dma_8h.html#ae2a0d7ee983ce7229d00424fc9bd561a", null ],
+    [ "GD32_DMA_CH_CFG_MEMORY_ADDR_INC", "gd32__dma_8h.html#ae55d797279e2483a9de15ddb250d9c01", null ],
+    [ "GD32_DMA_CH_CFG_MEMORY_WIDTH", "gd32__dma_8h.html#a7e46c2dd560ad05b3ef2d49e8e934634", null ],
+    [ "GD32_DMA_CH_CFG_PERIPH_ADDR_INC", "gd32__dma_8h.html#ad0abcd3eb77751438884eb14376a4249", null ],
+    [ "GD32_DMA_CH_CFG_PERIPH_INC_FIXED", "gd32__dma_8h.html#a0eecb55bada0630383167b56d82c4892", null ],
+    [ "GD32_DMA_CH_CFG_PERIPH_WIDTH", "gd32__dma_8h.html#a7ee975a1a1338f3fcbf9779a4f66ec7c", null ],
+    [ "GD32_DMA_CH_CFG_PRIORITY", "gd32__dma_8h.html#a7a95cc521b5445314d9d64528d885724", null ],
+    [ "GD32_DMA_MEMORY_ADDR_INC", "gd32__dma_8h.html#a1dfa4abe03789cb06229e071479a68d3", null ],
+    [ "GD32_DMA_MEMORY_TO_MEMORY", "gd32__dma_8h.html#ac66caaa6fd58e811ca1173afffb6eee0", null ],
+    [ "GD32_DMA_MEMORY_TO_PERIPH", "gd32__dma_8h.html#a133ee2eba1696a8a88e553899b42215d", null ],
+    [ "GD32_DMA_MEMORY_WIDTH_16BIT", "gd32__dma_8h.html#a0787852dc6f450f4eff8eea7be3a6b89", null ],
+    [ "GD32_DMA_MEMORY_WIDTH_32BIT", "gd32__dma_8h.html#a2d77c7ecc44a7c91dfecbf94044ec5a0", null ],
+    [ "GD32_DMA_MEMORY_WIDTH_8BIT", "gd32__dma_8h.html#aa02a7efc2fca50aa800f39e94b3759b4", null ],
+    [ "GD32_DMA_NO_MEMORY_ADDR_INC", "gd32__dma_8h.html#a45eb42e1d19daa3d40831c93ad0ba0a0", null ],
+    [ "GD32_DMA_NO_PERIPH_ADDR_INC", "gd32__dma_8h.html#a3190a823bcefea6dea75b22751437469", null ],
+    [ "GD32_DMA_PERIPH_ADDR_INC", "gd32__dma_8h.html#a886f483d28ecb076d76cab9807dbd9ae", null ],
+    [ "GD32_DMA_PERIPH_TO_MEMORY", "gd32__dma_8h.html#a6db732bda87b175e5594e47120b50fc4", null ],
+    [ "GD32_DMA_PERIPH_WIDTH_16BIT", "gd32__dma_8h.html#acd17760bf971b4efae57cbb7413c7993", null ],
+    [ "GD32_DMA_PERIPH_WIDTH_32BIT", "gd32__dma_8h.html#ac8071edf3e9c36beb96f8a2f41f9b297", null ],
+    [ "GD32_DMA_PERIPH_WIDTH_8BIT", "gd32__dma_8h.html#a43f8444f017382621385497e88bc28eb", null ],
+    [ "GD32_DMA_PRIORITY_HIGH", "gd32__dma_8h.html#a17a02cccc8980fd5a273f251b4e02ea6", null ],
+    [ "GD32_DMA_PRIORITY_LOW", "gd32__dma_8h.html#ae68917539c8744ddcfbad918e69db56e", null ],
+    [ "GD32_DMA_PRIORITY_MEDIUM", "gd32__dma_8h.html#a548fac07f1b1c5cdd61670178c7ecc8b", null ],
+    [ "GD32_DMA_PRIORITY_VERY_HIGH", "gd32__dma_8h.html#ad6e846a9a5b52f0838c1b214ba39b6b3", null ]
+];

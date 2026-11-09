@@ -1,0 +1,154 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: zephyr,input-longpress
+.. _dtbinding_zephyr_input_longpress:
+
+zephyr,input-longpress
+######################
+
+.. sidebar:: Overview
+
+   :Name: ``zephyr,input-longpress``
+   :Vendor: :ref:`Zephyr Project <dt_vendor_zephyr>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=zephyr,input-longpress>` using
+               this compatible
+   :Driver: :zephyr_file:`subsys/input/input_longpress.c`
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   Input longpress pseudo-device
+
+   Listens for key events as an input and produces key events as output
+   corresponding to short and long press.
+
+   Can be optionally be associated to a specific device to listen for events
+   only from that device.
+
+   Example output:
+
+   # short press
+   input event: dev=buttons          SYN type= 1 code= 11 value=1 # INPUT_KEY_0 press
+   # release before one second
+   input event: dev=buttons          SYN type= 1 code= 11 value=0 # INPUT_KEY_0 release
+   input event: dev=longpress        SYN type= 1 code= 30 value=1 # INPUT_KEY_A press
+   input event: dev=longpress        SYN type= 1 code= 30 value=0 # INPUT_KEY_A release
+
+   # long press
+   input event: dev=buttons          SYN type= 1 code= 11 value=1 # INPUT_KEY_0 press
+   # hold for more than one second
+   input event: dev=longpress        SYN type= 1 code= 45 value=1 # INPUT_KEY_X press
+   # wait for release
+   input event: dev=buttons          SYN type= 1 code= 11 value=0 # INPUT_KEY_0 release
+   input event: dev=longpress        SYN type= 1 code= 45 value=0 # INPUT_KEY_X release
+
+Examples
+********
+
+.. code-block:: dts
+
+   #include <zephyr/dt-bindings/input/input-event-codes.h>
+
+   longpress {
+           input = <&buttons>;
+           compatible = "zephyr,input-longpress";
+           input-codes = <INPUT_KEY_0>, <INPUT_KEY_1>;
+           short-codes = <INPUT_KEY_A>, <INPUT_KEY_B>;
+           long-codes = <INPUT_KEY_X>, <INPUT_KEY_Y>;
+           long-delay-ms = <1000>;
+   };
+
+
+Properties
+**********
+
+.. tabs::
+
+   .. group-tab:: Node specific properties
+
+      Properties not inherited from the base binding file.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``input``
+           - ``phandle``
+           - .. code-block:: none
+
+                Input device phandle, if not specified listen for input from all devices.
+
+
+
+         * - ``input-codes``
+           - ``array``
+           - .. code-block:: none
+
+                Array of input event key codes (INPUT_KEY_* or INPUT_BTN_*).
+
+
+
+             This property is **required**.
+
+         * - ``short-codes``
+           - ``array``
+           - .. code-block:: none
+
+                Optional array of key codes to be generated for short press (INPUT_KEY_* or
+                INPUT_BTN_*).
+
+
+
+         * - ``long-codes``
+           - ``array``
+           - .. code-block:: none
+
+                Array of key codes to be generated for long press (INPUT_KEY_* or
+                INPUT_BTN_*).
+
+
+
+             This property is **required**.
+
+         * - ``long-delay-ms``
+           - ``int``
+           - .. code-block:: none
+
+                Time delay to register a long press in milliseconds.
+
+
+             This property is **required**.
+
+
+
+   .. group-tab:: Deprecated node specific properties
+
+      Deprecated properties not inherited from the base binding file.
+
+      (None)
+
+   .. group-tab:: Base properties
+
+      Properties inherited from the base binding file, which defines
+      common properties that may be set on many nodes. Not all of these
+      may apply to the "zephyr,input-longpress" compatible.
+
+      (None)
+
+

@@ -1,0 +1,920 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCUmgr handlers &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=a5c4661c" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/services/device_mgmt/mcumgr_handlers.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script src="../../_static/tabs.js?v=3030b3cb"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="MCUmgr Callbacks" href="mcumgr_callbacks.html" />
+    <link rel="prev" title="MCUmgr" href="mcumgr.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">OS Services</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../binary_descriptors/index.html">Binary Descriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../console.html">Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cpu_freq/index.html">CPU Frequency Scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cpu_load/index.html">CPU Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../crc/index.html">CRC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../crypto/index.html">Cryptography</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debugging/index.html">Debugging</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Device Management</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="mcumgr.html">MCUmgr</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">MCUmgr handlers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#initial-header-grp-name-mgmt-h">Initial header &lt;grp_name&gt;_mgmt.h</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#initial-header-grp-name-mgmt-callbacks-h">Initial header &lt;grp_name&gt;_mgmt_callbacks.h</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#initial-source-grp-name-mgmt-c">Initial source &lt;grp_name&gt;_mgmt.c</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#initial-kconfig">Initial Kconfig</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#initial-cmakelists-txt">Initial CMakeLists.txt</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#including-from-application">Including from application</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#example-cmakelists-txt">Example CMakeLists.txt</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#example-kconfig">Example Kconfig</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#including-from-zephyr-module">Including from Zephyr Module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#example-zephyr-module-yml">Example zephyr/module.yml</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#id2">Example CMakeLists.txt</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#id3">Example Kconfig</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#demonstration-handler">Demonstration handler</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mcumgr_callbacks.html">MCUmgr Callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smp_protocol.html">SMP Protocol Specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smp_transport.html">SMP Transport Specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dfu.html">Device Firmware Upgrade</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ota.html">Over-the-Air Update</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ec_host_cmd.html">EC Host Command</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../dsp/index.html">Digital Signal Processing (DSP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../formatted_output.html">Formatted Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../input/index.html">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../instrumentation/index.html">Instrumentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ipc/index.html">Interprocessor Communication (IPC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../jwt/index.html">JSON Web Token (JWT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../llext/index.html">Linkable Loadable Extensions (LLEXT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../logging/index.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tracing/index.html">Tracing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resource_management/index.html">Resource Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mem_mgmt/index.html">Memory Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../net_buf/index.html">Network Buffers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modem/index.html">Modem modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notify.html">Asynchronous Notifications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pm/index.html">Power Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">OS Abstraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../poweroff.html">Power off</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../profiling/index.html">Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../shell/index.html">Shell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../serialization/index.html">Serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../smf/index.html">State Machine Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sensing/index.html">Sensing Subsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../task_wdt/index.html">Task Watchdog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tfm/index.html">Trusted Firmware-M (TF-M)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../uuid/index.html">UUID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rtio/index.html">Real Time I/O (RTIO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../zbus/index.html">Zephyr bus (zbus)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">OS Services</a> &raquo;</li>
+  
+     <li><a href="index.html">Device Management</a> &raquo;</li>
+  
+  <li>MCUmgr handlers</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/services/device_mgmt/mcumgr_handlers.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27services%2Fdevice_mgmt%2Fmcumgr_handlers%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+mcumgr&env=-+Page%3A+services%2Fdevice_mgmt%2Fmcumgr_handlers%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="mcumgr-handlers">
+<span id="id1"></span><h1>MCUmgr handlers<a class="headerlink" href="#mcumgr-handlers" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>MCUmgr functions by having group handlers which identify a group of functions relating to a
+specific management area, which is addressed with a 16-bit identification value,
+<a class="reference internal" href="../../doxygen/html/group__mcumgr__mgmt__api.html#ga81f98b9a0c3810f7d607b783f8e259b5" title=""><code class="xref c c-enum docutils literal notranslate"><span class="pre">mcumgr_group_t</span></code></a> contains the management groups available in Zephyr with their
+corresponding group ID values. The group ID is included in SMP headers to identify which
+group a command belongs to, there is also an 8-bit command ID which identifies the function of
+that group to execute - see <a class="reference internal" href="smp_protocol.html#mcumgr-smp-protocol-specification"><span class="std std-ref">SMP Protocol Specification</span></a> for details on the SMP
+protocol and header. There can only be one registered group per unique ID.</p>
+</section>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
+<p>MCUmgr handlers can be added externally by application code or by module code, they do not have
+to reside in the upstream Zephyr tree to be usable. The first step to creating a handler is to
+create the folder structure for it, the typical Zephyr MCUmgr group layout is as follows:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;dir&gt;/grp/&lt;grp_name&gt;_mgmt/
+├── CMakeLists.txt
+├── Kconfig
+├── include
+├──── &lt;grp_name&gt;_mgmt.h
+├──── &lt;grp_name&gt;_mgmt_callbacks.h
+├── src
+└──── &lt;grp_name&gt;_mgmt.c
+</pre></div>
+</div>
+<p>Note that the header files in upstream Zephyr MCUmgr handlers reside in the
+<code class="docutils literal notranslate"><span class="pre">zephyr/include/zephyr/mgmt/mcumgr/grp/&lt;grp_name&gt;_mgmt</span></code> directory to allow the files to be
+globally included by applications.</p>
+<section id="initial-header-grp-name-mgmt-h">
+<h3>Initial header &lt;grp_name&gt;_mgmt.h<a class="headerlink" href="#initial-header-grp-name-mgmt-h" title="Link to this heading"></a></h3>
+<p>The purpose of the header file is to provide defines which can be used by the MCUmgr handler
+itself and application code, e.g. to reference the command IDs for executing functions. An example
+file would look similar to:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cm">/*</span>
+<span class="linenos"> 2</span><span class="cm"> * Copyright (c) 2023 Nordic Semiconductor ASA</span>
+<span class="linenos"> 3</span><span class="cm"> *</span>
+<span class="linenos"> 4</span><span class="cm"> * SPDX-License-Identifier: Apache-2.0</span>
+<span class="linenos"> 5</span><span class="cm"> */</span>
+<span class="linenos"> 6</span><span class="cp">#ifndef H_EXAMPLE_MGMT_</span>
+<span class="linenos"> 7</span><span class="cp">#define H_EXAMPLE_MGMT_</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="cp">#ifdef __cplusplus</span>
+<span class="linenos">10</span><span class="k">extern</span><span class="w"> </span><span class="s">&quot;C&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">11</span><span class="cp">#endif</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="cm">/**</span>
+<span class="linenos">14</span><span class="cm"> * Group ID for example management group.</span>
+<span class="linenos">15</span><span class="cm"> */</span>
+<span class="linenos">16</span><span class="cp">#define MGMT_GROUP_ID_EXAMPLE  MGMT_GROUP_ID_PERUSER</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="cm">/**</span>
+<span class="linenos">19</span><span class="cm"> * Command IDs for example management group.</span>
+<span class="linenos">20</span><span class="cm"> */</span>
+<span class="linenos">21</span><span class="cp">#define EXAMPLE_MGMT_ID_TEST   0</span>
+<span class="linenos">22</span><span class="cp">#define EXAMPLE_MGMT_ID_OTHER  1</span>
+<span class="linenos">23</span>
+<span class="linenos">24</span><span class="cm">/**</span>
+<span class="linenos">25</span><span class="cm"> * Command result codes for example management group.</span>
+<span class="linenos">26</span><span class="cm"> */</span>
+<span class="linenos">27</span><span class="k">enum</span><span class="w"> </span><span class="n">example_mgmt_err_code_t</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">28</span><span class="w">	</span><span class="cm">/** No error, this is implied if there is no ret value in the response */</span>
+<span class="linenos">29</span><span class="w">	</span><span class="n">EXAMPLE_MGMT_ERR_OK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="linenos">30</span>
+<span class="linenos">31</span><span class="w">	</span><span class="cm">/** Unknown error occurred. */</span>
+<span class="linenos">32</span><span class="w">	</span><span class="n">EXAMPLE_MGMT_ERR_UNKNOWN</span><span class="p">,</span>
+<span class="linenos">33</span>
+<span class="linenos">34</span><span class="w">	</span><span class="cm">/** The provided value is not wanted at this time. */</span>
+<span class="linenos">35</span><span class="w">	</span><span class="n">EXAMPLE_MGMT_ERR_NOT_WANTED</span><span class="p">,</span>
+<span class="linenos">36</span>
+<span class="linenos">37</span><span class="w">	</span><span class="cm">/** The provided value was rejected by a hook. */</span>
+<span class="linenos">38</span><span class="w">	</span><span class="n">EXAMPLE_MGMT_ERR_REJECTED_BY_HOOK</span><span class="p">,</span>
+<span class="linenos">39</span><span class="p">};</span>
+<span class="linenos">40</span>
+<span class="linenos">41</span><span class="cp">#ifdef __cplusplus</span>
+<span class="linenos">42</span><span class="p">}</span>
+<span class="linenos">43</span><span class="cp">#endif</span>
+<span class="linenos">44</span>
+<span class="linenos">45</span><span class="cp">#endif</span>
+</pre></div>
+</div>
+<p>This provides the defines for 2 command <code class="docutils literal notranslate"><span class="pre">test</span></code> and <code class="docutils literal notranslate"><span class="pre">other</span></code> and sets up the SMP version 2 error
+responses (which have unique error codes per group as opposed to the legacy SMP version 1 error
+responses that return a <a class="reference internal" href="../../doxygen/html/group__mcumgr__mgmt__api.html#gac5d8757a7ca945c77f405764b85ad5c5" title=""><code class="xref c c-enum docutils literal notranslate"><span class="pre">mcumgr_err_t</span></code></a> - there should always be an OK error code with the
+value 0 and an unknown error code with the value 1. The above example then adds an error code of
+<code class="docutils literal notranslate"><span class="pre">not</span> <span class="pre">wanted</span></code> with value 2. In addition, the group ID is set to be
+<a class="reference internal" href="../../doxygen/html/group__mcumgr__mgmt__api.html#gga81f98b9a0c3810f7d607b783f8e259b5af2504389290c7b2a3537f4ebfb730726" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_GROUP_ID_PERUSER</span></code></a>, which is the start group ID for user-defined groups, note
+that group IDs need to be unique so other custom groups should use different values, a central index
+header file (as upstream Zephyr has) can be used to distribute group IDs more easily.</p>
+</section>
+<section id="initial-header-grp-name-mgmt-callbacks-h">
+<h3>Initial header &lt;grp_name&gt;_mgmt_callbacks.h<a class="headerlink" href="#initial-header-grp-name-mgmt-callbacks-h" title="Link to this heading"></a></h3>
+<p>The purpose of the header file is to provide defines which can be used by the MCUmgr handler
+itself and application code, e.g. to reference the command IDs for executing functions. An example
+file would look similar to:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cm">/*</span>
+<span class="linenos"> 2</span><span class="cm"> * Copyright (c) 2023 Nordic Semiconductor ASA</span>
+<span class="linenos"> 3</span><span class="cm"> *</span>
+<span class="linenos"> 4</span><span class="cm"> * SPDX-License-Identifier: Apache-2.0</span>
+<span class="linenos"> 5</span><span class="cm"> */</span>
+<span class="linenos"> 6</span><span class="cp">#ifndef H_MCUMGR_EXAMPLE_MGMT_CALLBACKS_</span>
+<span class="linenos"> 7</span><span class="cp">#define H_MCUMGR_EXAMPLE_MGMT_CALLBACKS_</span>
+<span class="linenos"> 8</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdint.h&gt;</span>
+<span class="linenos"> 9</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/mgmt/mcumgr/mgmt/callbacks.h&gt;</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="cp">#ifdef __cplusplus</span>
+<span class="linenos">12</span><span class="k">extern</span><span class="w"> </span><span class="s">&quot;C&quot;</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">13</span><span class="cp">#endif</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="cm">/* This is the event ID for the example group */</span>
+<span class="linenos">16</span><span class="cp">#define MGMT_EVT_GRP_EXAMPLE MGMT_EVT_GRP_USER_CUSTOM_START</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="cm">/* MGMT event opcodes for example management group */</span>
+<span class="linenos">19</span><span class="k">enum</span><span class="w"> </span><span class="n">example_mgmt_group_events</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">20</span><span class="w">	</span><span class="cm">/* Callback when the other command is received, data is example_mgmt_other_data */</span>
+<span class="linenos">21</span><span class="w">	</span><span class="n">MGMT_EVT_OP_EXAMPLE_OTHER</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MGMT_DEF_EVT_OP_ID</span><span class="p">(</span><span class="n">MGMT_EVT_GRP_EXAMPLE</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span><span class="w">	</span><span class="cm">/* Used to enable all smp_group events */</span>
+<span class="linenos">24</span><span class="w">	</span><span class="n">MGMT_EVT_OP_EXAMPLE_MGMT_ALL</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">MGMT_DEF_EVT_OP_ALL</span><span class="p">(</span><span class="n">MGMT_EVT_GRP_EXAMPLE</span><span class="p">),</span>
+<span class="linenos">25</span><span class="p">};</span>
+<span class="linenos">26</span>
+<span class="linenos">27</span><span class="cm">/* Structure provided in the #MGMT_EVT_OP_EXAMPLE_OTHER notification callback */</span>
+<span class="linenos">28</span><span class="k">struct</span><span class="w"> </span><span class="nc">example_mgmt_other_data</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">29</span><span class="w">	</span><span class="cm">/* Contains the user supplied value */</span>
+<span class="linenos">30</span><span class="w">	</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">user_value</span><span class="p">;</span>
+<span class="linenos">31</span><span class="p">};</span>
+<span class="linenos">32</span>
+<span class="linenos">33</span><span class="cp">#ifdef __cplusplus</span>
+<span class="linenos">34</span><span class="p">}</span>
+<span class="linenos">35</span><span class="cp">#endif</span>
+<span class="linenos">36</span>
+<span class="linenos">37</span><span class="cp">#endif</span>
+</pre></div>
+</div>
+<p>This sets up a single event which application (or module) code can register for to receive a
+callback when the function handler is executed, which allows the flow of the handler to be
+changed (i.e. to return an error instead of continuing). The event group ID is set to
+<a class="reference internal" href="../../doxygen/html/group__mcumgr__callback__api.html#gga40ecf8933112abe76d7fedb3dcc7cdbea66361c0b52e996d2feb0a7c84532594d" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_GRP_USER_CUSTOM_START</span></code></a>, which is the start event ID for user-defined groups,
+note that event IDs need to be unique so other custom groups should use different values, a
+central index header file (as upstream Zephyr has) can be used to distribute event IDs more
+easily.</p>
+</section>
+<section id="initial-source-grp-name-mgmt-c">
+<h3>Initial source &lt;grp_name&gt;_mgmt.c<a class="headerlink" href="#initial-source-grp-name-mgmt-c" title="Link to this heading"></a></h3>
+<p>The purpose of this source file is to handle the incoming MCUmgr commands, provide responses, and
+register the transport with MCUmgr so that commands will be sent to it. An example file would
+look similar to:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="cm">/*</span>
+<span class="linenos">  2</span><span class="cm"> * Copyright (c) 2023 Nordic Semiconductor ASA</span>
+<span class="linenos">  3</span><span class="cm"> *</span>
+<span class="linenos">  4</span><span class="cm"> * SPDX-License-Identifier: Apache-2.0</span>
+<span class="linenos">  5</span><span class="cm"> */</span>
+<span class="linenos">  6</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/kernel.h&gt;</span>
+<span class="linenos">  7</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/mgmt/mcumgr/mgmt/mgmt.h&gt;</span>
+<span class="linenos">  8</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/mgmt/mcumgr/smp/smp.h&gt;</span>
+<span class="linenos">  9</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/mgmt/mcumgr/mgmt/handlers.h&gt;</span>
+<span class="linenos"> 10</span><span class="cm">/* The below should be updated with the real name of the file */</span>
+<span class="linenos"> 11</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;example_mgmt.h&gt;</span>
+<span class="linenos"> 12</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/logging/log.h&gt;</span>
+<span class="linenos"> 13</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;assert.h&gt;</span>
+<span class="linenos"> 14</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;limits.h&gt;</span>
+<span class="linenos"> 15</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string.h&gt;</span>
+<span class="linenos"> 16</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="linenos"> 17</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zcbor_common.h&gt;</span>
+<span class="linenos"> 18</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zcbor_decode.h&gt;</span>
+<span class="linenos"> 19</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zcbor_encode.h&gt;</span>
+<span class="linenos"> 20</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mgmt/mcumgr/util/zcbor_bulk.h&gt;</span>
+<span class="linenos"> 21</span>
+<span class="linenos"> 22</span><span class="cp">#if defined(CONFIG_MCUMGR_MGMT_NOTIFICATION_HOOKS)</span>
+<span class="linenos"> 23</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/mgmt/mcumgr/mgmt/callbacks.h&gt;</span>
+<span class="linenos"> 24</span><span class="cp">#if defined(CONFIG_MCUMGR_GRP_EXAMPLE_OTHER_HOOK)</span>
+<span class="linenos"> 25</span><span class="cm">/* The below should be updated with the real name of the file */</span>
+<span class="linenos"> 26</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;example_mgmt_callbacks.h&gt;</span>
+<span class="linenos"> 27</span><span class="cp">#endif</span>
+<span class="linenos"> 28</span><span class="cp">#endif</span>
+<span class="linenos"> 29</span>
+<span class="linenos"> 30</span><span class="n">LOG_MODULE_REGISTER</span><span class="p">(</span><span class="n">mcumgr_example_grp</span><span class="p">,</span><span class="w"> </span><span class="n">CONFIG_MCUMGR_GRP_EXAMPLE_LOG_LEVEL</span><span class="p">);</span>
+<span class="linenos"> 31</span><span class="cm">/* Example function with &quot;read&quot; command support, requires both parameters are supplied */</span>
+<span class="linenos"> 32</span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">example_mgmt_test</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">smp_streamer</span><span class="w"> </span><span class="o">*</span><span class="n">ctxt</span><span class="p">)</span>
+<span class="linenos"> 33</span><span class="p">{</span>
+<span class="linenos"> 34</span><span class="w">	</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">uint_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos"> 35</span><span class="w">	</span><span class="n">zcbor_state_t</span><span class="w"> </span><span class="o">*</span><span class="n">zse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctxt</span><span class="o">-&gt;</span><span class="n">writer</span><span class="o">-&gt;</span><span class="n">zs</span><span class="p">;</span>
+<span class="linenos"> 36</span><span class="w">	</span><span class="n">zcbor_state_t</span><span class="w"> </span><span class="o">*</span><span class="n">zsd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctxt</span><span class="o">-&gt;</span><span class="n">reader</span><span class="o">-&gt;</span><span class="n">zs</span><span class="p">;</span>
+<span class="linenos"> 37</span><span class="w">	</span><span class="kt">bool</span><span class="w"> </span><span class="n">ok</span><span class="p">;</span>
+<span class="linenos"> 38</span><span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">zcbor_string</span><span class="w"> </span><span class="n">string_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">};</span>
+<span class="linenos"> 39</span><span class="w">	</span><span class="kt">size_t</span><span class="w"> </span><span class="n">decoded</span><span class="p">;</span>
+<span class="linenos"> 40</span><span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">zcbor_map_decode_key_val</span><span class="w"> </span><span class="n">example_test_decode</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 41</span><span class="w">		</span><span class="n">ZCBOR_MAP_DECODE_KEY_DECODER</span><span class="p">(</span><span class="s">&quot;uint_key&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">zcbor_uint32_decode</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">uint_value</span><span class="p">),</span>
+<span class="linenos"> 42</span><span class="w">		</span><span class="n">ZCBOR_MAP_DECODE_KEY_DECODER</span><span class="p">(</span><span class="s">&quot;string_key&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">zcbor_tstr_decode</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">string_value</span><span class="p">),</span>
+<span class="linenos"> 43</span><span class="w">	</span><span class="p">};</span>
+<span class="linenos"> 44</span>
+<span class="linenos"> 45</span><span class="w">	</span><span class="n">LOG_DBG</span><span class="p">(</span><span class="s">&quot;Example test function called&quot;</span><span class="p">);</span>
+<span class="linenos"> 46</span>
+<span class="linenos"> 47</span><span class="w">	</span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zcbor_map_decode_bulk</span><span class="p">(</span><span class="n">zsd</span><span class="p">,</span><span class="w"> </span><span class="n">example_test_decode</span><span class="p">,</span><span class="w"> </span><span class="n">ARRAY_SIZE</span><span class="p">(</span><span class="n">example_test_decode</span><span class="p">),</span>
+<span class="linenos"> 48</span><span class="w">				   </span><span class="o">&amp;</span><span class="n">decoded</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos"> 49</span><span class="w">	</span><span class="cm">/* Check that both parameters were supplied and that the value of &quot;string_key&quot; is not</span>
+<span class="linenos"> 50</span><span class="cm">	 * empty</span>
+<span class="linenos"> 51</span><span class="cm">	 */</span>
+<span class="linenos"> 52</span><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ok</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">string_value</span><span class="p">.</span><span class="n">len</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">zcbor_map_decode_bulk_key_found</span><span class="p">(</span>
+<span class="linenos"> 53</span><span class="w">			   </span><span class="n">example_test_decode</span><span class="p">,</span><span class="w"> </span><span class="n">ARRAY_SIZE</span><span class="p">(</span><span class="n">example_test_decode</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;uint_key&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 54</span><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="n">MGMT_ERR_EINVAL</span><span class="p">;</span>
+<span class="linenos"> 55</span><span class="w">	</span><span class="p">}</span>
+<span class="linenos"> 56</span>
+<span class="linenos"> 57</span><span class="w">	</span><span class="cm">/* If the value of &quot;uint_key&quot; is over 50, return an error of &quot;not wanted&quot; */</span>
+<span class="linenos"> 58</span><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">uint_value</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 59</span><span class="w">		</span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">smp_add_cmd_err</span><span class="p">(</span><span class="n">zse</span><span class="p">,</span><span class="w"> </span><span class="n">MGMT_GROUP_ID_EXAMPLE</span><span class="p">,</span><span class="w"> </span><span class="n">EXAMPLE_MGMT_ERR_NOT_WANTED</span><span class="p">);</span>
+<span class="linenos"> 60</span><span class="w">		</span><span class="k">goto</span><span class="w"> </span><span class="n">end</span><span class="p">;</span>
+<span class="linenos"> 61</span><span class="w">	</span><span class="p">}</span>
+<span class="linenos"> 62</span>
+<span class="linenos"> 63</span><span class="w">	</span><span class="cm">/* Otherwise, return an integer value of 4691 */</span>
+<span class="linenos"> 64</span><span class="w">	</span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zcbor_tstr_put_lit</span><span class="p">(</span><span class="n">zse</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;return_int&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="linenos"> 65</span><span class="w">	     </span><span class="n">zcbor_int32_put</span><span class="p">(</span><span class="n">zse</span><span class="p">,</span><span class="w"> </span><span class="mi">4691</span><span class="p">);</span>
+<span class="linenos"> 66</span>
+<span class="linenos"> 67</span><span class="nl">end</span><span class="p">:</span>
+<span class="linenos"> 68</span><span class="w">	</span><span class="cm">/* If &quot;ok&quot; is false, then there was an error processing the output cbor message, which</span>
+<span class="linenos"> 69</span><span class="cm">	 * likely indicates a lack of available memory</span>
+<span class="linenos"> 70</span><span class="cm">	 */</span>
+<span class="linenos"> 71</span><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">ok</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">MGMT_ERR_EOK</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">MGMT_ERR_EMSGSIZE</span><span class="p">);</span>
+<span class="linenos"> 72</span><span class="p">}</span>
+<span class="linenos"> 73</span>
+<span class="linenos"> 74</span><span class="cm">/* Example function with &quot;write&quot; command support */</span>
+<span class="linenos"> 75</span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">example_mgmt_other</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">smp_streamer</span><span class="w"> </span><span class="o">*</span><span class="n">ctxt</span><span class="p">)</span>
+<span class="linenos"> 76</span><span class="p">{</span>
+<span class="linenos"> 77</span><span class="w">	</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">user_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos"> 78</span><span class="w">	</span><span class="n">zcbor_state_t</span><span class="w"> </span><span class="o">*</span><span class="n">zse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctxt</span><span class="o">-&gt;</span><span class="n">writer</span><span class="o">-&gt;</span><span class="n">zs</span><span class="p">;</span>
+<span class="linenos"> 79</span><span class="w">	</span><span class="n">zcbor_state_t</span><span class="w"> </span><span class="o">*</span><span class="n">zsd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctxt</span><span class="o">-&gt;</span><span class="n">reader</span><span class="o">-&gt;</span><span class="n">zs</span><span class="p">;</span>
+<span class="linenos"> 80</span><span class="w">	</span><span class="kt">bool</span><span class="w"> </span><span class="n">ok</span><span class="p">;</span>
+<span class="linenos"> 81</span><span class="w">	</span><span class="kt">size_t</span><span class="w"> </span><span class="n">decoded</span><span class="p">;</span>
+<span class="linenos"> 82</span><span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">zcbor_map_decode_key_val</span><span class="w"> </span><span class="n">example_other_decode</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 83</span><span class="w">		</span><span class="n">ZCBOR_MAP_DECODE_KEY_DECODER</span><span class="p">(</span><span class="s">&quot;user_value&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">zcbor_uint32_decode</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">user_value</span><span class="p">),</span>
+<span class="linenos"> 84</span><span class="w">	</span><span class="p">};</span>
+<span class="linenos"> 85</span>
+<span class="linenos"> 86</span><span class="cp">#if defined(CONFIG_MCUMGR_GRP_EXAMPLE_OTHER_HOOK)</span>
+<span class="linenos"> 87</span><span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">example_mgmt_other_data</span><span class="w"> </span><span class="n">other_data</span><span class="p">;</span>
+<span class="linenos"> 88</span><span class="w">	</span><span class="k">enum</span><span class="w"> </span><span class="n">mgmt_cb_return</span><span class="w"> </span><span class="n">status</span><span class="p">;</span>
+<span class="linenos"> 89</span><span class="w">	</span><span class="kt">int32_t</span><span class="w"> </span><span class="n">err_rc</span><span class="p">;</span>
+<span class="linenos"> 90</span><span class="w">	</span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">err_group</span><span class="p">;</span>
+<span class="linenos"> 91</span><span class="cp">#endif</span>
+<span class="linenos"> 92</span>
+<span class="linenos"> 93</span><span class="w">	</span><span class="n">LOG_DBG</span><span class="p">(</span><span class="s">&quot;Example other function called&quot;</span><span class="p">);</span>
+<span class="linenos"> 94</span>
+<span class="linenos"> 95</span><span class="w">	</span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zcbor_map_decode_bulk</span><span class="p">(</span><span class="n">zsd</span><span class="p">,</span><span class="w"> </span><span class="n">example_other_decode</span><span class="p">,</span><span class="w"> </span><span class="n">ARRAY_SIZE</span><span class="p">(</span><span class="n">example_other_decode</span><span class="p">),</span>
+<span class="linenos"> 96</span><span class="w">				   </span><span class="o">&amp;</span><span class="n">decoded</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos"> 97</span>
+<span class="linenos"> 98</span><span class="w">	</span><span class="cm">/* The supplied value is optional, therefore do not return an error if it was not</span>
+<span class="linenos"> 99</span><span class="cm">	 * provided</span>
+<span class="linenos">100</span><span class="cm">	 */</span>
+<span class="linenos">101</span><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ok</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">102</span><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="n">MGMT_ERR_EINVAL</span><span class="p">;</span>
+<span class="linenos">103</span><span class="w">	</span><span class="p">}</span>
+<span class="linenos">104</span>
+<span class="linenos">105</span><span class="cp">#if defined(CONFIG_MCUMGR_GRP_EXAMPLE_OTHER_HOOK)</span>
+<span class="linenos">106</span><span class="w">	</span><span class="cm">/* Send request to application to check what to do */</span>
+<span class="linenos">107</span><span class="w">	</span><span class="n">other_data</span><span class="p">.</span><span class="n">user_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user_value</span><span class="p">;</span>
+<span class="linenos">108</span><span class="w">	</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mgmt_callback_notify</span><span class="p">(</span><span class="n">MGMT_EVT_OP_EXAMPLE_OTHER</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">other_data</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">other_data</span><span class="p">),</span>
+<span class="linenos">109</span><span class="w">				      </span><span class="o">&amp;</span><span class="n">err_rc</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">err_group</span><span class="p">);</span>
+<span class="linenos">110</span><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">MGMT_CB_OK</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">111</span><span class="w">		</span><span class="cm">/* If a callback returned an RC error, exit out, if it returned a group error</span>
+<span class="linenos">112</span><span class="cm">		 * code, add the error code to the response and return to the calling function to</span>
+<span class="linenos">113</span><span class="cm">		 * have it sent back to the client</span>
+<span class="linenos">114</span><span class="cm">		 */</span>
+<span class="linenos">115</span><span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">MGMT_CB_ERROR_RC</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">116</span><span class="w">			</span><span class="k">return</span><span class="w"> </span><span class="n">err_rc</span><span class="p">;</span>
+<span class="linenos">117</span><span class="w">		</span><span class="p">}</span>
+<span class="linenos">118</span>
+<span class="linenos">119</span><span class="w">		</span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">smp_add_cmd_err</span><span class="p">(</span><span class="n">zse</span><span class="p">,</span><span class="w"> </span><span class="n">err_group</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">uint16_t</span><span class="p">)</span><span class="n">err_rc</span><span class="p">);</span>
+<span class="linenos">120</span><span class="w">		</span><span class="k">goto</span><span class="w"> </span><span class="n">end</span><span class="p">;</span>
+<span class="linenos">121</span><span class="w">	</span><span class="p">}</span>
+<span class="linenos">122</span><span class="cp">#endif</span>
+<span class="linenos">123</span><span class="w">	</span><span class="cm">/* Return some dummy data to the client */</span>
+<span class="linenos">124</span><span class="w">	</span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zcbor_tstr_put_lit</span><span class="p">(</span><span class="n">zse</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;return_string&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="linenos">125</span><span class="w">	     </span><span class="n">zcbor_tstr_put_lit</span><span class="p">(</span><span class="n">zse</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;some dummy data!&quot;</span><span class="p">);</span>
+<span class="linenos">126</span>
+<span class="linenos">127</span><span class="cp">#if defined(CONFIG_MCUMGR_GRP_EXAMPLE_OTHER_HOOK)</span>
+<span class="linenos">128</span><span class="nl">end</span><span class="p">:</span>
+<span class="linenos">129</span><span class="cp">#endif</span>
+<span class="linenos">130</span><span class="w">	</span><span class="cm">/* If &quot;ok&quot; is false, then there was an error processing the output cbor message, which</span>
+<span class="linenos">131</span><span class="cm">	 * likely indicates a lack of available memory</span>
+<span class="linenos">132</span><span class="cm">	 */</span>
+<span class="linenos">133</span><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">ok</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">MGMT_ERR_EOK</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">MGMT_ERR_EMSGSIZE</span><span class="p">);</span>
+<span class="linenos">134</span><span class="p">}</span>
+<span class="linenos">135</span>
+<span class="linenos">136</span><span class="cp">#ifdef CONFIG_MCUMGR_SMP_SUPPORT_ORIGINAL_PROTOCOL</span>
+<span class="linenos">137</span><span class="cm">/* This is a lookup function that converts from SMP version 2 group error codes to legacy</span>
+<span class="linenos">138</span><span class="cm"> * MCUmgr error codes, it is only included if support for the original protocol is enabled.</span>
+<span class="linenos">139</span><span class="cm"> * Note that in SMP version 2, MCUmgr error codes can still be returned, but are to be used</span>
+<span class="linenos">140</span><span class="cm"> * only for general SMP/MCUmgr errors. The success/OK error code is not used in translation</span>
+<span class="linenos">141</span><span class="cm"> * functions as it is automatically handled by the base SMP code.</span>
+<span class="linenos">142</span><span class="cm"> */</span>
+<span class="linenos">143</span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">example_mgmt_translate_error_code</span><span class="p">(</span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">err</span><span class="p">)</span>
+<span class="linenos">144</span><span class="p">{</span>
+<span class="linenos">145</span><span class="w">	</span><span class="kt">int</span><span class="w"> </span><span class="n">rc</span><span class="p">;</span>
+<span class="linenos">146</span>
+<span class="linenos">147</span><span class="w">	</span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">err</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">148</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">EXAMPLE_MGMT_ERR_NOT_WANTED</span><span class="p">:</span>
+<span class="linenos">149</span><span class="w">		</span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MGMT_ERR_ENOENT</span><span class="p">;</span>
+<span class="linenos">150</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">151</span>
+<span class="linenos">152</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">EXAMPLE_MGMT_ERR_REJECTED_BY_HOOK</span><span class="p">:</span>
+<span class="linenos">153</span><span class="w">		</span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MGMT_ERR_EBADSTATE</span><span class="p">;</span>
+<span class="linenos">154</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">155</span>
+<span class="linenos">156</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">EXAMPLE_MGMT_ERR_UNKNOWN</span><span class="p">:</span>
+<span class="linenos">157</span><span class="w">	</span><span class="k">default</span><span class="o">:</span>
+<span class="linenos">158</span><span class="w">		</span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MGMT_ERR_EUNKNOWN</span><span class="p">;</span>
+<span class="linenos">159</span><span class="w">	</span><span class="p">}</span>
+<span class="linenos">160</span>
+<span class="linenos">161</span><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="n">rc</span><span class="p">;</span>
+<span class="linenos">162</span><span class="p">}</span>
+<span class="linenos">163</span><span class="cp">#endif</span>
+<span class="linenos">164</span>
+<span class="linenos">165</span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">mgmt_handler</span><span class="w"> </span><span class="n">example_mgmt_handlers</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">166</span><span class="w">	</span><span class="p">[</span><span class="n">EXAMPLE_MGMT_ID_TEST</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">167</span><span class="w">		</span><span class="p">.</span><span class="n">mh_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">example_mgmt_test</span><span class="p">,</span>
+<span class="linenos">168</span><span class="w">		</span><span class="p">.</span><span class="n">mh_write</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="linenos">169</span><span class="w">	</span><span class="p">},</span>
+<span class="linenos">170</span><span class="w">	</span><span class="p">[</span><span class="n">EXAMPLE_MGMT_ID_OTHER</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">171</span><span class="w">		</span><span class="p">.</span><span class="n">mh_read</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="linenos">172</span><span class="w">		</span><span class="p">.</span><span class="n">mh_write</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">example_mgmt_other</span><span class="p">,</span>
+<span class="linenos">173</span><span class="w">	</span><span class="p">},</span>
+<span class="linenos">174</span><span class="p">};</span>
+<span class="linenos">175</span>
+<span class="linenos">176</span><span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">mgmt_group</span><span class="w"> </span><span class="n">example_mgmt_group</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">177</span><span class="w">	</span><span class="p">.</span><span class="n">mg_handlers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">example_mgmt_handlers</span><span class="p">,</span>
+<span class="linenos">178</span><span class="w">	</span><span class="p">.</span><span class="n">mg_handlers_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ARRAY_SIZE</span><span class="p">(</span><span class="n">example_mgmt_handlers</span><span class="p">),</span>
+<span class="linenos">179</span><span class="w">	</span><span class="p">.</span><span class="n">mg_group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MGMT_GROUP_ID_EXAMPLE</span><span class="p">,</span>
+<span class="linenos">180</span><span class="cp">#ifdef CONFIG_MCUMGR_SMP_SUPPORT_ORIGINAL_PROTOCOL</span>
+<span class="linenos">181</span><span class="w">	</span><span class="p">.</span><span class="n">mg_translate_error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">example_mgmt_translate_error_code</span><span class="p">,</span>
+<span class="linenos">182</span><span class="cp">#endif</span>
+<span class="linenos">183</span><span class="p">};</span>
+<span class="linenos">184</span>
+<span class="linenos">185</span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">example_mgmt_register_group</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="linenos">186</span><span class="p">{</span>
+<span class="linenos">187</span><span class="w">	</span><span class="cm">/* This function is called during system init before main() is invoked, if the</span>
+<span class="linenos">188</span><span class="cm">	 * handler needs to set anything up before it can be used, it should do it here.</span>
+<span class="linenos">189</span><span class="cm">	 * This register the group so that clients can call the function handlers.</span>
+<span class="linenos">190</span><span class="cm">	 */</span>
+<span class="linenos">191</span><span class="w">	</span><span class="n">mgmt_register_group</span><span class="p">(</span><span class="o">&amp;</span><span class="n">example_mgmt_group</span><span class="p">);</span>
+<span class="linenos">192</span><span class="p">}</span>
+<span class="linenos">193</span>
+<span class="linenos">194</span><span class="n">MCUMGR_HANDLER_DEFINE</span><span class="p">(</span><span class="n">example_mgmt</span><span class="p">,</span><span class="w"> </span><span class="n">example_mgmt_register_group</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The above code creates 2 function handlers, <code class="docutils literal notranslate"><span class="pre">test</span></code> which supports read requests and takes 2
+required parameters, and <code class="docutils literal notranslate"><span class="pre">other</span></code> which supports write requests and takes 1 optional parameter,
+this function handler has an optional notification callback feature that allows other parts of
+the code to listen for the event and take any required actions that are necessary or prevent
+further execution of the function by returning an error, further details on MCUmgr callback
+functionality can be found on <a class="reference internal" href="mcumgr_callbacks.html#mcumgr-callbacks"><span class="std std-ref">MCUmgr Callbacks</span></a>.</p>
+<p>Note that other code referencing callbacks for custom MCUmgr handlers needs to include both the
+base Zephyr callback include file and the custom handler callback file, only in-tree Zephyr
+handler headers are included when including the upstream Zephyr callback header file.</p>
+</section>
+<section id="initial-kconfig">
+<h3>Initial Kconfig<a class="headerlink" href="#initial-kconfig" title="Link to this heading"></a></h3>
+<p>The purpose of the Kconfig file is to provide options which users can enable or change relating
+to the functionality of the handler being implemented. An example file would look similar to:</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="c1"># Copyright Nordic Semiconductor ASA 2023. All rights reserved.</span>
+<span class="c1"># SPDX-License-Identifier: Apache-2.0</span>
+<span class="c1"># The Kconfig file is dedicated to example management group of</span>
+<span class="c1"># of MCUmgr subsystem and provides Kconfig options to configure</span>
+<span class="c1"># group commands behaviour and other aspects.</span>
+<span class="c1">#</span>
+<span class="c1"># Options defined in this file should be prefixed:</span>
+<span class="c1">#  MCUMGR_GRP_EXAMPLE_ -- general group options;</span>
+<span class="c1">#</span>
+<span class="c1"># When adding Kconfig options, that control the same feature,</span>
+<span class="c1"># try to group them together by the same stem after prefix.</span>
+<span class="k">if</span><span class="w"> </span>MCUMGR
+
+<span class="k">menuconfig</span><span class="w"> </span>MCUMGR_GRP_EXAMPLE_APP
+<span class="w">	</span><span class="nb">bool</span><span class="w"> </span><span class="s2">&quot;MCUmgr handlers for example management (app)&quot;</span>
+<span class="w">	</span><span class="k">select</span><span class="w"> </span>MCUMGR_SMP_CBOR_MIN_DECODING_LEVEL_2
+<span class="w">	</span><span class="k">default</span><span class="w"> </span>y
+<span class="w">	</span><span class="k">help</span>
+<span class="sd">	  Enables MCUmgr handlers for example management. This demonstrates the</span>
+<span class="sd">	  file at application-level.</span>
+
+<span class="k">if</span><span class="w"> </span>MCUMGR_GRP_EXAMPLE_APP
+<span class="k">config</span><span class="w"> </span>MCUMGR_GRP_EXAMPLE_OTHER_HOOK
+<span class="w">	</span><span class="nb">bool</span><span class="w"> </span><span class="s2">&quot;Other hook&quot;</span>
+<span class="w">	</span><span class="k">depends on</span><span class="w"> </span>MCUMGR_MGMT_NOTIFICATION_HOOKS
+<span class="w">	</span><span class="k">help</span>
+<span class="sd">	  Allows applications to receive callback when the &quot;other&quot; example</span>
+<span class="sd">	  management function is called</span>
+
+module<span class="w"> </span><span class="o">=</span><span class="w"> </span>MCUMGR_GRP_EXAMPLE
+module-str<span class="w"> </span><span class="o">=</span><span class="w"> </span>mcumgr_grp_example
+<span class="k">source</span><span class="w"> </span><span class="s2">&quot;subsys/logging/Kconfig.template.log_config&quot;</span>
+
+<span class="k">endif</span>
+
+<span class="k">endif</span>
+
+<span class="k">source</span><span class="w"> </span><span class="s2">&quot;Kconfig.zephyr&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="initial-cmakelists-txt">
+<h3>Initial CMakeLists.txt<a class="headerlink" href="#initial-cmakelists-txt" title="Link to this heading"></a></h3>
+<p>The CMakeLists.txt file is used by the build system to setup files to compile, include
+directories to add and specify options that can be changed. A basic file only need to include the
+source files if the Kconfig options are enabled. An example file would look similar to:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-WmVwaHlyIG1vZHVsZQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-WmVwaHlyIG1vZHVsZQ==" name="WmVwaHlyIG1vZHVsZQ==" role="tab" tabindex="0">Zephyr module</button><button aria-controls="panel-0-QXBwbGljYXRpb24=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-QXBwbGljYXRpb24=" name="QXBwbGljYXRpb24=" role="tab" tabindex="-1">Application</button></div><div aria-labelledby="tab-0-WmVwaHlyIG1vZHVsZQ==" class="sphinx-tabs-panel group-tab" id="panel-0-WmVwaHlyIG1vZHVsZQ==" name="WmVwaHlyIG1vZHVsZQ==" role="tabpanel" tabindex="0"><div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="c"># Copyright (c) 2023 Nordic Semiconductor ASA</span>
+<span class="c"># SPDX-License-Identifier: Apache-2.0</span>
+
+<span class="nb">if</span><span class="p">(</span><span class="s">CONFIG_MCUMGR_GRP_EXAMPLE_MODULE</span><span class="p">)</span>
+<span class="w">  </span><span class="nb">zephyr_library</span><span class="p">()</span>
+<span class="w">  </span><span class="c"># The below should be updated with the real name of the file</span>
+<span class="w">  </span><span class="nb">zephyr_library_sources</span><span class="p">(</span><span class="s">src/example_mgmt.c</span><span class="p">)</span>
+<span class="w">  </span><span class="nb">zephyr_include_directories</span><span class="p">(</span><span class="s">include</span><span class="p">)</span>
+<span class="nb">endif</span><span class="p">()</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-QXBwbGljYXRpb24=" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-QXBwbGljYXRpb24=" name="QXBwbGljYXRpb24=" role="tabpanel" tabindex="0"><div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">if</span><span class="p">(</span><span class="s">CONFIG_MCUMGR_GRP_EXAMPLE_APP</span><span class="p">)</span>
+<span class="w">  </span><span class="nb">target_sources</span><span class="p">(</span><span class="s">app</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">example_as_module/src/example_mgmt.c</span><span class="p">)</span>
+<span class="w">  </span><span class="nb">zephyr_include_directories</span><span class="p">(</span><span class="s">example_as_module/include</span><span class="p">)</span>
+<span class="nb">endif</span><span class="p">()</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+</section>
+<section id="including-from-application">
+<h2>Including from application<a class="headerlink" href="#including-from-application" title="Link to this heading"></a></h2>
+<p>Application-specific MCUmgr handlers can be added by creating/editing application build files.
+Example modifications are shown below.</p>
+<section id="example-cmakelists-txt">
+<h3>Example CMakeLists.txt<a class="headerlink" href="#example-cmakelists-txt" title="Link to this heading"></a></h3>
+<p>The application <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> file can load the CMake file for the example MCUmgr handler by
+adding the following:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">add_subdirectory</span><span class="p">(</span><span class="s">mcumgr/grp/&lt;grp_name&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="example-kconfig">
+<h3>Example Kconfig<a class="headerlink" href="#example-kconfig" title="Link to this heading"></a></h3>
+<p>The application Kconfig file can include the Kconfig file for the example MCUmgr handler by adding
+the following to the <code class="docutils literal notranslate"><span class="pre">Kconfig</span></code> file in the application directory (or creating it if it does not
+exist):</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span>rsource<span class="w"> </span><span class="s2">&quot;mcumgr/grp/&lt;grp_name&gt;/Kconfig&quot;</span>
+
+<span class="c1"># Include Zephyr&#39;s Kconfig</span>
+<span class="k">source</span><span class="w"> </span><span class="s2">&quot;Kconfig.zephyr&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="including-from-zephyr-module">
+<h2>Including from Zephyr Module<a class="headerlink" href="#including-from-zephyr-module" title="Link to this heading"></a></h2>
+<p>Zephyr <a class="reference internal" href="../../develop/modules.html#modules"><span class="std std-ref">Modules (External projects)</span></a> can be used to add custom MCUmgr handlers to multiple different applications
+without needing to duplicate the code in each application’s source tree, see <a class="reference internal" href="../../develop/modules.html#module-yml"><span class="std std-ref">Module yaml file description</span></a> for
+details on how to set up the module files. Example files are shown below.</p>
+<section id="example-zephyr-module-yml">
+<h3>Example zephyr/module.yml<a class="headerlink" href="#example-zephyr-module-yml" title="Link to this heading"></a></h3>
+<p>This is an example file which can be used to load the Kconfig and CMake files from the root of the
+module directory, and would be placed at <code class="docutils literal notranslate"><span class="pre">zephyr/module.yml</span></code>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">build</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">kconfig</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Kconfig</span>
+<span class="w">  </span><span class="nt">cmake</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h3>Example CMakeLists.txt<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<p>This is an example CMakeLists.txt file which loads the CMake file for the example MCUmgr handler,
+and would be placed at <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">add_subdirectory</span><span class="p">(</span><span class="s">mcumgr/grp/&lt;grp_name&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h3>Example Kconfig<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<p>This is an example Kconfig file which loads the Kconfig file for the example MCUmgr handler, and
+would be placed at <code class="docutils literal notranslate"><span class="pre">Kconfig</span></code>:</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span>rsource<span class="w"> </span><span class="s2">&quot;mcumgr/grp/&lt;grp_name&gt;/Kconfig&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="demonstration-handler">
+<h2>Demonstration handler<a class="headerlink" href="#demonstration-handler" title="Link to this heading"></a></h2>
+<p>There is a demonstration project which includes configuration for both application and zephyr
+module-MCUmgr handlers which can be used as a basis for created your own in
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/tests/subsys/mgmt/mcumgr/handler_demo/">tests/subsys/mgmt/mcumgr/handler_demo/</a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

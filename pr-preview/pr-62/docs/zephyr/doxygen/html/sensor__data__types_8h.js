@@ -1,0 +1,28 @@
+var sensor__data__types_8h =
+[
+    [ "sensor_data_header", "structsensor__data__header.html", "structsensor__data__header" ],
+    [ "sensor_three_axis_data", "structsensor__three__axis__data.html", "structsensor__three__axis__data" ],
+    [ "sensor_three_axis_data::sensor_three_axis_sample_data", "structsensor__three__axis__data_1_1sensor__three__axis__sample__data.html", "structsensor__three__axis__data_1_1sensor__three__axis__sample__data" ],
+    [ "sensor_game_rotation_vector_data", "structsensor__game__rotation__vector__data.html", "structsensor__game__rotation__vector__data" ],
+    [ "sensor_game_rotation_vector_data::sensor_game_rotation_vector_sample_data", "structsensor__game__rotation__vector__data_1_1sensor__game__rotation__vector__sample__data.html", "structsensor__game__rotation__vector__data_1_1sensor__game__rotation__vector__sample__data" ],
+    [ "sensor_occurrence_data", "structsensor__occurrence__data.html", "structsensor__occurrence__data" ],
+    [ "sensor_occurrence_data::sensor_occurrence_sample_data", "structsensor__occurrence__data_1_1sensor__occurrence__sample__data.html", "structsensor__occurrence__data_1_1sensor__occurrence__sample__data" ],
+    [ "sensor_q31_data", "structsensor__q31__data.html", "structsensor__q31__data" ],
+    [ "sensor_q31_data::sensor_q31_sample_data", "structsensor__q31__data_1_1sensor__q31__sample__data.html", "structsensor__q31__data_1_1sensor__q31__sample__data" ],
+    [ "sensor_byte_data", "structsensor__byte__data.html", "structsensor__byte__data" ],
+    [ "sensor_byte_data::sensor_byte_sample_data", "structsensor__byte__data_1_1sensor__byte__sample__data.html", "structsensor__byte__data_1_1sensor__byte__sample__data" ],
+    [ "sensor_uint64_data", "structsensor__uint64__data.html", "structsensor__uint64__data" ],
+    [ "sensor_uint64_data::sensor_uint64_sample_data", "structsensor__uint64__data_1_1sensor__uint64__sample__data.html", "structsensor__uint64__data_1_1sensor__uint64__sample__data" ],
+    [ "PRIsensor_byte_data", "sensor__data__types_8h.html#af73f68f6b94dc1251dfeeb5caf141e94", null ],
+    [ "PRIsensor_byte_data_arg", "sensor__data__types_8h.html#a36cfa50e20150d44c6a254afc149eb5b", null ],
+    [ "PRIsensor_game_rotation_vector_data", "sensor__data__types_8h.html#a25faf87afbedf805a056ae103e98aa75", null ],
+    [ "PRIsensor_game_rotation_vector_data_arg", "sensor__data__types_8h.html#a416ce85d29265cc6b9993a50656b2cb2", null ],
+    [ "PRIsensor_occurrence_data", "sensor__data__types_8h.html#a9862e4197bb6146b3e41958f427c9f9a", null ],
+    [ "PRIsensor_occurrence_data_arg", "sensor__data__types_8h.html#a3f8a660a28578bbb7baf08fefbca7ac4", null ],
+    [ "PRIsensor_q31_data", "sensor__data__types_8h.html#a92ae9197089ece9de51db496c9ed5ed6", null ],
+    [ "PRIsensor_q31_data_arg", "sensor__data__types_8h.html#aac3d2a0c462c05c26f7dee0fa0e1ef62", null ],
+    [ "PRIsensor_three_axis_data", "sensor__data__types_8h.html#a0c6a78118f9360ed97b1327cf3a3fa9a", null ],
+    [ "PRIsensor_three_axis_data_arg", "sensor__data__types_8h.html#af8c5897a6515c73ec1795b800590a7b4", null ],
+    [ "PRIsensor_uint64_data", "sensor__data__types_8h.html#abc9a284dcd602d240f9bd9b097703634", null ],
+    [ "PRIsensor_uint64_data_arg", "sensor__data__types_8h.html#a06ef9de1e3821289cd22575410edc80f", null ]
+];

@@ -1,0 +1,851 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bluetooth: Common Audio Profile Shell &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/connectivity/bluetooth/shell/audio/cap.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Bluetooth: Call Control Profile Shell" href="ccp.html" />
+    <link rel="prev" title="Bluetooth: Basic Audio Profile: Scan Delegator Shell" href="bap_scan_delegator.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">Connectivity</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">Bluetooth</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../features.html">Supported features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-qual.html">Qualification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-arch.html">Stack Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-le-host.html">LE Host</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/audio/bluetooth-le-audio-arch.html">LE Audio Stack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/audio/bluetooth-le-audio-arch.html#le-audio-resources">LE Audio resources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-ctlr-arch.html">LE Controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-dev.html">Application Development</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-tools.html">Tools</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../bluetooth-shell.html">Shell</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="bap.html">Bluetooth: Basic Audio Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bap_broadcast_assistant.html">Bluetooth: Basic Audio Profile: Broadcast Assistant Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bap_scan_delegator.html">Bluetooth: Basic Audio Profile: Scan Delegator Shell</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Bluetooth: Common Audio Profile Shell</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#cap-acceptor">CAP Acceptor</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#cap-initiator">CAP Initiator</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#cap-commander">CAP Commander</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="ccp.html">Bluetooth: Call Control Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="csip.html">Bluetooth: Coordinated Set Identification Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gmap.html">Bluetooth: Gaming Audio Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mcp.html">Bluetooth: Media Control Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tbs.html">Bluetooth: Telephone Bearer Service Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tmap.html">Bluetooth: Telephone and Media Audio Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pbp.html">Bluetooth: Public Broadcast Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../classic/a2dp.html">Bluetooth: A2DP Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../classic/avrcp.html">Bluetooth: Classic: AVRCP Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../classic/goep.html">Bluetooth: Classic: GOEP Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../classic/hfp.html">Bluetooth: Classic: HFP Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../classic/l2cap.html">Bluetooth: Classic: L2CAP Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../classic/rfcomm.html">Bluetooth: Classic: RFCOMM Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../host/gap.html">Bluetooth: GAP Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../host/gatt.html">Bluetooth: GATT Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../host/iso.html">Bluetooth: Isochronous Channels Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../host/l2cap.html">Bluetooth: L2CAP Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-shell.html#bluetooth-shell-setup-and-usage">Bluetooth Shell Setup and Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-shell.html#logging">Logging</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../canbus/index.html">Controller Area Network (CAN) Bus Protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../networking/index.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lora_lorawan/index.html">LoRa and LoRaWAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usb/index.html">USB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modbus/index.html">Modbus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">Connectivity</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Bluetooth</a> &raquo;</li>
+  
+     <li><a href="../../bluetooth-shell.html">Shell</a> &raquo;</li>
+  
+  <li>Bluetooth: Common Audio Profile Shell</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/connectivity/bluetooth/shell/audio/cap.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27connectivity%2Fbluetooth%2Fshell%2Faudio%2Fcap%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Bluetooth+Audio%2Carea%3A+Bluetooth&env=-+Page%3A+connectivity%2Fbluetooth%2Fshell%2Faudio%2Fcap%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="bluetooth-common-audio-profile-shell">
+<h1>Bluetooth: Common Audio Profile Shell<a class="headerlink" href="#bluetooth-common-audio-profile-shell" title="Link to this heading"></a></h1>
+<p>This document describes how to run the Common Audio Profile functionality.</p>
+<section id="cap-acceptor">
+<h2>CAP Acceptor<a class="headerlink" href="#cap-acceptor" title="Link to this heading"></a></h2>
+<p>The Acceptor will typically be a resource-constrained device, such as a headset, earbud or hearing
+aid. The Acceptor can initialize a Coordinated Set Identification Service instance, if it is in
+a pair with one or more other CAP Acceptors.</p>
+<section id="using-the-cap-acceptor">
+<h3>Using the CAP Acceptor<a class="headerlink" href="#using-the-cap-acceptor" title="Link to this heading"></a></h3>
+<p>When the Bluetooth stack has been initialized (<code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">init</span></code>), the Acceptor can be registered by
+calling <code class="code docutils literal notranslate"><span class="pre">cap_acceptor</span> <span class="pre">init</span></code>, which will register the CAS and CSIS services, as well as
+register callbacks.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cap_acceptor --help</span>
+<span class="go">cap_acceptor - Bluetooth CAP acceptor shell commands</span>
+<span class="go">Subcommands:</span>
+<span class="go">  init          :Initialize the service and register callbacks [size &lt;int&gt;]</span>
+<span class="go">                 [rank &lt;int&gt;] [not-lockable] [sirk &lt;data&gt;]</span>
+<span class="go">  lock          :Lock the set</span>
+<span class="go">  release       :Release the set [force]</span>
+<span class="go">  sirk          :Set the currently used SIRK &lt;sirk&gt;</span>
+<span class="go">  get_info      :Get CSIS info</span>
+<span class="go">  sirk_rsp      :Set the response used in SIRK requests &lt;accept, accept_enc,</span>
+<span class="go">                 reject, oob&gt;</span>
+</pre></div>
+</div>
+<p>Besides initializing the CAS and the CSIS, there are also commands to lock and release the CSIS
+instance, as well as printing and modifying access to the SIRK of the CSIS.</p>
+<section id="setting-a-new-sirk">
+<h4>Setting a new SIRK<a class="headerlink" href="#setting-a-new-sirk" title="Link to this heading"></a></h4>
+<p>This command can modify the currently used SIRK. To get the new RSI to advertise on air,
+<code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">adv-data</span></code> or <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">advertise</span></code> must be called again to set the new advertising data.
+If <code class="code docutils literal notranslate"><span class="pre">CONFIG_BT_CSIP_SET_MEMBER_SIRK_NOTIFIABLE</span></code> is enabled, this will also notify connected
+clients.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>cap_acceptor<span class="w"> </span>sirk<span class="w"> </span>00112233445566778899aabbccddeeff
+<span class="go">SIRK updated</span>
+</pre></div>
+</div>
+</section>
+<section id="getting-the-current-sirk">
+<h4>Getting the current SIRK<a class="headerlink" href="#getting-the-current-sirk" title="Link to this heading"></a></h4>
+<p>This command can get the currently used SIRK.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>cap_acceptor<span class="w"> </span>get_info
+<span class="go">Info for 0x2003b0c8</span>
+<span class="go">        SIRK</span>
+<span class="go">00000000: 20 37 0a 00 95 c4 04 20  00 00 00 00 f1 79 09 00 | 7.....  .....y..|</span>
+<span class="go">        Set size: 2</span>
+<span class="go">        Rank: 1</span>
+<span class="go">        Lockable: true</span>
+<span class="go">        Locked: false</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="cap-initiator">
+<h2>CAP Initiator<a class="headerlink" href="#cap-initiator" title="Link to this heading"></a></h2>
+<p>The Initiator will typically be a resource-rich device, such as a phone or PC. The Initiator can
+discover CAP Acceptors’s CAS and optional CSIS services. The CSIS service can be read to provide
+information about other CAP Acceptors in the same Coordinated Set. The Initiator can execute
+stream control procedures on sets of devices, either ad-hoc or Coordinated, and thus provides an
+easy way to setup multiple streams on multiple devices at once.</p>
+<section id="using-the-cap-initiator">
+<h3>Using the CAP Initiator<a class="headerlink" href="#using-the-cap-initiator" title="Link to this heading"></a></h3>
+<p>When the Bluetooth stack has been initialized (<code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">init</span></code>), the Initiator can discover CAS and
+the optionally included CSIS instance by calling (<code class="code docutils literal notranslate"><span class="pre">cap_initiator</span> <span class="pre">discover</span></code>).
+The CAP initiator also supports broadcast audio as a source.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>cap_initiator<span class="w"> </span>--help
+<span class="go">cap_initiator - Bluetooth CAP initiator shell commands</span>
+<span class="go">Subcommands:</span>
+<span class="go">  discover          : Discover CAS</span>
+<span class="go">  unicast_start     : Unicast Start [csip] [sinks &lt;cnt&gt; (default 1)] [sources</span>
+<span class="go">                     &lt;cnt&gt; (default 1)] [conns (&lt;cnt&gt; | all) (default 1)]</span>
+<span class="go">  unicast_list      : Unicast list streams</span>
+<span class="go">  unicast_update    : Unicast Update &lt;all | stream [stream [stream...]]&gt;</span>
+<span class="go">  unicast_stop      : Unicast stop streams [stream [stream [stream...]]] (all by default)</span>
+<span class="go">  unicast_cancel    : Unicast cancel current procedure</span>
+<span class="go">  ac_1              : Unicast audio configuration 1</span>
+<span class="go">  ac_2              : Unicast audio configuration 2</span>
+<span class="go">  ac_3              : Unicast audio configuration 3</span>
+<span class="go">  ac_4              : Unicast audio configuration 4</span>
+<span class="go">  ac_5              : Unicast audio configuration 5</span>
+<span class="go">  ac_6_i            : Unicast audio configuration 6(i)</span>
+<span class="go">  ac_6_ii           : Unicast audio configuration 6(ii)</span>
+<span class="go">  ac_7_i            : Unicast audio configuration 7(i)</span>
+<span class="go">  ac_7_ii           : Unicast audio configuration 7(ii)</span>
+<span class="go">  ac_8_i            : Unicast audio configuration 8(i)</span>
+<span class="go">  ac_8_ii           : Unicast audio configuration 8(ii)</span>
+<span class="go">  ac_9_i            : Unicast audio configuration 9(i)</span>
+<span class="go">  ac_9_ii           : Unicast audio configuration 9(ii)</span>
+<span class="go">  ac_10             : Unicast audio configuration 10</span>
+<span class="go">  ac_11_i           : Unicast audio configuration 11(i)</span>
+<span class="go">  ac_11_ii          : Unicast audio configuration 11(ii)</span>
+<span class="go">  broadcast_start   :</span>
+<span class="go">  broadcast_update  : &lt;meta&gt;</span>
+<span class="go">  broadcast_stop    :</span>
+<span class="go">  broadcast_delete  :</span>
+<span class="go">  ac_12             : Broadcast audio configuration 12</span>
+<span class="go">  ac_13             : Broadcast audio configuration 13</span>
+<span class="go">  ac_14             : Broadcast audio configuration 14</span>
+</pre></div>
+</div>
+<p>Before being able to perform any stream operation, the device must also perform the
+<code class="code docutils literal notranslate"><span class="pre">bap</span> <span class="pre">discover</span></code> operation to discover the ASEs and PAC records. The <code class="code docutils literal notranslate"><span class="pre">bap</span> <span class="pre">init</span></code>
+command also needs to be called.</p>
+<section id="when-connected">
+<h4>When connected<a class="headerlink" href="#when-connected" title="Link to this heading"></a></h4>
+<p>Discovering CAS and CSIS on a device:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>cap_initiator<span class="w"> </span>discover
+<span class="go">discovery completed with CSIS</span>
+</pre></div>
+</div>
+<p>Discovering ASEs and PAC records on a device:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bap<span class="w"> </span>discover
+<span class="go">conn 0x81cc260: #0: codec 0x81d5b28 dir 0x01</span>
+<span class="go">codec 0x06 cid 0x0000 vid 0x0000 count 5</span>
+<span class="go">data #0: type 0x01 len 2</span>
+<span class="go">00000000: f5                                               |.                |</span>
+<span class="go">data #1: type 0x02 len 1</span>
+<span class="go">data #2: type 0x03 len 1</span>
+<span class="go">data #3: type 0x04 len 4</span>
+<span class="go">00000000: 1e 00 f0                                         |...              |</span>
+<span class="go">data #4: type 0x05 len 1</span>
+<span class="go">meta #0: type 0x01 len 2</span>
+<span class="go">00000000: 06                                               |.                |</span>
+<span class="go">dir 1 loc 1</span>
+<span class="go">snk ctx 6 src ctx 6</span>
+<span class="go">Conn: 0x81cc260, Sink #0: ep 0x81e4248</span>
+<span class="go">Conn: 0x81cc260, Sink #1: ep 0x81e46a8</span>
+<span class="go">conn 0x81cc260: #0: codec 0x81d5f00 dir 0x02</span>
+<span class="go">codec 0x06 cid 0x0000 vid 0x0000 count 5</span>
+<span class="go">data #0: type 0x01 len 2</span>
+<span class="go">00000000: f5                                               |.                |</span>
+<span class="go">data #1: type 0x02 len 1</span>
+<span class="go">data #2: type 0x03 len 1</span>
+<span class="go">data #3: type 0x04 len 4</span>
+<span class="go">00000000: 1e 00 f0                                         |...              |</span>
+<span class="go">data #4: type 0x05 len 1</span>
+<span class="go">meta #0: type 0x01 len 2</span>
+<span class="go">00000000: 06                                               |.                |</span>
+<span class="go">dir 2 loc 1</span>
+<span class="go">snk ctx 6 src ctx 6</span>
+<span class="go">Conn: 0x81cc260, Source #0: ep 0x81e5c88</span>
+<span class="go">Conn: 0x81cc260, Source #1: ep 0x81e60e8</span>
+<span class="go">Discover complete: err 0</span>
+</pre></div>
+</div>
+<p>Both of the above commands should be done for each device that you want to use in the set.
+To use multiple devices, simply connect to more and then use <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">select</span></code> the device to execute
+the commands on.</p>
+<p>Once all devices have been connected and the respective discovery commands have been called, the
+<code class="code docutils literal notranslate"><span class="pre">cap_initiator</span> <span class="pre">unicast_start</span></code> command can be used to put one or more streams into the
+streaming state.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>cap_initiator<span class="w"> </span>unicast_start<span class="w"> </span>sinks<span class="w"> </span><span class="m">1</span><span class="w"> </span>sources<span class="w"> </span><span class="m">0</span><span class="w"> </span>conns<span class="w"> </span>all
+<span class="go">Setting up 1 sinks and 0 sources on each (2) conn</span>
+<span class="go">Starting 1 streams</span>
+<span class="go">Unicast start completed</span>
+</pre></div>
+</div>
+<p>To stop all the streams that has been started, the <code class="code docutils literal notranslate"><span class="pre">cap_initiator</span> <span class="pre">unicast_stop</span></code> command can be
+used.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>cap_initiator<span class="w"> </span>unicast_stop<span class="w"> </span>all
+<span class="go">Unicast stop completed</span>
+</pre></div>
+</div>
+</section>
+<section id="when-doing-broadcast">
+<h4>When doing broadcast<a class="headerlink" href="#when-doing-broadcast" title="Link to this heading"></a></h4>
+<p>To start a broadcast as the CAP initiator there are a few steps to be done:</p>
+<ol class="arabic simple">
+<li><p>Create and configure an extended advertising set with periodic advertising</p></li>
+<li><p>Create and configure a broadcast source</p></li>
+<li><p>Setup extended and periodic advertising data</p></li>
+</ol>
+<p>The following commands will setup a CAP broadcast source using the 16_2_1 preset (defined by BAP):</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">bt init</span>
+<span class="go">bap init</span>
+<span class="go">bt adv-create nconn-nscan ext-adv</span>
+<span class="go">bt per-adv-param</span>
+<span class="go">bap preset broadcast 16_2_1</span>
+<span class="go">cap_initiator ac_12</span>
+<span class="go">bt adv-data dev-name discov</span>
+<span class="go">bt per-adv-data</span>
+<span class="go">cap_initiator broadcast_start</span>
+<span class="go">bt adv-start</span>
+<span class="go">bt per-adv on</span>
+</pre></div>
+</div>
+<p>The broadcast source is created by the <code class="code docutils literal notranslate"><span class="pre">cap_initiator</span> <span class="pre">ac_12</span></code>, <code class="code docutils literal notranslate"><span class="pre">cap_initiator</span> <span class="pre">ac_13</span></code>,
+and <code class="code docutils literal notranslate"><span class="pre">cap_initiator</span> <span class="pre">ac_14</span></code> commands, configuring the broadcast source for the defined audio
+configurations from BAP. The broadcast source can then be stopped with
+<code class="code docutils literal notranslate"><span class="pre">cap_initiator</span> <span class="pre">broadcast_stop</span></code> or deleted with <code class="code docutils literal notranslate"><span class="pre">cap_initiator</span> <span class="pre">broadcast_delete</span></code>.</p>
+<p>The metadata of the broadcast source can be updated at any time, including when it is already
+streaming. To update the metadata the <code class="code docutils literal notranslate"><span class="pre">cap_initiator</span> <span class="pre">broadcast_update</span></code> command can be used.
+The command takes an array of data, and the only requirement (besides having valid data) is that the
+streaming context shall be set. For example to set the streaming context to media, the command can
+be used as</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cap_initiator broadcast_update 03020400</span>
+<span class="go">CAP Broadcast source updated with new metadata. Update the advertised base via `bt per-adv-data`</span>
+<span class="go">bt per-adv-data</span>
+</pre></div>
+</div>
+<p>The <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">per-adv-data</span></code> command should be used afterwards to update the data is the advertised
+BASE. The data must be little-endian, so in the above example the metadata <code class="code docutils literal notranslate"><span class="pre">03020400</span></code> is
+setting the metadata entry with <code class="code docutils literal notranslate"><span class="pre">03</span></code> as the length, <code class="code docutils literal notranslate"><span class="pre">02</span></code> as the type (streaming context)
+and <code class="code docutils literal notranslate"><span class="pre">0400</span></code> as the value <code class="code docutils literal notranslate"><span class="pre">BT_AUDIO_CONTEXT_TYPE_MEDIA</span></code>
+(which has the numeric value of 0x).</p>
+</section>
+</section>
+</section>
+<section id="cap-commander">
+<h2>CAP Commander<a class="headerlink" href="#cap-commander" title="Link to this heading"></a></h2>
+<p>The Commander will typically be a either co-located with a CAP Initiator or be on a separate
+resource-rich mobile device, such as a phone or smartwatch. The Commander can
+discover CAP Acceptors’s CAS and optional CSIS services. The CSIS service can be read to provide
+information about other CAP Acceptors in the same Coordinated Set. The Commander can provide
+information about broadcast sources to CAP Acceptors or coordinate capture and rendering information
+such as mute or volume states.</p>
+<section id="using-the-cap-commander">
+<h3>Using the CAP Commander<a class="headerlink" href="#using-the-cap-commander" title="Link to this heading"></a></h3>
+<p>When the Bluetooth stack has been initialized (<code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">init</span></code>), the Commander can discover CAS and
+the optionally included CSIS instance by calling (<code class="code docutils literal notranslate"><span class="pre">cap_commander</span> <span class="pre">discover</span></code>).</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cap_commander --help</span>
+<span class="go">cap_commander - Bluetooth CAP commander shell commands</span>
+<span class="go">Subcommands:</span>
+<span class="go">  discover                  :Discover CAS</span>
+<span class="go">  cancel                    :CAP commander cancel current procedure</span>
+<span class="go">  change_volume             :Change volume on all connections &lt;volume&gt;</span>
+<span class="go">  change_volume_mute        :Change volume mute state on all connections &lt;mute&gt;</span>
+<span class="go">  change_volume_offset      :Change volume offset per connection &lt;volume_offset</span>
+<span class="go">                             [volume_offset [...]]&gt;</span>
+<span class="go">  change_microphone_mute    :Change microphone mute state on all connections &lt;mute&gt;</span>
+<span class="go">  change_microphone_gain    :Change microphone gain per connection &lt;gain</span>
+<span class="go">                             [gain [...]]&gt;</span>
+<span class="go">  broadcast_reception_start : Start broadcast reception with</span>
+<span class="go">                              source &lt;address: XX:XX:XX:XX:XX:XX&gt;</span>
+<span class="go">                              &lt;type: public/random&gt; &lt;adv_sid&gt; &lt;broadcast_id&gt;</span>
+<span class="go">                              [&lt;pa_interval&gt;] [&lt;sync_bis&gt;] [&lt;metadata&gt;]</span>
+<span class="go">  broadcast_reception_stop  : Stop broadcast reception &lt;src_id [...]&gt;</span>
+<span class="go">  distribute_broadcast_code : Distribute broadcast code &lt;src_id [...]&gt; &lt;broadcast_code&gt;</span>
+</pre></div>
+</div>
+<p>Before being able to perform any stream operation, the device must also perform the
+<code class="code docutils literal notranslate"><span class="pre">bap</span> <span class="pre">discover</span></code> operation to discover the ASEs and PAC records. The <code class="code docutils literal notranslate"><span class="pre">bap</span> <span class="pre">init</span></code>
+command also needs to be called.</p>
+<section id="id1">
+<h4>When connected<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<section id="discovering-cas-and-csis-on-a-device">
+<h5>Discovering CAS and CSIS on a device<a class="headerlink" href="#discovering-cas-and-csis-on-a-device" title="Link to this heading"></a></h5>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>discover
+<span class="go">discovery completed with CSIS</span>
+</pre></div>
+</div>
+</section>
+<section id="setting-the-volume-on-all-connected-devices">
+<h5>Setting the volume on all connected devices<a class="headerlink" href="#setting-the-volume-on-all-connected-devices" title="Link to this heading"></a></h5>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>vcp_vol_ctlr<span class="w"> </span>discover
+<span class="go">VCP discover done with 1 VOCS and 1 AICS</span>
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>change_volume<span class="w"> </span><span class="m">15</span>
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>change_volume<span class="w"> </span><span class="m">15</span>
+<span class="go">Setting volume to 15 on 2 connections</span>
+<span class="go">VCP volume 15, mute 0</span>
+<span class="go">VCP vol_set done</span>
+<span class="go">VCP volume 15, mute 0</span>
+<span class="go">VCP flags 0x01</span>
+<span class="go">VCP vol_set done</span>
+<span class="go">Volume change completed</span>
+</pre></div>
+</div>
+</section>
+<section id="setting-the-volume-offset-on-one-or-more-devices">
+<h5>Setting the volume offset on one or more devices<a class="headerlink" href="#setting-the-volume-offset-on-one-or-more-devices" title="Link to this heading"></a></h5>
+<p>The offsets are set by connection index, so connection index 0 gets the first offset,
+and index 1 gets the second offset, etc.:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bt<span class="w"> </span>connect<span class="w"> </span>&lt;device<span class="w"> </span>A&gt;
+<span class="go">Connected: &lt;device A&gt;</span>
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>discover
+<span class="go">discovery completed with CSIS</span>
+<span class="gp">uart:~$ </span>vcp_vol_ctlr<span class="w"> </span>discover
+<span class="go">VCP discover done with 1 VOCS and 1 AICS</span>
+<span class="gp">uart:~$</span>
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>connect<span class="w"> </span>&lt;device<span class="w"> </span>B&gt;
+<span class="go">Connected: &lt;device B&gt;</span>
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>discover
+<span class="go">discovery completed with CSIS</span>
+<span class="gp">uart:~$ </span>vcp_vol_ctlr<span class="w"> </span>discover
+<span class="go">VCP discover done with 1 VOCS and 1 AICS</span>
+<span class="gp">uart:~$</span>
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>change_volume_offset<span class="w"> </span><span class="m">10</span>
+<span class="go">Setting volume offset on 1 connections</span>
+<span class="go">VOCS inst 0x200140a4 offset 10</span>
+<span class="go">Offset set for inst 0x200140a4</span>
+<span class="go">Volume offset change completed</span>
+<span class="gp">uart:~$</span>
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>change_volume_offset<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">15</span>
+<span class="go">Setting volume offset on 2 connections</span>
+<span class="go">Offset set for inst 0x200140a4</span>
+<span class="go">VOCS inst 0x20014188 offset 15</span>
+<span class="go">Offset set for inst 0x20014188</span>
+<span class="go">Volume offset change completed</span>
+</pre></div>
+</div>
+</section>
+<section id="setting-the-volume-mute-on-all-connected-devices">
+<h5>Setting the volume mute on all connected devices<a class="headerlink" href="#setting-the-volume-mute-on-all-connected-devices" title="Link to this heading"></a></h5>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bt<span class="w"> </span>connect<span class="w"> </span>&lt;device<span class="w"> </span>A&gt;
+<span class="go">Connected: &lt;device A&gt;</span>
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>discover
+<span class="go">discovery completed with CSIS</span>
+<span class="gp">uart:~$ </span>vcp_vol_ctlr<span class="w"> </span>discover
+<span class="go">VCP discover done with 1 VOCS and 1 AICS</span>
+<span class="gp">uart:~$</span>
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>connect<span class="w"> </span>&lt;device<span class="w"> </span>B&gt;
+<span class="go">Connected: &lt;device B&gt;</span>
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>discover
+<span class="go">discovery completed with CSIS</span>
+<span class="gp">uart:~$ </span>vcp_vol_ctlr<span class="w"> </span>discover
+<span class="go">VCP discover done with 1 VOCS and 1 AICS</span>
+<span class="gp">uart:~$</span>
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>change_volume_mute<span class="w"> </span><span class="m">1</span>
+<span class="go">Setting volume mute to 1 on 2 connections</span>
+<span class="go">VCP volume 100, mute 1</span>
+<span class="go">VCP mute done</span>
+<span class="go">VCP volume 100, mute 1</span>
+<span class="go">VCP mute done</span>
+<span class="go">Volume mute change completed</span>
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>change_volume_mute<span class="w"> </span><span class="m">0</span>
+<span class="go">Setting volume mute to 0 on 2 connections</span>
+<span class="go">VCP volume 100, mute 0</span>
+<span class="go">VCP unmute done</span>
+<span class="go">VCP volume 100, mute 0</span>
+<span class="go">VCP unmute done</span>
+<span class="go">Volume mute change completed</span>
+</pre></div>
+</div>
+</section>
+<section id="setting-the-microphone-mute-on-all-connected-devices">
+<h5>Setting the microphone mute on all connected devices<a class="headerlink" href="#setting-the-microphone-mute-on-all-connected-devices" title="Link to this heading"></a></h5>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bt<span class="w"> </span>connect<span class="w"> </span>&lt;device<span class="w"> </span>A&gt;
+<span class="go">Connected: &lt;device A&gt;</span>
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>discover
+<span class="go">discovery completed with CSIS</span>
+<span class="gp">uart:~$ </span>micp_mic_ctlr<span class="w"> </span>discover
+<span class="go">MICP discover done with 1 VOCS and 1 AICS</span>
+<span class="gp">uart:~$</span>
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>connect<span class="w"> </span>&lt;device<span class="w"> </span>B&gt;
+<span class="go">Connected: &lt;device B&gt;</span>
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>discover
+<span class="go">discovery completed with CSIS</span>
+<span class="gp">uart:~$ </span>micp_mic_ctlr<span class="w"> </span>discover
+<span class="go">MICP discover done with 1 VOCS and 1 AICS</span>
+<span class="gp">uart:~$</span>
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>change_microphone_mute<span class="w"> </span><span class="m">1</span>
+<span class="go">Setting microphone mute to 1 on 2 connections</span>
+<span class="go">MICP microphone 100, mute 1</span>
+<span class="go">MICP mute done</span>
+<span class="go">MICP microphone 100, mute 1</span>
+<span class="go">MICP mute done</span>
+<span class="go">Microphone mute change completed</span>
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>change_microphone_mute<span class="w"> </span><span class="m">0</span>
+<span class="go">Setting microphone mute to 0 on 2 connections</span>
+<span class="go">MICP microphone 100, mute 0</span>
+<span class="go">MICP unmute done</span>
+<span class="go">MICP microphone 100, mute 0</span>
+<span class="go">MICP unmute done</span>
+<span class="go">Microphone mute change completed</span>
+</pre></div>
+</div>
+</section>
+<section id="setting-the-microphone-gain-on-one-or-more-devices">
+<h5>Setting the microphone gain on one or more devices<a class="headerlink" href="#setting-the-microphone-gain-on-one-or-more-devices" title="Link to this heading"></a></h5>
+<p>The gains are set by connection index, so connection index 0 gets the first offset,
+and index 1 gets the second offset, etc.:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bt<span class="w"> </span>connect<span class="w"> </span>&lt;device<span class="w"> </span>A&gt;
+<span class="go">Connected: &lt;device A&gt;</span>
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>discover
+<span class="go">discovery completed with CSIS</span>
+<span class="gp">uart:~$ </span>micp_mic_ctlr<span class="w"> </span>discover
+<span class="go">MICP discover done with 1 AICS</span>
+<span class="gp">uart:~$</span>
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>connect<span class="w"> </span>&lt;device<span class="w"> </span>B&gt;
+<span class="go">Connected: &lt;device B&gt;</span>
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>discover
+<span class="go">discovery completed with CSIS</span>
+<span class="gp">uart:~$ </span>micp_mic_ctlr<span class="w"> </span>discover
+<span class="go">MICP discover done with 1 AICS</span>
+<span class="gp">uart:~$</span>
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>change_microphone_gain<span class="w"> </span><span class="m">10</span>
+<span class="go">Setting microphone gain on 1 connections</span>
+<span class="go">AICS inst 0x200140a4 state gain 10, mute 0, mode 0</span>
+<span class="go">Gain set for inst 0x200140a4</span>
+<span class="go">Microphone gain change completed</span>
+<span class="gp">uart:~$</span>
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>change_microphone_gain<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">15</span>
+<span class="go">Setting microphone gain on 2 connections</span>
+<span class="go">Gain set for inst 0x200140a4</span>
+<span class="go">AICS inst 0x20014188 state gain 15, mute 0, mode 0</span>
+<span class="go">Gain set for inst 0x20014188</span>
+<span class="go">Microphone gain change completed</span>
+</pre></div>
+</div>
+</section>
+<section id="starting-and-stopping-broadcast-reception">
+<h5>Starting and stopping broadcast reception<a class="headerlink" href="#starting-and-stopping-broadcast-reception" title="Link to this heading"></a></h5>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bt<span class="w"> </span>connect<span class="w"> </span>&lt;device<span class="w"> </span>A&gt;
+<span class="go">Connected: &lt;device A&gt;</span>
+<span class="gp">uart:~$ </span>bap_init
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>discover
+<span class="go">discovery completed with CSIS</span>
+<span class="gp">uart:~$ </span>bap_broadcast_assistant<span class="w"> </span>discover
+<span class="go">BASS discover done with 1 recv states</span>
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>broadcast_reception_start<span class="w"> </span>&lt;device<span class="w"> </span>B&gt;<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">4</span>
+<span class="go">Starting broadcast reception on 1 connection(s)</span>
+<span class="go">Broadcast reception start completed</span>
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>broadcast_reception_stop<span class="w"> </span><span class="m">0</span>
+<span class="go">Stopping broadcast reception on 1 connection(s)</span>
+<span class="go">Broadcast reception stop completed</span>
+</pre></div>
+</div>
+</section>
+<section id="distributing-the-broadcast-code">
+<h5>Distributing the broadcast code<a class="headerlink" href="#distributing-the-broadcast-code" title="Link to this heading"></a></h5>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bt<span class="w"> </span>connect<span class="w"> </span>&lt;device<span class="w"> </span>A&gt;
+<span class="go">Connected: &lt;device A&gt;</span>
+<span class="gp">uart:~$ </span>bap_init
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>discover
+<span class="go">discovery completed with CSIS</span>
+<span class="gp">uart:~$ </span>bap_broadcast_assistant<span class="w"> </span>discover
+<span class="go">BASS discover done with 1 recv states</span>
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>broadcast_reception_start<span class="w"> </span>&lt;device<span class="w"> </span>B&gt;<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">4</span>
+<span class="go">Starting broadcast reception on 1 connection(s)</span>
+<span class="go">Broadcast reception start completed</span>
+<span class="gp">uart:~$ </span>cap_commander<span class="w"> </span>distribute_broadcast_code<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="s2">&quot;BroadcastCode&quot;</span>
+<span class="go">Distribute broadcast code completed</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

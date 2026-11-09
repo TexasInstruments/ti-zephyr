@@ -1,0 +1,608 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Network Management &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/connectivity/networking/api/net_mgmt.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Network Statistics" href="net_stats.html" />
+    <link rel="prev" title="DNS Resolve" href="dns_resolve.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Connectivity</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../canbus/index.html">Controller Area Network (CAN) Bus Protocols</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Networking</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../net-stack-architecture.html">Network Stack Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../net_config_guide.html">Network Configuration Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../networking_with_host.html">Networking with the host system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../network_monitoring.html">Monitor Network Traffic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../network_tracing.html">Network Tracing</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Networking APIs</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="apis.html">Network APIs</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="sockets.html">BSD Sockets</a></li>
+<li class="toctree-l5"><a class="reference internal" href="socket_service.html">Socket Services</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ip_4_6.html">IPv4/IPv6 Primitives and Helpers</a></li>
+<li class="toctree-l5"><a class="reference internal" href="dns_resolve.html">DNS Resolve</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">Network Management</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_stats.html">Network Statistics</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_timeout.html">Network Timeout</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_context.html">Networking Context</a></li>
+<li class="toctree-l5"><a class="reference internal" href="promiscuous.html">Promiscuous Mode</a></li>
+<li class="toctree-l5"><a class="reference internal" href="sntp.html">Simple Network Time Protocol Library</a></li>
+<li class="toctree-l5"><a class="reference internal" href="socks5.html">SOCKS5 Proxy Support</a></li>
+<li class="toctree-l5"><a class="reference internal" href="trickle.html">Trickle Timer Library</a></li>
+<li class="toctree-l5"><a class="reference internal" href="websocket.html">Websocket Client API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="capture.html">Network Packet Capture</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="buf_mgmt.html">Network Packet Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="net_tech.html">Networking Technologies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protocols.html">Protocols</a></li>
+<li class="toctree-l4"><a class="reference internal" href="system_mgmt.html">Network System Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tsn.html">Time Sensitive Networking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="zperf.html">zperf: Network Traffic Generator</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../conn_mgr/index.html">Connection Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dsa.html">Distributed Switch Architecture (DSA)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa and LoRaWAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../usb/index.html">USB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Connectivity</a> &raquo;</li>
+  
+     <li><a href="../index.html">Networking</a> &raquo;</li>
+  
+     <li><a href="index.html">Networking APIs</a> &raquo;</li>
+  
+     <li><a href="apis.html">Network APIs</a> &raquo;</li>
+  
+  <li>Network Management</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/connectivity/networking/api/net_mgmt.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27connectivity%2Fnetworking%2Fapi%2Fnet_mgmt%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Networking&env=-+Page%3A+connectivity%2Fnetworking%2Fapi%2Fnet_mgmt%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="network-management">
+<span id="net-mgmt-interface"></span><h1>Network Management<a class="headerlink" href="#network-management" title="Link to this heading"></a></h1>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id1">Overview</a></p></li>
+<li><p><a class="reference internal" href="#requesting-a-defined-procedure" id="id2">Requesting a defined procedure</a></p></li>
+<li><p><a class="reference internal" href="#listening-to-network-events" id="id3">Listening to network events</a></p></li>
+<li><p><a class="reference internal" href="#defining-a-network-management-procedure" id="id4">Defining a network management procedure</a></p></li>
+<li><p><a class="reference internal" href="#signaling-a-network-event" id="id5">Signaling a network event</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id6">API Reference</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Overview</a><a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The Network Management APIs allow applications, as well as network
+layer code itself, to call defined network routines at any level in
+the IP stack, or receive notifications on relevant network events. For
+example, by using these APIs, application code can request a scan be done on a
+Wi-Fi- or Bluetooth-based network interface, or request notification if
+a network interface IP address changes.</p>
+<p>The Network Management API implementation is designed to save memory
+by eliminating code at build time for management routines that are not
+used. Distinct and statically defined APIs for network management
+procedures are not used.  Instead, defined procedure handlers are
+registered by using a <a class="reference internal" href="../../../doxygen/html/group__net__mgmt.html#gab67d09d1e65b806ec1957451cbf60501" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_MGMT_REGISTER_REQUEST_HANDLER</span></code></a>
+macro. Procedure requests are done through a single <a class="reference internal" href="../../../doxygen/html/group__net__mgmt.html#ga40e0f9fc86812ad9f6fe174b4c3804e6" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">net_mgmt()</span></code></a> API
+that invokes the registered handler for the corresponding request.</p>
+<p>The current implementation is experimental and may change and improve
+in future releases.</p>
+</section>
+<section id="requesting-a-defined-procedure">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Requesting a defined procedure</a><a class="headerlink" href="#requesting-a-defined-procedure" title="Link to this heading"></a></h2>
+<p>All network management requests are of the form
+<code class="docutils literal notranslate"><span class="pre">net_mgmt(mgmt_request,</span> <span class="pre">...)</span></code>. The <code class="docutils literal notranslate"><span class="pre">mgmt_request</span></code> parameter is a bit
+mask that tells which stack layer is targeted, if a <code class="docutils literal notranslate"><span class="pre">net_if</span></code> object is
+implied, and the specific management procedure being requested. The
+available procedure requests depend on what has been implemented in
+the stack.</p>
+<p>To avoid extra cost, all <a class="reference internal" href="../../../doxygen/html/group__net__mgmt.html#ga40e0f9fc86812ad9f6fe174b4c3804e6" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">net_mgmt()</span></code></a> calls are direct. Though this
+may change in a future release, it will not affect the users of this
+function.</p>
+</section>
+<section id="listening-to-network-events">
+<span id="net-mgmt-listening"></span><h2><a class="toc-backref" href="#id3" role="doc-backlink">Listening to network events</a><a class="headerlink" href="#listening-to-network-events" title="Link to this heading"></a></h2>
+<p>You can receive notifications on network events by registering a
+callback function and specifying a set of events used to filter when
+your callback is invoked. The callback will have to be unique for a
+pair of layer and code, whereas on the command part it will be a mask of
+events.</p>
+<p>At runtime two functions are available, <a class="reference internal" href="../../../doxygen/html/group__net__mgmt.html#gae53f5bbc973b0f414107eca75ac0c26f" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">net_mgmt_add_event_callback()</span></code></a>
+for registering the callback function, and <a class="reference internal" href="../../../doxygen/html/group__net__mgmt.html#ga4960bfb01ecd891da72c57f17587f946" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">net_mgmt_del_event_callback()</span></code></a>
+for unregistering a callback. A helper function,
+<a class="reference internal" href="../../../doxygen/html/group__net__mgmt.html#ga4e42b6d16b863ca374d032682e8c11fb" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">net_mgmt_init_event_callback()</span></code></a>, can
+be used to ease the initialization of the callback structure.</p>
+<p>Additionally <a class="reference internal" href="../../../doxygen/html/group__net__mgmt.html#ga3a6ca8a72ab12afd4f9b0461253eaa12" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_MGMT_REGISTER_EVENT_HANDLER</span></code></a> can be used to
+register a callback handler at compile time.</p>
+<p>When an event occurs that matches a callback’s event set, the
+associated callback function is invoked with the actual event
+code. This makes it possible for different events to be handled by the
+same callback function, if desired.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Event set filtering allows false positives for events that have the same
+layer and layer code.  A callback handler function <strong>must</strong> check
+the event code (passed as an argument) against the specific network
+events it will handle, <strong>regardless</strong> of how many events were in the
+set passed to <a class="reference internal" href="../../../doxygen/html/group__net__mgmt.html#ga4e42b6d16b863ca374d032682e8c11fb" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">net_mgmt_init_event_callback()</span></code></a>.</p>
+<p>Note that in order to receive events from multiple layers, one must have
+multiple listeners registered, one for each layer being listened.
+The callback handler function can be shared between different layer events.</p>
+<p>(False positives can occur for events which have the same layer and
+layer code.)</p>
+</div>
+<p>An example follows.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * Set of events to handle.</span>
+<span class="cm"> * See e.g. include/zephyr/net/net_event.h for some NET_EVENT_xxx values.</span>
+<span class="cm"> */</span>
+<span class="cp">#define EVENT_IFACE_SET (NET_EVENT_IF_xxx | NET_EVENT_IF_yyy)</span>
+<span class="cp">#define EVENT_IPV4_SET (NET_EVENT_IPV4_xxx | NET_EVENT_IPV4_yyy)</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">net_mgmt_event_callback</span><span class="w"> </span><span class="n">iface_callback</span><span class="p">;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">net_mgmt_event_callback</span><span class="w"> </span><span class="n">ipv4_callback</span><span class="p">;</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">callback_handler</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">net_mgmt_event_callback</span><span class="w"> </span><span class="o">*</span><span class="n">cb</span><span class="p">,</span>
+<span class="w">                      </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">mgmt_event</span><span class="p">,</span>
+<span class="w">                      </span><span class="k">struct</span><span class="w"> </span><span class="nc">net_if</span><span class="w"> </span><span class="o">*</span><span class="n">iface</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mgmt_event</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">NET_EVENT_IF_xxx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="cm">/* Handle NET_EVENT_IF_xxx */</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mgmt_event</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">NET_EVENT_IF_yyy</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="cm">/* Handle NET_EVENT_IF_yyy */</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mgmt_event</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">NET_EVENT_IPV4_xxx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="cm">/* Handle NET_EVENT_IPV4_xxx */</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mgmt_event</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">NET_EVENT_IPV4_yyy</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="cm">/* Handle NET_EVENT_IPV4_yyy */</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="cm">/* Spurious (false positive) invocation. */</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">register_cb</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="n">net_mgmt_init_event_callback</span><span class="p">(</span><span class="o">&amp;</span><span class="n">iface_callback</span><span class="p">,</span><span class="w"> </span><span class="n">callback_handler</span><span class="p">,</span>
+<span class="w">                                     </span><span class="n">EVENT_IFACE_SET</span><span class="p">);</span>
+<span class="w">        </span><span class="n">net_mgmt_init_event_callback</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ipv4_callback</span><span class="p">,</span><span class="w"> </span><span class="n">callback_handler</span><span class="p">,</span>
+<span class="w">                                     </span><span class="n">EVENT_IPV4_SET</span><span class="p">);</span>
+<span class="w">        </span><span class="n">net_mgmt_add_event_callback</span><span class="p">(</span><span class="o">&amp;</span><span class="n">iface_callback</span><span class="p">);</span>
+<span class="w">        </span><span class="n">net_mgmt_add_event_callback</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ipv4_callback</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Or similarly using <a class="reference internal" href="../../../doxygen/html/group__net__mgmt.html#ga3a6ca8a72ab12afd4f9b0461253eaa12" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_MGMT_REGISTER_EVENT_HANDLER</span></code></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">info</span></code> and <code class="docutils literal notranslate"><span class="pre">info_length</span></code> arguments are only usable if
+<a class="reference internal" href="../../../kconfig.html#CONFIG_NET_MGMT_EVENT_INFO" title="CONFIG_NET_MGMT_EVENT_INFO"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_MGMT_EVENT_INFO</span></code></a> is enabled. Otherwise these are
+<code class="docutils literal notranslate"><span class="pre">NULL</span></code> and zero.</p>
+</div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * Set of events to handle.</span>
+<span class="cm"> */</span>
+<span class="cp">#define EVENT_IFACE_SET (NET_EVENT_IF_xxx | NET_EVENT_IF_yyy)</span>
+<span class="cp">#define EVENT_IPV4_SET (NET_EVENT_IPV4_xxx | NET_EVENT_IPV4_yyy)</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">event_handler</span><span class="p">(</span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">mgmt_event</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">net_if</span><span class="w"> </span><span class="o">*</span><span class="n">iface</span><span class="p">,</span>
+<span class="w">                          </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">info</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">info_length</span><span class="p">,</span>
+<span class="w">                          </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">user_data</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mgmt_event</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">NET_EVENT_IF_xxx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="cm">/* Handle NET_EVENT_IF_xxx */</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mgmt_event</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">NET_EVENT_IF_yyy</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="cm">/* Handle NET_EVENT_IF_yyy */</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mgmt_event</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">NET_EVENT_IPV4_xxx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="cm">/* Handle NET_EVENT_IPV4_xxx */</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mgmt_event</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">NET_EVENT_IPV4_yyy</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="cm">/* Handle NET_EVENT_IPV4_yyy */</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="cm">/* Spurious (false positive) invocation. */</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">NET_MGMT_REGISTER_EVENT_HANDLER</span><span class="p">(</span><span class="n">iface_event_handler</span><span class="p">,</span><span class="w"> </span><span class="n">EVENT_IFACE_SET</span><span class="p">,</span>
+<span class="w">                                </span><span class="n">event_handler</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="n">NET_MGMT_REGISTER_EVENT_HANDLER</span><span class="p">(</span><span class="n">ipv4_event_handler</span><span class="p">,</span><span class="w"> </span><span class="n">EVENT_IPV4_SET</span><span class="p">,</span>
+<span class="w">                                </span><span class="n">event_handler</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>See <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/net/net_event.h">include/zephyr/net/net_event.h</a> for available generic core events that
+can be listened to.</p>
+</section>
+<section id="defining-a-network-management-procedure">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Defining a network management procedure</a><a class="headerlink" href="#defining-a-network-management-procedure" title="Link to this heading"></a></h2>
+<p>You can provide additional management procedures specific to your
+stack implementation by defining a handler and registering it with an
+associated mgmt_request code.</p>
+<p>Management request code are defined in relevant places depending on
+the targeted layer or eventually, if l2 is the layer, on the
+technology as well. For instance, all IP layer management request code
+will be found in the <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/net/net_event.h">include/zephyr/net/net_event.h</a> header file. But in case
+of an L2 technology, let’s say Ethernet, these would be found in
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/net/ethernet.h">include/zephyr/net/ethernet.h</a></p>
+<p>You define your handler modeled with this signature:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">your_handler</span><span class="p">(</span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">mgmt_event</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">net_if</span><span class="w"> </span><span class="o">*</span><span class="n">iface</span><span class="p">,</span>
+<span class="w">                        </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>and then register it with an associated mgmt_request code:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">NET_MGMT_REGISTER_REQUEST_HANDLER</span><span class="p">(</span><span class="o">&lt;</span><span class="n">mgmt_request</span><span class="w"> </span><span class="n">code</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">your_handler</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This new management procedure could then be called by using:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">net_mgmt</span><span class="p">(</span><span class="o">&lt;</span><span class="n">mgmt_request</span><span class="w"> </span><span class="n">code</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+</pre></div>
+</div>
+</section>
+<section id="signaling-a-network-event">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Signaling a network event</a><a class="headerlink" href="#signaling-a-network-event" title="Link to this heading"></a></h2>
+<p>You can signal a specific network event using the <a class="reference internal" href="../../../doxygen/html/group__net__mgmt.html#gabf710692e596a2d98f37b82da884a82a" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">net_mgmt_event_notify()</span></code></a>
+function and provide the network event code. See
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/net/net_mgmt.h">include/zephyr/net/net_mgmt.h</a> for details. As for the management request
+code, event code can be also found on specific L2 technology mgmt headers,
+for example <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/net/ieee802154_mgmt.h">include/zephyr/net/ieee802154_mgmt.h</a> would be the right place if
+802.15.4 L2 is the technology one wants to listen to events.</p>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">API Reference</a><a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../doxygen/html/group__net__mgmt.html" title=""><span class="pre">Network</span> <span class="pre">Management</span></a></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/dhcpv4_client/README.html#dhcpv4-client" title="Start a DHCPv4 client to obtain an IPv4 address from a DHCPv4 server.">DHCPv4 client</a></span><span class="code-sample-description">Start a DHCPv4 client to obtain an IPv4 address from a DHCPv4 server.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/dns_resolve/README.html#dns-resolve" title="Resolve an IP address for a given hostname.">DNS resolve</a></span><span class="code-sample-description">Resolve an IP address for a given hostname.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/ipv4_autoconf/README.html#ipv4-autoconf" title="Perform IPv4 autoconfiguration and self-assign a random IPv4 address">IPv4 autoconf client</a></span><span class="code-sample-description">Perform IPv4 autoconfiguration and self-assign a random IPv4 address</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/telnet/README.html#telnet-console" title="Access Zephyr shell over telnet.">Telnet console</a></span><span class="code-sample-description">Access Zephyr shell over telnet.</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

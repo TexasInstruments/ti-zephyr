@@ -1,0 +1,628 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instrumentation &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/services/instrumentation/index.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Interprocessor Communication (IPC)" href="../ipc/index.html" />
+    <link rel="prev" title="GPIO Keyboard Matrix" href="../input/gpio-kbd.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">OS Services</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../binary_descriptors/index.html">Binary Descriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../console.html">Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cpu_freq/index.html">CPU Frequency Scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cpu_load/index.html">CPU Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../crc/index.html">CRC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../crypto/index.html">Cryptography</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debugging/index.html">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">Device Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dsp/index.html">Digital Signal Processing (DSP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../formatted_output.html">Formatted Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../input/index.html">Input</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Instrumentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#operational-modes">Operational Modes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#callgraph-mode-tracing">Callgraph Mode (Tracing)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#statistical-mode-profiling">Statistical Mode (Profiling)</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#zaru-py-usage"><code class="docutils literal notranslate"><span class="pre">zaru.py</span></code> Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#limitations-and-considerations">Limitations and Considerations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-reference">API Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../ipc/index.html">Interprocessor Communication (IPC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../jwt/index.html">JSON Web Token (JWT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../llext/index.html">Linkable Loadable Extensions (LLEXT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../logging/index.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tracing/index.html">Tracing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resource_management/index.html">Resource Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mem_mgmt/index.html">Memory Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../net_buf/index.html">Network Buffers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modem/index.html">Modem modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notify.html">Asynchronous Notifications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pm/index.html">Power Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">OS Abstraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../poweroff.html">Power off</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../profiling/index.html">Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../shell/index.html">Shell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../serialization/index.html">Serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../smf/index.html">State Machine Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sensing/index.html">Sensing Subsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../task_wdt/index.html">Task Watchdog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tfm/index.html">Trusted Firmware-M (TF-M)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../uuid/index.html">UUID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rtio/index.html">Real Time I/O (RTIO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../zbus/index.html">Zephyr bus (zbus)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">OS Services</a> &raquo;</li>
+  
+  <li>Instrumentation</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/services/instrumentation/index.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27services%2Finstrumentation%2Findex%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Instrumentation&env=-+Page%3A+services%2Finstrumentation%2Findex%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="instrumentation">
+<span id="id1"></span><h1>Instrumentation<a class="headerlink" href="#instrumentation" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The instrumentation subsystem provides compiler-managed runtime system instrumentation capabilities
+for Zephyr applications. It enables developers to trace function calls, observe context switches,
+and profile application performance with minimal manual instrumentation effort.</p>
+<p>Unlike the <a class="reference internal" href="../tracing/index.html#tracing"><span class="std std-ref">tracing</span></a> subsystem, which provides RTOS-aware tracing with structured
+event APIs, the instrumentation subsystem works at a lower level by leveraging compiler
+instrumentation hooks. This approach makes it possible to capture virtually any function entry and
+exit events without requiring manual tracing calls in the code.</p>
+<div class="hint admonition">
+<p class="admonition-title">Tracing vs. Instrumentation</p>
+<p><strong>When to use Tracing</strong>: Choose the tracing subsystem when you need RTOS-aware event tracing
+(e.g. thread switches, semaphore operations, etc.) and want to minimize overhead.</p>
+<p><strong>When to use Instrumentation</strong>: Choose instrumentation when you need a detailed view of
+function-level execution to better understand code flow, or to identify performance bottlenecks
+without adding manual trace points.</p>
+</div>
+<p>The instrumentation subsystem relies on compiler support for automatic function instrumentation.
+When enabled, the compiler automatically inserts calls to special instrumentation handler functions
+at the entry and exit of every function in your application (excluding those explicitly marked with
+<code class="docutils literal notranslate"><span class="pre">__no_instrumentation__</span></code>). Currently, only GCC is supported with the <code class="docutils literal notranslate"><span class="pre">-finstrument-functions</span></code>
+compiler flag.</p>
+<p>The subsystem initializes automatically after RAM initialization and uses trigger/stopper functions
+to control when recording is active. The default trigger and stopper functions are both set to
+<code class="docutils literal notranslate"><span class="pre">main()</span></code> (configurable via Kconfig), meaning instrumentation captures the entire execution from
+when <code class="docutils literal notranslate"><span class="pre">main()</span></code> starts until it returns.</p>
+<p>The recorded data is stored in RAM and can be accessed from a host computer thanks to a UART backend
+that exposes a set of simple commands. <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/scripts/instrumentation/zaru.py">scripts/instrumentation/zaru.py</a> script allows
+to execute these commands through a high-level command-line interface and makes it easy to obtain
+data in a format suitable for further analysis (e.g. using <a class="reference external" href="https://perfetto.dev/">Perfetto</a>).</p>
+</section>
+<section id="operational-modes">
+<h2>Operational Modes<a class="headerlink" href="#operational-modes" title="Link to this heading"></a></h2>
+<p>The instrumentation subsystem supports two modes that can be enabled independently or together:</p>
+<section id="callgraph-mode-tracing">
+<h3>Callgraph Mode (Tracing)<a class="headerlink" href="#callgraph-mode-tracing" title="Link to this heading"></a></h3>
+<p>In callgraph mode (enabled with <a class="reference internal" href="../../kconfig.html#CONFIG_INSTRUMENTATION_MODE_CALLGRAPH" title="CONFIG_INSTRUMENTATION_MODE_CALLGRAPH"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INSTRUMENTATION_MODE_CALLGRAPH</span></code></a>), the
+subsystem records function entry and exit events along with timestamps and context information in a
+memory buffer. This enables:</p>
+<ul class="simple">
+<li><p>Reconstruction of the complete function call graph</p></li>
+<li><p>Observation of thread context switches</p></li>
+<li><p>Analysis of execution flow and timing relationships</p></li>
+</ul>
+<p>The trace buffer can operate in ring buffer mode (default, overwrites old entries) or fixed buffer
+mode (stops when full). Buffer size is configurable via
+<a class="reference internal" href="../../kconfig.html#CONFIG_INSTRUMENTATION_MODE_CALLGRAPH_TRACE_BUFFER_SIZE" title="CONFIG_INSTRUMENTATION_MODE_CALLGRAPH_TRACE_BUFFER_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INSTRUMENTATION_MODE_CALLGRAPH_TRACE_BUFFER_SIZE</span></code></a>.</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Example of callgraph mode output. See <a class="reference internal" href="#zaru-usage"><span class="std std-ref">zaru.py Usage</span></a> for more details.</span><a class="headerlink" href="#id2" title="Link to this code"></a></div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/instrumentation/zaru.py<span class="w"> </span>trace
+
+<span class="go">   Thread Name      Thread ID  CPU  Mode     Timestamp          Function(s)</span>
+<span class="go">------------------------------------------------------------------------------------------------</span>
+<span class="go">            ... (truncated) ...</span>
+
+<span class="go">            main    0x20001a38   0)    0 |    187837720 ns |               sys_dlist_append();</span>
+<span class="go">            main    0x20001a38   0)    0 |    188802680 ns |             };   /* z_priq_simple_add */</span>
+<span class="go">            main    0x20001a38   0)    0 |    189282840 ns |           };   /* add_to_waitq_locked */</span>
+<span class="go">            main    0x20001a38   0)    0 |    189770000 ns |           add_thread_timeout();</span>
+<span class="go">            main    0x20001a38   0)    0 |    190732920 ns |         };   /* pend_locked */</span>
+<span class="go">            main    0x20001a38   0)    0 |    191198480 ns |         k_spin_release();</span>
+<span class="go">            main    0x20001a38   0)    0 |    192125560 ns |         z_swap() {</span>
+<span class="go">            main    0x20001a38   0)    0 |    192590080 ns |           k_spin_release();</span>
+<span class="go">            main    0x20001a38   0)    0 |    193520000 ns |           z_swap_irqlock() {</span>
+<span class="go">            main    0x20001a38   0)    0 |    193987840 ns |             __set_BASEPRI() {</span>
+<span class="go">            main    0x20001a38   0)    0 |    194474640 ns | /* --&gt; Scheduler switched OUT from thread &#39;main&#39; */</span>
+<span class="go">     thread-none   none-thread   0)    0 |    195178000 ns | /* &lt;-- Scheduler switched IN thread &#39;thread-none&#39; */</span>
+<span class="go">     thread-none   none-thread   0)    0 |    195851520 ns | z_thread_entry() {</span>
+<span class="go">     thread-none   none-thread   0)    0 |    196312600 ns |   k_sched_current_thread_query() {</span>
+<span class="go">     thread-none   none-thread   0)    0 |    196774680 ns |     z_impl_k_sched_current_thread_query();</span>
+<span class="go">     thread-none   none-thread   0)    0 |    197694480 ns |   };   /* k_sched_current_thread_query */</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    198160000 ns | thread_A() {</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    198443400 ns |   get_sem_and_exec_function() {</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    198727440 ns |     k_sem_take() {</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    199011840 ns |       z_impl_k_sem_take() {</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    199397520 ns |         k_spin_lock() {</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    199784200 ns |           __get_BASEPRI();</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    200557840 ns |           __set_BASEPRI_MAX();</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    201333640 ns |           __ISB();</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    202111360 ns |           z_spinlock_validate_pre();</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    202891000 ns |           z_spinlock_validate_post();</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    203664760 ns |         };   /* k_spin_lock */</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    204058000 ns |         k_spin_unlock() {</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    204450840 ns |           __set_BASEPRI();</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    205231640 ns |           __ISB();</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    206009600 ns |         };   /* k_spin_unlock */</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    206291600 ns |       };   /* z_impl_k_sem_take */</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    206572920 ns |     };   /* k_sem_take */</span>
+
+<span class="go">        ... (truncated) ...</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="statistical-mode-profiling">
+<h3>Statistical Mode (Profiling)<a class="headerlink" href="#statistical-mode-profiling" title="Link to this heading"></a></h3>
+<p>In statistical mode (enabled with <a class="reference internal" href="../../kconfig.html#CONFIG_INSTRUMENTATION_MODE_STATISTICAL" title="CONFIG_INSTRUMENTATION_MODE_STATISTICAL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INSTRUMENTATION_MODE_STATISTICAL</span></code></a>), the
+subsystem accumulates timing statistics for each unique function executed between the trigger and
+stopper points. This provides total execution time per function and helps identify performance
+bottlenecks. The subsystem tracks up to
+<a class="reference internal" href="../../kconfig.html#CONFIG_INSTRUMENTATION_MODE_STATISTICAL_MAX_NUM_FUNC" title="CONFIG_INSTRUMENTATION_MODE_STATISTICAL_MAX_NUM_FUNC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INSTRUMENTATION_MODE_STATISTICAL_MAX_NUM_FUNC</span></code></a> unique functions.</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">Example of statistical mode output (top 10 most expensive functions). See
+<a class="reference internal" href="#zaru-usage"><span class="std std-ref">zaru.py Usage</span></a> for more details.</span><a class="headerlink" href="#id3" title="Link to this code"></a></div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/instrumentation/zaru.py<span class="w"> </span>profile<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>
+
+<span class="go">9.45% 0000061d main</span>
+<span class="go">6.00% 0000049d k_msleep</span>
+<span class="go">5.98% 00000469 k_sleep</span>
+<span class="go">5.95% 0000aea1 z_impl_k_sleep</span>
+<span class="go">5.93% 0000ad6d z_tick_sleep</span>
+<span class="go">5.66% 00000431 k_sem_take</span>
+<span class="go">5.65% 00007e65 z_impl_k_sem_take</span>
+<span class="go">5.51% 0000ac29 z_pend_curr</span>
+<span class="go">2.83% 000063ed sys_clock_isr</span>
+<span class="go">2.67% 0000d361 sys_clock_announce</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<p>Enable instrumentation with:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_INSTRUMENTATION</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_INSTRUMENTATION_MODE_CALLGRAPH</span><span class="o">=</span><span class="s">y</span><span class="w">    </span><span class="c1"># For tracing</span>
+<span class="na">CONFIG_INSTRUMENTATION_MODE_STATISTICAL</span><span class="o">=</span><span class="s">y</span><span class="w">  </span><span class="c1"># For profiling</span>
+</pre></div>
+</div>
+<p>The instrumentation subsystem uses <a class="reference internal" href="../storage/retention/index.html#retention-api"><span class="std std-ref">retained memory</span></a> to persist trigger/stopper
+function addresses across reboots. This must be configured in the devicetree:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">sram</span><span class="o">@</span><span class="mi">2003FC00</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,memory-region&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mmio-sram&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x2003FC00</span><span class="w"> </span><span class="na">DT_SIZE_K</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">zephyr</span><span class="p">,</span><span class="n">memory-region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;RetainedMem&quot;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="nf">retainedmem</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,retained-ram&quot;</span><span class="p">;</span>
+<span class="w">            </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+
+<span class="w">            </span><span class="nl">instrumentation_triggers</span><span class="p">:</span><span class="w"> </span><span class="nf">retention</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,retention&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x0</span><span class="w"> </span><span class="mh">0x10</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">            </span><span class="p">};</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="cm">/* Adjust main SRAM to exclude retained region */</span>
+<span class="o">&amp;</span><span class="nf">sram0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x20000000</span><span class="w"> </span><span class="na">DT_SIZE_K</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>See the <a class="reference internal" href="../../samples/subsys/instrumentation/README.html#instrumentation" title="Demonstrate the instrumentation subsystem tracing and profiling features.">Instrumentation</a> sample for complete configuration examples.
+Additional options include buffer sizes, trigger functions, and function/file exclusion lists (see
+Kconfig options starting with <a class="reference internal" href="../../kconfig.html#!CONFIG_INSTRUMENTATION_*"><code class="xref kconfig kconfig-option-regex docutils literal notranslate"><span class="pre">CONFIG_INSTRUMENTATION_*</span></code></a>).</p>
+</section>
+<section id="zaru-py-usage">
+<span id="zaru-usage"></span><h2><code class="docutils literal notranslate"><span class="pre">zaru.py</span></code> Usage<a class="headerlink" href="#zaru-py-usage" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">zaru.py</span></code> command-line tool (located in <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/scripts/instrumentation/zaru.py">scripts/instrumentation/zaru.py</a>)
+provides an interface for controlling instrumentation and extracting data from the target over UART.</p>
+<p>The tool offers several commands:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">status</span></code>: Check if the target device supports callgraph (tracing) and statistical (profiling)
+modes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">trace</span></code>: Capture and display function call traces.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">profile</span></code>: Capture and display function profiling data.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reboot</span></code>: Reboot the target device.</p></li>
+</ul>
+<p>You can get help for each command by running <code class="docutils literal notranslate"><span class="pre">zaru.py</span> <span class="pre">&lt;command&gt;</span> <span class="pre">--help</span></code>.</p>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">zaru.py</span></code> attempts to connect to the target device using <code class="docutils literal notranslate"><span class="pre">/dev/ttyACM0</span></code>. You can
+specify a different serial port using the <code class="docutils literal notranslate"><span class="pre">--serial</span></code> option:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/instrumentation/zaru.py<span class="w"> </span>--serial<span class="w"> </span>/dev/ttyACM1<span class="w"> </span>status
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">--build-dir</span></code> option can be used to specify the Zephyr build directory, which is needed to
+locate the ELF file for symbol resolution. If not provided, <code class="docutils literal notranslate"><span class="pre">zaru.py</span></code> will attempt to find it
+automatically.</p>
+<p>See the <a class="reference internal" href="../../samples/subsys/instrumentation/README.html#instrumentation" title="Demonstrate the instrumentation subsystem tracing and profiling features.">Instrumentation</a> sample documentation for detailed usage instructions.</p>
+</section>
+<section id="limitations-and-considerations">
+<h2>Limitations and Considerations<a class="headerlink" href="#limitations-and-considerations" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>Compiler support</dt><dd><p>The instrumentation subsystem requires GCC with <code class="docutils literal notranslate"><span class="pre">-finstrument-functions</span></code> support. Other
+compilers are not supported.</p>
+</dd>
+<dt>Stack size requirements</dt><dd><p>Instrumentation adds overhead to every function call, which increases stack usage. You will likely
+need to increase thread stack sizes to accommodate the additional space required by instrumentation
+handlers and nested function calls.</p>
+</dd>
+<dt>Execution overhead</dt><dd><p>All function calls incur instrumentation overhead. Code size will increase due to added
+instrumentation calls, and performance will be impacted.</p>
+</dd>
+<dt>Initialization constraints</dt><dd><p>Code that runs before RAM initialization (e.g., early boot functions) is not captured as it runs
+before the instrumentation subsystem is initialized.</p>
+</dd>
+</dl>
+<p>To reduce overhead, use trigger/stopper functions to instrument only code regions of interest, and
+exclude performance-critical functions via
+<a class="reference internal" href="../../kconfig.html#CONFIG_INSTRUMENTATION_EXCLUDE_FUNCTION_LIST" title="CONFIG_INSTRUMENTATION_EXCLUDE_FUNCTION_LIST"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INSTRUMENTATION_EXCLUDE_FUNCTION_LIST</span></code></a> and
+<a class="reference internal" href="../../kconfig.html#CONFIG_INSTRUMENTATION_EXCLUDE_FILE_LIST" title="CONFIG_INSTRUMENTATION_EXCLUDE_FILE_LIST"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INSTRUMENTATION_EXCLUDE_FILE_LIST</span></code></a>.</p>
+</section>
+<section id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__instrumentation__api.html" title=""><span class="pre">Instrumentation</span></a></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/instrumentation/README.html#instrumentation" title="Demonstrate the instrumentation subsystem tracing and profiling features.">Instrumentation</a></span><span class="code-sample-description">Demonstrate the instrumentation subsystem tracing and profiling features.</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

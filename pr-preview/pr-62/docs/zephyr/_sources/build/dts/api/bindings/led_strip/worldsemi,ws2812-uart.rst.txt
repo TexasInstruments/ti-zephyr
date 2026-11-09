@@ -1,0 +1,554 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: worldsemi,ws2812-uart
+.. _dtbinding_worldsemi_ws2812_uart:
+
+worldsemi,ws2812-uart (on uart bus)
+###################################
+
+.. sidebar:: Overview
+
+   :Name: ``worldsemi,ws2812-uart``
+   :Vendor: :ref:`Worldsemi Co., Limited <dt_vendor_worldsemi>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=worldsemi,ws2812-uart>` using
+               this compatible
+   :Driver: :zephyr_file:`drivers/led_strip/ws2812_uart.c`
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   Worldsemi WS2812 LED strip, UART binding
+
+   Driver bindings for Worldsemi WS2812 and compatible LED strips using a UART
+   peripheral.
+
+   The driver encodes each WS2812 data bit into a multi-bit "symbol" that is
+   transmitted via a UART. The signal timing is achieved through a combination
+   of this node's properties:
+     - one-symbol,
+     - zero-symbol,
+     - bits-per-symbol,
+   and the parent UART's configuration:
+     - current-speed (baudrate),
+     - data-bits,
+     - tx-invert (to produce the required idle-low signal),
+     - stop-bits (must be "1" if set),
+     - parity (must be "none" if set).
+
+   The driver employs a UART frame-aware packing strategy, reusing the UART's
+   hardware start and stop bits as part of the on-wire symbol. This packing
+   scheme imposes a configuration constraint: the total number of bits in a
+   UART frame must be an integer multiple of `bits-per-symbol`.
+
+   Since the UART must be configured with one start bit, one stop bit, and no
+   parity, this means the total frame size, `(2 + data-bits)`, must be evenly
+   divisible by `bits-per-symbol`.
+
+   To meet the timing requirements of the WS2812 protocol, the UART controller
+   must support high-speed operation, typically 2.4 MHz or higher. The parent
+   UART's `current-speed` (baudrate) property should be configured as close as
+   possible to the ideal rate, calculated as `bits-per-symbol` times the
+   WS2812's data rate (typically 800 kHz). For example, with a
+   `bits-per-symbol` of 3, the target baudrate is 2.4 MHz.
+
+   The internal memory buffer size is determined by `bits-per-symbol`. For
+   each bit of pixel data, the driver generates a symbol of N bits (where N
+   is the value of `bits-per-symbol`), which are then packed into the buffer.
+
+Examples
+********
+
+.. code-block:: dts
+
+   &uart1 {
+       status = "okay";
+       /* Target baudrate is 800kHz * 3 = 2.4MHz. 2.5MHz is a close value. */
+       current-speed = <2500000>;
+       /* Frame constraint: (1 start + 7 data + 1 stop) = 9 bits total. */
+       data-bits = <7>;
+       /* tx-invert is required to create an idle-low signal. */
+       tx-invert;
+
+       led_strip: ws2812-strip {
+           compatible = "worldsemi,ws2812-uart";
+           status = "okay";
+
+           /* Timing based on 2.5MHz baudrate (400ns per bit):
+            * T1H for '1' bit (2 high bits) = 2 * 400ns = 800ns.
+            * T0H for '0' bit (1 high bit) = 1 * 400ns = 400ns.
+            */
+           one-symbol = <6>;   /* 0b110 */
+           zero-symbol = <4>;  /* 0b100 */
+           bits-per-symbol = <3>;
+
+           chain-length = <8>;
+           reset-delay = <50>;
+           color-mapping = <LED_COLOR_ID_GREEN
+                            LED_COLOR_ID_RED
+                            LED_COLOR_ID_BLUE>;
+       };
+   };
+
+
+Properties
+**********
+
+.. tabs::
+
+   .. group-tab:: Node specific properties
+
+      Properties not inherited from the base binding file.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``one-symbol``
+           - ``int``
+           - .. code-block:: none
+
+                The bit pattern that represents a single WS2812 '1' bit. The length of
+                the pattern is defined by 'bits-per-symbol'. The pattern's MSB must be
+                1 (to align with the UART start bit) and its LSB must be 0 (to align
+                with the UART stop bit).
+
+
+
+             This property is **required**.
+
+         * - ``zero-symbol``
+           - ``int``
+           - .. code-block:: none
+
+                The bit pattern that represents a single WS2812 '0' bit. The length of
+                the pattern is defined by 'bits-per-symbol'. The pattern's MSB must be
+                1 (to align with the UART start bit) and its LSB must be 0 (to align
+                with the UART stop bit).
+
+
+
+             This property is **required**.
+
+         * - ``bits-per-symbol``
+           - ``int``
+           - .. code-block:: none
+
+                The number of UART bits used to represent a single WS2812 data bit.
+                The value must be between 3 and 10, inclusive.
+
+
+
+             This property is **required**.
+
+         * - ``reset-delay``
+           - ``int``
+           - .. code-block:: none
+
+                Minimum delay to wait (in microseconds) to make sure that the strip has
+                latched the signal. If omitted, a default value of 8 microseconds is used.
+                This default is good for the WS2812 controllers. Note that despite the
+                WS2812 datasheet states that a 50 microseconds delay is required, it seems
+                6 microseconds is enough. The default is set to 8 microseconds just to be
+                safe.
+
+
+
+             Default value: ``8``
+
+         * - ``chain-length``
+           - ``int``
+           - .. code-block:: none
+
+                The number of devices in the daisy-chain.
+
+
+
+             This property is **required**.
+
+         * - ``color-mapping``
+           - ``array``
+           - .. code-block:: none
+
+                Channel to color mapping (or pixel order).
+
+                For example a GRB channel to color mapping would be
+
+                   color-mapping = <LED_COLOR_ID_GREEN
+                                    LED_COLOR_ID_RED
+                                    LED_COLOR_ID_BLUE>;
+
+
+
+             This property is **required**.
+
+
+
+   .. group-tab:: Deprecated node specific properties
+
+      Deprecated properties not inherited from the base binding file.
+
+      (None)
+
+   .. group-tab:: Base properties
+
+      Properties inherited from the base binding file, which defines
+      common properties that may be set on many nodes. Not all of these
+      may apply to the "worldsemi,ws2812-uart" compatible.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``status``
+           - ``string``
+           - .. code-block:: none
+
+                Indicates the operational status of the hardware or other
+                resource that the node represents. In particular:
+
+                  - "okay" means the resource is operational and, for example,
+                    can be used by device drivers
+                  - "disabled" means the resource is not operational and the system
+                    should treat it as if it is not present
+
+                For details, see "2.3.4 status" in Devicetree Specification v0.4.
+
+
+
+             Legal values: ``okay``, ``disabled``, ``reserved``, ``fail``, ``fail-sss``
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``compatible``
+           - ``string-array``
+           - .. code-block:: none
+
+                This property is a list of strings that essentially define what
+                type of hardware or other resource this devicetree node
+                represents. Each device driver checks for specific compatible
+                property values to find the devicetree nodes that represent
+                resources that the driver should manage.
+
+                The recommended format is "vendor,device", The "vendor" part is
+                an abbreviated name of the vendor. The "device" is usually from
+                the datasheet.
+
+                The compatible property can have multiple values, ordered from
+                most- to least-specific. Having additional values is useful when the
+                device is a specific instance of a more general family, to allow the
+                system to match the most specific driver available.
+
+                For details, see "2.3.1 compatible" in Devicetree Specification v0.4.
+
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``reg``
+           - ``array``
+           - .. code-block:: none
+
+                Information used to address the device. The value is specific to
+                the device (i.e. is different depending on the compatible
+                property).
+
+                The "reg" property is typically a sequence of (address, length) pairs.
+                Each pair is called a "register block". Values are
+                conventionally written in hex.
+
+                For details, see "2.3.6 reg" in Devicetree Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``reg-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each register block in the "reg" property.
+                For example:
+
+                  / {
+                       soc {
+                           #address-cells = <1>;
+                           #size-cells = <1>;
+
+                           uart@1000 {
+                               reg = <0x1000 0x2000>, <0x3000 0x4000>;
+                               reg-names = "foo", "bar";
+                           };
+                       };
+                  };
+
+                The uart@1000 node has two register blocks:
+
+                  - one with base address 0x1000, size 0x2000, and name "foo"
+                  - another with base address 0x3000, size 0x4000, and name "bar"
+
+
+
+         * - ``interrupts``
+           - ``array``
+           - .. code-block:: none
+
+                Information about interrupts generated by the device, encoded as an array
+                of one or more interrupt specifiers. The format of the data in this property
+                varies by where the device appears in the interrupt tree. Devices with the same
+                "interrupt-parent" will use the same format in their interrupts properties.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``interrupts-extended``
+           - ``compound``
+           - .. code-block:: none
+
+                Extended interrupt specifier for device, used as an alternative to
+                the "interrupts" property.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each interrupt generated by a device.
+                The interrupts themselves are defined in either "interrupts" or
+                "interrupts-extended" properties.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-parent``
+           - ``phandle``
+           - .. code-block:: none
+
+                If present, this refers to the node which handles interrupts generated
+                by this device.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``label``
+           - ``string``
+           - .. code-block:: none
+
+                Human readable string describing the device. Use of this property is
+                deprecated except as needed on a case-by-case basis.
+
+                For details, see "4.1.2 Miscellaneous Properties" in Devicetree
+                Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``clocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Information about the device's clock providers. In general, this property
+                should follow conventions established in the dt-schema binding:
+
+                  https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/clock/clock.yaml
+
+
+
+         * - ``clock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each clock provider in the "clocks" property.
+
+
+
+         * - ``#address-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by address fields
+                in "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+         * - ``#size-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by size fields in
+                "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+         * - ``dmas``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                DMA channel specifiers relevant to the device.
+
+
+
+         * - ``dma-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the DMA channel specifiers in the "dmas" property.
+
+
+
+         * - ``io-channels``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                IO channel specifiers relevant to the device.
+
+
+
+         * - ``io-channel-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the IO channel specifiers in the "io-channels" property.
+
+
+
+         * - ``mboxes``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Mailbox / IPM channel specifiers relevant to the device.
+
+
+
+         * - ``mbox-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the mbox specifiers in the "mboxes" property.
+
+
+
+         * - ``power-domains``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Power domain specifiers relevant to the device.
+
+
+
+         * - ``power-domain-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the power domain specifiers in the "power-domains" property.
+
+
+
+         * - ``#power-domain-cells``
+           - ``int``
+           - .. code-block:: none
+
+                Number of cells in power-domains property
+
+
+
+         * - ``hwlocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                HW spinlock id relevant to the device.
+
+
+
+         * - ``hwlock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the hwlock specifiers in the "hwlocks" property.
+
+
+
+         * - ``zephyr,deferred-init``
+           - ``boolean``
+           - .. code-block:: none
+
+                Do not initialize device automatically on boot. Device should be manually
+                initialized using device_init().
+
+
+
+         * - ``wakeup-source``
+           - ``boolean``
+           - .. code-block:: none
+
+                Property to identify that a device can be used as wake up source.
+
+                When this property is provided a specific flag is set into the
+                device that tells the system that the device is capable of
+                wake up the system.
+
+                Wake up capable devices are disabled (interruptions will not wake up
+                the system) by default but they can be enabled at runtime if necessary.
+
+
+
+         * - ``zephyr,pm-device-runtime-auto``
+           - ``boolean``
+           - .. code-block:: none
+
+                Automatically configure the device for runtime power management after the
+                init function runs.
+
+
+
+         * - ``zephyr,disabling-power-states``
+           - ``phandles``
+           - .. code-block:: none
+
+                List of power states that will disable this device power.
+
+
+
+
+
+

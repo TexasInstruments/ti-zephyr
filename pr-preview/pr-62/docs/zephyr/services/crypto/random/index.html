@@ -1,0 +1,613 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Random Number Generation &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/services/crypto/random/index.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Crypto APIs" href="../api/index.html" />
+    <link rel="prev" title="PSA Crypto" href="../psa_crypto.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">OS Services</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../binary_descriptors/index.html">Binary Descriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../console.html">Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cpu_freq/index.html">CPU Frequency Scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cpu_load/index.html">CPU Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../crc/index.html">CRC</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Cryptography</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../psa_crypto.html">PSA Crypto</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Random Number Generation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-usage">API Usage</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#non-cryptographic-random-numbers">Non-Cryptographic Random Numbers</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#cryptographically-secure-random-numbers">Cryptographically Secure Random Numbers</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#kconfig-options">Kconfig Options</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#general-options">General Options</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#cryptographically-secure-random-generator-selection">Cryptographically Secure Random Generator Selection</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#helper-configuration-options">Helper Configuration Options</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#devicetree-configuration">Devicetree Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/index.html">Crypto APIs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../debugging/index.html">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../device_mgmt/index.html">Device Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dsp/index.html">Digital Signal Processing (DSP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../formatted_output.html">Formatted Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../input/index.html">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../instrumentation/index.html">Instrumentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ipc/index.html">Interprocessor Communication (IPC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jwt/index.html">JSON Web Token (JWT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../llext/index.html">Linkable Loadable Extensions (LLEXT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../logging/index.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tracing/index.html">Tracing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../resource_management/index.html">Resource Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../mem_mgmt/index.html">Memory Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../net_buf/index.html">Network Buffers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modem/index.html">Modem modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notify.html">Asynchronous Notifications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../pm/index.html">Power Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../portability/index.html">OS Abstraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../poweroff.html">Power off</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../profiling/index.html">Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../shell/index.html">Shell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../serialization/index.html">Serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../smf/index.html">State Machine Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../storage/index.html">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sensing/index.html">Sensing Subsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../task_wdt/index.html">Task Watchdog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tfm/index.html">Trusted Firmware-M (TF-M)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../uuid/index.html">UUID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../virtualization/index.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../rtio/index.html">Real Time I/O (RTIO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../zbus/index.html">Zephyr bus (zbus)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">OS Services</a> &raquo;</li>
+  
+     <li><a href="../index.html">Cryptography</a> &raquo;</li>
+  
+  <li>Random Number Generation</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/services/crypto/random/index.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27services%2Fcrypto%2Frandom%2Findex%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Crypto+%2F+RNG&env=-+Page%3A+services%2Fcrypto%2Frandom%2Findex%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="random-number-generation">
+<span id="random-api"></span><h1>Random Number Generation<a class="headerlink" href="#random-number-generation" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The random API subsystem provides random number generation APIs in both
+cryptographically and non-cryptographically secure instances. Which
+random API to use is based on the cryptographic requirements of the
+random number. The non-cryptographic APIs will return random values
+much faster if non-cryptographic values are needed.</p>
+<ul class="simple">
+<li><p>Use <a class="reference internal" href="../../../doxygen/html/group__random__api.html#gaf4f6792ac29c876d59ace1deae53bbd7" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand_get()</span></code></a> and related functions for non-cryptographic
+purposes such as randomizing delays, shuffling data, or general-purpose
+randomization. These functions are faster but not suitable for security
+applications.</p></li>
+<li><p>Use <a class="reference internal" href="../../../doxygen/html/group__random__api.html#ga98f123f216b5df6e27eb980d6e5dec86" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_csrand_get()</span></code></a> for cryptographic purposes such as generating
+encryption keys, nonces, initialization vectors, or any data that must be
+unpredictable to an attacker.</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Never use the non-cryptographic random functions (<a class="reference internal" href="../../../doxygen/html/group__random__api.html#gaf4f6792ac29c876d59ace1deae53bbd7" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand_get()</span></code></a>,
+<a class="reference internal" href="../../../doxygen/html/group__random__api.html#ga810eaca8c5f71c9417d87f05c8fa4ebb" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand8_get()</span></code></a>, <a class="reference internal" href="../../../doxygen/html/group__random__api.html#ga27581a2b65faa6f1f3978ad6794300ba" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand16_get()</span></code></a>, <a class="reference internal" href="../../../doxygen/html/group__random__api.html#ga62cb24a6049b7aa9d03d66786e4a4db6" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand32_get()</span></code></a>,
+<a class="reference internal" href="../../../doxygen/html/group__random__api.html#ga26da47b7d5a76475b2fc528f5d6eced6" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand64_get()</span></code></a>) for security-sensitive operations. These functions
+do not provide cryptographically secure random numbers.</p>
+</div>
+</section>
+<section id="api-usage">
+<h2>API Usage<a class="headerlink" href="#api-usage" title="Link to this heading"></a></h2>
+<section id="non-cryptographic-random-numbers">
+<h3>Non-Cryptographic Random Numbers<a class="headerlink" href="#non-cryptographic-random-numbers" title="Link to this heading"></a></h3>
+<p>The following functions provide non-cryptographically secure random numbers:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../doxygen/html/group__random__api.html#gaf4f6792ac29c876d59ace1deae53bbd7" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand_get()</span></code></a> - Fill a buffer with random bytes</p></li>
+<li><p><a class="reference internal" href="../../../doxygen/html/group__random__api.html#ga810eaca8c5f71c9417d87f05c8fa4ebb" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand8_get()</span></code></a> - Get a random 8-bit value</p></li>
+<li><p><a class="reference internal" href="../../../doxygen/html/group__random__api.html#ga27581a2b65faa6f1f3978ad6794300ba" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand16_get()</span></code></a> - Get a random 16-bit value</p></li>
+<li><p><a class="reference internal" href="../../../doxygen/html/group__random__api.html#ga62cb24a6049b7aa9d03d66786e4a4db6" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand32_get()</span></code></a> - Get a random 32-bit value</p></li>
+<li><p><a class="reference internal" href="../../../doxygen/html/group__random__api.html#ga26da47b7d5a76475b2fc528f5d6eced6" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand64_get()</span></code></a> - Get a random 64-bit value</p></li>
+</ul>
+<p>Example usage:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/random/random.h&gt;</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">example_random_usage</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">buffer</span><span class="p">[</span><span class="mi">16</span><span class="p">];</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">random_value</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/* Fill buffer with random bytes */</span>
+<span class="w">    </span><span class="n">sys_rand_get</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">buffer</span><span class="p">));</span>
+
+<span class="w">    </span><span class="cm">/* Get a single random 32-bit value */</span>
+<span class="w">    </span><span class="n">random_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sys_rand32_get</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="cryptographically-secure-random-numbers">
+<h3>Cryptographically Secure Random Numbers<a class="headerlink" href="#cryptographically-secure-random-numbers" title="Link to this heading"></a></h3>
+<p>For cryptographic purposes, use <a class="reference internal" href="../../../doxygen/html/group__random__api.html#ga98f123f216b5df6e27eb980d6e5dec86" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_csrand_get()</span></code></a>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/random/random.h&gt;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">generate_encryption_key</span><span class="p">(</span><span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">key_len</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sys_csrand_get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">key_len</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* Handle error - entropy source may have failed */</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="../../../doxygen/html/group__random__api.html#ga98f123f216b5df6e27eb980d6e5dec86" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_csrand_get()</span></code></a> returns 0 on success, or <code class="docutils literal notranslate"><span class="pre">-EIO</span></code> if the entropy
+source fails. Always check the return value when generating cryptographic
+material.</p>
+</div>
+</section>
+</section>
+<section id="kconfig-options">
+<span id="random-kconfig"></span><h2>Kconfig Options<a class="headerlink" href="#kconfig-options" title="Link to this heading"></a></h2>
+<p>All configuration options can be found in <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/subsys/random/Kconfig">subsys/random/Kconfig</a>.</p>
+<section id="general-options">
+<h3>General Options<a class="headerlink" href="#general-options" title="Link to this heading"></a></h3>
+<dl>
+<dt><a class="reference internal" href="../../../kconfig.html#CONFIG_TEST_RANDOM_GENERATOR" title="CONFIG_TEST_RANDOM_GENERATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TEST_RANDOM_GENERATOR</span></code></a></dt><dd><p>For testing, this option allows a non-random number generator to be used and
+permits random number APIs to return values that are not truly random.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This option is intended only for testing on platforms that lack hardware
+entropy support. The random numbers generated when this option is enabled
+are predictable and not suitable for any security-sensitive use.</p>
+</div>
+</dd>
+</dl>
+<p>Non-Cryptographic Random Generator Selection</p>
+<dl>
+<dt><a class="reference internal" href="../../../kconfig.html#CONFIG_ENTROPY_DEVICE_RANDOM_GENERATOR" title="CONFIG_ENTROPY_DEVICE_RANDOM_GENERATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ENTROPY_DEVICE_RANDOM_GENERATOR</span></code></a></dt><dd><p>Uses the hardware entropy driver directly to generate random numbers.
+This provides high-quality random numbers but may be slower than
+pseudo-random alternatives. Select this option when your hardware entropy
+source has sufficient performance for your application’s needs.</p>
+</dd>
+<dt><a class="reference internal" href="../../../kconfig.html#CONFIG_XOSHIRO_RANDOM_GENERATOR" title="CONFIG_XOSHIRO_RANDOM_GENERATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_XOSHIRO_RANDOM_GENERATOR</span></code></a></dt><dd><p>Uses the Xoshiro128++ pseudo-random number generator, seeded from the
+hardware entropy source. This is a fast, general-purpose PRNG with a
+128-bit state that passes all standard randomness tests.</p>
+<p>This is the recommended choice for most applications that need fast
+non-cryptographic random numbers.</p>
+</dd>
+<dt><a class="reference internal" href="../../../kconfig.html#CONFIG_TIMER_RANDOM_GENERATOR" title="CONFIG_TIMER_RANDOM_GENERATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TIMER_RANDOM_GENERATOR</span></code></a></dt><dd><p>Uses the system timer to generate pseudo-random numbers. This generator
+produces predictable values and is intended <strong>only for testing</strong> on
+platforms without hardware entropy support.</p>
+<p>Requires <a class="reference internal" href="../../../kconfig.html#CONFIG_TEST_RANDOM_GENERATOR" title="CONFIG_TEST_RANDOM_GENERATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TEST_RANDOM_GENERATOR</span></code></a> to be enabled.</p>
+</dd>
+</dl>
+</section>
+<section id="cryptographically-secure-random-generator-selection">
+<h3>Cryptographically Secure Random Generator Selection<a class="headerlink" href="#cryptographically-secure-random-generator-selection" title="Link to this heading"></a></h3>
+<p>The <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CSPRNG_GENERATOR_CHOICE</span></code> kconfig choice selects the source
+for cryptographically secure random number generation.</p>
+<p>To override the default in a board or SoC configuration file:</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">choice</span><span class="w"> </span>CSPRNG_GENERATOR_CHOICE
+<span class="w">        </span><span class="k">default</span><span class="w"> </span>PSA_CSPRNG_GENERATOR
+<span class="k">endchoice</span>
+</pre></div>
+</div>
+<p>Available generators:</p>
+<dl>
+<dt><a class="reference internal" href="../../../kconfig.html#CONFIG_HARDWARE_DEVICE_CS_GENERATOR" title="CONFIG_HARDWARE_DEVICE_CS_GENERATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HARDWARE_DEVICE_CS_GENERATOR</span></code></a></dt><dd><p>Uses the hardware entropy driver directly as the source for cryptographically
+secure random numbers. Select this when your hardware random number generator
+is certified or validated for cryptographic use.</p>
+</dd>
+<dt><a class="reference internal" href="../../../kconfig.html#CONFIG_PSA_CSPRNG_GENERATOR" title="CONFIG_PSA_CSPRNG_GENERATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PSA_CSPRNG_GENERATOR</span></code></a></dt><dd><p>enables a cryptographically secure random number generator that uses the
+PSA Crypto API. This CSPRNG implementation leverages the underlying PSA Crypto
+library’s secure random number generation capabilities, which may use hardware
+entropy sources when available. The PSA CSPRNG provides cryptographically secure
+random numbers suitable for security-sensitive applications.</p>
+</dd>
+<dt><a class="reference internal" href="../../../kconfig.html#CONFIG_TEST_CSPRNG_GENERATOR" title="CONFIG_TEST_CSPRNG_GENERATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TEST_CSPRNG_GENERATOR</span></code></a></dt><dd><p>Routes calls to <a class="reference internal" href="../../../doxygen/html/group__random__api.html#ga98f123f216b5df6e27eb980d6e5dec86" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_csrand_get()</span></code></a> through <a class="reference internal" href="../../../doxygen/html/group__random__api.html#gaf4f6792ac29c876d59ace1deae53bbd7" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand_get()</span></code></a>.
+This allows testing libraries that require CSPRNG on platforms without
+hardware entropy support.</p>
+<p>Requires <a class="reference internal" href="../../../kconfig.html#CONFIG_TEST_RANDOM_GENERATOR" title="CONFIG_TEST_RANDOM_GENERATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TEST_RANDOM_GENERATOR</span></code></a> to be enabled.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This option provides <strong>no cryptographic security</strong>. Use only for testing.</p>
+</div>
+</dd>
+</dl>
+<section id="ctr-drbg-personalization">
+<h4>CTR-DRBG Personalization<a class="headerlink" href="#ctr-drbg-personalization" title="Link to this heading"></a></h4>
+<dl>
+<dt><a class="reference internal" href="../../../kconfig.html#CONFIG_CS_CTR_DRBG_PERSONALIZATION" title="CONFIG_CS_CTR_DRBG_PERSONALIZATION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CS_CTR_DRBG_PERSONALIZATION</span></code></a></dt><dd><p>A personalization string used during CTR-DRBG initialization. This string
+is mixed with the entropy source during seeding to make the DRBG state
+as unique as possible.</p>
+<p>Consider customizing this value for your application to add additional
+uniqueness to the DRBG initialization.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="helper-configuration-options">
+<h3>Helper Configuration Options<a class="headerlink" href="#helper-configuration-options" title="Link to this heading"></a></h3>
+</section>
+</section>
+<section id="devicetree-configuration">
+<h2>Devicetree Configuration<a class="headerlink" href="#devicetree-configuration" title="Link to this heading"></a></h2>
+<p>The random subsystem uses the <code class="docutils literal notranslate"><span class="pre">zephyr,entropy</span></code> chosen node to identify
+the hardware entropy device:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">chosen</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">zephyr</span><span class="p">,</span><span class="n">entropy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rng</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Ensure your board’s devicetree correctly specifies this chosen node if your
+platform has a hardware random number generator.</p>
+</section>
+<section id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../doxygen/html/group__random__api.html" title=""><span class="pre">Random</span> <span class="pre">Function</span> <span class="pre">APIs</span></a></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/cloud/aws_iot_mqtt/README.html#aws-iot-mqtt" title="Connect to AWS IoT Core and publish messages using MQTT.">AWS IoT Core MQTT</a></span><span class="code-sample-description">Connect to AWS IoT Core and publish messages using MQTT.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/cloud/mqtt_azure/README.html#mqtt-azure" title="Connect to Azure IoT Hub and publish messages using MQTT.">Microsoft Azure IoT Hub MQTT</a></span><span class="code-sample-description">Connect to Azure IoT Hub and publish messages using MQTT.</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

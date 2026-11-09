@@ -1,0 +1,604 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Demand Paging &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/kernel/memory_management/demand_paging.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Virtual Memory" href="virtual_memory.html" />
+    <link rel="prev" title="Memory Blocks Allocator" href="sys_mem_blocks.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Kernel</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../services/index.html">Kernel Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drivers/index.html">Device Driver Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usermode/index.html">User Mode</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Memory Management</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="heap.html">Memory Heaps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_multi_heap.html">Shared Multi Heap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slabs.html">Memory Slabs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sys_mem_blocks.html">Memory Blocks Allocator</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Demand Paging</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#terminology">Terminology</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#paging-statistics">Paging Statistics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eviction-algorithm">Eviction Algorithm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backing-store">Backing Store</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API Reference</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#eviction-algorithm-apis">Eviction Algorithm APIs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#backing-store-apis">Backing Store APIs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="virtual_memory.html">Virtual Memory</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../data_structures/index.html">Data Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timing_functions/index.html">Executing Time Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../object_cores/index.html">Object Cores</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timeutil.html">Time Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../util/index.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iterable_sections/index.html">Iterable Sections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../code-relocation.html">Code And Data Relocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanup.html">Scope-based Cleanup Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Kernel</a> &raquo;</li>
+  
+     <li><a href="index.html">Memory Management</a> &raquo;</li>
+  
+  <li>Demand Paging</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/kernel/memory_management/demand_paging.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27kernel%2Fmemory_management%2Fdemand_paging%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Kernel&env=-+Page%3A+kernel%2Fmemory_management%2Fdemand_paging%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="demand-paging">
+<span id="memory-management-api-demand-paging"></span><h1>Demand Paging<a class="headerlink" href="#demand-paging" title="Link to this heading"></a></h1>
+<p>Demand paging provides a mechanism where data is only brought into physical
+memory as required by current execution context. The physical memory is
+conceptually divided in page-sized page frames as regions to hold data.</p>
+<ul class="simple">
+<li><p>When the processor tries to access data and the data page exists in
+one of the page frames, the execution continues without any interruptions.</p></li>
+<li><p>When the processor tries to access the data page that does not exist
+in any page frames, a page fault occurs. The paging code then brings in
+the corresponding data page from backing store into physical memory if
+there is a free page frame. If there is no more free page frames,
+the eviction algorithm is invoked to select a data page to be paged out,
+thus freeing up a page frame for new data to be paged in. If this data
+page has been modified after it is first paged in, the data will be
+written back into the backing store. If no modifications is done or
+after written back into backing store, the data page is now considered
+paged out and the corresponding page frame is now free. The paging code
+then invokes the backing store to page in the data page corresponding to
+the location of the requested data. The backing store copies that data
+page into the free page frame. Now the data page is in physical memory
+and execution can continue.</p></li>
+</ul>
+<p>There are functions where paging in and out can be invoked manually
+using <a class="reference internal" href="../../doxygen/html/group__mem-demand-paging.html#gab36c36a4e230677d2090514f7a34b408" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_page_in()</span></code></a> and <a class="reference internal" href="../../doxygen/html/group__mem-demand-paging.html#ga0b18037209b4d8b5964bd9a1d760f703" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_page_out()</span></code></a>.
+<a class="reference internal" href="../../doxygen/html/group__mem-demand-paging.html#gab36c36a4e230677d2090514f7a34b408" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_page_in()</span></code></a> can be used to page in data pages
+in anticipation that they are required in the near future. This is used to
+minimize number of page faults as these data pages are already in physical
+memory, and thus minimizing latency. <a class="reference internal" href="../../doxygen/html/group__mem-demand-paging.html#ga0b18037209b4d8b5964bd9a1d760f703" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_page_out()</span></code></a> can be
+used to page out data pages where they are not going to be accessed for
+a considerable amount of time. This frees up page frames so that the next
+page in can be executed faster as the paging code does not need to invoke
+the eviction algorithm.</p>
+<section id="terminology">
+<h2>Terminology<a class="headerlink" href="#terminology" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>Data Page</dt><dd><p>A data page is a page-sized region of data. It may exist in a page frame,
+or be paged out to some backing store. Its location can always be looked
+up in the CPU’s page tables (or equivalent) by virtual address.
+The data type will always be <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span></code> or in some cases <code class="docutils literal notranslate"><span class="pre">uint8_t</span> <span class="pre">*</span></code>
+when doing pointer arithmetic.</p>
+</dd>
+<dt>Page Frame</dt><dd><p>A page frame is a page-sized physical memory region in RAM. It is a
+container where a data page may be placed. It is always referred to by
+physical address. Zephyr has a convention of using <code class="docutils literal notranslate"><span class="pre">uintptr_t</span></code> for physical
+addresses. For every page frame, a <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">k_mem_page_frame</span></code> is instantiated to
+store metadata. Flags for each page frame:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_PAGE_FRAME_FREE</span></code> indicates a page frame is unused and on the list of
+free page frames. When this flag is set, none of the other flags are
+meaningful and they must not be modified.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_PAGE_FRAME_PINNED</span></code> indicates a page frame is pinned in memory
+and should never be paged out.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_PAGE_FRAME_RESERVED</span></code> indicates a physical page reserved by hardware
+and should not be used at all.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_PAGE_FRAME_MAPPED</span></code> is set when a physical page is mapped to
+virtual memory address.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_PAGE_FRAME_BUSY</span></code> indicates a page frame is currently involved in
+a page-in/out operation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_PAGE_FRAME_BACKED</span></code> indicates a page frame has a clean copy
+in the backing store.</p></li>
+</ul>
+</dd>
+<dt>K_MEM_SCRATCH_PAGE</dt><dd><p>The virtual address of a special page provided to the backing store to:
+* Copy a data page from <code class="docutils literal notranslate"><span class="pre">k_MEM_SCRATCH_PAGE</span></code> to the specified location; or,
+* Copy a data page from the provided location to <code class="docutils literal notranslate"><span class="pre">K_MEM_SCRATCH_PAGE</span></code>.
+This is used as an intermediate page for page in/out operations. This
+scratch needs to be mapped read/write for backing store code to access.
+However the data page itself may only be mapped as read-only in virtual
+address space. If this page is provided as-is to backing store,
+the data page must be re-mapped as read/write which has security
+implications as the data page is no longer read-only to other parts of
+the application.</p>
+</dd>
+</dl>
+</section>
+<section id="paging-statistics">
+<h2>Paging Statistics<a class="headerlink" href="#paging-statistics" title="Link to this heading"></a></h2>
+<p>Paging statistics can be obtained via various function calls when
+<a class="reference internal" href="../../kconfig.html#CONFIG_DEMAND_PAGING_TIMING_HISTOGRAM_NUM_BINS" title="CONFIG_DEMAND_PAGING_TIMING_HISTOGRAM_NUM_BINS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DEMAND_PAGING_TIMING_HISTOGRAM_NUM_BINS</span></code></a> is enabled:</p>
+<ul class="simple">
+<li><p>Overall statistics via <a class="reference internal" href="../../doxygen/html/group__mem-demand-paging.html#ga52ad88e0c0eed2aa27331bfd4707b7ec" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_stats_get()</span></code></a></p></li>
+<li><p>Per-thread statistics via <a class="reference internal" href="../../doxygen/html/group__mem-demand-paging.html#gafad6b39cb2faf3bb416cd4d3faaa8d8c" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_thread_stats_get()</span></code></a>
+if <a class="reference internal" href="../../kconfig.html#CONFIG_DEMAND_PAGING_THREAD_STATS" title="CONFIG_DEMAND_PAGING_THREAD_STATS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DEMAND_PAGING_THREAD_STATS</span></code></a> is enabled</p></li>
+<li><p>Execution time histogram can be obtained when
+<a class="reference internal" href="../../kconfig.html#CONFIG_DEMAND_PAGING_TIMING_HISTOGRAM" title="CONFIG_DEMAND_PAGING_TIMING_HISTOGRAM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DEMAND_PAGING_TIMING_HISTOGRAM</span></code></a> is enabled, and
+<a class="reference internal" href="../../kconfig.html#CONFIG_DEMAND_PAGING_TIMING_HISTOGRAM_NUM_BINS" title="CONFIG_DEMAND_PAGING_TIMING_HISTOGRAM_NUM_BINS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DEMAND_PAGING_TIMING_HISTOGRAM_NUM_BINS</span></code></a> is defined.
+Note that the timing is highly dependent on the architecture,
+SoC or board. It is highly recommended that
+<code class="docutils literal notranslate"><span class="pre">k_mem_paging_eviction_histogram_bounds[]</span></code> and
+<code class="docutils literal notranslate"><span class="pre">k_mem_paging_backing_store_histogram_bounds[]</span></code>
+be defined for a particular application.</p>
+<ul>
+<li><p>Execution time histogram of eviction algorithm via
+<a class="reference internal" href="../../doxygen/html/group__mem-demand-paging.html#gaec64d019d819b00c7bc3804aac269199" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_histogram_eviction_get()</span></code></a></p></li>
+<li><p>Execution time histogram of backing store doing page-in via
+<a class="reference internal" href="../../doxygen/html/group__mem-demand-paging.html#ga1da0a643e8f85f98e29288e441a37dfa" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_histogram_backing_store_page_in_get()</span></code></a></p></li>
+<li><p>Execution time histogram of backing store doing page-out via
+<a class="reference internal" href="../../doxygen/html/group__mem-demand-paging.html#gae4f80d14f88a46ddb9aeb7afba861864" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_histogram_backing_store_page_out_get()</span></code></a></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="eviction-algorithm">
+<h2>Eviction Algorithm<a class="headerlink" href="#eviction-algorithm" title="Link to this heading"></a></h2>
+<p>The eviction algorithm is used to determine which data page and its
+corresponding page frame can be paged out to free up a page frame
+for the next page in operation. There are four functions which are
+called from the kernel paging code:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../doxygen/html/group__mem-demand-paging-eviction.html#ga68dcfc0e5374de2c8ad7b9fe4e65c4f4" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_eviction_init()</span></code></a> is called to initialize
+the eviction algorithm. This is called at <code class="docutils literal notranslate"><span class="pre">POST_KERNEL</span></code>.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__mem-demand-paging-eviction.html#ga6bb19be3098cc839ae3f6e9528598867" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_eviction_add()</span></code></a> is called each time a data page becomes
+eligible for future eviction.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__mem-demand-paging-eviction.html#ga16a4df904cc7a9641d06741ed589949d" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_eviction_remove()</span></code></a> is called when a data page is no
+longer eligible for eviction. This may happen if the given data page becomes
+pinned, gets unmapped or is about to be evicted.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__mem-demand-paging-eviction.html#gaadbb4eb56c239f800daf995e6673ae1d" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_eviction_select()</span></code></a> is called to select
+a data page to evict. A function argument <code class="docutils literal notranslate"><span class="pre">dirty</span></code> is written to
+signal the caller whether the selected data page has been modified
+since it is first paged in. If the <code class="docutils literal notranslate"><span class="pre">dirty</span></code> bit is returned
+as set, the paging code signals to the backing store to write
+the data page back into storage (thus updating its content).
+The function returns a pointer to the page frame corresponding to
+the selected data page.</p></li>
+</ul>
+<p>There is one additional function which is called by the architecture’s memory
+management code to flag data pages when they trigger an access fault:
+<a class="reference internal" href="../../doxygen/html/group__mem-demand-paging-eviction.html#ga228747c10bfd8816aec59fddf0e3a224" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_eviction_accessed()</span></code></a>. This is used by the LRU algorithm
+to requeue “used” pages.</p>
+<p>Two eviction algorithms are currently available:</p>
+<ul class="simple">
+<li><p>An NRU (Not-Recently-Used) eviction algorithm has been implemented as a
+sample. This is a very simple algorithm which ranks data pages on whether
+they have been accessed and modified. The selection is based on this ranking.</p></li>
+<li><p>An LRU (Least-Recently-Used) eviction algorithm is also available. It is
+based on a sorted queue of data pages. The LRU code is more complex compared
+to the NRU code but also considerably more efficient. This is recommended for
+production use.</p></li>
+</ul>
+<p>To implement a new eviction algorithm, <a class="reference internal" href="../../doxygen/html/group__mem-demand-paging-eviction.html#ga68dcfc0e5374de2c8ad7b9fe4e65c4f4" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_eviction_init()</span></code></a>
+and <a class="reference internal" href="../../doxygen/html/group__mem-demand-paging-eviction.html#gaadbb4eb56c239f800daf995e6673ae1d" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_eviction_select()</span></code></a> must be implemented.
+If <a class="reference internal" href="../../kconfig.html#CONFIG_EVICTION_TRACKING" title="CONFIG_EVICTION_TRACKING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_EVICTION_TRACKING</span></code></a> is enabled for an algorithm,
+these additional functions must also be implemented,
+<a class="reference internal" href="../../doxygen/html/group__mem-demand-paging-eviction.html#ga6bb19be3098cc839ae3f6e9528598867" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_eviction_add()</span></code></a>, <a class="reference internal" href="../../doxygen/html/group__mem-demand-paging-eviction.html#ga16a4df904cc7a9641d06741ed589949d" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_eviction_remove()</span></code></a>,
+<a class="reference internal" href="../../doxygen/html/group__mem-demand-paging-eviction.html#ga228747c10bfd8816aec59fddf0e3a224" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_eviction_accessed()</span></code></a>.</p>
+</section>
+<section id="backing-store">
+<h2>Backing Store<a class="headerlink" href="#backing-store" title="Link to this heading"></a></h2>
+<p>Backing store is responsible for paging in/out data page between
+their corresponding page frames and storage. These are the functions
+which must be implemented:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../doxygen/html/group__mem-demand-paging-backing-store.html#ga7ff441f23619b2678bfb72559d5bd592" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_backing_store_init()</span></code></a> is called to
+initialized the backing store at <code class="docutils literal notranslate"><span class="pre">POST_KERNEL</span></code>.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__mem-demand-paging-backing-store.html#ga1192487fdc8d63c025de42162fb204cd" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_backing_store_location_get()</span></code></a> is called to
+reserve a backing store location so a data page can be paged out.
+This <code class="docutils literal notranslate"><span class="pre">location</span></code> token is passed to
+<a class="reference internal" href="../../doxygen/html/group__mem-demand-paging-backing-store.html#ga51f663e0a8c31367082e78097359af6d" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_backing_store_page_out()</span></code></a> to perform actual
+page out operation.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__mem-demand-paging-backing-store.html#ga6ad421ad5671d9df3d96e03361f672e8" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_backing_store_location_free()</span></code></a> is called to
+free a backing store location (the <code class="docutils literal notranslate"><span class="pre">location</span></code> token) which can
+then be used for subsequent page out operation.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__mem-demand-paging-backing-store.html#ga25debe925b369765ecd5bd7777ce32d0" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_backing_store_location_query()</span></code></a> is called to obtain
+the <code class="docutils literal notranslate"><span class="pre">location</span></code> token corresponding to storage content to be virtually
+mapped and paged-in on demand. Most useful with
+<a class="reference internal" href="../../kconfig.html#CONFIG_DEMAND_MAPPING" title="CONFIG_DEMAND_MAPPING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DEMAND_MAPPING</span></code></a>.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__mem-demand-paging-backing-store.html#ga9becb4908cc7840ece93a2360692962d" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_backing_store_page_in()</span></code></a> copies a data page
+from the backing store location associated with the provided
+<code class="docutils literal notranslate"><span class="pre">location</span></code> token to the page pointed by <code class="docutils literal notranslate"><span class="pre">K_MEM_SCRATCH_PAGE</span></code>.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__mem-demand-paging-backing-store.html#ga51f663e0a8c31367082e78097359af6d" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_backing_store_page_out()</span></code></a> copies a data page
+from <code class="docutils literal notranslate"><span class="pre">K_MEM_SCRATCH_PAGE</span></code> to the backing store location associated
+with the provided <code class="docutils literal notranslate"><span class="pre">location</span></code> token.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__mem-demand-paging-backing-store.html#ga8d4bd3ea311fd873413d0477e8deb464" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_backing_store_page_finalize()</span></code></a> is invoked after
+<a class="reference internal" href="../../doxygen/html/group__mem-demand-paging-backing-store.html#ga9becb4908cc7840ece93a2360692962d" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_backing_store_page_in()</span></code></a> so that the page frame
+struct may be updated for internal accounting. This can be
+a no-op.</p></li>
+</ul>
+<p>To implement a new backing store, the functions mentioned above
+must be implemented.
+<a class="reference internal" href="../../doxygen/html/group__mem-demand-paging-backing-store.html#ga8d4bd3ea311fd873413d0477e8deb464" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_backing_store_page_finalize()</span></code></a> can be an empty
+function if so desired.</p>
+</section>
+<section id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__mem-demand-paging.html" title=""><span class="pre">Demand</span> <span class="pre">Paging</span> <span class="pre">APIs</span></a></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/demand_paging/README.html#demand-paging" title="Leverage demand paging to deal with code bigger than available RAM.">Demand paging</a></span><span class="code-sample-description">Leverage demand paging to deal with code bigger than available RAM.</span></li>
+</ul>
+</div>
+<section id="eviction-algorithm-apis">
+<h3>Eviction Algorithm APIs<a class="headerlink" href="#eviction-algorithm-apis" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__mem-demand-paging-eviction.html" title=""><span class="pre">Eviction</span> <span class="pre">Algorithm</span> <span class="pre">APIs</span></a></dt>
+</dl>
+
+</section>
+<section id="backing-store-apis">
+<h3>Backing Store APIs<a class="headerlink" href="#backing-store-apis" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__mem-demand-paging-backing-store.html" title=""><span class="pre">Backing</span> <span class="pre">Store</span> <span class="pre">APIs</span></a></dt>
+</dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

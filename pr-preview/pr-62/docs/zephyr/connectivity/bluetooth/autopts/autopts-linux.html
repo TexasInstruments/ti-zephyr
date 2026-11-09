@@ -1,0 +1,712 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoPTS on Linux &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/connectivity/bluetooth/autopts/autopts-linux.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Stack Architecture" href="../bluetooth-arch.html" />
+    <link rel="prev" title="AutoPTS on Windows 10 with nRF52 board" href="autopts-win10.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Connectivity</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Bluetooth</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../features.html">Supported features</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../bluetooth-qual.html">Qualification</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../bluetooth-qual.html#qualification-setup">Qualification setup</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="autopts-win10.html">AutoPTS on Windows 10 with nRF52 board</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">AutoPTS on Linux</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../bluetooth-qual.html#ics-features">ICS Features</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../bluetooth-arch.html">Stack Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../bluetooth-le-host.html">LE Host</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/audio/bluetooth-le-audio-arch.html">LE Audio Stack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/audio/bluetooth-le-audio-arch.html#le-audio-resources">LE Audio resources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../bluetooth-ctlr-arch.html">LE Controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../bluetooth-dev.html">Application Development</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/index.html">API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../bluetooth-tools.html">Tools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../bluetooth-shell.html">Shell</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../canbus/index.html">Controller Area Network (CAN) Bus Protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../networking/index.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa and LoRaWAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../usb/index.html">USB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Connectivity</a> &raquo;</li>
+  
+     <li><a href="../index.html">Bluetooth</a> &raquo;</li>
+  
+     <li><a href="../bluetooth-qual.html">Qualification</a> &raquo;</li>
+  
+  <li>AutoPTS on Linux</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/connectivity/bluetooth/autopts/autopts-linux.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27connectivity%2Fbluetooth%2Fautopts%2Fautopts-linux%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Bluetooth+Qualification%2Carea%3A+Bluetooth&env=-+Page%3A+connectivity%2Fbluetooth%2Fautopts%2Fautopts-linux%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="autopts-on-linux">
+<span id="autopts-linux"></span><h1>AutoPTS on Linux<a class="headerlink" href="#autopts-on-linux" title="Link to this heading"></a></h1>
+<p>This tutorial shows how to setup AutoPTS client on Linux with AutoPTS server running on Windows 10
+virtual machine. Tested with Ubuntu 20.4 and Linux Mint 20.4.</p>
+<p>You must have a Zephyr development environment set up. See
+<a class="reference internal" href="../../../develop/getting_started/index.html#getting-started"><span class="std std-ref">Getting Started Guide</span></a> for details.</p>
+<p>Supported methods to test zephyr bluetooth host:</p>
+<ul class="simple">
+<li><p>Testing Zephyr Host Stack on QEMU</p></li>
+<li><p>Testing Zephyr Host Stack on <a class="reference internal" href="../../../boards/native/native_sim/doc/index.html#native_sim"><span class="xref zephyr zephyr-board">native_sim</span></a></p></li>
+<li><p>Testing Zephyr combined (controller + host) build on Real hardware (such as nRF52)</p></li>
+</ul>
+<p>For running with QEMU or <a class="reference internal" href="../../../boards/native/native_sim/doc/index.html#native_sim"><span class="xref zephyr zephyr-board">native_sim</span></a>, see <a class="reference internal" href="../bluetooth-tools.html#bluetooth-qemu-native"><span class="std std-ref">Running on QEMU or native_sim</span></a>.</p>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#setup-linux" id="id2">Setup Linux</a></p></li>
+<li><p><a class="reference internal" href="#setup-windows-10-11-virtual-machine" id="id3">Setup Windows 10/11 virtual machine</a></p>
+<ul>
+<li><p><a class="reference internal" href="#update-windows" id="id4">Update Windows</a></p></li>
+<li><p><a class="reference internal" href="#setup-nat" id="id5">Setup NAT</a></p></li>
+<li><p><a class="reference internal" href="#setup-static-ip" id="id6">Setup static IP</a></p></li>
+<li><p><a class="reference internal" href="#install-python-3" id="id7">Install Python 3</a></p></li>
+<li><p><a class="reference internal" href="#install-git" id="id8">Install Git</a></p></li>
+<li><p><a class="reference internal" href="#install-pts" id="id9">Install PTS</a></p></li>
+<li><p><a class="reference internal" href="#connect-pts-dongle" id="id10">Connect PTS dongle</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#connect-devices-only-required-in-the-actual-hardware-test-mode" id="id11">Connect devices (only required in the actual hardware test mode)</a></p></li>
+<li><p><a class="reference internal" href="#setup-auto-pts-project" id="id12">Setup auto-pts project</a></p>
+<ul>
+<li><p><a class="reference internal" href="#autopts-client-on-linux" id="id13">AutoPTS client on Linux</a></p></li>
+<li><p><a class="reference internal" href="#autopts-server-on-windows-virtual-machine" id="id14">Autopts server on Windows virtual machine</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#running-autopts" id="id15">Running AutoPTS</a></p>
+<ul>
+<li><p><a class="reference internal" href="#testing-zephyr-host-stack-on-hardware" id="id16">Testing Zephyr Host Stack on hardware</a></p></li>
+<li><p><a class="reference internal" href="#testing-zephyr-host-stack-on-qemu" id="id17">Testing Zephyr Host Stack on QEMU</a></p></li>
+<li><p><a class="reference internal" href="#testing-zephyr-host-stack-on-native-sim" id="id18">Testing Zephyr Host Stack on <a class="reference internal" href="../../../boards/native/native_sim/doc/index.html#native_sim"><span class="xref zephyr zephyr-board">native_sim</span></a></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#troubleshooting" id="id19">Troubleshooting</a></p>
+<ul>
+<li><p><a class="reference internal" href="#after-running-one-test-i-need-to-restart-my-windows-virtual-machine-to-run-another-because-of-fail-verdict-from-apicom-in-pts-logs" id="id20">After running one test, I need to restart my Windows virtual machine to run another, because of fail verdict from APICOM in PTS logs</a></p></li>
+<li><p><a class="reference internal" href="#i-cannot-start-autoptsserver-zephyr-py-i-always-get-a-python-error" id="id21">I cannot start autoptsserver-zephyr.py. I always get a Python error</a></p></li>
+<li><p><a class="reference internal" href="#the-pts-automation-window-keeps-opening-and-closing" id="id22">The PTS automation window keeps opening and closing</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="setup-linux">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Setup Linux</a><a class="headerlink" href="#setup-linux" title="Link to this heading"></a></h2>
+<p>Please follow <a class="reference internal" href="../../../develop/getting_started/index.html#getting-started"><span class="std std-ref">Getting Started Guide</span></a> on how to setup Linux for building and flashing applications.</p>
+</section>
+<section id="setup-windows-10-11-virtual-machine">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Setup Windows 10/11 virtual machine</a><a class="headerlink" href="#setup-windows-10-11-virtual-machine" title="Link to this heading"></a></h2>
+<p>Choose and install your hypervisor like VMWare Workstation(preferred) or
+VirtualBox. On VirtualBox could be some issues, if your host has fewer than 6 CPU.</p>
+<p>Create Windows virtual machine instance. Make sure it has at least 2 cores and
+installed guest extensions.</p>
+<p>Setup tested with VirtualBox 7.2.4 and VMWare Workstation 16.1.1 Pro.</p>
+<section id="update-windows">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">Update Windows</a><a class="headerlink" href="#update-windows" title="Link to this heading"></a></h3>
+<p>Update Windows in:</p>
+<p>Start -&gt; Settings -&gt; Update &amp; Security -&gt; Windows Update</p>
+</section>
+<section id="setup-nat">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">Setup NAT</a><a class="headerlink" href="#setup-nat" title="Link to this heading"></a></h3>
+<p>It is possible to use NAT and portforwarding to setup communication between a Linux host and a
+Windows guest. This is easiest setup for VirtualBox, and does not require any static IPs to be
+configured, and will not get blocked by the Windows Firewall.</p>
+<section id="virtualbox">
+<h4>VirtualBox<a class="headerlink" href="#virtualbox" title="Link to this heading"></a></h4>
+<p>Open virtual machine network settings. On adapter 1 you will have created by default NAT.
+Open the Port Forwarding menu an add the ports you want.</p>
+<a class="reference internal image-reference" href="../../../_images/virtualbox_nat_1.png"><img alt="../../../_images/virtualbox_nat_1.png" class="align-center" src="../../../_images/virtualbox_nat_1.png" width="500" />
+</a>
+<p>For example setting up the following will allow you to use
+<code class="docutils literal notranslate"><span class="pre">localhost:65000</span></code> and <code class="docutils literal notranslate"><span class="pre">localhost:65002</span></code> (or <code class="docutils literal notranslate"><span class="pre">127.0.0.0:65000</span></code> and <code class="docutils literal notranslate"><span class="pre">127.0.0.0:65002</span></code>)
+to connect to an AutoPTS Server in Windows running on ports 65000 and 65002.</p>
+<a class="reference internal image-reference" href="../../../_images/virtualbox_nat_2.png"><img alt="../../../_images/virtualbox_nat_2.png" class="align-center" src="../../../_images/virtualbox_nat_2.png" width="500" />
+</a>
+</section>
+</section>
+<section id="setup-static-ip">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">Setup static IP</a><a class="headerlink" href="#setup-static-ip" title="Link to this heading"></a></h3>
+<p>If you cannot or do not want to use NAT it is possible to configure a static IP.</p>
+<section id="vmware-works">
+<h4>VMWare Works<a class="headerlink" href="#vmware-works" title="Link to this heading"></a></h4>
+<p>On Linux, open Virtual Network Editor app and create network:</p>
+<a class="reference internal image-reference" href="../../../_images/vmware_static_ip_1.png"><img alt="../../../_images/vmware_static_ip_1.png" class="align-center" height="400" src="../../../_images/vmware_static_ip_1.png" width="500" />
+</a>
+<p>Open virtual machine network settings. Add custom adapter:</p>
+<a class="reference internal image-reference" href="../../../_images/vmware_static_ip_2.png"><img alt="../../../_images/vmware_static_ip_2.png" class="align-center" height="400" src="../../../_images/vmware_static_ip_2.png" width="500" />
+</a>
+<p>If you type ‘ifconfig’ in terminal, you should be able to find your host IP:</p>
+<a class="reference internal image-reference" href="../../../_images/vmware_static_ip_3.png"><img alt="../../../_images/vmware_static_ip_3.png" class="align-center" height="150" src="../../../_images/vmware_static_ip_3.png" width="550" />
+</a>
+</section>
+<section id="id1">
+<h4>VirtualBox<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<p>VirtualBox on Linux, macOS and Solaris Oracle VM VirtualBox will only allow IP addresses in
+<code class="docutils literal notranslate"><span class="pre">192.168.56.0/21</span></code> range to be assigned to host-only adapters, so if using a static address with
+VirtualBox this is the only address range you can use.</p>
+<p>Go to:</p>
+<p>File -&gt; Tools -&gt; Network Manager</p>
+<p>and create network:</p>
+<a class="reference internal image-reference" href="../../../_images/virtualbox_static_ip_1.png"><img alt="../../../_images/virtualbox_static_ip_1.png" class="align-center" src="../../../_images/virtualbox_static_ip_1.png" width="500" />
+</a>
+<p>Open virtual machine network settings. On adapter 1 you will have created by default NAT.
+Add adapter 2:</p>
+<a class="reference internal image-reference" href="../../../_images/virtualbox_static_ip_2.png"><img alt="../../../_images/virtualbox_static_ip_2.png" class="align-center" src="../../../_images/virtualbox_static_ip_2.png" width="500" />
+</a>
+</section>
+<section id="windows">
+<h4>Windows<a class="headerlink" href="#windows" title="Link to this heading"></a></h4>
+<p>Setup static IP on Windows virtual machine. Go to</p>
+<p>Settings -&gt; Network &amp; Internet -&gt; Ethernet -&gt; Unidentified network -&gt; Edit</p>
+<p>and set:</p>
+<a class="reference internal image-reference" href="../../../_images/windows_static_ip.png"><img alt="../../../_images/windows_static_ip.png" class="align-center" height="400" src="../../../_images/windows_static_ip.png" width="400" />
+</a>
+</section>
+</section>
+<section id="install-python-3">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">Install Python 3</a><a class="headerlink" href="#install-python-3" title="Link to this heading"></a></h3>
+<p>Download and install latest <a class="reference external" href="https://www.python.org/downloads/">Python 3</a> on Windows.
+Let the installer add the Python installation directory to the PATH and
+disable the path length limitation.</p>
+<a class="reference internal image-reference" href="../../../_images/install_python1.png"><img alt="../../../_images/install_python1.png" class="align-center" height="300" src="../../../_images/install_python1.png" width="450" />
+</a>
+<a class="reference internal image-reference" href="../../../_images/install_python2.png"><img alt="../../../_images/install_python2.png" class="align-center" height="300" src="../../../_images/install_python2.png" width="450" />
+</a>
+</section>
+<section id="install-git">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">Install Git</a><a class="headerlink" href="#install-git" title="Link to this heading"></a></h3>
+<p>Download and install <a class="reference external" href="https://git-scm.com/downloads">Git</a>.
+During installation enable option: Enable experimental support for pseudo
+consoles. We will use Git Bash as Windows terminal.</p>
+<a class="reference internal image-reference" href="../../../_images/install_git.png"><img alt="../../../_images/install_git.png" class="align-center" height="350" src="../../../_images/install_git.png" width="400" />
+</a>
+</section>
+<section id="install-pts">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">Install PTS</a><a class="headerlink" href="#install-pts" title="Link to this heading"></a></h3>
+<p>On Windows virtual machine, install the latest PTS from <a class="reference external" href="https://pts.bluetooth.com/download">https://pts.bluetooth.com/download</a>.
+Remember to install drivers from installation directory
+“C:/Program Files (x86)/Bluetooth SIG/Bluetooth PTS/PTS Driver/win64/CSRBlueCoreUSB.inf”</p>
+<a class="reference internal image-reference" href="../../../_images/install_pts_drivers.png"><img alt="../../../_images/install_pts_drivers.png" class="align-center" height="250" src="../../../_images/install_pts_drivers.png" width="850" />
+</a>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Starting with PTS 8.0.1 the Bluetooth Protocol Viewer is no longer included.
+So to capture Bluetooth events, you have to download it separately.</p>
+</div>
+</section>
+<section id="connect-pts-dongle">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">Connect PTS dongle</a><a class="headerlink" href="#connect-pts-dongle" title="Link to this heading"></a></h3>
+<p>With VirtualBox there should be no problem. Just find dongle in Devices -&gt; USB and connect.</p>
+<p>With VMWare you might need to use some trick, if you cannot find dongle in
+VM -&gt; Removable Devices. Type in Linux terminal:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>usb-devices
+</pre></div>
+</div>
+<p>and find in output your PTS Bluetooth USB dongle</p>
+<a class="reference internal image-reference" href="../../../_images/usb-devices_output.png"><img alt="../../../_images/usb-devices_output.png" class="align-center" height="100" src="../../../_images/usb-devices_output.png" width="500" />
+</a>
+<p>Note Vendor and ProdID number. Close VMWare Workstation and open .vmx of your virtual machine
+(path similar to /home/codecoup/vmware/Windows 10/Windows 10.vmx) in text editor.
+Write anywhere in the file following line:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>usb.autoConnect.device0 = &quot;0x0a12:0x0001&quot;
+</pre></div>
+</div>
+<p>just replace 0x0a12 with Vendor number and 0x0001 with ProdID number you found earlier.</p>
+</section>
+</section>
+<section id="connect-devices-only-required-in-the-actual-hardware-test-mode">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">Connect devices (only required in the actual hardware test mode)</a><a class="headerlink" href="#connect-devices-only-required-in-the-actual-hardware-test-mode" title="Link to this heading"></a></h2>
+<a class="reference internal image-reference" href="../../../_images/devices_1.png"><img alt="../../../_images/devices_1.png" class="align-center" height="400" src="../../../_images/devices_1.png" width="600" />
+</a>
+<a class="reference internal image-reference" href="../../../_images/devices_2.png"><img alt="../../../_images/devices_2.png" class="align-center" height="700" src="../../../_images/devices_2.png" width="500" />
+</a>
+</section>
+<section id="setup-auto-pts-project">
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">Setup auto-pts project</a><a class="headerlink" href="#setup-auto-pts-project" title="Link to this heading"></a></h2>
+<section id="autopts-client-on-linux">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">AutoPTS client on Linux</a><a class="headerlink" href="#autopts-client-on-linux" title="Link to this heading"></a></h3>
+<p>Clone auto-pts project:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/auto-pts/auto-pts.git
+</pre></div>
+</div>
+<p>Install socat, that is used to transfer BTP data stream from UART’s tty file:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sudo apt-get install python-setuptools socat
+</pre></div>
+</div>
+<p>Install required python modules:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cd auto-pts
+pip3 install --user -r autoptsclient_requirements.txt
+</pre></div>
+</div>
+</section>
+<section id="autopts-server-on-windows-virtual-machine">
+<h3><a class="toc-backref" href="#id14" role="doc-backlink">Autopts server on Windows virtual machine</a><a class="headerlink" href="#autopts-server-on-windows-virtual-machine" title="Link to this heading"></a></h3>
+<p>In Git Bash, clone auto-pts project repo:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/auto-pts/auto-pts.git
+</pre></div>
+</div>
+<p>Install required python modules:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cd auto-pts
+pip3 install --user wheel
+pip3 install --user -r autoptsserver_requirements.txt
+</pre></div>
+</div>
+<p>Restart virtual machine.</p>
+</section>
+</section>
+<section id="running-autopts">
+<h2><a class="toc-backref" href="#id15" role="doc-backlink">Running AutoPTS</a><a class="headerlink" href="#running-autopts" title="Link to this heading"></a></h2>
+<p>Please follow the information from
+<a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/tree/main/tests/bluetooth/tester">https://github.com/zephyrproject-rtos/zephyr/tree/main/tests/bluetooth/tester</a> on how to build,
+flash and run the Bluetooth Tester application.</p>
+<p>Server and client by default will run on localhost address.
+Run the server in the Windows virtual machine:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>python ./autoptsserver.py
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../../../_images/autoptsserver_run_2.png"><img alt="../../../_images/autoptsserver_run_2.png" class="align-center" height="120" src="../../../_images/autoptsserver_run_2.png" width="700" />
+</a>
+<p>See also <a class="reference external" href="https://github.com/auto-pts/auto-pts">https://github.com/auto-pts/auto-pts</a> for additional information on how to run auto-pts.</p>
+<section id="testing-zephyr-host-stack-on-hardware">
+<h3><a class="toc-backref" href="#id16" role="doc-backlink">Testing Zephyr Host Stack on hardware</a><a class="headerlink" href="#testing-zephyr-host-stack-on-hardware" title="Link to this heading"></a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>python ./autoptsclient-zephyr.py zephyr-master -t /dev/ttyACM0 -b BOARD -i SERVER_IP -l LOCAL_IP
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">/dev/ttyACM0</span></code> is the tty for the board,
+<code class="docutils literal notranslate"><span class="pre">BOARD</span></code> is the board to use (e.g. <code class="docutils literal notranslate"><span class="pre">nrf53_audio</span></code>),
+<code class="docutils literal notranslate"><span class="pre">SERVER_IP</span></code> is the IP of the AutoPTS server,
+<code class="docutils literal notranslate"><span class="pre">LOCAL_IP</span></code> is the local IP of the Linux machine.</p>
+</section>
+<section id="testing-zephyr-host-stack-on-qemu">
+<h3><a class="toc-backref" href="#id17" role="doc-backlink">Testing Zephyr Host Stack on QEMU</a><a class="headerlink" href="#testing-zephyr-host-stack-on-qemu" title="Link to this heading"></a></h3>
+<p>A Bluetooth controller needs to be mounted.
+For running with HCI UART, please visit <a class="reference internal" href="../../../samples/bluetooth/hci_uart/README.html#bluetooth_hci_uart" title="Expose a Bluetooth controller to another device or CPU over UART.">HCI UART</a>.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>python ./autoptsclient-zephyr.py zephyr-master BUILD_DIR/zephyr/zephyr.elf -i SERVER_IP -l LOCAL_IP
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">BUILD_DIR</span></code> is the build directory,
+<code class="docutils literal notranslate"><span class="pre">SERVER_IP</span></code> is the IP of the AutoPTS server,
+<code class="docutils literal notranslate"><span class="pre">LOCAL_IP</span></code> is the local IP of the Linux machine.</p>
+</section>
+<section id="testing-zephyr-host-stack-on-native-sim">
+<h3><a class="toc-backref" href="#id18" role="doc-backlink">Testing Zephyr Host Stack on <a class="reference internal" href="../../../boards/native/native_sim/doc/index.html#native_sim"><span class="xref zephyr zephyr-board">native_sim</span></a></a><a class="headerlink" href="#testing-zephyr-host-stack-on-native-sim" title="Link to this heading"></a></h3>
+<p>When tester application has been built for <a class="reference internal" href="../../../boards/native/native_sim/doc/index.html#native_sim"><span class="xref zephyr zephyr-board">native_sim</span></a> it produces a
+<code class="docutils literal notranslate"><span class="pre">zephyr.exe</span></code> file, that can be run as a native Linux application.
+Depending on your system,
+you may need to perform the following steps to successfully run <code class="docutils literal notranslate"><span class="pre">zephyr.exe</span></code>.</p>
+<section id="setting-capabilities">
+<h4>Setting capabilities<a class="headerlink" href="#setting-capabilities" title="Link to this heading"></a></h4>
+<p>Since the application will need access to connect to a socket for HCI,
+you may need to perform the following</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>setcap cap_net_raw,cap_net_admin,cap_sys_admin+ep zephyr.exe
+</pre></div>
+</div>
+<p>This is not required if you run <code class="docutils literal notranslate"><span class="pre">zephyr.exe</span></code> or <code class="docutils literal notranslate"><span class="pre">./autoptsclient-zephyr.py</span></code> with e.g. <code class="docutils literal notranslate"><span class="pre">sudo</span></code>.</p>
+</section>
+<section id="downing-the-hci-controller">
+<h4>Downing the HCI controller<a class="headerlink" href="#downing-the-hci-controller" title="Link to this heading"></a></h4>
+<p>You may also need to “down” or “power off” the HCI controller before running <code class="docutils literal notranslate"><span class="pre">zephyr.exe</span></code>.
+This can be done either with <code class="docutils literal notranslate"><span class="pre">hciconfig</span></code> as</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>hciconfig hciX down
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">hciX</span></code> is a value like <code class="docutils literal notranslate"><span class="pre">hci0</span></code>. You may run <code class="docutils literal notranslate"><span class="pre">hciconfig</span></code> to get a list of your HCI devices.</p>
+<p>Since <code class="docutils literal notranslate"><span class="pre">hciconfig</span></code> is deprecated on some systems, you may need to use</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>btmgmt -i hciX power off
+</pre></div>
+</div>
+<p>Similar to <code class="docutils literal notranslate"><span class="pre">hciconfig</span></code>, <code class="docutils literal notranslate"><span class="pre">btmgmt</span> <span class="pre">info</span></code> may be used to list current controllers and their states.</p>
+<p>Both <code class="docutils literal notranslate"><span class="pre">hciconfig</span></code> and <code class="docutils literal notranslate"><span class="pre">btmgmt</span></code> may require <code class="docutils literal notranslate"><span class="pre">sudo</span></code> when powering down a controller.</p>
+</section>
+<section id="running-the-client">
+<h4>Running the client<a class="headerlink" href="#running-the-client" title="Link to this heading"></a></h4>
+<p>The application can be run as</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>python ./autoptsclient-zephyr.py zephyr-master --hci HCI BUILD_DIR/zephyr/zephyr.exe -i SERVER_IP -l LOCAL_IP
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">HCI</span></code> is the HCI index, e.g. <code class="docutils literal notranslate"><span class="pre">0</span></code> or <code class="docutils literal notranslate"><span class="pre">1</span></code>,
+<code class="docutils literal notranslate"><span class="pre">BUILD_DIR</span></code> is the build directory,
+<code class="docutils literal notranslate"><span class="pre">SERVER_IP</span></code> is the IP of the AutoPTS server,
+<code class="docutils literal notranslate"><span class="pre">LOCAL_IP</span></code> is the local IP of the Linux machine.</p>
+</section>
+</section>
+</section>
+<section id="troubleshooting">
+<h2><a class="toc-backref" href="#id19" role="doc-backlink">Troubleshooting</a><a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<section id="after-running-one-test-i-need-to-restart-my-windows-virtual-machine-to-run-another-because-of-fail-verdict-from-apicom-in-pts-logs">
+<h3><a class="toc-backref" href="#id20" role="doc-backlink">After running one test, I need to restart my Windows virtual machine to run another, because of fail verdict from APICOM in PTS logs</a><a class="headerlink" href="#after-running-one-test-i-need-to-restart-my-windows-virtual-machine-to-run-another-because-of-fail-verdict-from-apicom-in-pts-logs" title="Link to this heading"></a></h3>
+<p>It means your virtual machine has not enough processor cores or memory. Try to add more in
+settings. Note that a host with 4 CPUs could be not enough with VirtualBox as hypervisor.
+In this case, choose rather VMWare Workstation.</p>
+</section>
+<section id="i-cannot-start-autoptsserver-zephyr-py-i-always-get-a-python-error">
+<h3><a class="toc-backref" href="#id21" role="doc-backlink">I cannot start autoptsserver-zephyr.py. I always get a Python error</a><a class="headerlink" href="#i-cannot-start-autoptsserver-zephyr-py-i-always-get-a-python-error" title="Link to this heading"></a></h3>
+<a class="reference internal image-reference" href="../../../_images/autoptsserver_typical_error.png"><img alt="../../../_images/autoptsserver_typical_error.png" class="align-center" height="300" src="../../../_images/autoptsserver_typical_error.png" width="650" />
+</a>
+<p>One or more of the following steps should help:</p>
+<ul class="simple">
+<li><p>Close all PTS Windows.</p></li>
+<li><p>Replug PTS bluetooth dongle.</p></li>
+<li><p>Delete temporary workspace. You will find it in auto-pts-code/workspaces/zephyr/zephyr-master/ as temp_zephyr-master. Be careful, do not remove the original one zephyr-master.pqw6.</p></li>
+<li><p>Restart Windows virtual machine.</p></li>
+</ul>
+</section>
+<section id="the-pts-automation-window-keeps-opening-and-closing">
+<h3><a class="toc-backref" href="#id22" role="doc-backlink">The PTS automation window keeps opening and closing</a><a class="headerlink" href="#the-pts-automation-window-keeps-opening-and-closing" title="Link to this heading"></a></h3>
+<p>This indicates that it fails to capture a PTS dongle.
+If the AutoPTS server is able to find and use a PTS dongle,
+then the title of the window will show the Bluetooth address of the dongle.
+If this does not happen then ensure that the dongle is plugged in, updated and recognized by PTS.</p>
+<a class="reference internal image-reference" href="../../../_images/pts_automation_window.png"><img alt="../../../_images/pts_automation_window.png" class="align-center" src="../../../_images/pts_automation_window.png" width="500" />
+</a>
+<p>If it still fails to run tests after this,
+please ensure that the Bluetooth Protocol Viewer is installed.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+var mchp__pic32cm__jh__adc_8h =
+[
+    [ "MCHP_ADC_AIN0", "mchp__pic32cm__jh__adc_8h.html#a8625f637c989a40b57fd01a6bfed0127", null ],
+    [ "MCHP_ADC_AIN1", "mchp__pic32cm__jh__adc_8h.html#ab84e577a86286ca44c30ead0a534ee12", null ],
+    [ "MCHP_ADC_AIN10", "mchp__pic32cm__jh__adc_8h.html#a2b96313e20431ec65518c8c68e78c98a", null ],
+    [ "MCHP_ADC_AIN11", "mchp__pic32cm__jh__adc_8h.html#a4e8e54ef93e63c2c7037df24187d073e", null ],
+    [ "MCHP_ADC_AIN2", "mchp__pic32cm__jh__adc_8h.html#aa476264b4c17067264726dc03a18ba2e", null ],
+    [ "MCHP_ADC_AIN3", "mchp__pic32cm__jh__adc_8h.html#a19bc8973b10e21e613e52500e09f24f2", null ],
+    [ "MCHP_ADC_AIN4", "mchp__pic32cm__jh__adc_8h.html#afd474bdf740b40d91789e7e605c1713d", null ],
+    [ "MCHP_ADC_AIN5", "mchp__pic32cm__jh__adc_8h.html#a0e6418cf051268e5743e0c800b729451", null ],
+    [ "MCHP_ADC_AIN6", "mchp__pic32cm__jh__adc_8h.html#aa6c6feb51f20c53cebdb1220291c3377", null ],
+    [ "MCHP_ADC_AIN7", "mchp__pic32cm__jh__adc_8h.html#a330784cc8bd7364229f7cc0d89f950c0", null ],
+    [ "MCHP_ADC_AIN8", "mchp__pic32cm__jh__adc_8h.html#a1de81a455c0d9503e68466634f970058", null ],
+    [ "MCHP_ADC_AIN9", "mchp__pic32cm__jh__adc_8h.html#a96d7ea071e38d1102c0180383d774f2b", null ],
+    [ "MCHP_ADC_BANDGAP", "mchp__pic32cm__jh__adc_8h.html#a05bb9b098c85384d9d52abaecd1744fc", null ],
+    [ "MCHP_ADC_MUXNEG_VALID_MASK", "mchp__pic32cm__jh__adc_8h.html#ad9e11020a074ecf5aab57bd5995804eb", null ],
+    [ "MCHP_ADC_MUXPOS_VALID_MASK", "mchp__pic32cm__jh__adc_8h.html#a8f04960a7b9d4c2259cec80d5426b8ee", null ],
+    [ "MCHP_ADC_REF_AREFA", "mchp__pic32cm__jh__adc_8h.html#a61f6ce4e754fa850562afa66ac92e454", null ],
+    [ "MCHP_ADC_REF_DAC", "mchp__pic32cm__jh__adc_8h.html#aab0d49af1313ae9ff72df182a47abfbc", null ],
+    [ "MCHP_ADC_REF_INTREF", "mchp__pic32cm__jh__adc_8h.html#a703d3e7da7cfa2066bb927910179a98b", null ],
+    [ "MCHP_ADC_REF_INTVCC0", "mchp__pic32cm__jh__adc_8h.html#a41de16e40109f95286e0f2e4cfc8cb8b", null ],
+    [ "MCHP_ADC_REF_INTVCC1", "mchp__pic32cm__jh__adc_8h.html#a4d9b8439add7c67ff7b65b97db2f8451", null ],
+    [ "MCHP_ADC_REF_INTVCC2", "mchp__pic32cm__jh__adc_8h.html#a1c08a5c056dfff547a67a5cadee67b92", null ],
+    [ "MCHP_ADC_SCALEDCOREVCC", "mchp__pic32cm__jh__adc_8h.html#a4a2c27f0a068de7af86f85e92aebc1bb", null ],
+    [ "MCHP_ADC_SCALEDIOVCC", "mchp__pic32cm__jh__adc_8h.html#a49217d35a337591700f927c42fae1488", null ]
+];

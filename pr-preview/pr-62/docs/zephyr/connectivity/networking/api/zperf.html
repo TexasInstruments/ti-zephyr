@@ -1,0 +1,660 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>zperf: Network Traffic Generator &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/connectivity/networking/api/zperf.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Connection Manager" href="../conn_mgr/index.html" />
+    <link rel="prev" title="Precision Time Protocol (PTP)" href="ptp.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Connectivity</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../canbus/index.html">Controller Area Network (CAN) Bus Protocols</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Networking</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../net-stack-architecture.html">Network Stack Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../net_config_guide.html">Network Configuration Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../networking_with_host.html">Networking with the host system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../network_monitoring.html">Monitor Network Traffic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../network_tracing.html">Network Tracing</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Networking APIs</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="apis.html">Network APIs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="buf_mgmt.html">Network Packet Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="net_tech.html">Networking Technologies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protocols.html">Protocols</a></li>
+<li class="toctree-l4"><a class="reference internal" href="system_mgmt.html">Network System Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tsn.html">Time Sensitive Networking</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">zperf: Network Traffic Generator</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#sample-usage">Sample Usage</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#session-management">Session Management</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#custom-data-upload">Custom Data Upload</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#raw-tx-mode">Raw TX Mode</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../conn_mgr/index.html">Connection Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dsa.html">Distributed Switch Architecture (DSA)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa and LoRaWAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../usb/index.html">USB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Connectivity</a> &raquo;</li>
+  
+     <li><a href="../index.html">Networking</a> &raquo;</li>
+  
+     <li><a href="index.html">Networking APIs</a> &raquo;</li>
+  
+  <li>zperf: Network Traffic Generator</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/connectivity/networking/api/zperf.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27connectivity%2Fnetworking%2Fapi%2Fzperf%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Networking&env=-+Page%3A+connectivity%2Fnetworking%2Fapi%2Fzperf%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="zperf-network-traffic-generator">
+<span id="zperf"></span><h1>zperf: Network Traffic Generator<a class="headerlink" href="#zperf-network-traffic-generator" title="Link to this heading"></a></h1>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id1">Overview</a></p></li>
+<li><p><a class="reference internal" href="#sample-usage" id="id2">Sample Usage</a></p></li>
+<li><p><a class="reference internal" href="#session-management" id="id3">Session Management</a></p></li>
+<li><p><a class="reference internal" href="#custom-data-upload" id="id4">Custom Data Upload</a></p></li>
+<li><p><a class="reference internal" href="#raw-tx-mode" id="id5">Raw TX Mode</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Overview</a><a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>zperf is a shell utility which allows to generate network traffic in Zephyr. The
+tool may be used to evaluate network bandwidth.</p>
+<p>zperf is compatible with iPerf 2.0.10 and newer. For compatibility with older versions,
+enable <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_ZPERF_LEGACY_HEADER_COMPAT" title="CONFIG_NET_ZPERF_LEGACY_HEADER_COMPAT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_ZPERF_LEGACY_HEADER_COMPAT</span></code></a>.</p>
+<p>zperf can be enabled in any application, a dedicated sample is also present
+in Zephyr. See <a class="reference internal" href="../../../samples/net/zperf/README.html#zperf" title="Use the zperf shell utility to evaluate network bandwidth."><span class="xref zephyr zephyr-code-sample">zperf sample application</span></a> for details.</p>
+</section>
+<section id="sample-usage">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Sample Usage</a><a class="headerlink" href="#sample-usage" title="Link to this heading"></a></h2>
+<p>If Zephyr acts as a client, iPerf must be executed in server mode.
+For example, the following command line must be used for UDP testing:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>iperf<span class="w"> </span>-s<span class="w"> </span>-l<span class="w"> </span>1K<span class="w"> </span>-u<span class="w"> </span>-V<span class="w"> </span>-B<span class="w"> </span><span class="m">2001</span>:db8::2
+</pre></div>
+</div>
+<p>For TCP testing, the command line would look like this:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>iperf<span class="w"> </span>-s<span class="w"> </span>-l<span class="w"> </span>1K<span class="w"> </span>-V<span class="w"> </span>-B<span class="w"> </span><span class="m">2001</span>:db8::2
+</pre></div>
+</div>
+<p>In the Zephyr console, zperf can be executed as follows:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">zperf udp upload 2001:db8::2 5001 10 1K 1M</span>
+</pre></div>
+</div>
+<p>For TCP the zperf command would look like this:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">zperf tcp upload 2001:db8::2 5001 10 1K 1M</span>
+</pre></div>
+</div>
+<p>If the IP addresses of Zephyr and the host machine are specified in the
+config file, zperf can be started as follows:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">zperf udp upload2 v6 10 1K 1M</span>
+</pre></div>
+</div>
+<p>or like this if you want to test TCP:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">zperf tcp upload2 v6 10 1K 1M</span>
+</pre></div>
+</div>
+<p>If Zephyr is acting as a server, set the download mode as follows for UDP:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">zperf udp download 5001</span>
+</pre></div>
+</div>
+<p>or like this for TCP:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">zperf tcp download 5001</span>
+</pre></div>
+</div>
+<p>and in the host side, iPerf must be executed with the following
+command line if you are testing UDP:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>iperf<span class="w"> </span>-l<span class="w"> </span>1K<span class="w"> </span>-u<span class="w"> </span>-V<span class="w"> </span>-c<span class="w"> </span><span class="m">2001</span>:db8::1<span class="w"> </span>-p<span class="w"> </span><span class="m">5001</span>
+</pre></div>
+</div>
+<p>and this if you are testing TCP:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>iperf<span class="w"> </span>-l<span class="w"> </span>1K<span class="w"> </span>-V<span class="w"> </span>-c<span class="w"> </span><span class="m">2001</span>:db8::1<span class="w"> </span>-p<span class="w"> </span><span class="m">5001</span>
+</pre></div>
+</div>
+<p>iPerf output can be limited by using the -b option if Zephyr is not
+able to receive all the packets in orderly manner.</p>
+</section>
+<section id="session-management">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Session Management</a><a class="headerlink" href="#session-management" title="Link to this heading"></a></h2>
+<p>If <a class="reference internal" href="../../../kconfig.html#CONFIG_ZPERF_SESSION_PER_THREAD" title="CONFIG_ZPERF_SESSION_PER_THREAD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZPERF_SESSION_PER_THREAD</span></code></a> option is set, then
+multiple upload sessions can be done at the same time if user supplies <code class="docutils literal notranslate"><span class="pre">-a</span></code>
+option when starting the upload. Each session will have their own work queue
+to run the test. The session test results can be viewed also after the tests
+have finished. The sessions can be started with <code class="docutils literal notranslate"><span class="pre">-w</span></code> option which then
+lets the worker threads to wait a start signal so that all the threads can
+be started at the same time. This will prevent the case where the zperf shell
+cannot run because it is running in lower priority than the already started
+session thread. If you have only one upload session, then the <code class="docutils literal notranslate"><span class="pre">-w</span></code> is not
+really needed.</p>
+<p>Following zperf shell commands are available for session management:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>zperf shell command</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">jobs</span></code></p></td>
+<td><p>Show currently active or finished sessions</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">jobs</span> <span class="pre">all</span></code></p></td>
+<td><p>Show statistics of finished sessions</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">jobs</span> <span class="pre">clear</span></code></p></td>
+<td><p>Clear finished session statistics</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">jobs</span> <span class="pre">start</span></code></p></td>
+<td><p>Start all the waiting sessions</p></td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>zperf<span class="w"> </span>udp<span class="w"> </span>upload<span class="w"> </span>-a<span class="w"> </span>-t<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">192</span>.0.2.2<span class="w"> </span><span class="m">5001</span><span class="w"> </span><span class="m">10</span><span class="w"> </span>1K<span class="w"> </span>1M
+<span class="go">Remote port is 5001</span>
+<span class="go">Connecting to 192.0.2.2</span>
+<span class="go">Duration:       10.00 s</span>
+<span class="go">Packet size:    1000 bytes</span>
+<span class="go">Rate:           1000 kbps</span>
+<span class="go">Starting...</span>
+<span class="go">Rate:           1.00 Mbps</span>
+<span class="go">Packet duration 7 ms</span>
+
+<span class="gp">uart:~$ </span>zperf<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>all
+<span class="go">No sessions sessions found</span>
+<span class="gp">uart:~$ </span>zperf<span class="w"> </span><span class="nb">jobs</span>
+<span class="go">           Thread    Remaining</span>
+<span class="go">Id  Proto  Priority  time (sec)</span>
+<span class="go">[1] UDP    5            4</span>
+
+<span class="go">Active sessions have not yet finished</span>
+<span class="go">-</span>
+<span class="go">Upload completed!</span>
+<span class="go">Statistics:             server  (client)</span>
+<span class="go">Duration:               30.01 s (30.01 s)</span>
+<span class="go">Num packets:            3799    (3799)</span>
+<span class="go">Num packets out order:  0</span>
+<span class="go">Num packets lost:       0</span>
+<span class="go">Jitter:                 63 us</span>
+<span class="go">Rate:                   1.01 Mbps       (1.01 Mbps)</span>
+<span class="go">Thread priority:        5</span>
+<span class="go">Protocol:               UDP</span>
+<span class="go">Session id:             1</span>
+
+<span class="gp">uart:~$ </span>zperf<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>all
+<span class="go">-</span>
+<span class="go">Upload completed!</span>
+<span class="go">Statistics:             server  (client)</span>
+<span class="go">Duration:               30.01 s (30.01 s)</span>
+<span class="go">Num packets:            3799    (3799)</span>
+<span class="go">Num packets out order:  0</span>
+<span class="go">Num packets lost:       0</span>
+<span class="go">Jitter:                 63 us</span>
+<span class="go">Rate:                   1.01 Mbps       (1.01 Mbps)</span>
+<span class="go">Thread priority:        5</span>
+<span class="go">Protocol:               UDP</span>
+<span class="go">Session id:             1</span>
+<span class="go">Total 1 sessions done</span>
+
+<span class="gp">uart:~$ </span>zperf<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>clear
+<span class="go">Cleared data from 1 sessions</span>
+
+<span class="gp">uart:~$ </span>zperf<span class="w"> </span><span class="nb">jobs</span>
+<span class="go">No active upload sessions</span>
+<span class="go">No finished sessions found</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">-w</span></code> option can be used like this to delay the startup of the jobs.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>zperf<span class="w"> </span>tcp<span class="w"> </span>upload<span class="w"> </span>-a<span class="w"> </span>-t<span class="w"> </span><span class="m">6</span><span class="w"> </span>-w<span class="w"> </span><span class="m">192</span>.0.2.2<span class="w"> </span><span class="m">5001</span><span class="w"> </span><span class="m">10</span><span class="w"> </span>1K
+<span class="go">Remote port is 5001</span>
+<span class="go">Connecting to 192.0.2.2</span>
+<span class="go">Duration:       10.00 s</span>
+<span class="go">Packet size:    1000 bytes</span>
+<span class="go">Rate:           10 kbps</span>
+<span class="go">Waiting &quot;zperf jobs start&quot; command.</span>
+<span class="go">[01:06:51.392,288] &lt;inf&gt; net_zperf: [0] TCP waiting for start</span>
+
+<span class="gp">uart:~$ </span>zperf<span class="w"> </span>udp<span class="w"> </span>upload<span class="w"> </span>-a<span class="w"> </span>-t<span class="w"> </span><span class="m">6</span><span class="w"> </span>-w<span class="w"> </span><span class="m">192</span>.0.2.2<span class="w"> </span><span class="m">5001</span><span class="w"> </span><span class="m">10</span><span class="w"> </span>1K<span class="w"> </span>10M
+<span class="go">Remote port is 5001</span>
+<span class="go">Connecting to 192.0.2.2</span>
+<span class="go">Duration:       10.00 s</span>
+<span class="go">Packet size:    1000 bytes</span>
+<span class="go">Rate:           10000 kbps</span>
+<span class="go">Waiting &quot;zperf jobs start&quot; command.</span>
+<span class="go">Rate:           10.00 Mbps</span>
+<span class="go">Packet duration 781 us</span>
+<span class="go">[01:06:58.064,552] &lt;inf&gt; net_zperf: [0] UDP waiting for start</span>
+
+<span class="gp">uart:~$ </span>zperf<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start
+<span class="go">-</span>
+<span class="go">Upload completed!</span>
+<span class="go">-</span>
+<span class="go">Upload completed!</span>
+
+<span class="gp"># </span>Note<span class="w"> </span>that<span class="w"> </span>the<span class="w"> </span>output<span class="w"> </span>may<span class="w"> </span>be<span class="w"> </span>garbled<span class="w"> </span>as<span class="w"> </span>two<span class="w"> </span>threads<span class="w"> </span>printed
+<span class="gp"># </span>output<span class="w"> </span>at<span class="w"> </span>the<span class="w"> </span>same<span class="w"> </span>time.<span class="w"> </span>Just<span class="w"> </span>print<span class="w"> </span>out<span class="w"> </span>the<span class="w"> </span>fresh<span class="w"> </span>listing
+<span class="gp"># </span>like<span class="w"> </span>this.
+
+<span class="gp">uart:~$ </span>zperf<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>all
+<span class="go">-</span>
+<span class="go">Upload completed!</span>
+<span class="go">Statistics:             server  (client)</span>
+<span class="go">Duration:               9.99 s  (10.00 s)</span>
+<span class="go">Num packets:            11429   (11429)</span>
+<span class="go">Num packets out order:  0</span>
+<span class="go">Num packets lost:       0</span>
+<span class="go">Jitter:                 164 us</span>
+<span class="go">Rate:                   9.14 Mbps       (9.14 Mbps)</span>
+<span class="go">Thread priority:        6</span>
+<span class="go">Protocol:               UDP</span>
+<span class="go">Session id:             0</span>
+<span class="go">-</span>
+<span class="go">Upload completed!</span>
+<span class="go">Duration:               10.00 s</span>
+<span class="go">Num packets:            15487</span>
+<span class="go">Num errors:             0 (retry or fail)</span>
+<span class="go">Rate:                   12.38 Mbps</span>
+<span class="go">Thread priority:        6</span>
+<span class="go">Protocol:               TCP</span>
+<span class="go">Session id:             0</span>
+<span class="go">Total 2 sessions done</span>
+</pre></div>
+</div>
+</section>
+<section id="custom-data-upload">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Custom Data Upload</a><a class="headerlink" href="#custom-data-upload" title="Link to this heading"></a></h2>
+<p>zperf supports more advanced data upload profiling by setting a custom data
+source through <code class="xref c c-member docutils literal notranslate"><span class="pre">zperf_upload_params.data_loader</span></code>. This enables the
+generation of custom packet contents instead of sending a constant packet
+consisting solely of the <code class="docutils literal notranslate"><span class="pre">z</span></code> character. An example use case would be
+determining the maximum throughput of uploading data from an external flash
+memory chip.</p>
+</section>
+<section id="raw-tx-mode">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Raw TX Mode</a><a class="headerlink" href="#raw-tx-mode" title="Link to this heading"></a></h2>
+<p>zperf supports raw packet transmission mode for testing custom L2 frames or
+vendor-specific protocols. This mode bypasses UDP/TCP and sends raw packets
+directly using packet sockets.</p>
+<p>To enable raw TX mode, set the following Kconfig options:</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span>CONFIG_NET_SOCKETS_PACKET=y
+CONFIG_NET_ZPERF_RAW_TX=y
+</pre></div>
+</div>
+<p>The maximum header size can be configured with
+<a class="reference internal" href="../../../kconfig.html#CONFIG_NET_ZPERF_RAW_TX_MAX_HDR_SIZE" title="CONFIG_NET_ZPERF_RAW_TX_MAX_HDR_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_ZPERF_RAW_TX_MAX_HDR_SIZE</span></code></a> (default: 64 bytes).</p>
+<p>Before using raw TX mode, TX injection mode must be enabled on the network
+interface:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>net<span class="w"> </span>iface<span class="w"> </span>txinjection<span class="w"> </span><span class="m">1</span><span class="w"> </span>on
+</pre></div>
+</div>
+<p>The raw TX upload command syntax is:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">zperf raw upload [-a] &lt;if_index&gt; &lt;header_hex&gt; [&lt;duration_sec&gt;] [&lt;packet_size&gt;] [&lt;rate_kbps&gt;]</span>
+</pre></div>
+</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-a</span></code>: Optional async mode flag</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">if_index</span></code>: Network interface index (e.g., 1)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">header_hex</span></code>: User-provided header as hex string (vendor metadata + frame header)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">duration_sec</span></code>: Test duration in seconds (default: 1)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">packet_size</span></code>: Total packet size including header (default: 256)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rate_kbps</span></code>: Target rate in Kbps, supports K/M suffixes (default: 10)</p></li>
+</ul>
+<p>Example for sending raw 802.11 frames with vendor metadata:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>zperf<span class="w"> </span>raw<span class="w"> </span>upload<span class="w"> </span><span class="m">1</span><span class="w"> </span>12345678000400030000000088000000ffffffffffa06960e35215a06960e3521500000000aaaa030000000800<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">1024</span><span class="w"> </span>50M
+</pre></div>
+</div>
+<p>The header hex string contains:</p>
+<ul class="simple">
+<li><p>Vendor metadata (first 12 bytes in this example)</p></li>
+<li><p>802.11 QoS Data header with LLC/SNAP</p></li>
+</ul>
+<p>The payload (filled with <code class="docutils literal notranslate"><span class="pre">z</span></code> characters) is automatically appended to reach
+the specified packet size.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

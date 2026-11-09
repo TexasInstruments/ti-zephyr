@@ -1,0 +1,548 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Virtual I/O (VIRTIO) &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/hardware/virtualization/virtio.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Contributing to Zephyr" href="../../contribute/index.html" />
+    <link rel="prev" title="Virtualization" href="index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Hardware Support</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../arch/index.html">Architecture-related Guides</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../barriers/index.html">Barriers API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cache/index.html">Caching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/index.html">Zephyr’s device emulators/simulators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/bus_emulators.html">External Bus and Bus Connected Peripherals Emulators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../peripherals/index.html">Peripherals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pinctrl/index.html">Pin Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../porting/index.html">Porting</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Virtualization</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Virtual I/O (VIRTIO)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#concepts">Concepts</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#configuration-space">Configuration space</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#virtqueues">Virtqueues</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#common-virtio-libraries">Common Virtio libraries</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#device-initialization">Device initialization</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#virtqueue-operation">Virtqueue operation</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#guest-side-virtio-drivers">Guest-side Virtio drivers</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#virtiofs">Virtiofs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#virtio-entropy">Virtio-entropy</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#virtio-samples">Virtio samples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API Reference</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Hardware Support</a> &raquo;</li>
+  
+     <li><a href="index.html">Virtualization</a> &raquo;</li>
+  
+  <li>Virtual I/O (VIRTIO)</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/hardware/virtualization/virtio.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27hardware%2Fvirtualization%2Fvirtio%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Virtualization&env=-+Page%3A+hardware%2Fvirtualization%2Fvirtio%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="virtual-i-o-virtio">
+<h1>Virtual I/O (VIRTIO)<a class="headerlink" href="#virtual-i-o-virtio" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>Virtual I/O (VIRTIO) is a protocol used for communication with various devices, typically used in
+virtualized environments. Its main goal is to provide an efficient and standardized mechanism for
+interfacing with virtual devices from within a virtual machine. The communication relies on virtqueues
+and standard transfer methods like PCI or MMIO.</p>
+</section>
+<section id="concepts">
+<h2>Concepts<a class="headerlink" href="#concepts" title="Link to this heading"></a></h2>
+<p>Virtio defines various components used during communication and initialization. It specifies both the
+host (named “device” in the specification) and guest (named “driver” in the specification) sides.
+Currently Zephyr can only work as a guest. On top of the facilities exposed by the Virtio driver,
+a driver for a specific device (e.g. network card) can be implemented.</p>
+<p>A high-level overview of a system with a Virtio device is shown below.</p>
+<figure class="align-default" id="id2">
+<div class="graphviz"><object data="../../_images/graphviz-a07d9776beae782f25713bf8746b0de54753005e.svg" type="image/svg+xml" class="graphviz">
+<p class="warning">digraph {
+
+     subgraph cluster_host {
+         style=filled;
+         color=lightgrey;
+         label = &quot;Host&quot;;
+         labeljust=r;
+
+         virtio_device [label = &quot;virtio device&quot;];
+     }
+
+     transfer_method [label = &quot;virtio transfer method&quot;];
+
+     subgraph cluster_guest {
+         style=filled;
+         color=lightgrey;
+         label = &quot;Guest&quot;;
+         labeljust=r;
+
+         virtio_driver [label = &quot;virtio driver&quot;];
+         specific_device_driver [label = &quot;specific device driver&quot;];
+         device_user [label = &quot;device user&quot;];
+     }
+
+     virtio_device -&gt; transfer_method;
+     transfer_method -&gt; virtio_device;
+     transfer_method -&gt; virtio_driver;
+     virtio_driver -&gt; transfer_method;
+     virtio_driver -&gt; specific_device_driver;
+     specific_device_driver -&gt; virtio_driver;
+     specific_device_driver -&gt; device_user;
+     device_user -&gt; specific_device_driver;
+}</p></object></div>
+<figcaption>
+<p><span class="caption-text">Virtual I/O overview</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<section id="configuration-space">
+<h3>Configuration space<a class="headerlink" href="#configuration-space" title="Link to this heading"></a></h3>
+<p>Each device provides configuration space, used for initialization and configuration. It allows
+selection of device and driver features, enabling specific virtqueues and setting their addresses.
+Once the device is configured, most of its configuration cannot be changed without resetting the device.
+The exact layout of the configuration space depends on the transfer method.</p>
+<section id="driver-and-device-features">
+<h4>Driver and device features<a class="headerlink" href="#driver-and-device-features" title="Link to this heading"></a></h4>
+<p>The configuration space provides a way to negotiate feature bits, determining some non-mandatory
+capabilities of the devices. The exact available feature bits depend on the device and platform.</p>
+</section>
+<section id="device-specific-configuration">
+<h4>Device-specific configuration<a class="headerlink" href="#device-specific-configuration" title="Link to this heading"></a></h4>
+<p>Some of the devices offer device-specific configuration space, providing additional configuration options.</p>
+</section>
+</section>
+<section id="virtqueues">
+<h3>Virtqueues<a class="headerlink" href="#virtqueues" title="Link to this heading"></a></h3>
+<p>The main mechanism used for transferring data between host and guest is a virtqueue. Specific
+devices have different numbers of virtqueues, for example devices supporting bidirectional transfer
+usually have one or more tx/rx virtqueue pairs. Virtio specifies two types of virtqueues: split
+virtqueues and packed virtqueues. Zephyr currently supports only split virtqueues.</p>
+<section id="split-virtqueues">
+<h4>Split virtqueues<a class="headerlink" href="#split-virtqueues" title="Link to this heading"></a></h4>
+<p>A split virtqueue consists of three parts: descriptor table, available ring and used ring.</p>
+<p>The descriptor table holds descriptors of buffers, that is their physical addresses, lengths and flags.
+Each descriptor is either device writeable or driver writeable. The descriptors can be chained, creating
+descriptor chains. Typically a chain begins with descriptors containing the data for the device to read
+and ends with the device writeable part, where the device places its response.</p>
+<p>The main part of the available ring is a circular buffer of references (in the form of indexes) to the
+descriptors in the descriptor table. Once the guest decides to send the data to the host, it adds the index of
+the head of the descriptor chain to the top of the available ring.</p>
+<p>The used ring is similar to the available ring, but it’s used by the host to return descriptors to the guest. In
+addition to storing descriptor indexes, it also provides information about the amount of data written to them.</p>
+</section>
+</section>
+</section>
+<section id="common-virtio-libraries">
+<h2>Common Virtio libraries<a class="headerlink" href="#common-virtio-libraries" title="Link to this heading"></a></h2>
+<p>Zephyr provides an API for interfacing with Virtio devices and virtqueues, which allows performing necessary operations
+over the lifetime of the Virtio device.</p>
+<section id="device-initialization">
+<h3>Device initialization<a class="headerlink" href="#device-initialization" title="Link to this heading"></a></h3>
+<p>Once the Virtio driver finishes performing low-level initialization common to the all devices using a given transfer method,
+like finding device on the bus and mapping Virtio structures, the device specific driver steps in and performs the next
+stages of initialization with the help of the Virtio API.</p>
+<p>The first thing the device-specific driver does is feature bits negotiation. It uses <a class="reference internal" href="../../doxygen/html/group__virtio__interface.html#ga55be5a1c2dc457bb1d44b0c302bfb7a8" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">virtio_read_device_feature_bit()</span></code></a>
+to determine which features the device offers, and then selects the ones it needs using <a class="reference internal" href="../../doxygen/html/group__virtio__interface.html#gab920f8dfee1139585f6af6b22c340912" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">virtio_write_driver_feature_bit()</span></code></a>.
+After all required features have been selected, the device-specific driver calls <a class="reference internal" href="../../doxygen/html/group__virtio__interface.html#ga7d29735da898548661844356fef966e9" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">virtio_commit_feature_bits()</span></code></a>. Then, virtqueues
+are initialized with <a class="reference internal" href="../../doxygen/html/group__virtio__interface.html#gaf8fde0107ed6da7eb621f334f478666e" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">virtio_init_virtqueues()</span></code></a>. This function enumerates the virtqueues, invoking the provided callback
+<a class="reference internal" href="../../doxygen/html/group__virtio__interface.html#gac66779305009c3896eff113f680c29c4" title=""><code class="xref c c-type docutils literal notranslate"><span class="pre">virtio_enumerate_queues</span></code></a> to determine the required size of each virtqueue. Initialization process is finalized by calling
+<a class="reference internal" href="../../doxygen/html/group__virtio__interface.html#ga3ce7e3833b19210d47e563995c39087d" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">virtio_finalize_init()</span></code></a>. From this point, if none of the functions returned errors, the virtqueues are operational. If the
+specific device provides one, the device-specific config can be obtained by calling <a class="reference internal" href="../../doxygen/html/group__virtio__interface.html#ga24987fd9a7603824baed470e4b0ef4d0" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">virtio_get_device_specific_config()</span></code></a>.</p>
+</section>
+<section id="virtqueue-operation">
+<h3>Virtqueue operation<a class="headerlink" href="#virtqueue-operation" title="Link to this heading"></a></h3>
+<p>Once the virtqueues are operational, they can be used to send and receive data. To do so, the pointer to the nth
+virtqueue has to be acquired using <a class="reference internal" href="../../doxygen/html/group__virtio__interface.html#ga4c1e58e5e34cb40f0a420a52767bff27" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">virtio_get_virtqueue()</span></code></a>. To send data consisting of a descriptor chain,
+<a class="reference internal" href="../../doxygen/html/group__virtqueue__interface.html#ga5e01b141e28aec876c298047f8d623a6" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">virtq_add_buffer_chain()</span></code></a> has to be used. Along the descriptor chain, it takes pointer to the callback that
+will be invoked once the device returns the given descriptor chain. After that, the virtqueue has to be notified using
+<a class="reference internal" href="../../doxygen/html/group__virtio__interface.html#gada51c40981fcdf232b571e1a11dc3cee" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">virtio_notify_virtqueue()</span></code></a> from the Virtio API.</p>
+</section>
+</section>
+<section id="guest-side-virtio-drivers">
+<h2>Guest-side Virtio drivers<a class="headerlink" href="#guest-side-virtio-drivers" title="Link to this heading"></a></h2>
+<p>Currently Zephyr provides drivers for Virtio over PCI and Virtio over MMIO and drivers for two devices using virtio - virtiofs, used
+to access the filesystem of the host and virtio-entropy, used as an entropy source.</p>
+<section id="virtiofs">
+<h3>Virtiofs<a class="headerlink" href="#virtiofs" title="Link to this heading"></a></h3>
+<p>This driver provides support for <a class="reference external" href="https://virtio-fs.gitlab.io/">virtiofs</a> - a filesystem allowing a virtual machine guest to access
+a directory on the host. It uses FUSE messages to communicate between the host and the guest in order to perform filesystem operations such as
+opening and reading files. Every time the guest wants to perform some filesystem operation it places in the virtqueue a descriptor chain
+starting with the device readable part, containing the FUSE input header and input data, and ending it with the device writeable part, with place
+for the FUSE output header and output data.</p>
+</section>
+<section id="virtio-entropy">
+<h3>Virtio-entropy<a class="headerlink" href="#virtio-entropy" title="Link to this heading"></a></h3>
+<p>This driver allows using virtio-entropy as an entropy source in Zephyr. The operation of this device is simple - the driver places a
+buffer in the virtqueue and receives it back, filled with random data.</p>
+</section>
+</section>
+<section id="virtio-samples">
+<h2>Virtio samples<a class="headerlink" href="#virtio-samples" title="Link to this heading"></a></h2>
+<p>A sample showcasing the use of a driver relying on Virtio is provided in <a class="reference internal" href="../../samples/subsys/fs/virtiofs/README.html#virtiofs" title="Use file system API over virtiofs.">virtiofs filesystem</a>. If you wish
+to check code interfacing directly with the Virtio driver, you can check the virtiofs driver, especially <code class="xref c c-func docutils literal notranslate"><span class="pre">virtiofs_init()</span></code>
+for initialization and <code class="xref c c-func docutils literal notranslate"><span class="pre">virtiofs_send_receive()</span></code> with the <code class="xref c c-func docutils literal notranslate"><span class="pre">virtiofs_recv_cb()</span></code> for data transfer to/from
+the Virtio device.</p>
+</section>
+<section id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__virtio__interface.html" title=""><span class="pre">VIRTIO</span></a></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__virtqueue__interface.html" title=""><span class="pre">Virtqueue</span> <span class="pre">Interface</span></a></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

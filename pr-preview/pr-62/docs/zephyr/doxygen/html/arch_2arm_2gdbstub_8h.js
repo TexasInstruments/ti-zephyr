@@ -1,0 +1,38 @@
+var arch_2arm_2gdbstub_8h =
+[
+    [ "gdb_ctx", "structgdb__ctx.html", "structgdb__ctx" ],
+    [ "DBGDBCR_BRK_EN_MASK", "arch_2arm_2gdbstub_8h.html#a8a45c188cf3151e9be5be93f30045677", null ],
+    [ "DBGDBCR_BYTE_ADDR_MASK", "arch_2arm_2gdbstub_8h.html#a50194abb1647e1d92d01c4ba47a9ec45", null ],
+    [ "DBGDBCR_BYTE_ADDR_SHIFT", "arch_2arm_2gdbstub_8h.html#ac87512cf5f50421d9b497257ac57e0e6", null ],
+    [ "DBGDBCR_MEANING_ADDR_MISMATCH", "arch_2arm_2gdbstub_8h.html#a4a8887a30ce534c977025df4cda6ebf3", null ],
+    [ "DBGDBCR_MEANING_MASK", "arch_2arm_2gdbstub_8h.html#a01ddae18a481f64f43e45bec4cec862f", null ],
+    [ "DBGDBCR_MEANING_SHIFT", "arch_2arm_2gdbstub_8h.html#ae980d4c38dc2b9cf9a844ee6c260543c", null ],
+    [ "DBGDSCR_MONITOR_MODE_EN", "arch_2arm_2gdbstub_8h.html#ae317be4d10650eb7cbb82e712dfea3cf", null ],
+    [ "GDB_READALL_PACKET_SIZE", "arch_2arm_2gdbstub_8h.html#a6453cecddeb088726f5a2aa150d60666", null ],
+    [ "IFSR_DEBUG_EVENT", "arch_2arm_2gdbstub_8h.html#a4d913f0bcecc023101cde8e72c082d19", null ],
+    [ "SPSR_ISETSTATE_ARM", "arch_2arm_2gdbstub_8h.html#a32017751414ac0108912b631a7ac2fc0", null ],
+    [ "SPSR_ISETSTATE_JAZELLE", "arch_2arm_2gdbstub_8h.html#a4e3118b8f4d3473750a606e5f4015622", null ],
+    [ "SPSR_J", "arch_2arm_2gdbstub_8h.html#a5e5065f2d7a76a211a83c196b1b32ffe", null ],
+    [ "SPSR_REG_IDX", "arch_2arm_2gdbstub_8h.html#a3cd5aa981d967ab54210822bc1a76b68", null ],
+    [ "SPSR_T", "arch_2arm_2gdbstub_8h.html#a052da1c2631bb0ea9f8670244c22702c", null ],
+    [ "AARCH32_GDB_REG", "arch_2arm_2gdbstub_8h.html#a0d4c0f1339778bac80a5871c979605ab", [
+      [ "R0", "arch_2arm_2gdbstub_8h.html#a0d4c0f1339778bac80a5871c979605aba8cd2a8ec48785abb434cbdfc72ea1219", null ],
+      [ "R1", "arch_2arm_2gdbstub_8h.html#a0d4c0f1339778bac80a5871c979605abaf8d87ff07efe24755164f550526f4dac", null ],
+      [ "R2", "arch_2arm_2gdbstub_8h.html#a0d4c0f1339778bac80a5871c979605aba629d7b403cea5f826352f3aefb9a6d6a", null ],
+      [ "R3", "arch_2arm_2gdbstub_8h.html#a0d4c0f1339778bac80a5871c979605abaad0b4725f69a34fed2c914517bcd9baa", null ],
+      [ "R4", "arch_2arm_2gdbstub_8h.html#a0d4c0f1339778bac80a5871c979605aba3805fd63a00bf220a1e303b977565eb8", null ],
+      [ "R5", "arch_2arm_2gdbstub_8h.html#a0d4c0f1339778bac80a5871c979605aba85be67ddcf5734117ab855cebe9b6563", null ],
+      [ "R6", "arch_2arm_2gdbstub_8h.html#a0d4c0f1339778bac80a5871c979605aba8cd5c4fcc06125ee4035a4f72a29bcba", null ],
+      [ "R7", "arch_2arm_2gdbstub_8h.html#a0d4c0f1339778bac80a5871c979605aba054fa446dec19779f7d15d8cc5fca5cf", null ],
+      [ "R8", "arch_2arm_2gdbstub_8h.html#a0d4c0f1339778bac80a5871c979605abadaf41609f8eadc7d15918adacc662c59", null ],
+      [ "R9", "arch_2arm_2gdbstub_8h.html#a0d4c0f1339778bac80a5871c979605aba550ff95070e1f18bc610107aaf8e0c2b", null ],
+      [ "R10", "arch_2arm_2gdbstub_8h.html#a0d4c0f1339778bac80a5871c979605abaef1c3e581bbab81e38c6d53357760b3c", null ],
+      [ "R11", "arch_2arm_2gdbstub_8h.html#a0d4c0f1339778bac80a5871c979605abaecda251967ab2413a2db85530a2a8429", null ],
+      [ "R12", "arch_2arm_2gdbstub_8h.html#a0d4c0f1339778bac80a5871c979605aba49ea06ace91cf41ec29751a4a1d5a7de", null ],
+      [ "R13", "arch_2arm_2gdbstub_8h.html#a0d4c0f1339778bac80a5871c979605aba1dd4349b8ea1e5be418ff8b01a25f37a", null ],
+      [ "LR", "arch_2arm_2gdbstub_8h.html#a0d4c0f1339778bac80a5871c979605aba6d456bf17ff1ba9f670c09ae9abb1305", null ],
+      [ "PC", "arch_2arm_2gdbstub_8h.html#a0d4c0f1339778bac80a5871c979605abaa2c62b62b658ac45e83749e9e9c1cb46", null ],
+      [ "SPSR", "arch_2arm_2gdbstub_8h.html#a0d4c0f1339778bac80a5871c979605aba34b48af74e3e2ce7523ef539a917dc39", null ],
+      [ "GDB_NUM_REGS", "arch_2arm_2gdbstub_8h.html#a0d4c0f1339778bac80a5871c979605abab4321f1e50a634d85534d73e468e97dd", null ]
+    ] ]
+];

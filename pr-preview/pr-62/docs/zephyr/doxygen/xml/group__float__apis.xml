@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="group__float__apis" kind="group">
+    <compoundname>float_apis</compoundname>
+    <title>Floating Point APIs</title>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="group__float__apis_1ga2df4b2550ace30512cddebd36b6a54a1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int k_float_disable</definition>
+        <argsstring>(struct k_thread *thread)</argsstring>
+        <name>k_float_disable</name>
+        <param>
+          <type>struct <ref refid="structk__thread" kindref="compound">k_thread</ref> *</type>
+          <declname>thread</declname>
+        </param>
+        <briefdescription>
+<para>Disable preservation of floating point context information. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This routine informs the kernel that the specified thread will no longer be using the floating point registers.</para>
+<para><simplesect kind="warning"><para>Some architectures apply restrictions on how the disabling of floating point preservation may be requested, see arch_float_disable.</para>
+</simplesect>
+<simplesect kind="warning"><para>This routine should only be used to disable floating point support for a thread that currently has such support enabled.</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>thread</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>ID of thread.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>0</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>On success. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-ENOTSUP</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>If the floating point disabling is not implemented. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EINVAL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>If the floating point disabling could not be performed. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/kernel.h" line="6940" column="6" declfile="zephyr/kernel.h" declline="6940" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group__float__apis_1ga81fb955ddd41658a9aad5c083f173f77" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int k_float_enable</definition>
+        <argsstring>(struct k_thread *thread, unsigned int options)</argsstring>
+        <name>k_float_enable</name>
+        <param>
+          <type>struct <ref refid="structk__thread" kindref="compound">k_thread</ref> *</type>
+          <declname>thread</declname>
+        </param>
+        <param>
+          <type><ref refid="lib_2libc_2minimal_2include_2sys_2types_8h_1a4089fb16419d359081465355db05f846" kindref="member">unsigned</ref> int</type>
+          <declname>options</declname>
+        </param>
+        <briefdescription>
+<para>Enable preservation of floating point context information. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This routine informs the kernel that the specified thread will use the floating point registers.</para>
+<para>Invoking this routine initializes the thread&apos;s floating point context info to that of an FPU that has been reset. The next time the thread is scheduled by z_swap() it will either inherit an FPU that is guaranteed to be in a &quot;sane&quot; state (if the most recent user of the FPU was cooperatively swapped out) or the thread&apos;s own floating point context will be loaded (if the most recent user of the FPU was preempted, or if this thread is the first user of the FPU). Thereafter, the kernel will protect the thread&apos;s FP context so that it is not altered during a preemptive context switch.</para>
+<para>The <emphasis>options</emphasis> parameter indicates which floating point register sets will be used by the specified thread.</para>
+<para>For x86 options:</para>
+<para><itemizedlist>
+<listitem><para>K_FP_REGS indicates x87 FPU and MMX registers only</para>
+</listitem><listitem><para>K_SSE_REGS indicates SSE registers (and also x87 FPU and MMX registers)</para>
+</listitem></itemizedlist>
+</para>
+<para><simplesect kind="warning"><para>Some architectures apply restrictions on how the enabling of floating point preservation may be requested, see arch_float_enable.</para>
+</simplesect>
+<simplesect kind="warning"><para>This routine should only be used to enable floating point support for a thread that currently has such support enabled.</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>thread</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>ID of thread. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>options</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>architecture dependent options</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>0</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>On success. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-ENOTSUP</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>If the floating point enabling is not implemented. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EINVAL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>If the floating point enabling could not be performed. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/kernel.h" line="6980" column="6" declfile="zephyr/kernel.h" declline="6980" declcolumn="6"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

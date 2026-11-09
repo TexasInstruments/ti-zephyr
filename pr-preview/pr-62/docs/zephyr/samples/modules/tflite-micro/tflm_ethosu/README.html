@@ -1,0 +1,566 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="Run an inference using an optimized TFLite model on Arm Ethos-U NPU." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TensorFlow Lite for Microcontrollers on Arm Ethos-U &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/samples/modules/tflite-micro/tflm_ethosu/README.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Apache Thrift" href="../../thrift/thrift.html" />
+    <link rel="prev" title="Magic Wand" href="../magic_wand/README.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1 current"><a class="category-link reference internal" href="../../../index.html">Samples and Demos</a><ul class="current">
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../application_development/application_development.html">Application Development</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../arch/index.html">Architecture-dependent Samples</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../basic/basic.html">Basic</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../bluetooth/bluetooth.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../boards/boards.html">Boards</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../cpp/cpp.html">C++</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../data_structures/data_structures.html">Data Structures</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../drivers/drivers.html">Drivers</a></li>
+<li class="toctree-l2 current"><a class="category-link reference internal" href="../../index.html">External modules</a><ul class="current">
+<li class="toctree-l3"><a class="category-link reference internal" href="../../thrift/thrift.html">Apache Thrift</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../cmsis_dsp/cmsis_dsp.html">CMSIS-DSP</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../lvgl/lvgl.html">LVGL</a></li>
+<li class="toctree-l3 current"><a class="category-link reference internal" href="../tflite-micro.html">TensorFlow Lite for Microcontrollers</a><ul class="current">
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../hello_world/README.html" title="Replicate a sine wave using TensorFlow Lite for Microcontrollers.">Hello World</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../magic_wand/README.html" title="Recognize gestures from an accelerometer using TensorFlow Lite for Microcontrollers and a 20KB neural network.">Magic Wand</a></li>
+<li class="toctree-l4 current"><a class="code-sample-link current reference internal" href="#" title="Run an inference using an optimized TFLite model on Arm Ethos-U NPU.">TensorFlow Lite for Microcontrollers on Arm Ethos-U</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../chre/README.html" title="Run nanoapps on Zephyr using the Context Hub Runtime Environment (CHRE).">Android's Context Hub Runtime Environment (CHRE)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../canopennode/README.html" title="Use the CANopenNode CANopen protocol stack in Zephyr.">CANopenNode</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../nanopb/README.html" title="Serialize and deserialize structured data using the nanopb module.">Nanopb</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../kernel/index.html">Kernel and Scheduler</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../net/net.html">Networking</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../posix/posix.html">POSIX API</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../psa/index.html">PSA</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../regulator/index.html">Regulator</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../sensor/sensor.html">Sensors</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../shields/shields.html">Shields</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/subsys.html">Subsystems</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../sysbuild/sysbuild.html">Sysbuild</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../tfm_integration/tfm_integration.html">TF-M Integration</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../userspace/index.html">Userspace</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../../synchronization/README.html" title="Manipulate basic kernel synchronization primitives.">Basic Synchronization</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../../philosophers/README.html" title="Implement a solution to the Dining Philosophers problem using Zephyr kernel services.">Dining Philosophers</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../../hello_world/README.html" title="Print &quot;Hello World&quot; to the console.">Hello World</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">Samples and Demos</a> &raquo;</li>
+  
+     <li><a href="../../index.html">External modules</a> &raquo;</li>
+  
+     <li><a href="../tflite-micro.html">TensorFlow Lite for Microcontrollers</a> &raquo;</li>
+  
+  <li>TensorFlow Lite for Microcontrollers on Arm Ethos-U</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main//samples/modules/tflite-micro/tflm_ethosu/README.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27samples%2Fmodules%2Ftflite-micro%2Ftflm_ethosu%2FREADME%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Samples%2Carea%3A+Neural+Networks&env=-+Page%3A+samples%2Fmodules%2Ftflite-micro%2Ftflm_ethosu%2FREADME%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="tflite-ethosu">
+<h1>TensorFlow Lite for Microcontrollers on Arm Ethos-U<a class="headerlink" href="#tflite-ethosu" title="Link to this heading"></a></h1>
+<p>
+                <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main//samples/modules/tflite-micro/tflm_ethosu/README.rst/.." class="btn btn-info fa fa-github"
+                    target="_blank" style="text-align: center;">
+                    Browse source code on GitHub
+                </a>
+                </p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>A sample application that demonstrates how to run an inference using the TFLM
+framework and the Arm Ethos-U NPU.</p>
+<p>The sample application runs a model that has been downloaded from the
+<a class="reference external" href="https://github.com/ARM-software/ML-zoo">Arm model zoo</a>. This model has then
+been optimized using the
+<a class="reference external" href="https://git.mlplatform.org/ml/ethos-u/ethos-u-vela.git">Vela compiler</a>.</p>
+<p>Vela takes a tflite file as input and produces another tflite file as output,
+where the operators supported by Ethos-U have been replaced by an Ethos-U custom
+operator. In an ideal case the complete network would be replaced by a single
+Ethos-U custom operator.</p>
+</section>
+<section id="generating-vela-compiled-model">
+<h2>Generating Vela-compiled model<a class="headerlink" href="#generating-vela-compiled-model" title="Link to this heading"></a></h2>
+<p>Follow the steps below to generate Vela-compiled model and test input/output data.
+Use <a class="reference external" href="https://github.com/Arm-Examples/ML-zoo/tree/master/models/keyword_spotting/cnn_small/model_package_tf/model_archive/TFLite/tflite_int8">keyword_spotting_cnn_small_int8</a> model in this sample:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The default Vela-compiled model is to target Ethos-U55 and 128 MAC
+on MPS3 target. Because one model can add up to hundreds of KB, don’t
+attempt to add more models into code base for other targets.</p>
+</div>
+<ol class="arabic">
+<li><p>Downloading the files below from <a class="reference external" href="https://github.com/Arm-Examples/ML-zoo/tree/master/models/keyword_spotting/cnn_small/model_package_tf/model_archive/TFLite/tflite_int8">keyword_spotting_cnn_small_int8</a>:</p>
+<ul class="simple">
+<li><p>cnn_s_quantized.tflite</p></li>
+<li><p>testing_input/input/0.npy</p></li>
+<li><p>testing_output/identity/0.npy</p></li>
+</ul>
+</li>
+<li><p>Optimizing the model for Ethos-U using Vela</p>
+<p>Assuming target Ethos-U is U55 and 128 MAC:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>vela<span class="w"> </span>cnn_s_quantized.tflite<span class="w"> </span><span class="se">\</span>
+--output-dir<span class="w"> </span>.<span class="w"> </span><span class="se">\</span>
+--accelerator-config<span class="w"> </span>ethos-u55-128<span class="w"> </span><span class="se">\</span>
+--system-config<span class="w"> </span>Ethos_U55_High_End_Embedded<span class="w"> </span><span class="se">\</span>
+--memory-mode<span class="w"> </span>Shared_Sram
+</pre></div>
+</div>
+</li>
+<li><p>Removing unnecessary header</p>
+<p><code class="docutils literal notranslate"><span class="pre">testing_input/input/0.npy</span></code> and <code class="docutils literal notranslate"><span class="pre">testing_output/0.npy</span></code> have 128-byte header.
+They must be removed for integration with this sample.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>testing_input/input/0.npy<span class="w"> </span><span class="nv">of</span><span class="o">=</span>testing_input/input/0_no-header.npy<span class="w"> </span><span class="nv">bs</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">skip</span><span class="o">=</span><span class="m">128</span>
+<span class="gp">$ </span>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>testing_output/identity/0.npy<span class="w"> </span><span class="nv">of</span><span class="o">=</span>testing_output/identity/0_no-header.npy<span class="w"> </span><span class="nv">bs</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">skip</span><span class="o">=</span><span class="m">128</span>
+</pre></div>
+</div>
+</li>
+<li><p>Converting to C array</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>xxd<span class="w"> </span>-c<span class="w"> </span><span class="m">16</span><span class="w"> </span>-i<span class="w"> </span>cnn_s_quantized.tflite<span class="w"> </span>cnn_s_quantized.tflite.h
+<span class="gp">$ </span>xxd<span class="w"> </span>-c<span class="w"> </span><span class="m">16</span><span class="w"> </span>-i<span class="w"> </span>cnn_s_quantized_vela.tflite<span class="w"> </span>cnn_s_quantized_vela.tflite.h
+<span class="gp">$ </span>xxd<span class="w"> </span>-c<span class="w"> </span><span class="m">16</span><span class="w"> </span>-i<span class="w"> </span>testing_input/input/0_no-header.npy<span class="w"> </span>testing_input/input/0_no-header.npy.h
+<span class="gp">$ </span>xxd<span class="w"> </span>-c<span class="w"> </span><span class="m">16</span><span class="w"> </span>-i<span class="w"> </span>testing_output/identity/0_no-header.npy<span class="w"> </span>testing_output/identity/0_no-header.npy.h
+</pre></div>
+</div>
+</li>
+<li><p>Synchronizing to this sample</p>
+<p>Synchronize the files below to <code class="docutils literal notranslate"><span class="pre">keyword_spotting_cnn_small_int8</span></code> directory
+in this sample:</p>
+<ul class="simple">
+<li><p>cnn_s_quantized_vela.tflite.h &gt; model.h</p></li>
+<li><p>testing_input/input/0_no-header.npy.h &gt; input.h</p></li>
+<li><p>testing_output/identity/0_no-header.npy.h &gt; output.h</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To run non-Vela-compiled model (<code class="docutils literal notranslate"><span class="pre">CONFIG_TAINT_BLOBS_TFLM_ETHOSU=n</span></code>),
+synchronize <code class="docutils literal notranslate"><span class="pre">cnn_s_quantized.tflite.h</span></code> instead.</p>
+</div>
+</li>
+</ol>
+</section>
+<section id="building-and-running">
+<h2>Building and running<a class="headerlink" href="#building-and-running" title="Link to this heading"></a></h2>
+<p>Add the tflite-micro module to your West manifest and pull it:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west config manifest.project-filter -- +tflite-micro</span>
+<span class="go">west update</span>
+</pre></div>
+</div>
+<p>This application can be built and run on any Arm Ethos-U capable platform, for
+example Corstone(TM)-300. A reference implementation of Corstone-300 can be
+downloaded either as a FPGA bitfile for the
+<a class="reference external" href="https://developer.arm.com/tools-and-software/development-boards/fpga-prototyping-boards/mps3">MPS3 FPGA prototyping board</a>,
+or as a
+<a class="reference external" href="https://developer.arm.com/tools-and-software/open-source-software/arm-platforms-software/arm-ecosystem-fvps">Fixed Virtual Platform</a>
+that can be emulated on a host machine.</p>
+<p>Assuming that the Corstone-300 FVP has been downloaded, installed and added to
+the <code class="docutils literal notranslate"><span class="pre">PATH</span></code> variable, then building and testing can be done with following
+commands.</p>
+<p>Build the sample for the FVP:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>mps3/corstone300/fvp<span class="w"> </span>samples/modules/tflite-micro/tflm_ethosu
+</pre></div>
+</div>
+<p>Then run the image on the FVP:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>FVP_Corstone_SSE-300_Ethos-U55<span class="w"> </span>build/zephyr/zephyr.elf
+</pre></div>
+</div>
+</section>
+<section id="configuring-pmu-events-via-cmake">
+<h2>Configuring PMU Events via CMake<a class="headerlink" href="#configuring-pmu-events-via-cmake" title="Link to this heading"></a></h2>
+<p>If <code class="docutils literal notranslate"><span class="pre">CONFIG_SAMPLE_TFLM_ETHOSU_PMU</span></code> is enabled, the sample reports
+per-inference PMU counters. You can override which PMU events are
+counted by setting CMake cache variables <code class="docutils literal notranslate"><span class="pre">ETHOSU_PMU_EVENT_0</span></code> ..
+<code class="docutils literal notranslate"><span class="pre">ETHOSU_PMU_EVENT_3</span></code> (and <code class="docutils literal notranslate"><span class="pre">_4</span></code> .. <code class="docutils literal notranslate"><span class="pre">_7</span></code> when supported). Each value should
+be an event token from the PMU header (for example
+<code class="docutils literal notranslate"><span class="pre">ETHOSU_PMU_AXI0_RD_DATA_BEAT_RECEIVED</span></code>). Sensible defaults are provided by
+the sample CMake based on the target platform.</p>
+<p>For example, to enable the PMU instrumentation and override the first two
+events:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>mps3/corstone300/fvp<span class="w"> </span>samples/modules/tflite-micro/tflm_ethosu<span class="w"> </span>--<span class="w"> </span>-DCONFIG_SAMPLE_TFLM_ETHOSU_PMU<span class="o">=</span>y<span class="w"> </span>-DETHOSU_PMU_EVENT_0<span class="o">=</span>ETHOSU_PMU_AXI0_RD_DATA_BEAT_RECEIVED<span class="w"> </span>-DETHOSU_PMU_EVENT_1<span class="o">=</span>ETHOSU_PMU_AXI1_RD_DATA_BEAT_RECEIVED
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>run
+</pre></div>
+</div>
+</section>
+<section id="pmu-report-format">
+<h2>PMU report format<a class="headerlink" href="#pmu-report-format" title="Link to this heading"></a></h2>
+<p>When enabled, the sample prints a short PMU report after each inference in a
+compact, machine-parseable style:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Ethos-U PMU report:
+ethosu_pmu_cycle_cntr : 134869
+ethosu_pmu_cntr0 : 133577
+ethosu_pmu_cntr1 : 0
+ethosu_pmu_cntr2 : 111744
+ethosu_pmu_cntr3 : 0
+# (if supported, counters 4..7 are also printed.)
+</pre></div>
+</div>
+</section>
+<section id="timing-adapters-ta">
+<h2>Timing Adapters (TA)<a class="headerlink" href="#timing-adapters-ta" title="Link to this heading"></a></h2>
+<p>The timing adapters allows the platform to simulate user provided memory
+bandwidth and latency constraints on platforms that support it (FVP/FPGA).
+This sample does <strong>not</strong> auto-add overlays; apply a TA overlay explicitly with
+<code class="docutils literal notranslate"><span class="pre">-DDTC_OVERLAY_FILE=...</span></code>.</p>
+<p>For a full overview of TA behavior, controls, and usage guidance, see the
+<a class="reference external" href="https://gitlab.arm.com/artificial-intelligence/ethos-u/ml-embedded-evaluation-kit/-/blob/main/docs/sections/timing_adapters.md">Evaluation Kit documentation: Timing Adapters</a>.</p>
+<section id="ta-overlay-only-corstone-320">
+<h3>TA overlay only (Corstone-320)<a class="headerlink" href="#ta-overlay-only-corstone-320" title="Link to this heading"></a></h3>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>mps4/corstone320/fvp<span class="w"> </span>samples/modules/tflite-micro/tflm_ethosu<span class="w"> </span>--<span class="w"> </span>-DDTC_OVERLAY_FILE<span class="o">=</span>boards/mps4_corstone320_fvp.ta.overlay
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>run
+</pre></div>
+</div>
+</section>
+<section id="ta-overlay-only-corstone-300">
+<h3>TA overlay only (Corstone-300)<a class="headerlink" href="#ta-overlay-only-corstone-300" title="Link to this heading"></a></h3>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>mps3/corstone300/fvp<span class="w"> </span>samples/modules/tflite-micro/tflm_ethosu<span class="w"> </span>--<span class="w"> </span>-DDTC_OVERLAY_FILE<span class="o">=</span>boards/mps3_corstone300_fvp.ta.overlay
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>run
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<script type="application/ld+json">
+                {"@context": "http://schema.org", "@type": "SoftwareSourceCode", "name": "TensorFlow Lite for Microcontrollers on Arm Ethos-U", "description": "Run an inference using an optimized TFLite model on Arm Ethos-U NPU.", "codeSampleType": "full", "codeRepository": "https://github.com/zephyrproject-rtos/zephyr/blob/main//samples/modules/tflite-micro/tflm_ethosu/README.rst"}
+                </script>
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

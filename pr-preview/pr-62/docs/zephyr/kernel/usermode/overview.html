@@ -1,0 +1,552 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overview &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/kernel/usermode/overview.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Memory Protection Design" href="memory_domain.html" />
+    <link rel="prev" title="User Mode" href="index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Kernel</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../services/index.html">Kernel Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drivers/index.html">Device Driver Model</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">User Mode</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Overview</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#threat-model">Threat Model</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#design-goals">Design Goals</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#high-level-policy-details">High-level Policy Details</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#constraints">Constraints</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="memory_domain.html">Memory Protection Design</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kernelobjects.html">Kernel Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls.html">System Calls</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mpu_stack_objects.html">MPU Stack Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mpu_userspace.html">MPU Backed Userspace</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management/index.html">Memory Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data_structures/index.html">Data Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timing_functions/index.html">Executing Time Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../object_cores/index.html">Object Cores</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timeutil.html">Time Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../util/index.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iterable_sections/index.html">Iterable Sections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../code-relocation.html">Code And Data Relocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanup.html">Scope-based Cleanup Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Kernel</a> &raquo;</li>
+  
+     <li><a href="index.html">User Mode</a> &raquo;</li>
+  
+  <li>Overview</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/kernel/usermode/overview.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27kernel%2Fusermode%2Foverview%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Kernel&env=-+Page%3A+kernel%2Fusermode%2Foverview%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="overview">
+<span id="usermode-overview"></span><h1>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h1>
+<section id="threat-model">
+<h2>Threat Model<a class="headerlink" href="#threat-model" title="Link to this heading"></a></h2>
+<p>User mode threads are considered to be untrusted by Zephyr and are therefore
+isolated from other user mode threads and from the kernel. A flawed or
+malicious user mode thread cannot leak or modify the private data/resources
+of another thread or the kernel, and cannot interfere with or
+control another user mode thread or the kernel.</p>
+<p>Example use-cases of Zephyr’s user mode features:</p>
+<ul class="simple">
+<li><p>The kernel can protect against many unintentional programming errors which
+could otherwise silently or spectacularly corrupt the system.</p></li>
+<li><p>The kernel can sandbox complex data parsers such as interpreters, network
+protocols, and filesystems such that malicious third-party code or data
+cannot compromise the kernel or other threads.</p></li>
+<li><p>The kernel can support the notion of multiple logical “applications”, each
+with their own group of threads and private data structures, which are
+isolated from each other if one crashes or is otherwise compromised.</p></li>
+</ul>
+<section id="design-goals">
+<h3>Design Goals<a class="headerlink" href="#design-goals" title="Link to this heading"></a></h3>
+<p>For threads running in a non-privileged CPU state (hereafter referred to as
+‘user mode’) we aim to protect against the following:</p>
+<ul class="simple">
+<li><p>We prevent access to memory not specifically granted, or incorrect access to
+memory that has an incompatible policy, such as attempting to write to a
+read-only area.</p>
+<ul>
+<li><p>Access to thread stack buffers will be controlled with a policy which
+partially depends on the underlying memory protection hardware.</p>
+<ul>
+<li><p>A user thread will by default have read/write access to its own stack
+buffer.</p></li>
+<li><p>A user thread will never by default have access to user thread stacks
+that are not members of the same memory domain.</p></li>
+<li><p>A user thread will never by default have access to thread stacks owned
+by a supervisor thread, or thread stacks used to handle system call
+privilege elevations, interrupts, or CPU exceptions.</p></li>
+<li><p>A user thread may have read/write access to the stacks of other user
+threads in the same memory domain, depending on hardware.</p>
+<ul>
+<li><p>On MPU systems, threads may only access their own stack buffer.</p></li>
+<li><p>On MMU systems, threads may access any user thread stack in the same
+memory domain. Portable code should not assume this.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>By default, program text and read-only data are accessible to all threads
+on read-only basis, kernel-wide. This policy may be adjusted.</p></li>
+<li><p>User threads by default are not granted default access to any memory
+except what is noted above.</p></li>
+</ul>
+</li>
+<li><p>We prevent use of device drivers or kernel objects not specifically granted,
+with the permission granularity on a per object or per driver instance
+basis.</p></li>
+<li><p>We validate kernel or driver API calls with incorrect parameters that would
+otherwise cause a crash or corruption of data structures private to the
+kernel. This includes:</p>
+<ul>
+<li><p>Using the wrong kernel object type.</p></li>
+<li><p>Using parameters outside of proper bounds or with nonsensical values.</p></li>
+<li><p>Passing memory buffers that the calling thread does not have sufficient
+access to read or write, depending on the semantics of the API.</p></li>
+<li><p>Use of kernel objects that are not in a proper initialization state.</p></li>
+</ul>
+</li>
+<li><p>We ensure the detection and safe handling of user mode stack overflows.</p></li>
+<li><p>We prevent invoking system calls to functions excluded by the kernel
+configuration.</p></li>
+<li><p>We prevent disabling of or tampering with kernel-defined and
+hardware-enforced memory protections.</p></li>
+<li><p>We prevent re-entry from user to supervisor mode except through the
+kernel-defined system calls and interrupt handlers.</p></li>
+<li><p>We prevent the introduction of new executable code by user mode threads,
+except to the extent to which this is supported by kernel system calls.</p></li>
+</ul>
+<p>We are specifically not protecting against the following attacks:</p>
+<ul class="simple">
+<li><p>The kernel itself, and any threads that are executing in supervisor mode,
+are assumed to be trusted.</p></li>
+<li><p>The toolchain and any supplemental programs used by the build system are
+assumed to be trusted.</p></li>
+<li><p>The kernel build is assumed to be trusted. There is considerable build-time
+logic for creating the tables of valid kernel objects, defining system calls,
+and configuring interrupts. The .elf binary files that are worked with
+during this process are all assumed to be trusted code.</p></li>
+<li><p>We can’t protect against mistakes made in memory domain configuration done in
+kernel mode that exposes private kernel data structures to a user thread. RAM
+for kernel objects should always be configured as supervisor-only.</p></li>
+<li><p>It is possible to make top-level declarations of user mode threads and
+assign them permissions to kernel objects. In general, all C and header
+files that are part of the kernel build producing zephyr.elf are assumed to
+be trusted.</p></li>
+<li><p>We do not protect against denial of service attacks through thread CPU
+starvation. Zephyr has no thread priority aging and a user thread of a
+particular priority can starve all threads of lower priority, and also other
+threads of the same priority if time-slicing is not enabled.</p></li>
+<li><p>There are build-time defined limits on how many threads can be active
+simultaneously, after which creation of new user threads will fail.</p></li>
+<li><p>Stack overflows for threads running in supervisor mode may be caught,
+but the integrity of the system cannot be guaranteed.</p></li>
+</ul>
+</section>
+</section>
+<section id="high-level-policy-details">
+<h2>High-level Policy Details<a class="headerlink" href="#high-level-policy-details" title="Link to this heading"></a></h2>
+<p>Broadly speaking, we accomplish these thread-level memory protection goals
+through the following mechanisms:</p>
+<ul class="simple">
+<li><p>Any user thread will only have access to a subset of memory:
+typically its stack, program text, read-only data, and any partitions
+configured in the <a class="reference internal" href="memory_domain.html#memory-domain"><span class="std std-ref">Memory Protection Design</span></a> it belongs to. Access to any other RAM
+must be done on the thread’s behalf through system calls, or specifically
+granted by a supervisor thread using the memory domain APIs. Newly created
+threads inherit the memory domain configuration of the parent. Threads may
+communicate with each other by having shared membership of the same memory
+domains, or via kernel objects such as semaphores and pipes.</p></li>
+<li><p>User threads cannot directly access memory belonging to kernel objects.
+Although pointers to kernel objects are used to reference them, actual
+manipulation of kernel objects is done through system call interfaces. Device
+drivers and threads stacks are also considered kernel objects. This ensures
+that any data inside a kernel object that is private to the kernel cannot be
+tampered with.</p></li>
+<li><p>User threads by default have no permission to access any kernel object or
+driver other than their own thread object. Such access must be granted by
+another thread that is either in supervisor mode or has permission on both
+the receiving thread object and the kernel object being granted access to.
+The creation of new threads has an option to automatically inherit
+permissions of all kernel objects granted to the parent, except the parent
+thread itself.</p></li>
+<li><p>For performance and footprint reasons Zephyr normally does little or no
+parameter error checking for kernel object or device driver APIs. Access from
+user mode through system calls involves an extra layer of handler functions,
+which are expected to rigorously validate access permissions and type of
+the object, check the validity of other parameters through bounds checking or
+other means, and verify proper read/write access to any memory buffers
+involved.</p></li>
+<li><p>Thread stacks are defined in such a way that exceeding the specified stack
+space will generate a hardware fault. The way this is done specifically
+varies per architecture.</p></li>
+</ul>
+</section>
+<section id="constraints">
+<h2>Constraints<a class="headerlink" href="#constraints" title="Link to this heading"></a></h2>
+<p>All kernel objects, thread stacks, and device driver instances must be defined
+at build time if they are to be used from user mode. Dynamic use-cases for
+kernel objects will need to go through pre-defined pools of available objects.</p>
+<p>There are some constraints if additional application binary data is loaded
+for execution after the kernel starts:</p>
+<ul class="simple">
+<li><p>Loaded object code will not be able to define any kernel objects that will be
+recognized by the kernel. This code will instead need to use APIs for
+requesting kernel objects from pools.</p></li>
+<li><p>Similarly, since the loaded object code will not be part of the kernel build
+process, this code will not be able to install interrupt handlers,
+instantiate device drivers, or define system calls, regardless of what
+mode it runs in.</p></li>
+<li><p>Loaded object code that does not come from a verified source should always
+be entered with the CPU already in user mode.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

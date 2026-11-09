@@ -1,0 +1,820 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Improved Inter-Integrated Circuit (I3C) Bus &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/hardware/peripherals/i3c.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Inter-Integrated Circuit (I2C) Bus" href="i2c.html" />
+    <link rel="prev" title="I2C EEPROM Target" href="i2c_eeprom_target.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Hardware Support</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../arch/index.html">Architecture-related Guides</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../barriers/index.html">Barriers API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cache/index.html">Caching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/index.html">Zephyr’s device emulators/simulators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/bus_emulators.html">External Bus and Bus Connected Peripherals Emulators</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Peripherals</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="w1.html">1-Wire Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="adc.html">Analog-to-Digital Converter (ADC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auxdisplay.html">Auxiliary Display (auxdisplay)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="audio/index.html">Audio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bbram.html">Battery Backed RAM (BBRAM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bc12.html">BC1.2 Devices (Experimental)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="biometrics.html">Biometrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="clock_control.html">Clock Control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="can/index.html">Controller Area Network (CAN)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="charger.html">Chargers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="comparator.html">Comparator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="coredump.html">Coredump Device</a></li>
+<li class="toctree-l3"><a class="reference internal" href="counter.html">Counter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="crc.html">Cyclic Redundancy Check (CRC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dac.html">Digital-to-Analog Converter (DAC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dma.html">Direct Memory Access (DMA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="display/index.html">Display</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eeprom/index.html">Electrically Erasable Programmable Read-Only Memory (EEPROM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="espi.html">Enhanced Serial Peripheral Interface (eSPI) Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="entropy.html">Entropy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="edac/index.html">Error Detection And Correction (EDAC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flash.html">Flash</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fuel_gauge.html">Fuel Gauge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnss.html">GNSS (Global Navigation Satellite System)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gpio.html">General-Purpose Input/Output (GPIO)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="haptics.html">Haptics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hwinfo.html">Hardware Information</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hwspinlock.html">Hardware Spinlocks (HWSPINLOCK)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="i2c_eeprom_target.html">I2C EEPROM Target</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Improved Inter-Integrated Circuit (I3C) Bus</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#i3c-controller-api">I3C Controller API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#in-band-interrupt-ibi">In-Band Interrupt (IBI)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#device-tree">Device Tree</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#device-drivers-for-i3c-devices">Device Drivers for I3C Devices</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#i2c-devices-under-i3c-bus">I<sup>2</sup>C Devices under I3C Bus</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="i2c.html">Inter-Integrated Circuit (I2C) Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ipm.html">Inter-Processor Mailbox (IPM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="led.html">Light-Emitting Diode (LED)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mdio.html">Management Data Input/Output (MDIO)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mspi.html">Multi-bit SPI Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mbox.html">Multi-Channel Inter-Processor Mailbox (MBOX)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mux.html">Multiplexer (MUX)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="opamp.html">Operational Amplifier (OPAMP)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="otp/index.html">One Time Programmable (OTP) memory devices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pcie.html">Peripheral Component Interconnect express Bus (PCIe)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="peci.html">Platform Environment Control Interface (PECI)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ps2.html">PS/2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="psi5.html">Peripheral Sensor Interface (PSI5)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pwm.html">Pulse Width Modulation (PWM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rtc.html">Real-Time Clock (RTC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="regulators.html">Regulators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="reset.html">Reset Controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="retained_mem.html">Retained Memory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sdhc.html">Secure Digital (SD card) interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sensor/index.html">Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sent.html">Single Edge Nibble Transmission (SENT)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spi.html">Serial Peripheral Interface (SPI) Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stepper/index.html">Steppers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smbus.html">System Management Bus (SMBus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="uart.html">Universal Asynchronous Receiver-Transmitter (UART)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usbc_vbus.html">USB-C VBUS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tcpc.html">USB Type-C Port Controller (TCPC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tgpio.html">Time-aware General-Purpose Input/Output (TGPIO)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="video.html">Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="watchdog.html">Watchdog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="wuc.html">Wakeup Controller (WUC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../pinctrl/index.html">Pin Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../porting/index.html">Porting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">Virtualization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Hardware Support</a> &raquo;</li>
+  
+     <li><a href="index.html">Peripherals</a> &raquo;</li>
+  
+  <li>Improved Inter-Integrated Circuit (I3C) Bus</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/hardware/peripherals/i3c.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27hardware%2Fperipherals%2Fi3c%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+I3C&env=-+Page%3A+hardware%2Fperipherals%2Fi3c%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="improved-inter-integrated-circuit-i3c-bus">
+<span id="i3c-api"></span><h1>Improved Inter-Integrated Circuit (I3C) Bus<a class="headerlink" href="#improved-inter-integrated-circuit-i3c-bus" title="Link to this heading"></a></h1>
+<p>I3C (Improved Inter-Integrated Circuit) is a two-signal shared
+peripheral interface bus.  Devices on the bus can operate in
+two roles: as a “controller” that initiates transactions and
+controls the clock, or as a “target” that responds to transaction
+commands.</p>
+<p>Currently, the API is based on <a class="reference external" href="https://www.mipi.org/specifications/i3c-sensor-specification">I3C Specification</a> version 1.1.1.</p>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#i3c-controller-api" id="id2">I3C Controller API</a></p>
+<ul>
+<li><p><a class="reference internal" href="#in-band-interrupt-ibi" id="id3">In-Band Interrupt (IBI)</a></p></li>
+<li><p><a class="reference internal" href="#device-tree" id="id4">Device Tree</a></p></li>
+<li><p><a class="reference internal" href="#device-drivers-for-i3c-devices" id="id5">Device Drivers for I3C Devices</a></p></li>
+<li><p><a class="reference internal" href="#i2c-devices-under-i3c-bus" id="id6">I<sup>2</sup>C Devices under I3C Bus</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#configuration-options" id="id7">Configuration Options</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id8">API Reference</a></p></li>
+</ul>
+</nav>
+<section id="i3c-controller-api">
+<span id="id1"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">I3C Controller API</a><a class="headerlink" href="#i3c-controller-api" title="Link to this heading"></a></h2>
+<p>Zephyr’s I3C controller API is used when an I3C controller controls
+the bus, particularly the start and stop conditions and the clock.
+This is the most common mode, used to interact with I3C target
+devices such as sensors.</p>
+<p>Due to the nature of the I3C, there are devices on the bus where
+they may not have addresses when powered on. Therefore, an additional
+dynamic address assignment needs to be carried out by the I3C
+controller. Because of this, the controller needs to maintain
+separate structures to keep track of device status. This can be done
+at build time, for example, by creating arrays of device descriptors
+for both I3C and I<sup>2</sup>C devices:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">i3c_device_desc</span><span class="w"> </span><span class="n">i3c_device_array</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">I3C_DEVICE_ARRAY_DT_INST</span><span class="p">(</span><span class="n">inst</span><span class="p">);</span>
+<span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">i3c_i2c_device_desc</span><span class="w"> </span><span class="n">i2c_device_array</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">I3C_I2C_DEVICE_ARRAY_DT_INST</span><span class="p">(</span><span class="n">inst</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The macros <a class="reference internal" href="../../doxygen/html/group__i3c__devicetree.html#ga3153fd2d2b68eb760730827f6d6986c5" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">I3C_DEVICE_ARRAY_DT_INST</span></code></a> and
+<a class="reference internal" href="../../doxygen/html/group__i3c__devicetree.html#gab441564c36a5d7e0856bba5eed51906f" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">I3C_I2C_DEVICE_ARRAY_DT_INST</span></code></a> are helper macros to aid in
+create arrays of device descriptors corresponding to the devicetree
+nodes under the I3C controller.</p>
+<p>Here is a list of generic steps for initializing the I3C
+controller and the I3C bus inside the device driver
+initialization function:</p>
+<ol class="arabic simple">
+<li><p>Initialize the data structure of the I3C controller device
+driver instance. The usual device defining macros such as
+<a class="reference internal" href="../../doxygen/html/group__device__model.html#gada5ba4aca9e0662ccebb2232c7256419" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DEVICE_DT_INST_DEFINE</span></code></a> can be used, and the initialization
+function provided as a parameter to the macro.</p>
+<ul class="simple">
+<li><p>The <a class="reference internal" href="../../doxygen/html/structi3c__addr__slots.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">i3c_addr_slots</span></code></a> and <a class="reference internal" href="../../doxygen/html/structi3c__dev__list.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">i3c_dev_list</span></code></a> are
+structures to aid in address assignments and device list management.
+If this is being used, this struct needs to be initialized by calling
+<a class="reference internal" href="../../doxygen/html/group__i3c__addresses.html#gaf2be07d40d885f60997b5eb5edcf910f" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">i3c_addr_slots_init()</span></code></a>. These two structures can also be used
+with various helper functions.</p></li>
+<li><p>Initialize the device descriptors if needed by the controller
+driver.</p></li>
+</ul>
+</li>
+<li><p>Initialize the hardware, including but not limited to:</p>
+<ul class="simple">
+<li><p>Setup pin mux and directions.</p></li>
+<li><p>Setup the clock for the controller.</p></li>
+<li><p>Power on the hardware.</p></li>
+<li><p>Configure the hardware (e.g. SCL clock frequency).</p></li>
+</ul>
+</li>
+<li><p>Perform bus initialization. There is a generic helper function,
+<a class="reference internal" href="../../doxygen/html/group__i3c__interface.html#ga9af9191a5ab2e5e2ea0478520721171d" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">i3c_bus_init()</span></code></a>, which performs the following steps.
+This function can be used if the controller does not require
+any special handling during bus initialization.</p>
+<ol class="arabic simple">
+<li><p>Do <code class="docutils literal notranslate"><span class="pre">RSTDAA</span></code> to reset dynamic addresses of connected devices.
+If any connected devices have already been assigned an address,
+the bookkeeping data structures do not have records of these,
+for example, at power-on. So it is a good idea to reset and
+assign them new addresses.</p></li>
+<li><p>Do <code class="docutils literal notranslate"><span class="pre">DISEC</span></code> to disable any events from devices.</p></li>
+<li><p>Do <code class="docutils literal notranslate"><span class="pre">SETDASA</span></code> to assign a dynamic address using the static address of the device
+if so desired.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SETAASA</span></code> may not be supported for all connected devices
+to assign static addresses as dynamic addresses.</p></li>
+<li><p>BCR and DCR need to be obtained separately to populate
+the relevant fields in the I3C target device descriptor
+struct.</p></li>
+</ul>
+</li>
+<li><p>Do <code class="docutils literal notranslate"><span class="pre">ENTDAA</span></code> to start dynamic address assignment, if there are
+still devices without addresses.</p>
+<ul class="simple">
+<li><p>If there is a device waiting for address, it will send
+its Provisioned ID, BCR, and DCR back. Match the received
+Provisioned ID to the list of registered I3C devices.</p>
+<ul>
+<li><p>If there is a match, assign an address (either from
+the stated static address if <code class="docutils literal notranslate"><span class="pre">SETDASA</span></code> has not been
+done, or use a free address).</p>
+<ul>
+<li><p>Also, set the BCR and DCR fields in the device descriptor
+struct.</p></li>
+</ul>
+</li>
+<li><p>If there is no match, depending on policy, it can be
+assigned a free address, or the device driver can stop
+the assignment process and errors out.</p>
+<ul>
+<li><p>Note that the I3C API requires device descriptor to
+function. A device without a device descriptor cannot be
+accessed through the API.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>This step can be skipped if there is no connected devices
+requiring DAA.</p></li>
+</ul>
+</li>
+<li><p>These are optional but highly recommended:</p>
+<ul class="simple">
+<li><p>Do <code class="docutils literal notranslate"><span class="pre">GETMRL</span></code> and <code class="docutils literal notranslate"><span class="pre">GETMWL</span></code> to get maximum read/write
+length.</p></li>
+<li><p>Do <code class="docutils literal notranslate"><span class="pre">GETMXDS</span></code> to get maximum read/write speed and maximum
+read turnaround time.</p></li>
+<li><p>The helper function, <a class="reference internal" href="../../doxygen/html/group__i3c__interface.html#ga9af9191a5ab2e5e2ea0478520721171d" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">i3c_bus_init()</span></code></a>, would retrieve
+basic device information such as BCR, DCR, MRL and MWL.</p></li>
+</ul>
+</li>
+<li><p>Do <code class="docutils literal notranslate"><span class="pre">ENEC</span></code> to re-enable events from devices.</p>
+<ul class="simple">
+<li><p>The helper function, <a class="reference internal" href="../../doxygen/html/group__i3c__interface.html#ga9af9191a5ab2e5e2ea0478520721171d" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">i3c_bus_init()</span></code></a>, only re-enables
+hot-join events. IBI event should only be enabled when
+enabling IBI of a device.</p></li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+<section id="in-band-interrupt-ibi">
+<h3><a class="toc-backref" href="#id3" role="doc-backlink">In-Band Interrupt (IBI)</a><a class="headerlink" href="#in-band-interrupt-ibi" title="Link to this heading"></a></h3>
+<p>If a target device can generate In-Band Interrupt (IBI),
+the controller needs to be made aware of it.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../doxygen/html/group__i3c__ibi.html#ga7625ef0313ded1f638a6eb44395b02c0" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">i3c_ibi_enable()</span></code></a> to enable IBI of a target device.</p>
+<ul>
+<li><p>Some controller hardware have IBI slots which need to be
+programmed so that the controller can recognize incoming IBIs
+from a particular target device.</p>
+<ul>
+<li><p>If the hardware has IBI slots, <a class="reference internal" href="../../doxygen/html/group__i3c__ibi.html#ga7625ef0313ded1f638a6eb44395b02c0" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">i3c_ibi_enable()</span></code></a>
+needs to program those IBI slots.</p></li>
+<li><p>Note that there are usually limited IBI slots on
+the controller so this operation may fail.</p></li>
+</ul>
+</li>
+<li><p>The implementation in driver should also send the <code class="docutils literal notranslate"><span class="pre">ENEC</span></code> command
+to enable interrupt of this target device.</p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__i3c__ibi.html#ga037e156404324262694b4a5403821adc" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">i3c_ibi_disable()</span></code></a> to disable IBI of a target device.</p>
+<ul>
+<li><p>If controller hardware makes use of IBI slots, this will remove
+description of the target device from the slots.</p></li>
+<li><p>The implementation in driver should also send the <code class="docutils literal notranslate"><span class="pre">DISEC</span></code> command
+to disable interrupt of this target device.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="device-tree">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">Device Tree</a><a class="headerlink" href="#device-tree" title="Link to this heading"></a></h3>
+<p>Here is an example for defining a I3C controller in device tree:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nl">i3c0</span><span class="p">:</span><span class="w"> </span><span class="nf">i3c</span><span class="o">@</span><span class="mi">10000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;vendor,i3c&quot;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="kr">#address-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x3</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">#size-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x0</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x10000</span><span class="w"> </span><span class="mh">0x1000</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">interrupts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x1F</span><span class="w"> </span><span class="mh">0x0</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">pinctrl-0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">&amp;</span><span class="na">pinmux</span><span class="o">-</span><span class="na">i3c</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">pinctrl-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;default&quot;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">i2c-scl-hz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">400000</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">i3c-scl-hz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">12000000</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="nl">i3c-dev0</span><span class="p">:</span><span class="w"> </span><span class="nf">i3c-dev0</span><span class="o">@</span><span class="mi">420000ABCD12345678</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;vendor,i3c-dev&quot;</span><span class="p">;</span>
+
+<span class="w">                </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x42</span><span class="w"> </span><span class="mh">0xABCD</span><span class="w"> </span><span class="mh">0x12345678</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">                </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="nl">i2c-dev0</span><span class="p">:</span><span class="w"> </span><span class="nf">i2c-dev0</span><span class="o">@</span><span class="mi">380000000000000050</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;vendor-i2c-dev&quot;</span><span class="p">;</span>
+
+<span class="w">                </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x38</span><span class="w"> </span><span class="mh">0x0</span><span class="w"> </span><span class="mh">0x50</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">                </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<section id="i3c-devices">
+<h4>I3C Devices<a class="headerlink" href="#i3c-devices" title="Link to this heading"></a></h4>
+<p>For I3C devices, the <code class="docutils literal notranslate"><span class="pre">reg</span></code> property has 3 elements:</p>
+<ul class="simple">
+<li><p>The first one is the static address of the device.</p>
+<ul>
+<li><p>Can be zero if static address is not used. Address will be
+assigned during DAA (Dynamic Address Assignment).</p></li>
+<li><p>If non-zero and property <code class="docutils literal notranslate"><span class="pre">assigned-address</span></code> is not set,
+this will be the address of the device after SETDASA
+(Set Dynamic Address from Static Address) is issued.</p></li>
+</ul>
+</li>
+<li><p>Second element is the upper 16-bit of the Provisioned ID (PID)
+which contains the manufacturer ID left-shifted by 1. This is
+the bits 33-47 (zero-based) of the 48-bit Provisioned ID.</p></li>
+<li><p>Third element contains the lower 32-bit of the Provisioned ID
+which is a combination of the part ID (left-shifted by 16,
+bits 16-31 of the PID) and the instance ID (left-shifted by 12,
+bits 12-15 of the PID).</p></li>
+</ul>
+<p>Note that the unit-address (the part after <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>) must match
+the <code class="docutils literal notranslate"><span class="pre">reg</span></code> property fully where each element is treated as
+32-bit integer, combining to form a 96-bit integer. This is
+required for properly generating device tree macros.</p>
+</section>
+<section id="i2c-devices">
+<h4>I<sup>2</sup>C Devices<a class="headerlink" href="#i2c-devices" title="Link to this heading"></a></h4>
+<p>For I<sup>2</sup>C devices where the device driver has support for
+working under I3C bus, the device node can be described as
+a child of the I3C controller. If the device driver is written to
+only work with I<sup>2</sup>C controllers, define the node under
+the I<sup>2</sup>C virtual controller as described below.
+Otherwise, the <code class="docutils literal notranslate"><span class="pre">reg</span></code> property, similar to I3C devices,
+has 3 elements:</p>
+<ul class="simple">
+<li><p>The first one is the static address of the device. This must be
+a valid address as I<sup>2</sup>C devices do not support
+dynamic address assignment.</p></li>
+<li><p>Second element is always zero.</p>
+<ul>
+<li><p>This is used by various helper macros to determine whether
+the device tree entry corresponds to a I<sup>2</sup>C device.</p></li>
+</ul>
+</li>
+<li><p>Third element is the LVR (Legacy Virtual Register):</p>
+<ul>
+<li><p>bit[31:8] are unused.</p></li>
+<li><p>bit[7:5] are the I<sup>2</sup>C device index:</p>
+<ul>
+<li><p>Index <code class="docutils literal notranslate"><span class="pre">0</span></code></p>
+<ul>
+<li><p>I3C device has a 50 ns spike filter where it is not
+affected by high frequency on SCL.</p></li>
+</ul>
+</li>
+<li><p>Index <code class="docutils literal notranslate"><span class="pre">1</span></code></p>
+<ul>
+<li><p>I<sup>2</sup>C device does not have a 50 ns spike filter but
+can work with high frequency on SCL.</p></li>
+</ul>
+</li>
+<li><p>Index <code class="docutils literal notranslate"><span class="pre">2</span></code></p>
+<ul>
+<li><p>I3C device does not have a 50 ns spike filter and
+cannot work with high frequency on SCL.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>bit[4] is the I<sup>2</sup>C mode indicator:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code> is FM+ mode.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code> is FM mode.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Similar to I3C devices, the unit-address must match the <code class="docutils literal notranslate"><span class="pre">reg</span></code>
+property fully where each element is treated as 32-bit integer,
+combining to form a 96-bit integer.</p>
+</section>
+</section>
+<section id="device-drivers-for-i3c-devices">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">Device Drivers for I3C Devices</a><a class="headerlink" href="#device-drivers-for-i3c-devices" title="Link to this heading"></a></h3>
+<p>All of the transfer functions of I3C controller API require
+the use of device descriptors, <a class="reference internal" href="../../doxygen/html/structi3c__device__desc.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">i3c_device_desc</span></code></a>.
+This struct contains runtime information about a I3C device,
+such as, its dynamic address, BCR, DCR, MRL and MWL. Therefore,
+the device driver of a I3C device should grab a pointer to
+this device descriptor from the controller using
+<a class="reference internal" href="../../doxygen/html/group__i3c__interface.html#ga10a3963b749cc667a03975889d618d1b" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">i3c_device_find()</span></code></a>. This function takes an ID parameter
+of type <a class="reference internal" href="../../doxygen/html/structi3c__device__id.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">i3c_device_id</span></code></a> for matching. The returned
+pointer can then be used in subsequent API calls to
+the controller.</p>
+</section>
+<section id="i2c-devices-under-i3c-bus">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">I<sup>2</sup>C Devices under I3C Bus</a><a class="headerlink" href="#i2c-devices-under-i3c-bus" title="Link to this heading"></a></h3>
+<p>Since I3C is backward compatible with I<sup>2</sup>C, the I3C controller
+API can accommodate I2C API calls without modifications if the controller
+device driver implements the I2C API. This has the advantage of using
+existing I2C devices without any modifications to their device drivers.
+However, since the I3C controller API works on device descriptors,
+any calls to I2C API will need to look up the corresponding device
+descriptor from the I2C device address. This adds a bit of processing
+cost to any I2C API calls.</p>
+<p>On the other hand, a device driver can be extended to utilize native
+I2C device support via the I3C controller API. During device
+initialization, <code class="xref c c-func docutils literal notranslate"><span class="pre">i3c_i2c_device_find()</span></code> needs to be called to
+retrieve the pointer to the device descriptor. This pointer can be used
+in subsequent API calls.</p>
+<p>Note that, with either methods mentioned above, the devicetree node of
+the I2C device must be declared according to I3C standard:</p>
+<p>The I<sup>2</sup>C virtual controller device driver provides a way to
+interface I<sup>2</sup>C devices on the I3C bus where the associated
+device drivers can be used as-is without modifications. This requires
+adding an intermediate node in the device tree:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nl">i3c0</span><span class="p">:</span><span class="w"> </span><span class="nf">i3c</span><span class="o">@</span><span class="mi">10000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">&lt;</span><span class="p">...</span><span class="w"> </span><span class="na">I3C</span><span class="w"> </span><span class="na">controller</span><span class="w"> </span><span class="na">related</span><span class="w"> </span><span class="na">properties</span><span class="w"> </span><span class="p">...</span><span class="o">&gt;</span>
+<span class="w">        </span><span class="o">&lt;</span><span class="p">...</span><span class="w"> </span><span class="na">Nodes</span><span class="w"> </span><span class="na">of</span><span class="w"> </span><span class="na">I3C</span><span class="w"> </span><span class="na">devices</span><span class="p">,</span><span class="w"> </span><span class="na">if</span><span class="w"> </span><span class="na">any</span><span class="w"> </span><span class="p">...</span><span class="o">&gt;</span>
+
+<span class="w">        </span><span class="nl">i2c-dev0</span><span class="p">:</span><span class="w"> </span><span class="nf">i2c-dev0</span><span class="o">@</span><span class="mi">420000000000000050</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;vendor-i2c-dev&quot;</span><span class="p">;</span>
+
+<span class="w">                </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mh">0x42</span><span class="w"> </span><span class="mh">0x0</span><span class="w"> </span><span class="mh">0x50</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">                </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="configuration-options">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Configuration Options</a><a class="headerlink" href="#configuration-options" title="Link to this heading"></a></h2>
+<p>Related configuration options:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_I3C" title="CONFIG_I3C"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_I3C</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_I3C_USE_IBI" title="CONFIG_I3C_USE_IBI"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_I3C_USE_IBI</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_I3C_IBI_MAX_PAYLOAD_SIZE" title="CONFIG_I3C_IBI_MAX_PAYLOAD_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_I3C_IBI_MAX_PAYLOAD_SIZE</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_I3C_CONTROLLER_INIT_PRIORITY" title="CONFIG_I3C_CONTROLLER_INIT_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_I3C_CONTROLLER_INIT_PRIORITY</span></code></a></p></li>
+</ul>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">API Reference</a><a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__i3c__interface.html" title=""><span class="pre">I3C</span></a></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__i3c__ccc.html" title=""><span class="pre">I3C</span> <span class="pre">Common</span> <span class="pre">Command</span> <span class="pre">Codes</span></a></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__i3c__addresses.html" title=""><span class="pre">I3C</span> <span class="pre">Address-related</span> <span class="pre">Helper</span> <span class="pre">Code</span></a></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__i3c__target__device.html" title=""><span class="pre">I3C</span> <span class="pre">Target</span> <span class="pre">Device</span> <span class="pre">API</span></a></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

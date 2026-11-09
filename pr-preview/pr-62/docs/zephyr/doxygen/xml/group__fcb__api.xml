@@ -1,0 +1,505 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="group__fcb__api" kind="group">
+    <compoundname>fcb_api</compoundname>
+    <title>fcb API</title>
+    <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="group__fcb__api_1gaeed5144438ee00d83c9b3d3b4b7490ea" prot="public" static="no">
+        <type>int(*</type>
+        <definition>typedef int(* fcb_walk_cb) (struct fcb_entry_ctx *loc_ctx, void *arg)</definition>
+        <argsstring>)(struct fcb_entry_ctx *loc_ctx, void *arg)</argsstring>
+        <name>fcb_walk_cb</name>
+        <briefdescription>
+<para>FCB Walk callback function type. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Type of function which is expected to be called while walking over fcb entries thanks to a <ref refid="group__fcb__api_1gad50e579ec9430a23ef5525e74ceb21b2" kindref="member">fcb_walk</ref> call.</para>
+<para>Entry data can be read using <ref refid="group__flash__area__api_1ga7c55704b0c0061a4715470676114b127" kindref="member">flash_area_read()</ref>, using loc_ctx fields as arguments. If cb wants to stop the walk, it should return non-zero value.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">loc_ctx</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>entry location information (full context) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="inout">arg</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>callback context, transferred from <ref refid="group__fcb__api_1gad50e579ec9430a23ef5525e74ceb21b2" kindref="member">fcb_walk</ref>.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 continue walking, non-zero stop walking. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/fs/fcb.h" line="209" column="9" bodyfile="zephyr/fs/fcb.h" bodystart="209" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="group__fcb__api_1gab304f3e9e28f6229d7ddbe638eda2f70" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int fcb_init</definition>
+        <argsstring>(int f_area_id, struct fcb *fcbp)</argsstring>
+        <name>fcb_init</name>
+        <param>
+          <type>int</type>
+          <declname>f_area_id</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structfcb" kindref="compound">fcb</ref> *</type>
+          <declname>fcbp</declname>
+        </param>
+        <briefdescription>
+<para>Initialize FCB instance. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">f_area_id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>ID of flash area where fcb storage resides. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="inout">fcbp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>FCB instance structure.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success, non-zero on failure. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/fs/fcb.h" line="165" column="5" declfile="zephyr/fs/fcb.h" declline="165" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__fcb__api_1gad567d124d8b0fe181ed54cfbe33b315c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int fcb_append</definition>
+        <argsstring>(struct fcb *fcbp, uint16_t len, struct fcb_entry *loc)</argsstring>
+        <name>fcb_append</name>
+        <param>
+          <type>struct <ref refid="structfcb" kindref="compound">fcb</ref> *</type>
+          <declname>fcbp</declname>
+        </param>
+        <param>
+          <type><ref refid="stdint_8h_1a5debae8b2a1ec20a6694c0c443ee399e" kindref="member">uint16_t</ref></type>
+          <declname>len</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structfcb__entry" kindref="compound">fcb_entry</ref> *</type>
+          <declname>loc</declname>
+        </param>
+        <briefdescription>
+<para>Appends an entry to circular buffer. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>When writing the contents for the entry, use loc-&gt;fe_sector and loc-&gt;fe_data_off with <ref refid="group__flash__area__api_1gaa56052f8d6bf4f6966752bc21f5cceb8" kindref="member">flash_area_write()</ref> to fcb <ref refid="structflash__area" kindref="compound">flash_area</ref>. When you&apos;re finished, call <ref refid="group__fcb__api_1gaae445e8376db192ce45fff9dcf95c954" kindref="member">fcb_append_finish()</ref> with loc as argument.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">fcbp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>FCB instance structure. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">len</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Length of data which are expected to be written as the entry payload. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="out">loc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>entry location information</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success, non-zero on failure. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/fs/fcb.h" line="182" column="5" declfile="zephyr/fs/fcb.h" declline="182" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__fcb__api_1gaae445e8376db192ce45fff9dcf95c954" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int fcb_append_finish</definition>
+        <argsstring>(struct fcb *fcbp, struct fcb_entry *append_loc)</argsstring>
+        <name>fcb_append_finish</name>
+        <param>
+          <type>struct <ref refid="structfcb" kindref="compound">fcb</ref> *</type>
+          <declname>fcbp</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structfcb__entry" kindref="compound">fcb_entry</ref> *</type>
+          <declname>append_loc</declname>
+        </param>
+        <briefdescription>
+<para>Finishes entry append operation. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">fcbp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>FCB instance structure. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">append_loc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>entry location information</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success, non-zero on failure. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/fs/fcb.h" line="192" column="5" declfile="zephyr/fs/fcb.h" declline="192" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__fcb__api_1gad50e579ec9430a23ef5525e74ceb21b2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int fcb_walk</definition>
+        <argsstring>(struct fcb *fcbp, struct flash_sector *sector, fcb_walk_cb cb, void *cb_arg)</argsstring>
+        <name>fcb_walk</name>
+        <param>
+          <type>struct <ref refid="structfcb" kindref="compound">fcb</ref> *</type>
+          <declname>fcbp</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structflash__sector" kindref="compound">flash_sector</ref> *</type>
+          <declname>sector</declname>
+        </param>
+        <param>
+          <type><ref refid="group__fcb__api_1gaeed5144438ee00d83c9b3d3b4b7490ea" kindref="member">fcb_walk_cb</ref></type>
+          <declname>cb</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>cb_arg</declname>
+        </param>
+        <briefdescription>
+<para>Walk over all entries in the FCB sector. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">sector</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>fcb sector to be walked. If null, traverse entire storage. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">fcbp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>FCB instance structure. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">cb</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>pointer to the function which gets called for every entry. If cb wants to stop the walk, it should return non-zero value. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="inout">cb_arg</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>callback context, transferred to the callback implementation.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success, negative on failure (or transferred form callback return-value), positive transferred form callback return-value </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/fs/fcb.h" line="226" column="5" declfile="zephyr/fs/fcb.h" declline="226" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__fcb__api_1ga7908a252a09ebbb98b60a505220072bc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int fcb_getnext</definition>
+        <argsstring>(struct fcb *fcbp, struct fcb_entry *loc)</argsstring>
+        <name>fcb_getnext</name>
+        <param>
+          <type>struct <ref refid="structfcb" kindref="compound">fcb</ref> *</type>
+          <declname>fcbp</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structfcb__entry" kindref="compound">fcb_entry</ref> *</type>
+          <declname>loc</declname>
+        </param>
+        <briefdescription>
+<para>Get next fcb entry location. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Function to obtain fcb entry location in relation to entry pointed by </para>
+<para>loc. If loc-&gt;fe_sector is set and loc-&gt;fe_elem_off is not 0 function fetches next fcb entry location. If loc-&gt;fe_sector is NULL function fetches the oldest entry location within FCB storage. loc-&gt;fe_sector is set and loc-&gt;fe_elem_off is 0 function fetches the first entry location in the fcb sector.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">fcbp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>FCB instance structure. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="inout">loc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>entry location information</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success, non-zero on failure. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/fs/fcb.h" line="244" column="5" declfile="zephyr/fs/fcb.h" declline="244" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__fcb__api_1gad2fb288645e678dd6ea05b0871d5e774" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int fcb_rotate</definition>
+        <argsstring>(struct fcb *fcbp)</argsstring>
+        <name>fcb_rotate</name>
+        <param>
+          <type>struct <ref refid="structfcb" kindref="compound">fcb</ref> *</type>
+          <declname>fcbp</declname>
+        </param>
+        <briefdescription>
+<para>Rotate fcb sectors. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Function erases the data from oldest sector. Upon that the next sector becomes the oldest. Active sector is also switched if needed.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">fcbp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>FCB instance structure. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/fs/fcb.h" line="254" column="5" declfile="zephyr/fs/fcb.h" declline="254" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__fcb__api_1ga22b2bab8af3004c93e5d40659ccfec29" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int fcb_append_to_scratch</definition>
+        <argsstring>(struct fcb *fcbp)</argsstring>
+        <name>fcb_append_to_scratch</name>
+        <param>
+          <type>struct <ref refid="structfcb" kindref="compound">fcb</ref> *</type>
+          <declname>fcbp</declname>
+        </param>
+        <briefdescription>
+<para>Start using the scratch block. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Take one of the scratch blocks into use. So a scratch sector becomes active sector to which entries can be appended.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">fcbp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>FCB instance structure.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success, non-zero on failure. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/fs/fcb.h" line="266" column="5" declfile="zephyr/fs/fcb.h" declline="266" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__fcb__api_1gaa9beaa3f5a6cc52b7e460d5670fdaabf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int fcb_free_sector_cnt</definition>
+        <argsstring>(struct fcb *fcbp)</argsstring>
+        <name>fcb_free_sector_cnt</name>
+        <param>
+          <type>struct <ref refid="structfcb" kindref="compound">fcb</ref> *</type>
+          <declname>fcbp</declname>
+        </param>
+        <briefdescription>
+<para>Get free sector count. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">fcbp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>FCB instance structure.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Number of free sectors. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/fs/fcb.h" line="275" column="5" declfile="zephyr/fs/fcb.h" declline="275" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__fcb__api_1gade8af12645d769ce3b27848976ada32a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int fcb_is_empty</definition>
+        <argsstring>(struct fcb *fcbp)</argsstring>
+        <name>fcb_is_empty</name>
+        <param>
+          <type>struct <ref refid="structfcb" kindref="compound">fcb</ref> *</type>
+          <declname>fcbp</declname>
+        </param>
+        <briefdescription>
+<para>Check whether FCB has any data. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">fcbp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>FCB instance structure.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Positive value if fcb is empty, otherwise 0. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/fs/fcb.h" line="284" column="5" declfile="zephyr/fs/fcb.h" declline="284" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__fcb__api_1gac15df95c0d9bed45c9da39802411598d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int fcb_offset_last_n</definition>
+        <argsstring>(struct fcb *fcbp, uint8_t entries, struct fcb_entry *last_n_entry)</argsstring>
+        <name>fcb_offset_last_n</name>
+        <param>
+          <type>struct <ref refid="structfcb" kindref="compound">fcb</ref> *</type>
+          <declname>fcbp</declname>
+        </param>
+        <param>
+          <type><ref refid="stdint_8h_1a3cb4a16b0e8d6af0af86d4fd6ba5fd9d" kindref="member">uint8_t</ref></type>
+          <declname>entries</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structfcb__entry" kindref="compound">fcb_entry</ref> *</type>
+          <declname>last_n_entry</declname>
+        </param>
+        <briefdescription>
+<para>Finds the fcb entry that gives back up to n entries at the end. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">fcbp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>FCB instance structure. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">entries</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>number of fcb entries the user wants to get </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="out">last_n_entry</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>last_n_entry the <ref refid="structfcb__entry" kindref="compound">fcb_entry</ref> to be returned</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on there are any fcbs available; -ENOENT otherwise </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/fs/fcb.h" line="295" column="5" declfile="zephyr/fs/fcb.h" declline="295" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__fcb__api_1gaab78da410b7e709854e29219eb02a0c9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int fcb_clear</definition>
+        <argsstring>(struct fcb *fcbp)</argsstring>
+        <name>fcb_clear</name>
+        <param>
+          <type>struct <ref refid="structfcb" kindref="compound">fcb</ref> *</type>
+          <declname>fcbp</declname>
+        </param>
+        <briefdescription>
+<para>Clear fcb instance storage. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">fcbp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>FCB instance structure.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 on success; non-zero on failure </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/fs/fcb.h" line="304" column="5" declfile="zephyr/fs/fcb.h" declline="304" declcolumn="5"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Flash Circular Buffer APIs. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

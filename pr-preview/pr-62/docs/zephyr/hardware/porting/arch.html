@@ -1,0 +1,1428 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Architecture Porting Guide &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/hardware/porting/arch.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="SoC Porting Guide" href="soc_porting.html" />
+    <link rel="prev" title="Porting" href="index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Hardware Support</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../arch/index.html">Architecture-related Guides</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../barriers/index.html">Barriers API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cache/index.html">Caching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/index.html">Zephyr’s device emulators/simulators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/bus_emulators.html">External Bus and Bus Connected Peripherals Emulators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../peripherals/index.html">Peripherals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pinctrl/index.html">Pin Control</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Porting</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Architecture Porting Guide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#early-boot-sequence">Early Boot Sequence</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#early-boot-sequence-hooks">Early Boot Sequence Hooks</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#interrupt-and-exception-handling">Interrupt and Exception Handling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#thread-context-switching">Thread Context Switching</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#thread-creation-and-termination">Thread Creation and Termination</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#thread-local-storage">Thread Local Storage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#device-drivers">Device Drivers</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#interrupt-controllers">Interrupt Controllers</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#system-clock">System Clock</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#console-over-serial-line">Console Over Serial Line</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#utility-libraries">Utility Libraries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpu-idling-power-management">CPU Idling/Power Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fault-management">Fault Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#toolchain-and-linking">Toolchain and Linking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#memory-management-and-memory-mapping">Memory Management and Memory Mapping</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stack-objects">Stack Objects</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#no-memory-protection">No Memory Protection</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#hw-based-stack-overflow-detection">HW-based stack overflow detection</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#user-mode-enabled">User mode enabled</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#user-mode-threads">User Mode Threads</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gdb-stub">GDB Stub</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API Reference</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#timing">Timing</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#threads">Threads</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#power-management">Power Management</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#symmetric-multi-processing">Symmetric Multi-Processing</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#interrupts">Interrupts</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#userspace">Userspace</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#memory-management">Memory Management</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#miscellaneous-architecture-apis">Miscellaneous Architecture APIs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#gdb-stub-apis">GDB Stub APIs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="soc_porting.html">SoC Porting Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="board_porting.html">Board Porting Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shields.html">Shields</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">Virtualization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Hardware Support</a> &raquo;</li>
+  
+     <li><a href="index.html">Porting</a> &raquo;</li>
+  
+  <li>Architecture Porting Guide</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/hardware/porting/arch.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27hardware%2Fporting%2Farch%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Architectures&env=-+Page%3A+hardware%2Fporting%2Farch%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="architecture-porting-guide">
+<span id="id1"></span><h1>Architecture Porting Guide<a class="headerlink" href="#architecture-porting-guide" title="Link to this heading"></a></h1>
+<p>An architecture port is needed to enable Zephyr to run on an <abbr title="instruction set architecture">ISA</abbr> or an <abbr title="Application Binary Interface">ABI</abbr> that is not currently supported.</p>
+<p>The following are examples of ISAs and ABIs that Zephyr supports:</p>
+<ul class="simple">
+<li><p>x86_32 ISA with System V ABI</p></li>
+<li><p>ARMv7-M ISA with Thumb2 instruction set and ARM Embedded ABI (aeabi)</p></li>
+<li><p>ARCv2 ISA</p></li>
+</ul>
+<p>For information on Kconfig configuration, see
+<a class="reference internal" href="../../build/kconfig/setting.html#setting-configuration-values"><span class="std std-ref">Setting Kconfig configuration values</span></a>. Architectures use a Kconfig configuration
+scheme similar to boards.</p>
+<p>An architecture port can be divided in several parts; most are required and
+some are optional:</p>
+<ul class="simple">
+<li><p><strong>The early boot sequence</strong>: each architecture has different steps it must
+take when the CPU comes out of reset (required).</p></li>
+<li><p><strong>Interrupt and exception handling</strong>: each architecture handles asynchronous
+and unrequested events in a specific manner (required).</p></li>
+<li><p><strong>Thread context switching</strong>: the Zephyr context switch is dependent on the
+ABI and each ISA has a different set of registers to save (required).</p></li>
+<li><p><strong>Thread creation and termination</strong>: A thread’s initial stack frame is ABI
+and architecture-dependent, and thread abortion possibly as well (required).</p></li>
+<li><p><strong>Device drivers</strong>: most often, the system clock timer and the interrupt
+controller are tied to the architecture (some required, some optional).</p></li>
+<li><p><strong>Utility libraries</strong>: some common kernel APIs rely on a
+architecture-specific implementation for performance reasons (required).</p></li>
+<li><p><strong>CPU idling/power management</strong>: most architectures implement instructions
+for putting the CPU to sleep (partly optional, most likely very desired).</p></li>
+<li><p><strong>Fault management</strong>: for implementing architecture-specific debug help and
+handling of fatal error in threads (partly optional).</p></li>
+<li><p><strong>Linker scripts and toolchains</strong>: architecture-specific details will most
+likely be needed in the build system and when linking the image (required).</p></li>
+<li><p><strong>Memory Management and Memory Mapping</strong>: for architecture-specific details
+on supporting memory management and memory mapping.</p></li>
+<li><p><strong>Stack Objects</strong>: for architecture-specific details on memory protection
+hardware regarding stack objects.</p></li>
+<li><p><strong>User Mode Threads</strong>: for supporting threads in user mode.</p></li>
+<li><p><strong>GDB Stub</strong>: for supporting GDB stub to enable remote debugging.</p></li>
+</ul>
+<section id="early-boot-sequence">
+<h2>Early Boot Sequence<a class="headerlink" href="#early-boot-sequence" title="Link to this heading"></a></h2>
+<p>The goal of the early boot sequence is to take the system from the state it is
+after reset to a state where is can run C code and thus the common kernel
+initialization sequence. Most of the time, very few steps are needed, while
+some architectures require a bit more work to be performed.</p>
+<p>Common steps for all architectures:</p>
+<ul class="simple">
+<li><p>Setup an initial stack.</p></li>
+<li><p>If running an <abbr title="eXecute-In-Place">XIP</abbr> kernel, copy initialized data
+from ROM to RAM.</p></li>
+<li><p>If not using an ELF loader, zero the BSS section.</p></li>
+<li><p>Jump to <code class="code docutils literal notranslate"><span class="pre">z_cstart()</span></code>, the early kernel initialization</p>
+<ul>
+<li><p><code class="code docutils literal notranslate"><span class="pre">z_cstart()</span></code> is responsible for context switching out of the fake
+context running at startup into the main thread.</p></li>
+</ul>
+</li>
+</ul>
+<p>Some examples of architecture-specific steps that have to be taken:</p>
+<ul class="simple">
+<li><p>If given control in real mode on x86_32, switch to 32-bit protected mode.</p></li>
+<li><p>Setup the segment registers on x86_32 to handle boot loaders that leave them
+in an unknown or broken state.</p></li>
+<li><p>Initialize a board-specific watchdog on Cortex-M3/4.</p></li>
+<li><p>Switch stacks from MSP to PSP on Cortex-M.</p></li>
+<li><p>Use a different approach than calling into z_swap() on Cortex-M to prevent
+race conditions.</p></li>
+<li><p>Setup FIRQ and regular IRQ handling on ARCv2.</p></li>
+</ul>
+<section id="early-boot-sequence-hooks">
+<h3>Early Boot Sequence Hooks<a class="headerlink" href="#early-boot-sequence-hooks" title="Link to this heading"></a></h3>
+<p>Zephyr exposes several hooks (described in <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/platform/hooks.h">include/zephyr/platform/hooks.h</a>)
+that allow execution of SoC- or board-specific code at precise moments of the boot process.</p>
+<p>The kernel takes care of calling most of the hooks from architecture-agnostic
+code. However, some hooks must be called during the early boot sequence; since
+the sequence is implemented in architecture-specific code, the call to the hooks
+must also be done there. The following gives a rough overview of the early
+boot sequence and when hooks should be called by architecture-specific code:</p>
+<ol class="arabic">
+<li><p>Execution begins in an architecture-specific entry point whose name
+matches <a class="reference internal" href="../../kconfig.html#CONFIG_KERNEL_ENTRY" title="CONFIG_KERNEL_ENTRY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_KERNEL_ENTRY</span></code></a>.</p></li>
+<li><p>Architecture-specific state is re-initialized immediately
+(if <a class="reference internal" href="../../kconfig.html#CONFIG_INIT_ARCH_HW_AT_BOOT" title="CONFIG_INIT_ARCH_HW_AT_BOOT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INIT_ARCH_HW_AT_BOOT</span></code></a> is enabled).</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/hooks_8h.html#ad8a7ba989faae8d2f35ddbad9f5b4233" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">soc_early_reset_hook()</span></code></a> is called.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is not necessary to set up a valid stack before calling this hook.
+However, the hook is allowed to overwrite the stack pointer before returning.
+The architecture-specific code must not expect the stack pointer register
+value to be preserved across the call to <a class="reference internal" href="../../doxygen/html/hooks_8h.html#ad8a7ba989faae8d2f35ddbad9f5b4233" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">soc_early_reset_hook()</span></code></a>.</p>
+<p>On architectures with multiple stack pointers, there is usually a <em>“primary”</em>
+stack pointer accessible directly and <em>“secondary”</em> stack pointer register(s).
+<a class="reference internal" href="../../doxygen/html/hooks_8h.html#ad8a7ba989faae8d2f35ddbad9f5b4233" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">soc_early_reset_hook()</span></code></a> implementations may overwrite the <em>“primary”</em>
+stack pointer must <strong>not</strong> read or modify the value of any <em>“secondary”</em> stack
+pointer. (This allows the architecture-specific code to set up any <em>“secondary”</em>
+stack pointer it desires before calling <a class="reference internal" href="../../doxygen/html/hooks_8h.html#ad8a7ba989faae8d2f35ddbad9f5b4233" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">soc_early_reset_hook()</span></code></a>)</p>
+<p>For example, the ARM Cortex-A architecture defines several execution modes,
+each of which has its own stack pointer register <code class="samp docutils literal notranslate"><span class="pre">sp_</span><em><span class="pre">mode</span></em></code>. When
+the processor is executing in mode <code class="samp docutils literal notranslate"><em><span class="pre">X</span></em></code>, operations involving the
+<code class="docutils literal notranslate"><span class="pre">sp</span></code> general-purpose register operate on <code class="samp docutils literal notranslate"><span class="pre">sp_</span><em><span class="pre">X</span></em></code>. On this
+architecture, assuming that the processor is executing in mode <code class="samp docutils literal notranslate"><em><span class="pre">M</span></em></code>
+when <a class="reference internal" href="../../doxygen/html/hooks_8h.html#ad8a7ba989faae8d2f35ddbad9f5b4233" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">soc_early_reset_hook()</span></code></a> is called, the hook is allowed to
+overwrite <code class="samp docutils literal notranslate"><span class="pre">sp_</span><em><span class="pre">M</span></em></code> (accessible through <code class="docutils literal notranslate"><span class="pre">sp</span></code>) but <strong>must not</strong> read
+or overwrite any other <code class="samp docutils literal notranslate"><span class="pre">sp_</span><em><span class="pre">mode</span></em></code> (where <code class="samp docutils literal notranslate"><em><span class="pre">mode</span></em> <span class="pre">!=</span> <em><span class="pre">M</span></em></code>).</p>
+<p><a class="reference internal" href="../../doxygen/html/hooks_8h.html#ad8a7ba989faae8d2f35ddbad9f5b4233" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">soc_early_reset_hook()</span></code></a> implementations are allowed to not return
+execution to the architecture-specific code, in which case they “take over”
+the system. Such hooks are not subject to the aforementioned rules and may
+read or overwrite any stack pointer. However, when such an implementation
+is provided, the rest of the early boot sequence obviously does not execute.</p>
+</div>
+</li>
+<li><p>An initial stack is set up for next steps of the early boot sequence.</p></li>
+<li><p>Architecture-specific “<em>resume from suspend-to-RAM</em>” logic is executed</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Refer to <a class="reference internal" href="../../kconfig.html#CONFIG_PM_S2RAM" title="CONFIG_PM_S2RAM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PM_S2RAM</span></code></a> and the architecture-specific
+implementation for more details, but note that the rest of the early boot
+sequence is not executed if this logic determines that an exit from
+suspend-to-RAM is ongoing.</p>
+</div>
+</li>
+<li><p><a class="reference internal" href="../../doxygen/html/hooks_8h.html#ad6e8df1eefd1add03ad8379802bd989e" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">soc_reset_hook()</span></code></a> is called.</p></li>
+<li><p><em>Architecture-specific operations (in assembly) are performed here…</em></p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">z_prep_c()</span></code> is called. This architecture-specific function is implemented in C.</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">z_prep_c()</span></code> immediately calls <a class="reference internal" href="../../doxygen/html/hooks_8h.html#adc333ec5f401d3d8311a496736bd1aa4" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">soc_prep_hook()</span></code></a>.</p></li>
+<li><p><em>Architecture-specific operations (in C) are performed here…</em></p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">z_cstart()</span></code> is called. Architecture-agnostic code begins executing.</p></li>
+</ol>
+</section>
+</section>
+<section id="interrupt-and-exception-handling">
+<h2>Interrupt and Exception Handling<a class="headerlink" href="#interrupt-and-exception-handling" title="Link to this heading"></a></h2>
+<p>Each architecture defines interrupt and exception handling differently.</p>
+<p>When a device wants to signal the processor that there is some work to be done
+on its behalf, it raises an interrupt. When a thread does an operation that is
+not handled by the serial flow of the software itself, it raises an exception.
+Both, interrupts and exceptions, pass control to a handler. The handler is
+known as an <abbr title="Interrupt Service Routine">ISR</abbr> in the case of
+interrupts. The handler performs the work required by the exception or the
+interrupt.  For interrupts, that work is device-specific. For exceptions, it
+depends on the exception, but most often the core kernel itself is responsible
+for providing the handler.</p>
+<p>The kernel has to perform some work in addition to the work the handler itself
+performs. For example:</p>
+<ul class="simple">
+<li><p>Prior to handing control to the handler:</p>
+<ul>
+<li><p>Save the currently executing context.</p></li>
+<li><p>Possibly getting out of power saving mode, which includes waking up
+devices.</p></li>
+<li><p>Updating the kernel uptime if getting out of tickless idle mode.</p></li>
+</ul>
+</li>
+<li><p>After getting control back from the handler:</p>
+<ul>
+<li><p>Decide whether to perform a context switch.</p></li>
+<li><p>When performing a context switch, restore the context being context
+switched in.</p></li>
+</ul>
+</li>
+</ul>
+<p>This work is conceptually the same across architectures, but the details are
+completely different:</p>
+<ul class="simple">
+<li><p>The registers to save and restore.</p></li>
+<li><p>The processor instructions to perform the work.</p></li>
+<li><p>The numbering of the exceptions.</p></li>
+<li><p>etc.</p></li>
+</ul>
+<p>It thus needs an architecture-specific implementation, called the
+interrupt/exception stub.</p>
+<p>Another issue is that the kernel defines the signature of ISRs as:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">isr</span><span class="p">)(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">parameter</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Architectures do not have a consistent or native way of handling parameters to
+an ISR. As such there are two commonly used methods for handling the
+parameter.</p>
+<ul class="simple">
+<li><p>Using some architecture defined mechanism, the parameter value is forced in
+the stub. This is commonly found in X86-based architectures.</p></li>
+<li><p>The parameters to the ISR are inserted and tracked via a separate table
+requiring the architecture to discover at runtime which interrupt is
+executing. A common interrupt handler demuxer is installed for all entries of
+the real interrupt vector table, which then fetches the device’s ISR and
+parameter from the separate table. This approach is commonly used in the ARC
+and ARM architectures via the <a class="reference internal" href="../../kconfig.html#CONFIG_GEN_ISR_TABLES" title="CONFIG_GEN_ISR_TABLES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_GEN_ISR_TABLES</span></code></a> implementation.
+You can find examples of the stubs by looking at <code class="code docutils literal notranslate"><span class="pre">_interrupt_enter()</span></code> in
+x86, <code class="code docutils literal notranslate"><span class="pre">_isr_wrapper()</span></code> in ARM, or the full implementation description for
+ARC in <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/arch/arc/core/isr_wrapper.S">arch/arc/core/isr_wrapper.S</a>.</p></li>
+</ul>
+<p>Each architecture also has to implement primitives for interrupt control:</p>
+<ul class="simple">
+<li><p>locking interrupts: <a class="reference internal" href="../../doxygen/html/group__isr__apis.html#ga19fdde73c3b02fcca6cf1d1e67631228" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">irq_lock()</span></code></a>, <a class="reference internal" href="../../doxygen/html/group__isr__apis.html#ga646045943b3b2a130738bcc48867bf57" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">irq_unlock()</span></code></a>.</p></li>
+<li><p>registering interrupts: <a class="reference internal" href="../../doxygen/html/group__isr__apis.html#ga131739d1faf501a15590053817aba984" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">IRQ_CONNECT()</span></code></a>.</p></li>
+<li><p>programming the priority if possible <code class="xref c c-func docutils literal notranslate"><span class="pre">irq_priority_set()</span></code>.</p></li>
+<li><p>enabling/disabling interrupts: <a class="reference internal" href="../../doxygen/html/group__isr__apis.html#ga7ea700ee31e4ff036c997a554dbedfeb" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">irq_enable()</span></code></a>, <a class="reference internal" href="../../doxygen/html/group__isr__apis.html#ga82c3a15d812f58e0f6525f358d031e6d" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">irq_disable()</span></code></a>.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="../../doxygen/html/group__isr__apis.html#ga131739d1faf501a15590053817aba984" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">IRQ_CONNECT</span></code></a> is a macro that uses assembler and/or linker script
+tricks to connect interrupts at build time, saving boot time and text size.</p>
+</div>
+<p>The vector table should contain a handler for each interrupt and exception that
+can possibly occur. The handler can be as simple as a spinning loop. However,
+we strongly suggest that handlers at least print some debug information. The
+information helps figuring out what went wrong when hitting an exception that
+is a fault, like divide-by-zero or invalid memory access, or an interrupt that
+is not expected (<em class="dfn">spurious interrupt</em>). See the ARM implementation in
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/arch/arm/core/cortex_m/fault.c">arch/arm/core/cortex_m/fault.c</a> for an example.</p>
+</section>
+<section id="thread-context-switching">
+<h2>Thread Context Switching<a class="headerlink" href="#thread-context-switching" title="Link to this heading"></a></h2>
+<p>Multi-threading is the basic purpose to have a kernel at all. Zephyr supports
+two types of threads: preemptible and cooperative. The rules for determining
+the next thread to schedule are handled by the kernel. However, it is up to
+the architecture port to implement the method of the context switch itself.</p>
+<p>Zephyr provides two mutually exclusive interfaces for context switching. The
+preferred interface to use is <code class="code docutils literal notranslate"><span class="pre">arch_switch</span></code> which is selected when
+<a class="reference internal" href="../../kconfig.html#CONFIG_USE_SWITCH" title="CONFIG_USE_SWITCH"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USE_SWITCH</span></code></a> is enabled. The alternative interface is
+<code class="code docutils literal notranslate"><span class="pre">arch_swap</span></code>–selected when <a class="reference internal" href="../../kconfig.html#CONFIG_USE_SWITCH" title="CONFIG_USE_SWITCH"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USE_SWITCH</span></code></a>
+is disabled. When porting to a new architecture, only one of these needs to
+implemented; however, for SMP platforms it must be <code class="code docutils literal notranslate"><span class="pre">arch_switch</span></code>.</p>
+<p>A context switch can happen in several circumstances:</p>
+<ul class="simple">
+<li><p>When a thread executes a blocking operation, such as taking a semaphore that
+is currently unavailable.</p></li>
+<li><p>When a preemptible thread unblocks a thread of higher priority by releasing
+the object on which it was blocked.</p></li>
+<li><p>When an interrupt unblocks a thread of higher priority than the one currently
+executing, if the currently executing thread is preemptible.</p></li>
+<li><p>When a thread runs to completion.</p></li>
+<li><p>When a thread causes a fatal exception and is removed from the running
+threads. For example, referencing invalid memory,</p></li>
+</ul>
+<p>Therefore, the context switching must thus be able to handle all these cases.</p>
+<p>There are two types of context switches: <em class="dfn">cooperative</em> and <em class="dfn">preemptive</em>.</p>
+<ul class="simple">
+<li><p>A <em>cooperative</em> context switch happens when a thread willfully gives the
+control to another thread. There are two cases where this happens</p>
+<ul>
+<li><p>When a thread explicitly yields.</p></li>
+<li><p>When a thread tries to take an object that is currently unavailable and is
+willing to wait until the object becomes available.</p></li>
+</ul>
+</li>
+<li><p>A <em>preemptive</em> context switch happens either because an ISR or a
+thread causes an operation that schedules a thread of higher priority than the
+one currently running, if the currently running thread is preemptible.
+An example of such an operation is releasing an object on which the thread
+of higher priority was waiting.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Control is never taken from cooperative thread when one of them is the
+running thread.</p>
+</div>
+<p>A cooperative context switch is always done by having a thread call the
+internal kernel routine <code class="code docutils literal notranslate"><span class="pre">z_swap</span></code> (or one of its variants). This in turn
+will call either <code class="code docutils literal notranslate"><span class="pre">arch_switch</span></code> or <code class="code docutils literal notranslate"><span class="pre">arch_swap</span></code> as appropriate.
+When these are called, no checks are done to determine if the context switch is
+to happen–the context switch must happen.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>On x86 and Nios2, <code class="code docutils literal notranslate"><span class="pre">arch_swap</span></code> is generic enough and the architecture
+flexible enough that it can be called when exiting an interrupt to provoke
+the context switch. This should not be taken as a rule, since
+neither the ARM Cortex-M nor ARCv2 port do this.</p>
+</div>
+<p>Since <code class="code docutils literal notranslate"><span class="pre">z_swap</span></code> is cooperative, the caller-saved registers from the ABI are
+already on the stack. There is no need to save them in the k_thread structure.</p>
+<p>A context switch can also be performed preemptively. This happens upon exiting
+an ISR, in the kernel interrupt exit stub:</p>
+<ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">_interrupt_enter</span></code> on x86 after the handler is called.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">z_arm_exc_exit</span></code> and <code class="code docutils literal notranslate"><span class="pre">z_arm_int_exit</span></code> on ARM.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">_firq_exit</span></code> and <code class="code docutils literal notranslate"><span class="pre">_rirq_exit</span></code> on ARCv2.</p></li>
+</ul>
+<p>The decision logic to invoke the context switch is simple and is only performed
+when exiting a non-nested interrupt:</p>
+<p>When <a class="reference internal" href="../../kconfig.html#CONFIG_USE_SWITCH" title="CONFIG_USE_SWITCH"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USE_SWITCH</span></code></a> is enabled …</p>
+<ul class="simple">
+<li><p>The interrupt exit code shall call <code class="xref c c-func docutils literal notranslate"><span class="pre">z_get_next_switch_handle()</span></code>, and
+return to the thread context identified by the returned switch handle</p></li>
+</ul>
+<p>When <a class="reference internal" href="../../kconfig.html#CONFIG_USE_SWITCH" title="CONFIG_USE_SWITCH"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USE_SWITCH</span></code></a> is not enabled …</p>
+<ul class="simple">
+<li><p>The interrupt exit code shall fetch the cached thread from the ready queue, and:</p>
+<ul>
+<li><p>If the cached thread is not the current thread, invoke the context switch.</p></li>
+<li><p>Otherwise do not invoke it.</p></li>
+</ul>
+</li>
+</ul>
+<p>This is simple, but crucial: if this is not implemented correctly, the kernel
+will not function as intended and will experience bizarre crashes, mostly due
+to stack corruption.</p>
+</section>
+<section id="thread-creation-and-termination">
+<h2>Thread Creation and Termination<a class="headerlink" href="#thread-creation-and-termination" title="Link to this heading"></a></h2>
+<p>To start a new thread, a stack frame must be constructed so that the context
+switch can pop it the same way it would pop one from a thread that had been
+context switched out. This is to be implemented in an architecture-specific
+<code class="code docutils literal notranslate"><span class="pre">_new_thread</span></code> internal routine.</p>
+<p>The thread entry point is also not to be called directly, i.e. it should not be
+set as the <abbr title="program counter">PC</abbr> for the new thread. Rather it must be
+wrapped in <code class="code docutils literal notranslate"><span class="pre">_thread_entry</span></code>. This means that the PC in the stack
+frame shall be set to <code class="code docutils literal notranslate"><span class="pre">_thread_entry</span></code>, and the thread entry point shall
+be passed as the first parameter to <code class="code docutils literal notranslate"><span class="pre">_thread_entry</span></code>. The specifics of
+this depend on the ABI.</p>
+<p>The need for an architecture-specific thread termination implementation depends
+on the architecture. There is a generic implementation, but it might not work
+for a given architecture.</p>
+<p>One reason that has been encountered for having an architecture-specific
+implementation of thread termination is that aborting a thread might be
+different if aborting because of a graceful exit or because of an exception.
+This is the case for ARM Cortex-M, where the CPU has to be taken out of handler
+mode if the thread triggered a fatal exception, but not if the thread
+gracefully exits its entry point function.</p>
+<p>This means implementing an architecture-specific version of
+<a class="reference internal" href="../../doxygen/html/group__thread__apis.html#ga1f44bb0307bea7a97227764ecd7bf963" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_abort()</span></code></a>, and setting the Kconfig option
+<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARCH_HAS_THREAD_ABORT</span></code> as needed for the architecture (e.g. see
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/arch/arm/core/cortex_m/Kconfig">arch/arm/core/cortex_m/Kconfig</a>).</p>
+</section>
+<section id="thread-local-storage">
+<h2>Thread Local Storage<a class="headerlink" href="#thread-local-storage" title="Link to this heading"></a></h2>
+<p>To enable thread local storage on a new architecture:</p>
+<ol class="arabic simple">
+<li><p>Implement <a class="reference internal" href="../../doxygen/html/group__arch-tls.html#ga7f159caca46063b04cf03a54b39255fc" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_tls_stack_setup()</span></code></a> to setup the TLS storage area in
+stack. Refer to the toolchain documentation on how the storage area needs
+to be structured. Some helper functions can be used:</p>
+<ul class="simple">
+<li><p>Function <code class="xref c c-func docutils literal notranslate"><span class="pre">z_tls_data_size()</span></code> returns the size
+needed for thread local variables (excluding any extra data required by
+toolchain and architecture).</p></li>
+<li><p>Function <code class="xref c c-func docutils literal notranslate"><span class="pre">z_tls_copy()</span></code> prepares the TLS storage area for
+thread local variables. This only copies the variable themselves and
+does not do architecture and/or toolchain specific data.</p></li>
+</ul>
+</li>
+<li><p>In the context switching, grab the <code class="docutils literal notranslate"><span class="pre">tls</span></code> field inside the new thread’s
+<code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">k_thread</span></code> and put it into an appropriate register (or some
+other variable) for access to the TLS storage area. Refer to toolchain
+and architecture documentation on which registers to use.</p></li>
+<li><p>In kconfig, add <code class="docutils literal notranslate"><span class="pre">select</span> <span class="pre">CONFIG_ARCH_HAS_THREAD_LOCAL_STORAGE</span></code> to
+kconfig related to the new architecture.</p></li>
+<li><p>Run the <code class="docutils literal notranslate"><span class="pre">tests/kernel/threads/tls</span></code> to make sure the new code works.</p></li>
+</ol>
+</section>
+<section id="device-drivers">
+<h2>Device Drivers<a class="headerlink" href="#device-drivers" title="Link to this heading"></a></h2>
+<p>The kernel requires very few hardware devices to function. In theory, the only
+required device is the interrupt controller, since the kernel can run without a
+system clock. In practice, to get access to most, if not all, of the sanity
+check test suite, a system clock is needed as well. Since these two are usually
+tied to the architecture, they are part of the architecture port.</p>
+<section id="interrupt-controllers">
+<h3>Interrupt Controllers<a class="headerlink" href="#interrupt-controllers" title="Link to this heading"></a></h3>
+<p>There can be significant differences between the interrupt controllers and the
+interrupt concepts across architectures.</p>
+<p>For example, x86 has the concept of an <abbr title="Interrupt Descriptor Table">IDT</abbr>
+and different interrupt controllers. The position of an interrupt in the IDT
+determines its priority.</p>
+<p>On the other hand, the ARM Cortex-M has the <abbr title="Nested Vectored Interrupt Controller">NVIC</abbr> as part of the architecture definition. There is no need
+for an IDT-like table that is separate from the NVIC vector table. The position
+in the table has nothing to do with priority of an IRQ: priorities are
+programmable per-entry.</p>
+<p>The ARCv2 has its interrupt unit as part of the architecture definition, which
+is somewhat similar to the NVIC. However, where ARC defines interrupts as
+having a one-to-one mapping between exception and interrupt numbers (i.e.
+exception 1 is IRQ1, and device IRQs start at 16), ARM has IRQ0 being
+equivalent to exception 16 (and weirdly enough, exception 1 can be seen as
+IRQ-15).</p>
+<p>All these differences mean that very little, if anything, can be shared between
+architectures with regards to interrupt controllers.</p>
+</section>
+<section id="system-clock">
+<h3>System Clock<a class="headerlink" href="#system-clock" title="Link to this heading"></a></h3>
+<p>x86 has APIC timers and the HPET as part of its architecture definition. ARM
+Cortex-M has the SYSTICK exception. Finally, ARCv2 has the timer0/1 device.</p>
+<p>Kernel timeouts are handled in the context of the system clock timer driver’s
+interrupt handler.</p>
+</section>
+<section id="console-over-serial-line">
+<h3>Console Over Serial Line<a class="headerlink" href="#console-over-serial-line" title="Link to this heading"></a></h3>
+<p>There is one other device that is almost a requirement for an architecture
+port, since it is so useful for debugging. It is a simple polling, output-only,
+serial port driver on which to send the console (<code class="code docutils literal notranslate"><span class="pre">printk</span></code>,
+<code class="code docutils literal notranslate"><span class="pre">printf</span></code>) output.</p>
+<p>It is not required, and a RAM console (<a class="reference internal" href="../../kconfig.html#CONFIG_RAM_CONSOLE" title="CONFIG_RAM_CONSOLE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_RAM_CONSOLE</span></code></a>)
+can be used to send all output to a circular buffer that can be read
+by a debugger instead.</p>
+</section>
+</section>
+<section id="utility-libraries">
+<h2>Utility Libraries<a class="headerlink" href="#utility-libraries" title="Link to this heading"></a></h2>
+<p>The kernel depends on a few functions that can be implemented with very few
+instructions or in a lock-less manner in modern processors. Those are thus
+expected to be implemented as part of an architecture port.</p>
+<ul class="simple">
+<li><p>Atomic operators.</p>
+<ul>
+<li><p>If instructions do exist for a given architecture, the implementation is
+configured using the <a class="reference internal" href="../../kconfig.html#CONFIG_ATOMIC_OPERATIONS_ARCH" title="CONFIG_ATOMIC_OPERATIONS_ARCH"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ATOMIC_OPERATIONS_ARCH</span></code></a> Kconfig
+option.</p></li>
+<li><p>If instructions do not exist for a given architecture,
+a generic version that wraps <a class="reference internal" href="../../doxygen/html/group__isr__apis.html#ga19fdde73c3b02fcca6cf1d1e67631228" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">irq_lock()</span></code></a> or <a class="reference internal" href="../../doxygen/html/group__isr__apis.html#ga646045943b3b2a130738bcc48867bf57" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">irq_unlock()</span></code></a>
+around non-atomic operations exists. It is configured using the
+<a class="reference internal" href="../../kconfig.html#CONFIG_ATOMIC_OPERATIONS_C" title="CONFIG_ATOMIC_OPERATIONS_C"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ATOMIC_OPERATIONS_C</span></code></a> Kconfig option.</p></li>
+</ul>
+</li>
+<li><p>Find-least-significant-bit-set and find-most-significant-bit-set.</p>
+<ul>
+<li><p>If instructions do not exist for a given architecture, it is always
+possible to implement these functions as generic C functions.</p></li>
+</ul>
+</li>
+</ul>
+<p>It is possible to use compiler built-ins to implement these, but be careful
+they use the required compiler barriers.</p>
+</section>
+<section id="cpu-idling-power-management">
+<h2>CPU Idling/Power Management<a class="headerlink" href="#cpu-idling-power-management" title="Link to this heading"></a></h2>
+<p>The kernel provides support for CPU power management with two functions:
+<a class="reference internal" href="../../doxygen/html/group__arch-pm.html#ga6ce051203e6cc091d0fb42a15f662a48" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_cpu_idle()</span></code></a> and <a class="reference internal" href="../../doxygen/html/group__arch-pm.html#ga4d0297717c23a3cc5df434549e26924d" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_cpu_atomic_idle()</span></code></a>.</p>
+<p><a class="reference internal" href="../../doxygen/html/group__arch-pm.html#ga6ce051203e6cc091d0fb42a15f662a48" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_cpu_idle()</span></code></a> can be as simple as calling the power saving
+instruction for the architecture with interrupts unlocked, for example
+<code class="code docutils literal notranslate"><span class="pre">hlt</span></code> on x86, <code class="code docutils literal notranslate"><span class="pre">wfi</span></code> or <code class="code docutils literal notranslate"><span class="pre">wfe</span></code> on ARM, <code class="code docutils literal notranslate"><span class="pre">sleep</span></code> on ARC.
+This function can be called in a loop within a context that does not care if it
+get interrupted or not by an interrupt before going to sleep. There are
+basically two scenarios when it is correct to use this function:</p>
+<ul class="simple">
+<li><p>In a single-threaded system, in the only thread when the thread is not used
+for doing real work after initialization, i.e. it is sitting in a loop doing
+nothing for the duration of the application.</p></li>
+<li><p>In the idle thread.</p></li>
+</ul>
+<p><a class="reference internal" href="../../doxygen/html/group__arch-pm.html#ga4d0297717c23a3cc5df434549e26924d" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_cpu_atomic_idle()</span></code></a>, on the other hand, must be able to atomically
+re-enable interrupts and invoke the power saving instruction. It can thus be
+used in real application code, again in single-threaded systems.</p>
+<p>Normally, idling the CPU should be left to the idle thread, but in some very
+special scenarios, these APIs can be used by applications.</p>
+<p>Both functions must exist for a given architecture. However, the implementation
+can be simply the following steps, if desired:</p>
+<ol class="arabic simple">
+<li><p>unlock interrupts</p></li>
+<li><p>NOP</p></li>
+</ol>
+<p>However, a real implementation is strongly recommended.</p>
+</section>
+<section id="fault-management">
+<h2>Fault Management<a class="headerlink" href="#fault-management" title="Link to this heading"></a></h2>
+<p>In the event of an unhandled CPU exception, the architecture
+code must call into <code class="xref c c-func docutils literal notranslate"><span class="pre">z_fatal_error()</span></code>.  This function dumps
+out architecture-agnostic information and makes a policy
+decision on what to do next by invoking <code class="xref c c-func docutils literal notranslate"><span class="pre">k_sys_fatal_error()</span></code>.
+This function can be overridden to implement application-specific
+policies that could include locking interrupts and spinning forever
+(the default implementation) or even powering off the
+system (if supported).</p>
+</section>
+<section id="toolchain-and-linking">
+<h2>Toolchain and Linking<a class="headerlink" href="#toolchain-and-linking" title="Link to this heading"></a></h2>
+<p>Toolchain support has to be added to the build system.</p>
+<p>Some architecture-specific definitions are needed in <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/toolchain/gcc.h">include/zephyr/toolchain/gcc.h</a>.
+See what exists in that file for currently supported architectures.</p>
+<p>Each architecture also needs its own linker script, even if most sections can
+be derived from the linker scripts of other architectures. Some sections might
+be specific to the new architecture, for example the SCB section on ARM and the
+IDT section on x86.</p>
+</section>
+<section id="memory-management-and-memory-mapping">
+<h2>Memory Management and Memory Mapping<a class="headerlink" href="#memory-management-and-memory-mapping" title="Link to this heading"></a></h2>
+<p>If the target platform enables paging and requires drivers to memory-map
+their I/O regions, <a class="reference internal" href="../../kconfig.html#CONFIG_MMU" title="CONFIG_MMU"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MMU</span></code></a> needs to be enabled and the
+following API implemented:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../doxygen/html/group__arch-mmu.html#ga627bee468e54bb2d5ebe6ac53bb7fc94" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_mem_map()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__arch-mmu.html#ga8783e1d292510477b3816b6686d7d8cd" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_mem_unmap()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__arch-mmu.html#gaa31a233dab4ad575a9a969de10965200" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_page_phys_get()</span></code></a></p></li>
+</ul>
+</section>
+<section id="stack-objects">
+<h2>Stack Objects<a class="headerlink" href="#stack-objects" title="Link to this heading"></a></h2>
+<p>The presence of memory protection hardware affects how stack objects are
+created. All architecture ports must specify the required alignment of the
+stack pointer, which is some combination of CPU and ABI requirements. This
+is defined in architecture headers with <a class="reference internal" href="../../doxygen/html/ztest_8h.html#af0f8ad93611d93cd0626914837e761d3" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_STACK_PTR_ALIGN</span></code></a> and
+is typically something small like 4, 8, or 16 bytes.</p>
+<p>Two types of thread stacks exist:</p>
+<ul class="simple">
+<li><p>“kernel” stacks defined with <a class="reference internal" href="../../doxygen/html/group__thread__stack__api.html#ga9e05e3cb5aa5b72d6f19e2f327313271" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_KERNEL_STACK_DEFINE()</span></code></a> and related
+APIs, which can host kernel threads running in supervisor mode or
+used as the stack for interrupt/exception handling. These have significantly
+relaxed alignment requirements and use less reserved data. No memory is
+reserved for privilege elevation stacks.</p></li>
+<li><p>“thread” stacks which typically use more memory, but are capable of hosting
+thread running in user mode, as well as any use-cases for kernel stacks.</p></li>
+</ul>
+<p>If <a class="reference internal" href="../../kconfig.html#CONFIG_USERSPACE" title="CONFIG_USERSPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code></a> is not enabled, “thread” and “kernel” stacks are
+equivalent.</p>
+<p>Additional macros may be defined in the architecture layer to specify
+the alignment of the base of stack objects, any reserved data inside the
+stack object not used for the thread’s stack buffer, and how to round up
+stack sizes to support user mode threads. In the absence of definitions
+some defaults are assumed:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../doxygen/html/group__arch-threads.html#ga75b8e6cce01f5a34e9f3d649e561c3af" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_KERNEL_STACK_RESERVED</span></code></a>: default no reserved space</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/arch_2x86_2thread__stack_8h.html#ace8831316d471ccfb06eeddb6d69d817" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_THREAD_STACK_RESERVED</span></code></a>: default no reserved space</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/arch_2xtensa_2thread__stack_8h.html#ac5a3684c543902ec50373d2c774c5bf6" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_KERNEL_STACK_OBJ_ALIGN</span></code></a>: default align to
+<a class="reference internal" href="../../doxygen/html/ztest_8h.html#af0f8ad93611d93cd0626914837e761d3" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_STACK_PTR_ALIGN</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/arch_2xtensa_2thread__stack_8h.html#ab6c1d96f5e018ed166ee401dc84b7ab7" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_THREAD_STACK_OBJ_ALIGN</span></code></a>: default align to
+<a class="reference internal" href="../../doxygen/html/ztest_8h.html#af0f8ad93611d93cd0626914837e761d3" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_STACK_PTR_ALIGN</span></code></a></p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_THREAD_STACK_SIZE_ALIGN</span></code>: default round up to
+<a class="reference internal" href="../../doxygen/html/ztest_8h.html#af0f8ad93611d93cd0626914837e761d3" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_STACK_PTR_ALIGN</span></code></a></p></li>
+</ul>
+<p>All stack creation macros are defined in terms of these.</p>
+<p>Stack objects all have the following layout, with some regions potentially
+zero-sized depending on configuration. There are always two main parts:
+reserved memory at the beginning, and then the stack buffer itself. The
+bounds of some areas can only be determined at runtime in the context of
+its associated thread object. Other areas are entirely computable at build
+time.</p>
+<p>Some architectures may need to carve-out reserved memory at runtime from the
+stack buffer, instead of unconditionally reserving it at build time, or to
+supplement an existing reserved area (as is the case with the ARM FPU).
+Such carve-outs will always be tracked in <code class="docutils literal notranslate"><span class="pre">thread.stack_info.start</span></code>.
+The region specified by <code class="docutils literal notranslate"><span class="pre">thread.stack_info.start</span></code> and
+<code class="docutils literal notranslate"><span class="pre">thread.stack_info.size</span></code> is always fully accessible by a user mode thread.
+<code class="docutils literal notranslate"><span class="pre">thread.stack_info.delta</span></code> denotes an offset which can be used to compute
+the initial stack pointer from the very end of the stack object, taking into
+account storage for TLS and ASLR random offsets.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+---------------------+ &lt;- thread.stack_obj
+| Reserved Memory     | } K_(THREAD|KERNEL)_STACK_RESERVED
++---------------------+
+| Carved-out memory   |
+|.....................| &lt;- thread.stack_info.start
+| Unused stack buffer |
+|                     |
+|.....................| &lt;- thread&#39;s current stack pointer
+| Used stack buffer   |
+|                     |
+|.....................| &lt;- Initial stack pointer. Computable
+| ASLR Random offset  |      with thread.stack_info.delta
++---------------------| &lt;- thread.userspace_local_data
+| Thread-local data   |
++---------------------+ &lt;- thread.stack_info.start + thread.stack_info.size
+</pre></div>
+</div>
+<p>At present, Zephyr does not support stacks that grow upward.</p>
+<section id="no-memory-protection">
+<h3>No Memory Protection<a class="headerlink" href="#no-memory-protection" title="Link to this heading"></a></h3>
+<p>If no memory protection is in use, then the defaults are sufficient.</p>
+</section>
+<section id="hw-based-stack-overflow-detection">
+<h3>HW-based stack overflow detection<a class="headerlink" href="#hw-based-stack-overflow-detection" title="Link to this heading"></a></h3>
+<p>This option uses hardware features to generate a fatal error if a thread
+in supervisor mode overflows its stack. This is useful for debugging, although
+for a couple reasons, you can’t reliably make any assertions about the state
+of the system after this happens:</p>
+<ul class="simple">
+<li><p>The kernel could have been inside a critical section when the overflow
+occurs, leaving important global data structures in a corrupted state.</p></li>
+<li><p>For systems that implement stack protection using a guard memory region,
+it’s possible to overshoot the guard and corrupt adjacent data structures
+before the hardware detects this situation.</p></li>
+</ul>
+<p>To enable the <a class="reference internal" href="../../kconfig.html#CONFIG_HW_STACK_PROTECTION" title="CONFIG_HW_STACK_PROTECTION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HW_STACK_PROTECTION</span></code></a> feature, the system must
+provide some kind of hardware-based stack overflow protection, and enable the
+<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARCH_HAS_STACK_PROTECTION</span></code> option.</p>
+<p>Two forms of HW-based stack overflow detection are supported: dedicated
+CPU features for this purpose, or special read-only guard regions immediately
+preceding stack buffers.</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_HW_STACK_PROTECTION" title="CONFIG_HW_STACK_PROTECTION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HW_STACK_PROTECTION</span></code></a> only catches stack overflows for
+supervisor threads. This is not required to catch stack overflow from user
+threads; <a class="reference internal" href="../../kconfig.html#CONFIG_USERSPACE" title="CONFIG_USERSPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code></a> is orthogonal.</p>
+<p>This feature only detects supervisor mode stack overflows, including stack
+overflows when handling system calls. It doesn’t guarantee that the kernel has
+not been corrupted. Any stack overflow in supervisor mode should be treated as
+a fatal error, with no assertions about the integrity of the overall system
+possible.</p>
+<p>Stack overflows in user mode are recoverable (from the kernel’s perspective)
+and require no special configuration; <a class="reference internal" href="../../kconfig.html#CONFIG_HW_STACK_PROTECTION" title="CONFIG_HW_STACK_PROTECTION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HW_STACK_PROTECTION</span></code></a>
+only applies to catching overflows when the CPU is in supervisor mode.</p>
+<section id="cpu-based-stack-overflow-detection">
+<h4>CPU-based stack overflow detection<a class="headerlink" href="#cpu-based-stack-overflow-detection" title="Link to this heading"></a></h4>
+<p>If we are detecting stack overflows in supervisor mode via special CPU
+registers (like ARM’s SPLIM), then the defaults are sufficient.</p>
+</section>
+<section id="guard-based-stack-overflow-detection">
+<h4>Guard-based stack overflow detection<a class="headerlink" href="#guard-based-stack-overflow-detection" title="Link to this heading"></a></h4>
+<p>We are detecting supervisor mode stack overflows via special memory protection
+region located immediately before the stack buffer that generates an exception
+on write. Reserved memory will be used for the guard region.</p>
+<p><a class="reference internal" href="../../doxygen/html/group__arch-threads.html#ga75b8e6cce01f5a34e9f3d649e561c3af" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_KERNEL_STACK_RESERVED</span></code></a> should be defined to the minimum size
+of a memory protection region. On most ARM CPUs this is 32 bytes.
+<a class="reference internal" href="../../doxygen/html/arch_2xtensa_2thread__stack_8h.html#ac5a3684c543902ec50373d2c774c5bf6" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_KERNEL_STACK_OBJ_ALIGN</span></code></a> should also be set to the required
+alignment for this region.</p>
+<p>MMU-based systems should not reserve RAM for the guard region and instead
+simply leave an non-present virtual page below every stack when it is mapped
+into the address space. The stack object will still need to be properly aligned
+and sized to page granularity.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+-----------------------------+ &lt;- thread.stack_obj
+| Guard reserved memory       | } K_KERNEL_STACK_RESERVED
++-----------------------------+
+| Guard carve-out             |
+|.............................| &lt;- thread.stack_info.start
+| Stack buffer                |
+.                             .
+</pre></div>
+</div>
+<p>Guard carve-outs for kernel stacks are uncommon and should be avoided if
+possible. They tend to be needed for two situations:</p>
+<ul class="simple">
+<li><p>The same stack may be re-purposed to host a user thread, in which case
+the guard is unnecessary and shouldn’t be unconditionally reserved.
+This is the case when privilege elevation stacks are not inside the stack
+object.</p></li>
+<li><p>The required guard size is variable and depends on context. For example, some
+ARM CPUs have lazy floating point stacking during exceptions and may
+decrement the stack pointer by a large value without writing anything,
+completely overshooting a minimally-sized guard and corrupting adjacent
+memory. Rather than unconditionally reserving a larger guard, the extra
+memory is carved out if the thread uses floating point.</p></li>
+</ul>
+</section>
+</section>
+<section id="user-mode-enabled">
+<h3>User mode enabled<a class="headerlink" href="#user-mode-enabled" title="Link to this heading"></a></h3>
+<p>Enabling user mode activates two new requirements:</p>
+<ul class="simple">
+<li><p>A separate fixed-sized privilege mode stack, specified by
+<a class="reference internal" href="../../kconfig.html#CONFIG_PRIVILEGED_STACK_SIZE" title="CONFIG_PRIVILEGED_STACK_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PRIVILEGED_STACK_SIZE</span></code></a>, must be allocated that the user
+thread cannot access. It is used as the stack by the kernel when handling
+system calls. If stack guards are implemented, a stack guard region must
+be able to be placed before it, with support for carve-outs if necessary.</p></li>
+<li><p>The memory protection hardware must be able to program a region that exactly
+covers the thread’s stack buffer, tracked in <code class="docutils literal notranslate"><span class="pre">thread.stack_info</span></code>. This
+implies that <a class="reference internal" href="../../doxygen/html/arch_2xtensa_2thread__stack_8h.html#ab76d60bd06e5c5a0f995c6b11bf97fd8" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_THREAD_STACK_SIZE_ADJUST()</span></code></a> will need to round
+up the requested stack size so that a region may cover it, and that
+<a class="reference internal" href="../../doxygen/html/arch_2xtensa_2thread__stack_8h.html#ab6c1d96f5e018ed166ee401dc84b7ab7" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_THREAD_STACK_OBJ_ALIGN()</span></code></a> is also specified per the
+granularity of the memory protection hardware.</p></li>
+</ul>
+<p>This becomes more complicated if the memory protection hardware requires that
+all memory regions be sized to a power of two, and aligned to their own size.
+This is common on older MPUs and is known with
+<a class="reference internal" href="../../kconfig.html#CONFIG_MPU_REQUIRES_POWER_OF_TWO_ALIGNMENT" title="CONFIG_MPU_REQUIRES_POWER_OF_TWO_ALIGNMENT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MPU_REQUIRES_POWER_OF_TWO_ALIGNMENT</span></code></a>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">thread.stack_info</span></code> always tracks the user-accessible part of the stack
+object, it must always be correct to program a memory protection region with
+user access using the range stored within.</p>
+<section id="non-power-of-two-memory-region-requirements">
+<h4>Non power-of-two memory region requirements<a class="headerlink" href="#non-power-of-two-memory-region-requirements" title="Link to this heading"></a></h4>
+<p>On systems without power-of-two region requirements, the reserved memory area
+for threads stacks defined by <a class="reference internal" href="../../doxygen/html/kernel_2thread__stack_8h.html#a025b257739ad52fe7106585b51468e49" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_THREAD_STACK_RESERVED</span></code></a> may be used to
+contain the privilege mode stack. The layout could be something like:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+------------------------------+ &lt;- thread.stack_obj
+| Other platform data          |
++------------------------------+
+| Guard region (if enabled)    |
++------------------------------+
+| Guard carve-out (if needed)  |
+|..............................|
+| Privilege elevation stack    |
++------------------------------| &lt;- thread.stack_obj +
+| Stack buffer                 |      K_THREAD_STACK_RESERVED =
+.                              .      thread.stack_info.start
+</pre></div>
+</div>
+<p>The guard region, and any carve-out (if needed) would be configured as a
+read-only region when the thread is created.</p>
+<ul class="simple">
+<li><p>If the thread is a supervisor thread, the privilege elevation region is just
+extra stack memory. An overflow will eventually crash into the guard region.</p></li>
+<li><p>If the thread is running in user mode, a memory protection region will be
+configured to allow user threads access to the stack buffer, but nothing
+before or after it. An overflow in user mode will crash into the privilege
+elevation stack, which the user thread has no access to. An overflow when
+handling a system call will crash into the guard region.</p></li>
+</ul>
+<p>On an MMU system there should be no physical guards; the privilege mode stack
+will be mapped into kernel memory, and the stack buffer in the user part of
+memory, each with non-present virtual guard pages below them to catch runtime
+stack overflows.</p>
+<p>Other platform data may be stored before the guard region, but this is highly
+discouraged if such data could be stored in <code class="docutils literal notranslate"><span class="pre">thread.arch</span></code> somewhere.</p>
+<p><a class="reference internal" href="../../doxygen/html/arch_2x86_2thread__stack_8h.html#ace8831316d471ccfb06eeddb6d69d817" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_THREAD_STACK_RESERVED</span></code></a> will need to be defined to capture
+the size of the reserved region containing platform data, privilege elevation
+stacks, and guards. It must be appropriately sized such that an MPU region
+to grant user mode access to the stack buffer can be placed immediately
+after it.</p>
+</section>
+<section id="power-of-two-memory-region-requirements">
+<h4>Power-of-two memory region requirements<a class="headerlink" href="#power-of-two-memory-region-requirements" title="Link to this heading"></a></h4>
+<p>Thread stack objects must be sized and aligned to the same power of two,
+without any reserved memory to allow efficient packing in memory. Thus,
+any guards in the thread stack must be completely carved out, and the
+privilege elevation stack must be allocated elsewhere.</p>
+<p><a class="reference internal" href="../../doxygen/html/arch_2xtensa_2thread__stack_8h.html#ab76d60bd06e5c5a0f995c6b11bf97fd8" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_THREAD_STACK_SIZE_ADJUST()</span></code></a> and
+<a class="reference internal" href="../../doxygen/html/arch_2xtensa_2thread__stack_8h.html#ab6c1d96f5e018ed166ee401dc84b7ab7" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_THREAD_STACK_OBJ_ALIGN()</span></code></a> should both be defined to
+<code class="xref c c-macro docutils literal notranslate"><span class="pre">Z_POW2_CEIL()</span></code>. <a class="reference internal" href="../../doxygen/html/kernel_2thread__stack_8h.html#a025b257739ad52fe7106585b51468e49" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_THREAD_STACK_RESERVED</span></code></a> must be 0.</p>
+<p>For the privilege stacks, the <a class="reference internal" href="../../kconfig.html#CONFIG_GEN_PRIV_STACKS" title="CONFIG_GEN_PRIV_STACKS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_GEN_PRIV_STACKS</span></code></a> must be,
+enabled. For every thread stack found in the system, a corresponding fixed-size
+kernel stack used for handling system calls is generated. The address
+of the privilege stacks can be looked up quickly at runtime based on the
+thread stack address using <code class="xref c c-func docutils literal notranslate"><span class="pre">z_priv_stack_find()</span></code>. These stacks are
+laid out the same way as other kernel-only stacks.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+-----------------------------+ &lt;- z_priv_stack_find(thread.stack_obj)
+| Reserved memory             | } K_KERNEL_STACK_RESERVED
++-----------------------------+
+| Guard carve-out (if needed) |
+|.............................|
+| Privilege elevation stack   |
+|                             |
++-----------------------------+ &lt;- z_priv_stack_find(thread.stack_obj) +
+                                     K_KERNEL_STACK_RESERVED +
+                                     CONFIG_PRIVILEGED_STACK_SIZE
+
++-----------------------------+ &lt;- thread.stack_obj
+| MPU guard carve-out         |
+| (supervisor mode only)      |
+|.............................| &lt;- thread.stack_info.start
+| Stack buffer                |
+.                             .
+</pre></div>
+</div>
+<p>The guard carve-out in the thread stack object is only used if the thread is
+running in supervisor mode. If the thread drops to user mode, there is no guard
+and the entire object is used as the stack buffer, with full access to the
+associated user mode thread and <code class="docutils literal notranslate"><span class="pre">thread.stack_info</span></code> updated appropriately.</p>
+</section>
+</section>
+</section>
+<section id="user-mode-threads">
+<h2>User Mode Threads<a class="headerlink" href="#user-mode-threads" title="Link to this heading"></a></h2>
+<p>To support user mode threads, several kernel-to-arch APIs need to be
+implemented, and the system must enable the <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARCH_HAS_USERSPACE</span></code>
+option. Please see the documentation for each of these functions for more
+details:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../doxygen/html/group__arch-userspace.html#ga13053a9233b86d5cd19dc3cea5804a16" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_buffer_validate()</span></code></a> to test whether the current thread has
+access permissions to a particular memory region</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__arch-userspace.html#ga447daa0454a90a7a3a247de01e522567" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_user_mode_enter()</span></code></a> which will irreversibly drop a supervisor
+thread to user mode privileges. The stack must be wiped.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__arch-userspace.html#gad53908f229d7e2c333574b009493644b" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_syscall_oops()</span></code></a> which generates a kernel oops when system
+call parameters can’t be validated, in such a way that the oops appears to be
+generated from where the system call was invoked in the user thread</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__arch-userspace.html#ga5e9ab24b9c980e327903fbe3f5bd97f3" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_syscall_invoke0()</span></code></a> through
+<a class="reference internal" href="../../doxygen/html/group__arch-userspace.html#gac6cae2197637993a86b6ec6803b5742b" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_syscall_invoke6()</span></code></a> invoke a system call with the
+appropriate number of arguments which must all be passed in during the
+privilege elevation via registers.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__arch-userspace.html#ga89ab53a218add419e37f89c1f5fd955f" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_is_user_context()</span></code></a> return nonzero if the CPU is currently
+running in user mode</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__arch-userspace.html#ga71542fcc679a94ad9ea60d7ac46da361" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_mem_domain_max_partitions_get()</span></code></a> which indicates the max
+number of regions for a memory domain. MMU systems have an unlimited amount,
+MPU systems have constraints on this.</p></li>
+</ul>
+<p>Some architectures may need to update software memory management structures
+or modify hardware registers on another CPU when memory domain APIs are invoked.
+If so, <a class="reference internal" href="../../kconfig.html#CONFIG_ARCH_MEM_DOMAIN_SYNCHRONOUS_API" title="CONFIG_ARCH_MEM_DOMAIN_SYNCHRONOUS_API"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARCH_MEM_DOMAIN_SYNCHRONOUS_API</span></code></a> must be selected by the
+architecture and some additional APIs must be implemented. This is common
+on MMU systems and uncommon on MPU systems:</p>
+<ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_mem_domain_thread_add()</span></code></p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_mem_domain_thread_remove()</span></code></p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_mem_domain_partition_add()</span></code></p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_mem_domain_partition_remove()</span></code></p></li>
+</ul>
+<p>Please see the doxygen documentation of these APIs for details.</p>
+<p>In addition to implementing these APIs, there are some other tasks as well:</p>
+<ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">_new_thread()</span></code> needs to spawn threads with <a class="reference internal" href="../../doxygen/html/group__thread__apis.html#gacb5340339892f22301e02697c6039ccc" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_USER</span></code></a> in
+user mode</p></li>
+<li><p>On context switch, the outgoing thread’s stack memory should be marked
+inaccessible to user mode by making the appropriate configuration changes in
+the memory management hardware.. The incoming thread’s stack memory should
+likewise be marked as accessible. This ensures that threads can’t mess with
+other thread stacks.</p></li>
+<li><p>On context switch, the system needs to switch between memory domains for
+the incoming and outgoing threads.</p></li>
+<li><p>Thread stack areas must include a kernel stack region. This should be
+inaccessible to user threads at all times. This stack will be used when
+system calls are made. This should be fixed size for all threads, and must
+be large enough to handle any system call.</p></li>
+<li><p>A software interrupt or some kind of privilege elevation mechanism needs to
+be established. This is closely tied to how the _arch_syscall_invoke macros
+are implemented. On system call, the appropriate handler function needs to
+be looked up in _k_syscall_table. Bad system call IDs should jump to the
+<code class="xref c c-enum docutils literal notranslate"><span class="pre">K_SYSCALL_BAD</span></code> handler. Upon completion of the system call, care
+must be taken not to leak any register state back to user mode.</p></li>
+</ul>
+</section>
+<section id="gdb-stub">
+<h2>GDB Stub<a class="headerlink" href="#gdb-stub" title="Link to this heading"></a></h2>
+<p>To enable GDB stub for remote debugging on a new architecture:</p>
+<ol class="arabic simple">
+<li><p>Create a new <code class="docutils literal notranslate"><span class="pre">gdbstub.h</span></code> header file under appropriate architecture
+include directory (<code class="file docutils literal notranslate"><span class="pre">include/zephyr/arch/&lt;arch&gt;/gdbstub.h</span></code>).</p>
+<ul class="simple">
+<li><p>Create a new struct <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gdb_ctx</span></code> as the GDB context.</p>
+<ul>
+<li><p>Must define a member named <code class="docutils literal notranslate"><span class="pre">exception</span></code> of type <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span></code> to
+store the GDB exception reason. This value needs to be set before
+entering <code class="xref c c-func docutils literal notranslate"><span class="pre">z_gdb_main_loop()</span></code>.</p></li>
+<li><p>Architecture can define as many members as needed for GDB stub to
+function.</p></li>
+<li><p>Pointer to this struct needs to be passed to <code class="xref c c-func docutils literal notranslate"><span class="pre">z_gdb_main_loop()</span></code>,
+where this pointer will be passed to other GDB stub functions.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Functions for entering and exiting GDB stub main loop.</p>
+<ul class="simple">
+<li><p>If the architecture relies on interrupts to service breakpoints,
+interrupt service routines (ISR) need to be implemented, which
+will serve as the entry point to GDB stub main loop.</p></li>
+<li><p>These functions need to save and restore context so code execution
+can continue as if no breakpoints have been encountered.</p></li>
+<li><p>These functions need to call <code class="xref c c-func docutils literal notranslate"><span class="pre">z_gdb_main_loop()</span></code> after saving
+execution context to go into the GDB stub main loop to receive commands
+from GDB.</p></li>
+<li><p>Before calling <code class="xref c c-func docutils literal notranslate"><span class="pre">z_gdb_main_loop()</span></code>, <a class="reference internal" href="../../doxygen/html/structgdb__ctx.html#adba5c39e347abc419b365bab2a1a0999" title=""><code class="xref c c-member docutils literal notranslate"><span class="pre">gdb_ctx.exception</span></code></a>
+must be set to specify the exception reason.</p></li>
+</ul>
+</li>
+<li><p>Implement necessary functions to support GDB stub functionality:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../doxygen/html/group__arch-gdbstub.html#ga21c8a32d35c4d267b8306d595ff1d726" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_gdb_init()</span></code></a></p>
+<ul>
+<li><p>This needs to initialize necessary bits to support GDB stub functionality,
+for example, setting up the GDB context and connecting debug interrupts.</p></li>
+<li><p>This must stop code execution via architecture specific method (e.g.
+raising debug interrupts). This allows GDB to connect during boot.</p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__arch-gdbstub.html#ga9c130421feeee919651828511743b346" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_gdb_continue()</span></code></a></p>
+<ul>
+<li><p>This function is called when GDB sends a <code class="docutils literal notranslate"><span class="pre">c</span></code> or <code class="docutils literal notranslate"><span class="pre">continue</span></code> command
+to continue code execution.</p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__arch-gdbstub.html#ga2aa577d5e55c8b739e2be6187336aaf0" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_gdb_step()</span></code></a></p>
+<ul>
+<li><p>This function is called when GDB sends a <code class="docutils literal notranslate"><span class="pre">si</span></code> or <code class="docutils literal notranslate"><span class="pre">stepi</span></code> command
+to execute one machine instruction, before returning to GDB prompt.</p></li>
+</ul>
+</li>
+<li><p>Hardware register read/write functions:</p>
+<ul>
+<li><p>Since the GDB stub is running on the target, manipulation of hardware
+registers need to cached to avoid affecting the execution of GDB stub.
+Think of it as context switching, where the execution context is
+changed to the GDB stub. So that the register values of the running
+thread before context switch need to be stored. Manipulation of
+register values must only be done to this cached copy. The updated
+values will then be written to hardware registers before switching
+back to the previous running thread.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__arch-gdbstub.html#ga5317106a8022bea2a0d42af0789cc016" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_gdb_reg_readall()</span></code></a></p>
+<ul>
+<li><p>This collects all hardware register values that would appear in
+a <code class="docutils literal notranslate"><span class="pre">g</span></code>/<code class="docutils literal notranslate"><span class="pre">G</span></code> packets which will be sent back to GDB. The format of
+the G-packet is architecture specific. Consult GDB on what is
+expected.</p></li>
+<li><p>Note that, for most architectures, a valid G-packet must be returned
+and sent to GDB. If a packet without incorrect length is sent to
+GDB, GDB will abort the debugging session.</p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__arch-gdbstub.html#ga0ef78d7e193e98549d9665632e53d5ca" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_gdb_reg_writeall()</span></code></a></p>
+<ul>
+<li><p>This takes a G-packet sent by GDB and populates the hardware
+registers with values from the G-packet.</p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__arch-gdbstub.html#gaa3216e9f381f974c374a6399af5cdba5" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_gdb_reg_readone()</span></code></a></p>
+<ul>
+<li><p>This reads the value of one hardware register and sends
+the result to GDB.</p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__arch-gdbstub.html#gad717b520d774294bbda78a56cddcaeff" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_gdb_reg_writeone()</span></code></a></p>
+<ul>
+<li><p>This writes the value of one hardware register received from GDB.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Breakpoints:</p>
+<ul>
+<li><p><a class="reference internal" href="../../doxygen/html/group__arch-gdbstub.html#gab6f42110cf2340132bf2b3916810c01d" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_gdb_add_breakpoint()</span></code></a> and
+<a class="reference internal" href="../../doxygen/html/group__arch-gdbstub.html#ga734041433f69030ad98439d10ef56ad6" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_gdb_remove_breakpoint()</span></code></a></p></li>
+<li><p>GDB may decide to use software breakpoints which modifies
+the memory at the breakpoint locations to replace the instruction
+with software breakpoint or trap instructions. GDB will then
+restore the memory content once execution reaches the breakpoints.
+GDB supports this by default and there is usually no need to
+handle software breakpoints in the architecture code (where
+breakpoint type is <code class="docutils literal notranslate"><span class="pre">0</span></code>).</p></li>
+<li><p>Hardware breakpoints (type <code class="docutils literal notranslate"><span class="pre">1</span></code>) are required if the code is
+in ROM or flash that cannot be modified at runtime. Consult
+the architecture datasheet on how to enable hardware breakpoints.</p></li>
+<li><p>If hardware breakpoints are not supported by the architecture,
+there is no need to implement these in architecture code.
+GDB will then rely on software breakpoints.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>For architecture where certain memory regions are not accessible,
+an array named <a class="reference internal" href="../../doxygen/html/debug_2gdbstub_8h.html#a9d01831c656bae3ee4592ccb45456295" title=""><code class="xref c c-var docutils literal notranslate"><span class="pre">gdb_mem_region_array</span></code></a> of type
+<a class="reference internal" href="../../doxygen/html/structgdb__mem__region.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">gdb_mem_region</span></code></a> needs to be defined to specify regions
+that are accessible. For each array item:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../doxygen/html/structgdb__mem__region.html#a463465123fd373996a857b38c71474b3" title=""><code class="xref c c-member docutils literal notranslate"><span class="pre">gdb_mem_region.start</span></code></a> specifies the start of a memory
+region.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/structgdb__mem__region.html#a16001ef766b3c5775c1d1b2c59575b74" title=""><code class="xref c c-member docutils literal notranslate"><span class="pre">gdb_mem_region.end</span></code></a> specifies the end of a memory
+region.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/structgdb__mem__region.html#ad8ae6acf6950428a9846a25fb0219eeb" title=""><code class="xref c c-member docutils literal notranslate"><span class="pre">gdb_mem_region.attributes</span></code></a> specifies the permission
+of a memory region.</p>
+<ul>
+<li><p><a class="reference internal" href="../../doxygen/html/debug_2gdbstub_8h.html#a083549c8b9db7f28536481e33d362479" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">GDB_MEM_REGION_RO</span></code></a>: region is read-only.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/debug_2gdbstub_8h.html#a386751baaedc3e607a37a473a88bb05a" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">GDB_MEM_REGION_RW</span></code></a>: region is read-write.</p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="../../doxygen/html/structgdb__mem__region.html#aa714bde657eb3572367a924298dd927f" title=""><code class="xref c c-member docutils literal notranslate"><span class="pre">gdb_mem_region.alignment</span></code></a> specifies read/write alignment
+of a memory region. Use <code class="docutils literal notranslate"><span class="pre">0</span></code> if there is no alignment requirement
+and read/write can be done byte-by-byte.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<section id="timing">
+<h3>Timing<a class="headerlink" href="#timing" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__arch-timing.html" title=""><span class="pre">Architecture</span> <span class="pre">timing</span> <span class="pre">APIs</span></a></dt>
+</dl>
+
+</section>
+<section id="threads">
+<h3>Threads<a class="headerlink" href="#threads" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__arch-threads.html" title=""><span class="pre">Architecture</span> <span class="pre">thread</span> <span class="pre">APIs</span></a></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__arch-tls.html" title=""><span class="pre">Architecture-specific</span> <span class="pre">Thread</span> <span class="pre">Local</span> <span class="pre">Storage</span> <span class="pre">APIs</span></a></dt>
+</dl>
+
+</section>
+<section id="power-management">
+<h3>Power Management<a class="headerlink" href="#power-management" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__arch-pm.html" title=""><span class="pre">Architecture-specific</span> <span class="pre">power</span> <span class="pre">management</span> <span class="pre">APIs</span></a></dt>
+</dl>
+
+</section>
+<section id="symmetric-multi-processing">
+<h3>Symmetric Multi-Processing<a class="headerlink" href="#symmetric-multi-processing" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__arch-smp.html" title=""><span class="pre">Architecture-specific</span> <span class="pre">SMP</span> <span class="pre">APIs</span></a></dt>
+</dl>
+
+</section>
+<section id="interrupts">
+<h3>Interrupts<a class="headerlink" href="#interrupts" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__arch-irq.html" title=""><span class="pre">Architecture-specific</span> <span class="pre">IRQ</span> <span class="pre">APIs</span></a></dt>
+</dl>
+
+</section>
+<section id="userspace">
+<h3>Userspace<a class="headerlink" href="#userspace" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__arch-userspace.html" title=""><span class="pre">Architecture-specific</span> <span class="pre">userspace</span> <span class="pre">APIs</span></a></dt>
+</dl>
+
+</section>
+<section id="memory-management">
+<h3>Memory Management<a class="headerlink" href="#memory-management" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__arch-mmu.html" title=""><span class="pre">Architecture-specific</span> <span class="pre">memory-mapping</span> <span class="pre">APIs</span></a></dt>
+</dl>
+
+</section>
+<section id="miscellaneous-architecture-apis">
+<h3>Miscellaneous Architecture APIs<a class="headerlink" href="#miscellaneous-architecture-apis" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__arch-misc.html" title=""><span class="pre">Miscellaneous</span> <span class="pre">architecture</span> <span class="pre">APIs</span></a></dt>
+</dl>
+
+</section>
+<section id="gdb-stub-apis">
+<h3>GDB Stub APIs<a class="headerlink" href="#gdb-stub-apis" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__arch-gdbstub.html" title=""><span class="pre">Architecture-specific</span> <span class="pre">gdbstub</span> <span class="pre">APIs</span></a></dt>
+</dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,601 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="Measures delta time between GPIO events and reports the latency metrics via latmon to the latmus service executing on the SUT." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Latmon Client &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/samples/net/latmon/README.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="LwM2M client" href="../lwm2m_client/README.html" />
+    <link rel="prev" title="IPv4 autoconf client" href="../ipv4_autoconf/README.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1 current"><a class="category-link reference internal" href="../../index.html">Samples and Demos</a><ul class="current">
+<li class="toctree-l2"><a class="category-link reference internal" href="../../application_development/application_development.html">Application Development</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../arch/index.html">Architecture-dependent Samples</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../basic/basic.html">Basic</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../bluetooth/bluetooth.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/boards.html">Boards</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../cpp/cpp.html">C++</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../data_structures/data_structures.html">Data Structures</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/drivers.html">Drivers</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../modules/index.html">External modules</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../kernel/index.html">Kernel and Scheduler</a></li>
+<li class="toctree-l2 current"><a class="category-link reference internal" href="../net.html">Networking</a><ul class="current">
+<li class="toctree-l3"><a class="category-link reference internal" href="../cloud/README.html">IoT Cloud</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../ethernet/README.html">Network Ethernet</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../openthread/README.html">OpenThread</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../qos/QoS.html">Quality of Service</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../sockets/sockets.html">Sockets API</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../wifi/README.html">Wi-Fi</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../wpan_serial/README.html" title="Implement a slip-radio device for Contiki-based border routers.">802.15.4 &quot;serial-radio&quot;</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../cellular_modem/README.html" title="Use a cellular modem to communicate with a UDP server.">Cellular modem</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../dhcpv4_client/README.html" title="Start a DHCPv4 client to obtain an IPv4 address from a DHCPv4 server.">DHCPv4 client</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../dns_resolve/README.html" title="Resolve an IP address for a given hostname.">DNS resolve</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../ftp_client/README.html" title="FTP client sample interacting with FTP server over Zephyr shell.">FTP client shell sample</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../ipv4_autoconf/README.html" title="Perform IPv4 autoconfiguration and self-assign a random IPv4 address">IPv4 autoconf client</a></li>
+<li class="toctree-l3 current"><a class="code-sample-link current reference internal" href="#" title="Measures delta time between GPIO events and reports the latency metrics via latmon to the latmus service executing on the SUT.">Latmon Client</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../lwm2m_client/README.html" title="Implement a LwM2M client that connects to a LwM2M server.">LwM2M client</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../mdns_responder/README.html" title="Listen and respond to mDNS queries.">mDNS responder</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../midi2/README.html" title="Exchange Universal MIDI Packets over the Network MIDI 2.0 protocol">MIDI2 network transport</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../mqtt_publisher/README.html" title="Send MQTT PUBLISH messages to an MQTT server.">MQTT publisher</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../mqtt_sn_publisher/README.html" title="Send MQTT-SN PUBLISH messages to an MQTT-SN gateway.">MQTT-SN publisher</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../capture/README.html" title="Capture network packets and send them to a remote host via IPIP tunnel.">Network packet capture</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../pkt_filter/README.html" title="Install network packet filter hooks.">Network packet filter</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../stats/README.html" title="Query and display network statistics from a user application.">Network statistics</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../ocpp/README.html" title="Implement an OCPP charge point that connects to a Central System server and simulates the meter readings.">OCPP charge point</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../prometheus/README.html" title="Implement a Prometheus Metric Server demonstrating various metric types.">Prometheus Sample</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../promiscuous_mode/README.html" title="Enable promiscuous mode on all interfaces and print information about incoming packets.">Promiscuous mode</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../ptp/README.html" title="Enable PTP support and monitor messages and events via logging.">PTP</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../syslog_net/README.html" title="Enable a remote syslog service that sends syslog messages to a remote server">Remote syslog</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../secure_mqtt_sensor_actuator/README.html" title="Implement an MQTT-based IoT sensor/actuator device">Secure MQTT Sensor/Actuator</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../telnet/README.html" title="Access Zephyr shell over telnet.">Telnet console</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../tftp_client/README.html" title="Use the TFTP client library to get/put files from/to a TFTP server.">TFTP client</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../virtual/README.html" title="Create a sample virtual network interface.">Virtual network interface</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../wireguard/README.html" title="Implement a echo-server application that sends received packets back to the sender over Wireguard VPN connection.">Wireguard VPN</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../zperf/README.html" title="Use the zperf shell utility to evaluate network bandwidth.">zperf: Network Traffic Generator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../posix/posix.html">POSIX API</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../psa/index.html">PSA</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../regulator/index.html">Regulator</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../sensor/sensor.html">Sensors</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../shields/shields.html">Shields</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/subsys.html">Subsystems</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../sysbuild/sysbuild.html">Sysbuild</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../tfm_integration/tfm_integration.html">TF-M Integration</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../userspace/index.html">Userspace</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../synchronization/README.html" title="Manipulate basic kernel synchronization primitives.">Basic Synchronization</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../philosophers/README.html" title="Implement a solution to the Dining Philosophers problem using Zephyr kernel services.">Dining Philosophers</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../hello_world/README.html" title="Print &quot;Hello World&quot; to the console.">Hello World</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Samples and Demos</a> &raquo;</li>
+  
+     <li><a href="../net.html">Networking</a> &raquo;</li>
+  
+  <li>Latmon Client</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main//samples/net/latmon/README.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27samples%2Fnet%2Flatmon%2FREADME%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Networking%2Carea%3A+Samples&env=-+Page%3A+samples%2Fnet%2Flatmon%2FREADME%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="latmon-client">
+<h1>Latmon Client<a class="headerlink" href="#latmon-client" title="Link to this heading"></a></h1>
+<p>
+                <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main//samples/net/latmon/README.rst/.." class="btn btn-info fa fa-github"
+                    target="_blank" style="text-align: center;">
+                    Browse source code on GitHub
+                </a>
+                </p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>This project provides tools to measure the worst-case response time of a system under test (SUT) to
+GPIO events using:</p>
+<ul>
+<li><p><strong>Latmon</strong>:</p>
+<p>Runs on a Zephyr-based board to generate and monitor GPIO events while collecting metrics</p>
+</li>
+<li><p><strong>Latmus</strong>:</p>
+<p>Runs on the SUT to respond to the falling edge of input GPIO event, displaying the latency metrics
+and generate histogram data.</p>
+</li>
+</ul>
+<p>This project is part of the open-source initiative
+<a class="reference external" href="https://evlproject.org/core/benchmarks/#latmus-gpio-response-time">EVL Project - Latmus GPIO Response Time</a>.</p>
+<p>The main program is designed to monitor latency using GPIO pins on a Zephyr-based system. It generates a
+pulse signal on a GPIO pin and measures the time it takes for the SUT (executing Latmus) to respond to
+it.</p>
+<p>The SUT must be running Latmus to capture the latency metrics and histogram information reported over the
+network. The program uses LEDs to indicate the different states, such as DHCP binding(red), waiting for the
+Latmus connection (blue) and sampling (green).</p>
+<section id="why-not-just-use-a-timer">
+<h3>Why Not Just Use a Timer?<a class="headerlink" href="#why-not-just-use-a-timer" title="Link to this heading"></a></h3>
+<p>Timer tests miss external factors like GPIO signals, hardware, and interrupt handling.
+Latmon and Latmus simulate real-world scenarios, capturing end-to-end latency metrics.
+This ensures accurate assessment of real-time responsiveness across the entire system.</p>
+<ul>
+<li><p><strong>Real-Time Thread Testing</strong>:</p>
+<p>Evaluates how a user-space thread processes external interrupts.</p>
+</li>
+<li><p><strong>End-to-End Latency Measurement</strong>:</p>
+<p>Captures delays from hardware, drivers, and user-space threads.</p>
+</li>
+<li><p><strong>Versatile Platform Support</strong>:</p>
+<p>Works on EVL, PREEMPT_RT, and other platforms.</p>
+</li>
+</ul>
+</section>
+<section id="code-structure">
+<h3>Code Structure<a class="headerlink" href="#code-structure" title="Link to this heading"></a></h3>
+<p>The Latmon sample application is divided into two main components:</p>
+<ul>
+<li><p><strong>Application Logic</strong> (<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/samples/net/latmon/src/main.c">samples/net/latmon/src/main.c</a>):</p>
+<blockquote>
+<div><p>This file contains the application logic for Latmon.
+It initializes networking, provides the instrumentation mechanism and handles LED indicators for the
+different states.</p>
+</div></blockquote>
+</li>
+<li><p><strong>Library</strong> (<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/subsys/net/lib/latmon/latmon.c">subsys/net/lib/latmon/latmon.c</a>):</p>
+<blockquote>
+<div><p>This file provides reusable functions and abstractions for latency monitoring via Latmus.
+It includes the core logic for reporting latency metrics and histogram data.</p>
+</div></blockquote>
+</li>
+</ul>
+</section>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<ul>
+<li><p><strong>Zephyr-Compatible Board</strong>:</p>
+<p>A board with external GPIO support and an IPv4 network interface (e.g., FRDM-K64F).</p>
+</li>
+<li><p><strong>System under Test</strong>:</p>
+<p>A system with external GPIO pins running the Latmus service and an IPv4 network interface.</p>
+</li>
+<li><p><strong>Network Connection</strong>:</p>
+<p>A DHCP server for IP assignment.</p>
+</li>
+<li><p><strong>Physical Connection</strong>:</p>
+<p>GPIO wires connecting the Zephyr board to the SUT and both systems connected to the network.</p>
+</li>
+</ul>
+</section>
+<section id="setup-and-usage">
+<h2>Setup and Usage<a class="headerlink" href="#setup-and-usage" title="Link to this heading"></a></h2>
+<ul>
+<li><p><strong>Flash Latmon onto the Zephyr board</strong>:</p>
+<p>The application will connect to the network and wait for a connection from the SUT. The application
+will use DHCP to obtain an IPv4 address.</p>
+</li>
+<li><p><strong>Connect GPIO pins for transmit (Zephyr to SUT) and receive (SUT to Zephyr)</strong></p>
+<p>On <strong>FRDM-K64F</strong>, the sample code uses the <strong>Arduino header J2</strong>, <code class="docutils literal notranslate"><span class="pre">pin</span> <span class="pre">20</span></code> for transmit the pulse to
+the SUT and <code class="docutils literal notranslate"><span class="pre">pin</span> <span class="pre">18</span></code> to receive the acknowledgment from the SUT.</p>
+</li>
+<li><p><strong>Run Latmus on the SUT</strong></p>
+<p>Request the appropriate options with <a class="reference external" href="https://evlproject.org/core/testing/#latmus-program">Latmus</a>. Users
+can for example modify the sampling period with the <code class="docutils literal notranslate"><span class="pre">-p</span></code> option or generate histogram data for
+postprocessing with the <code class="docutils literal notranslate"><span class="pre">-g</span></code> option,</p>
+</li>
+<li><p><strong>Monitor results from the SUT</strong></p>
+<p>Latmus will report latency figures and, if requested, generate the histogram data file.</p>
+</li>
+<li><p><strong>Calibrating the Latmus latencies: CONFIG_LATMON_LOOPBACK_CALIBRATION</strong>:</p>
+<p>Users can connect the GPIO pins in loopback mode (transmit to ack) and build the Latmon sample application with
+CONFIG_LATMON_LOOPBACK_CALIBRATION enabled. When connecting to Latmus in this configuration, Latmus is providing
+a calibration value that can be used to adjust the final latencies.</p>
+</li>
+</ul>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h3>
+<p>On the host and to build and flash the Zephyr FRDM-K64F board with the Latmon sample:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user@host:~$ </span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>frdm_k64f<span class="w"> </span>samples/net/latmon
+<span class="gp">user@host:~$ </span>west<span class="w"> </span>flash
+</pre></div>
+</div>
+<p>On the SUT running on Linux, latmus <strong>MUST</strong> track the falling edge of the signal:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">root@target:~$ </span>latmus<span class="w"> </span>-I<span class="w"> </span>gpiochip2,23,falling-edge<span class="w"> </span>-O<span class="w"> </span>gpiochip2,21<span class="w"> </span>-z<span class="w"> </span>-g<span class="s2">&quot;histogram&quot;</span><span class="w"> </span><span class="s2">&quot;broadcast&quot;</span>
+</pre></div>
+</div>
+<p>Monitoring both consoles, you should see the following:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[00:00:03.311,000] &lt;inf&gt; phy_mc_ksz8081: PHY 0 is up</span>
+<span class="go">[00:00:03.311,000] &lt;inf&gt; phy_mc_ksz8081: PHY (0) Link speed 100 Mb, full duplex</span>
+<span class="go">[00:00:03.312,000] &lt;inf&gt; eth_nxp_enet_mac: Link is up</span>
+<span class="go">*** Booting Zephyr OS build v4.1.0-3337-g886443a190b1 ***</span>
+<span class="go">[00:00:03.313,000] &lt;inf&gt; sample_latmon: DHCPv4: binding...</span>
+<span class="go">[00:00:03.313,000] &lt;inf&gt; latmon: Latmon server thread priority: 14</span>
+<span class="go">[00:00:10.964,000] &lt;inf&gt; net_dhcpv4: Received: 192.168.1.58</span>
+<span class="go">[00:00:10.964,000] &lt;inf&gt; sample_latmon: Listening on 192.168.1.58</span>
+<span class="go">[00:00:30.966,000] &lt;inf&gt; latmon: Waiting for Latmus ...</span>
+<span class="go">[00:00:31.356,000] &lt;inf&gt; latmon: Monitor thread priority: -16</span>
+<span class="go">[00:00:31.356,000] &lt;inf&gt; latmon:        monitoring started:</span>
+<span class="go">[00:00:31.356,000] &lt;inf&gt; latmon:         - samples per period: 1000</span>
+<span class="go">[00:00:31.356,000] &lt;inf&gt; latmon:         - period: 1000 usecs</span>
+<span class="go">[00:00:31.356,000] &lt;inf&gt; latmon:         - histogram cells: 200</span>
+<span class="go">[00:00:31.393,000] &lt;inf&gt; latmon: Transfer thread priority: 14</span>
+</pre></div>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">root@target:~$ </span>latmus<span class="w"> </span>-I<span class="w"> </span>gpiochip2,23,falling-edge<span class="w"> </span>-O<span class="w"> </span>gpiochip2,21<span class="w"> </span>-Z<span class="w"> </span>-g<span class="s2">&quot;histogram&quot;</span><span class="w"> </span>broadcast
+<span class="go">Received broadcast message: 192.168.1.58</span>
+<span class="go">warming up on CPU0 (not isolated)...</span>
+<span class="go">connecting to latmon at 192.168.1.58:2306...</span>
+<span class="go">RTT|  00:00:16  (oob-gpio, 1000 us period, priority 98, CPU0-noisol)</span>
+<span class="go">RTH|----lat min|----lat avg|----lat max|-overrun|---msw|---lat best|--lat worst</span>
+<span class="go">RTD|     26.375|     30.839|     33.508|       0|     0|     26.375|     33.508</span>
+<span class="go">RTD|     26.333|     30.801|     37.633|       0|     0|     26.333|     37.633</span>
+<span class="go">RTD|     26.375|     30.801|     31.966|       0|     0|     26.333|     37.633</span>
+<span class="go">RTD|     26.375|     30.911|     49.675|       0|     0|     26.333|     49.675</span>
+<span class="go">RTD|     26.333|     30.830|     41.658|       0|     0|     26.333|     49.675</span>
+<span class="go">RTD|     26.375|     31.107|     59.216|       0|     0|     26.333|     59.216</span>
+<span class="go">RTD|     26.333|     30.767|     30.925|       0|     0|     26.333|     59.216</span>
+<span class="go">RTD|     26.333|     30.781|     41.616|       0|     0|     26.333|     59.216</span>
+<span class="go">RTD|     26.375|     30.768|     32.925|       0|     0|     26.333|     59.216</span>
+<span class="go">RTD|     26.375|     30.768|     37.633|       0|     0|     26.333|     59.216</span>
+</pre></div>
+</div>
+<p>On completion and from your host, retrieve the histogram file from the SUT, and generate a plot (a PNG file) using
+gnuplot:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user@host:~$ </span>gnuplot<span class="w"> </span>plot_data.gp
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">plot_data.gp</span></code> script should look like this for a file named <code class="docutils literal notranslate"><span class="pre">histogram</span></code>:</p>
+<div class="highlight-gnuplot notranslate"><div class="highlight"><pre><span></span><span class="k">set</span><span class="w"> </span><span class="nb">terminal</span><span class="w"> </span><span class="n">pngcairo</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="mi">800</span><span class="o">,</span><span class="mi">600</span>
+<span class="k">set</span><span class="w"> </span><span class="nb">output</span><span class="w"> </span><span class="s">&#39;plot.png&#39;</span>
+<span class="k">set</span><span class="w"> </span><span class="nb">title</span><span class="w"> </span><span class="s">&quot;Data Plot&quot;</span>
+<span class="k">set</span><span class="w"> </span><span class="nb">xlabel</span><span class="w"> </span><span class="s">&quot;Latency (usec)&quot;</span>
+<span class="k">set</span><span class="w"> </span><span class="nb">ylabel</span><span class="w"> </span><span class="s">&quot;Sample Count&quot;</span>
+<span class="k">set</span><span class="w"> </span><span class="nb">grid</span>
+<span class="k">set</span><span class="w"> </span><span class="nb">style</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="n">linespoints</span>
+<span class="k">plot</span><span class="w"> </span><span class="s">&#39;histogram&#39;</span><span class="w"> </span><span class="nb">using</span><span class="w"> </span><span class="mi">1</span><span class="o">:</span><span class="mi">2</span><span class="w"> </span><span class="nb">with</span><span class="w"> </span><span class="n">linespoints</span><span class="w"> </span><span class="nb">title</span><span class="w"> </span><span class="s">&quot;Data Points&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../doxygen/html/group__latmon.html" title=""><span class="pre">Latency</span> <span class="pre">Monitor</span></a></dt>
+</dl>
+
+</section>
+</section>
+<script type="application/ld+json">
+                {"@context": "http://schema.org", "@type": "SoftwareSourceCode", "name": "Latmon Client", "description": "Measures delta time between GPIO events and reports the latency metrics via latmon to the latmus\nservice executing on the SUT.", "codeSampleType": "full", "codeRepository": "https://github.com/zephyrproject-rtos/zephyr/blob/main//samples/net/latmon/README.rst"}
+                </script>
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,638 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="Capture network packets and send them to a remote host via IPIP tunnel." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Network packet capture &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/samples/net/capture/README.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Cellular modem" href="../cellular_modem/README.html" />
+    <link rel="prev" title="Networking" href="../net.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1 current"><a class="category-link reference internal" href="../../index.html">Samples and Demos</a><ul class="current">
+<li class="toctree-l2"><a class="category-link reference internal" href="../../application_development/application_development.html">Application Development</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../arch/index.html">Architecture-dependent Samples</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../basic/basic.html">Basic</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../bluetooth/bluetooth.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/boards.html">Boards</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../cpp/cpp.html">C++</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../data_structures/data_structures.html">Data Structures</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/drivers.html">Drivers</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../modules/index.html">External modules</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../kernel/index.html">Kernel and Scheduler</a></li>
+<li class="toctree-l2 current"><a class="category-link reference internal" href="../net.html">Networking</a><ul class="current">
+<li class="toctree-l3"><a class="category-link reference internal" href="../cloud/README.html">IoT Cloud</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../ethernet/README.html">Network Ethernet</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../openthread/README.html">OpenThread</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../qos/QoS.html">Quality of Service</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../sockets/sockets.html">Sockets API</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../wifi/README.html">Wi-Fi</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../wpan_serial/README.html" title="Implement a slip-radio device for Contiki-based border routers.">802.15.4 &quot;serial-radio&quot;</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../cellular_modem/README.html" title="Use a cellular modem to communicate with a UDP server.">Cellular modem</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../dhcpv4_client/README.html" title="Start a DHCPv4 client to obtain an IPv4 address from a DHCPv4 server.">DHCPv4 client</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../dns_resolve/README.html" title="Resolve an IP address for a given hostname.">DNS resolve</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../ftp_client/README.html" title="FTP client sample interacting with FTP server over Zephyr shell.">FTP client shell sample</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../ipv4_autoconf/README.html" title="Perform IPv4 autoconfiguration and self-assign a random IPv4 address">IPv4 autoconf client</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../latmon/README.html" title="Measures delta time between GPIO events and reports the latency metrics via latmon to the latmus service executing on the SUT.">Latmon Client</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../lwm2m_client/README.html" title="Implement a LwM2M client that connects to a LwM2M server.">LwM2M client</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../mdns_responder/README.html" title="Listen and respond to mDNS queries.">mDNS responder</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../midi2/README.html" title="Exchange Universal MIDI Packets over the Network MIDI 2.0 protocol">MIDI2 network transport</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../mqtt_publisher/README.html" title="Send MQTT PUBLISH messages to an MQTT server.">MQTT publisher</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../mqtt_sn_publisher/README.html" title="Send MQTT-SN PUBLISH messages to an MQTT-SN gateway.">MQTT-SN publisher</a></li>
+<li class="toctree-l3 current"><a class="code-sample-link current reference internal" href="#" title="Capture network packets and send them to a remote host via IPIP tunnel.">Network packet capture</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../pkt_filter/README.html" title="Install network packet filter hooks.">Network packet filter</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../stats/README.html" title="Query and display network statistics from a user application.">Network statistics</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../ocpp/README.html" title="Implement an OCPP charge point that connects to a Central System server and simulates the meter readings.">OCPP charge point</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../prometheus/README.html" title="Implement a Prometheus Metric Server demonstrating various metric types.">Prometheus Sample</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../promiscuous_mode/README.html" title="Enable promiscuous mode on all interfaces and print information about incoming packets.">Promiscuous mode</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../ptp/README.html" title="Enable PTP support and monitor messages and events via logging.">PTP</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../syslog_net/README.html" title="Enable a remote syslog service that sends syslog messages to a remote server">Remote syslog</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../secure_mqtt_sensor_actuator/README.html" title="Implement an MQTT-based IoT sensor/actuator device">Secure MQTT Sensor/Actuator</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../telnet/README.html" title="Access Zephyr shell over telnet.">Telnet console</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../tftp_client/README.html" title="Use the TFTP client library to get/put files from/to a TFTP server.">TFTP client</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../virtual/README.html" title="Create a sample virtual network interface.">Virtual network interface</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../wireguard/README.html" title="Implement a echo-server application that sends received packets back to the sender over Wireguard VPN connection.">Wireguard VPN</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../zperf/README.html" title="Use the zperf shell utility to evaluate network bandwidth.">zperf: Network Traffic Generator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../posix/posix.html">POSIX API</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../psa/index.html">PSA</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../regulator/index.html">Regulator</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../sensor/sensor.html">Sensors</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../shields/shields.html">Shields</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/subsys.html">Subsystems</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../sysbuild/sysbuild.html">Sysbuild</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../tfm_integration/tfm_integration.html">TF-M Integration</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../userspace/index.html">Userspace</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../synchronization/README.html" title="Manipulate basic kernel synchronization primitives.">Basic Synchronization</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../philosophers/README.html" title="Implement a solution to the Dining Philosophers problem using Zephyr kernel services.">Dining Philosophers</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../hello_world/README.html" title="Print &quot;Hello World&quot; to the console.">Hello World</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Samples and Demos</a> &raquo;</li>
+  
+     <li><a href="../net.html">Networking</a> &raquo;</li>
+  
+  <li>Network packet capture</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main//samples/net/capture/README.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27samples%2Fnet%2Fcapture%2FREADME%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Networking%2Carea%3A+Samples&env=-+Page%3A+samples%2Fnet%2Fcapture%2FREADME%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="net-capture">
+<h1>Network packet capture<a class="headerlink" href="#net-capture" title="Link to this heading"></a></h1>
+<p>
+                <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main//samples/net/capture/README.rst/.." class="btn btn-info fa fa-github"
+                    target="_blank" style="text-align: center;">
+                    Browse source code on GitHub
+                </a>
+                </p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>This application will setup the device so that net-shell can be used
+to enable network packet capture.</p>
+<p>The captured packets are sent to
+remote host via IPIP tunnel. The tunnel can be configured to be in the
+same connection as what we are capturing packets or it can be a separate
+bearer. For example if you are capturing network traffic for interface 1,
+then the remote host where the captured packets are sent can also be reached
+via interface 1 or via some other network interface if the device has
+multiple network interfaces connected.</p>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../connectivity/networking/networking_with_host.html#networking-with-host"><span class="std std-ref">Networking with the host system</span></a></p></li>
+</ul>
+</section>
+<section id="building-and-running">
+<h2>Building and Running<a class="headerlink" href="#building-and-running" title="Link to this heading"></a></h2>
+<p>Build the sample application like this:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>&lt;board<span class="w"> </span>to<span class="w"> </span>use&gt;<span class="w"> </span>samples/net/capture
+</pre></div>
+</div>
+<p>Example building for <a class="reference internal" href="../../../boards/native/native_sim/doc/index.html#native_sim">Native simulator - native_sim</a>:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>native_sim<span class="w"> </span>samples/net/capture<span class="w"> </span>--<span class="w"> </span>-DEXTRA_CONF_FILE<span class="o">=</span>overlay-tunnel.conf
+</pre></div>
+</div>
+</section>
+<section id="network-configuration">
+<h2>Network Configuration<a class="headerlink" href="#network-configuration" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">net-tools</span></code> project contains <code class="docutils literal notranslate"><span class="pre">net-setup.sh</span></code> script that can be used to setup
+the tunneling.</p>
+<p>In terminal #1, type:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./net-setup.sh -c zeth-tunnel.conf</span>
+</pre></div>
+</div>
+<p>The script will create following network interfaces:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">zeth: flags=4099&lt;UP,BROADCAST,MULTICAST&gt;  mtu 1500</span>
+<span class="go">     inet 192.0.2.2  netmask 255.255.255.255  broadcast 0.0.0.0</span>
+<span class="go">     inet6 2001:db8::2  prefixlen 128  scopeid 0x0&lt;global&gt;</span>
+<span class="go">     ether 00:00:5e:00:53:ff  txqueuelen 1000  (Ethernet)</span>
+<span class="go">     RX packets 0  bytes 0 (0.0 B)</span>
+<span class="go">     RX errors 0  dropped 0  overruns 0  frame 0</span>
+<span class="go">     TX packets 0  bytes 0 (0.0 B)</span>
+<span class="go">     TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0</span>
+
+<span class="go">zeth-ip6ip: flags=209&lt;UP,POINTOPOINT,RUNNING,NOARP&gt;  mtu 1480</span>
+<span class="go">     inet6 2001:db8:200::2  prefixlen 64  scopeid 0x0&lt;global&gt;</span>
+<span class="go">     inet6 fe80::c000:202  prefixlen 64  scopeid 0x20&lt;link&gt;</span>
+<span class="go">     sit  txqueuelen 1000  (IPv6-in-IPv4)</span>
+<span class="go">     RX packets 0  bytes 0 (0.0 B)</span>
+<span class="go">     RX errors 0  dropped 0  overruns 0  frame 0</span>
+<span class="go">     TX packets 0  bytes 0 (0.0 B)</span>
+<span class="go">     TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0</span>
+
+<span class="go">zeth-ip6ip6: flags=209&lt;UP,POINTOPOINT,RUNNING,NOARP&gt;  mtu 1452</span>
+<span class="go">     inet6 fe80::486c:eeff:fead:5d11  prefixlen 64  scopeid 0x20&lt;link&gt;</span>
+<span class="go">     inet6 2001:db8:100::2  prefixlen 64  scopeid 0x0&lt;global&gt;</span>
+<span class="go">     unspec 20-01-0D-B8-00-00-00-00-00-00-00-00-00-00-00-00  txqueuelen 1000  (UNSPEC)</span>
+<span class="go">     RX packets 0  bytes 0 (0.0 B)</span>
+<span class="go">     RX errors 0  dropped 0  overruns 0  frame 0</span>
+<span class="go">     TX packets 0  bytes 0 (0.0 B)</span>
+<span class="go">     TX errors 8  dropped 8 overruns 0  carrier 8  collisions 0</span>
+
+<span class="go">zeth-ipip: flags=209&lt;UP,POINTOPOINT,RUNNING,NOARP&gt;  mtu 1480</span>
+<span class="go">     inet 198.51.100.2  netmask 255.255.255.0  destination 198.51.100.2</span>
+<span class="go">     inet6 fe80::5efe:c000:202  prefixlen 64  scopeid 0x20&lt;link&gt;</span>
+<span class="go">     tunnel   txqueuelen 1000  (IPIP Tunnel)</span>
+<span class="go">     RX packets 0  bytes 0 (0.0 B)</span>
+<span class="go">     RX errors 0  dropped 0  overruns 0  frame 0</span>
+<span class="go">     TX packets 0  bytes 0 (0.0 B)</span>
+<span class="go">     TX errors 7  dropped 0 overruns 0  carrier 0  collisions 0</span>
+
+<span class="go">zeth-ipip6: flags=209&lt;UP,POINTOPOINT,RUNNING,NOARP&gt;  mtu 1452</span>
+<span class="go">     inet 203.0.113.2  netmask 255.255.255.0  destination 203.0.113.2</span>
+<span class="go">     inet6 fe80::387b:a6ff:fe56:6cac  prefixlen 64  scopeid 0x20&lt;link&gt;</span>
+<span class="go">     unspec 20-01-0D-B8-00-00-00-00-00-00-00-00-00-00-00-00  txqueuelen 1000  (UNSPEC)</span>
+<span class="go">     RX packets 0  bytes 0 (0.0 B)</span>
+<span class="go">     RX errors 0  dropped 0  overruns 0  frame 0</span>
+<span class="go">     TX packets 0  bytes 0 (0.0 B)</span>
+<span class="go">     TX errors 7  dropped 7 overruns 0  carrier 0  collisions 0</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">zeth</span></code> is the outer tunnel interface, all the packets go via it.
+The other interfaces receive packets depending on the configuration you have
+in the Zephyr side.</p>
+<section id="network-capture-configuration">
+<h3>Network Capture Configuration<a class="headerlink" href="#network-capture-configuration" title="Link to this heading"></a></h3>
+<p>In Zephyr console, type:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>net<span class="w"> </span>iface
+
+<span class="go">Interface 0x807df74 (Virtual) [1]</span>
+<span class="go">=================================</span>
+<span class="go">Interface is down.</span>
+
+<span class="go">Interface 0x807e040 (Ethernet) [2]</span>
+<span class="go">==================================</span>
+<span class="go">Link addr : 02:00:5E:00:53:3B</span>
+<span class="go">MTU       : 1452</span>
+<span class="go">Flags     : AUTO_START,IPv4,IPv6</span>
+<span class="go">Ethernet capabilities supported:</span>
+<span class="go">IPv6 unicast addresses (max 4):</span>
+<span class="go">     fe80::5eff:fe00:533b autoconf preferred infinite</span>
+<span class="go">     2001:db8::1 manual preferred infinite</span>
+<span class="go">IPv6 multicast addresses (max 4):</span>
+<span class="go">     ff02::1</span>
+<span class="go">     ff02::1:ff00:533b</span>
+<span class="go">     ff02::1:ff00:1</span>
+<span class="go">IPv6 prefixes (max 2):</span>
+<span class="go">     &lt;none&gt;</span>
+<span class="go">IPv6 hop limit           : 64</span>
+<span class="go">IPv6 base reachable time : 30000</span>
+<span class="go">IPv6 reachable time      : 43300</span>
+<span class="go">IPv6 retransmit timer    : 0</span>
+<span class="go">IPv4 unicast addresses (max 2):</span>
+<span class="go">     192.0.2.1 manual preferred infinite</span>
+<span class="go">IPv4 multicast addresses (max 1):</span>
+<span class="go">     &lt;none&gt;</span>
+<span class="go">IPv4 gateway : 0.0.0.0</span>
+<span class="go">IPv4 netmask : 255.255.255.0</span>
+</pre></div>
+</div>
+<p>Next the monitoring is setup so that captured packets are sent as a payload
+in IPv6/UDP packets.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>net<span class="w"> </span>capture<span class="w"> </span>setup<span class="w"> </span><span class="m">192</span>.0.2.2<span class="w"> </span><span class="m">2001</span>:db8:200::1<span class="w"> </span><span class="m">2001</span>:db8:200::2
+<span class="go">Capture setup done, next enable it by &quot;net capture enable &lt;idx&gt;&quot;</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">net</span> <span class="pre">capture</span></code> command will show current configuration. As we have not
+yet enabled capturing, the interface is not yet set.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>net<span class="w"> </span>capture
+<span class="go">Network packet capture disabled</span>
+<span class="go">                Capture  Tunnel</span>
+<span class="go">Device          iface    iface   Local                  Peer</span>
+<span class="go">NET_CAPTURE0    -        1      [2001:db8:200::1]:4242  [2001:db8:200::2]:4242</span>
+</pre></div>
+</div>
+<p>Next enable network packet capturing for interface 2.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>net<span class="w"> </span>capture<span class="w"> </span><span class="nb">enable</span><span class="w"> </span><span class="m">2</span>
+</pre></div>
+</div>
+<p>The tunneling interface will be UP and the captured packets will be sent to
+peer host.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>net<span class="w"> </span>iface<span class="w"> </span><span class="m">1</span>
+
+<span class="go">Interface 0x807df74 (Virtual) [1]</span>
+<span class="go">=================================</span>
+<span class="go">Name      : IPv4 tunnel</span>
+<span class="go">Attached  : 2 (Ethernet / 0x807e040)</span>
+<span class="go">Link addr : 8E:F9:94:6D:B9:E6</span>
+<span class="go">MTU       : 1452</span>
+<span class="go">Flags     : POINTOPOINT,NO_AUTO_START,IPv6</span>
+<span class="go">IPv6 unicast addresses (max 4):</span>
+<span class="go">     fe80::aee6:fbff:fe50:28c0 autoconf preferred infinite</span>
+<span class="go">     2001:db8:200::1 manual preferred infinite</span>
+<span class="go">IPv6 multicast addresses (max 4):</span>
+<span class="go">     &lt;none&gt;</span>
+<span class="go">IPv6 prefixes (max 2):</span>
+<span class="go">     &lt;none&gt;</span>
+<span class="go">IPv6 hop limit           : 64</span>
+<span class="go">IPv6 base reachable time : 30000</span>
+<span class="go">IPv6 reachable time      : 22624</span>
+<span class="go">IPv6 retransmit timer    : 0</span>
+<span class="go">IPv4 not enabled for this interface.</span>
+</pre></div>
+</div>
+<p>If you now do this:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>net<span class="w"> </span>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">192</span>.0.2.2
+</pre></div>
+</div>
+<p>You should see a ICMPv4 message sent to <code class="docutils literal notranslate"><span class="pre">192.0.2.2</span></code> and also the captured
+packet will be sent to <code class="docutils literal notranslate"><span class="pre">192.0.2.2</span></code> in tunnel to <code class="docutils literal notranslate"><span class="pre">2001:db8:200::2</span></code>
+address. The UDP port is by default <code class="docutils literal notranslate"><span class="pre">4242</span></code> but that can be changed when
+setting the tunnel endpoint address.</p>
+<p>The actual captured network packets received at the end of the tunnel will look
+like this:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">No.     Time           Source                Destination           Protocol Length Info</span>
+<span class="go">     34 106.078538049  192.0.2.1             192.0.2.2             ICMP     94     Echo (ping) request  id=0xdc36, seq=0/0, ttl=64 (reply in 35)</span>
+
+<span class="go">Frame 34: 94 bytes on wire (752 bits), 94 bytes captured (752 bits) on interface zeth-ip6ip, id 0</span>
+<span class="go">Raw packet data</span>
+<span class="go">Internet Protocol Version 6, Src: 2001:db8:200::1, Dst: 2001:db8:200::2</span>
+<span class="go">User Datagram Protocol, Src Port: 4242, Dst Port: 4242</span>
+<span class="go">Ethernet II, Src: 02:00:5e:00:53:3b (02:00:5e:00:53:3b), Dst: ICANNIAN_00:53:ff (00:00:5e:00:53:ff)</span>
+<span class="go">Internet Protocol Version 4, Src: 192.0.2.1, Dst: 192.0.2.2</span>
+<span class="go">Internet Control Message Protocol</span>
+
+<span class="go">No.     Time           Source                Destination           Protocol Length Info</span>
+<span class="go">     35 106.098850599  192.0.2.2             192.0.2.1             ICMP     94     Echo (ping) reply    id=0xdc36, seq=0/0, ttl=64 (request in 34)</span>
+
+<span class="go">Frame 35: 94 bytes on wire (752 bits), 94 bytes captured (752 bits) on interface zeth-ip6ip, id 0</span>
+<span class="go">Raw packet data</span>
+<span class="go">Internet Protocol Version 6, Src: 2001:db8:200::1, Dst: 2001:db8:200::2</span>
+<span class="go">User Datagram Protocol, Src Port: 4242, Dst Port: 4242</span>
+<span class="go">Ethernet II, Src: ICANNIAN_00:53:ff (00:00:5e:00:53:ff), Dst: 02:00:5e:00:53:3b (02:00:5e:00:53:3b)</span>
+<span class="go">Internet Protocol Version 4, Src: 192.0.2.2, Dst: 192.0.2.1</span>
+<span class="go">Internet Control Message Protocol</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../doxygen/html/group__net__capture.html" title=""><span class="pre">Network</span> <span class="pre">packet</span> <span class="pre">capture</span></a></dt>
+</dl>
+
+</section>
+</section>
+<script type="application/ld+json">
+                {"@context": "http://schema.org", "@type": "SoftwareSourceCode", "name": "Network packet capture", "description": "Capture network packets and send them to a remote host via IPIP tunnel.", "codeSampleType": "full", "codeRepository": "https://github.com/zephyrproject-rtos/zephyr/blob/main//samples/net/capture/README.rst"}
+                </script>
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,662 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: adi,ad2s1210
+.. _dtbinding_adi_ad2s1210:
+
+adi,ad2s1210 (on spi bus)
+#########################
+
+.. sidebar:: Overview
+
+   :Name: ``adi,ad2s1210``
+   :Vendor: :ref:`Analog Devices, Inc. <dt_vendor_adi>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=adi,ad2s1210>` using
+               this compatible
+   :Driver: :zephyr_file:`drivers/sensor/adi/ad2s1210/ad2s1210.c`
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   AD2S1210 resolution tracking resolver-to-digital converter
+
+   The AD2S1210 is a complete 10-bit to 16-bit resolution tracking
+   resolver-to-digital converter, integrating an on-board programmable
+   sinusoidal oscillator that provides sine wave excitation for
+   resolvers.
+
+   The AD2S1210 allows the user to read the angular position or the
+   angular velocity data directly from the parallel outputs or through
+   the serial interface.
+
+   The mode of operation of the communication channel (parallel or serial) is
+   selected by the A0 and A1 input pins. In normal mode, data is latched by
+   toggling the SAMPLE line and can then be read directly. In configuration mode,
+   data is read or written using a register access scheme (address byte with
+   read/write flag and data byte).
+
+     A1  A0  Result
+      0   0  Normal mode - position output
+      0   1  Normal mode - velocity output
+      1   0  Reserved
+      1   1  Configuration mode
+
+   In normal mode, the resolution of the digital output is selected using
+   the RES0 and RES1 input pins. In configuration mode, the resolution is
+   selected by setting the RES0 and RES1 bits in the control register.
+
+   RES1  RES0  Resolution (Bits)
+      0     0  10
+      0     1  12
+      1     0  14
+      1     1  16
+
+   Note on SPI connections: The CS line on the AD2S1210 should hard-wired to
+   logic low and the WR/FSYNC line on the AD2S1210 should be connected to the
+   SPI CSn output of the SPI controller.
+
+   Datasheet:
+   https://www.analog.com/media/en/technical-documentation/data-sheets/ad2s1210.pdf
+
+Properties
+**********
+
+.. tabs::
+
+   .. group-tab:: Node specific properties
+
+      Properties not inherited from the base binding file.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``sample-gpios``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                GPIO connected to the /SAMPLE pin. As the line needs to be low to trigger a sample, it should be configured as GPIO_ACTIVE_LOW.
+
+
+             This property is **required**.
+
+         * - ``mode-gpios``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                GPIO lines connected to the A0 and A1 pins. These pins select the data transfer mode.
+
+
+             This property is **required**.
+
+         * - ``reset-gpios``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                GPIO connected to the /RESET pin. As the line needs to be low for the reset to be active, it should be configured as GPIO_ACTIVE_LOW.
+
+
+             This property is **required**.
+
+         * - ``resolution-gpios``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                GPIO lines connected to the RES0 and RES1 pins. These pins select the resolution of the digital output. If omitted, it is assumed that the RES0 and RES1 pins are hard-wired to match the assigned-resolution-bits property.
+
+
+         * - ``fault-gpios``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                GPIO lines connected to the LOT and DOS pins. These pins combined indicate the type of fault present, if any. As these pins a pulled low to indicate a fault condition, they should be configured as GPIO_ACTIVE_LOW.
+
+
+         * - ``assigned-resolution-bits``
+           - ``int``
+           - .. code-block:: none
+
+                Resolution of the digital output required by the application. This determines the precision of the angle and/or the maximum speed that can be measured. If resolution-gpios is omitted, it is assumed that RES0 and RES1 are hard-wired to match this value. Default resolution at power up for the configuration mode is 12 bits so we are using 12 bits as default here as well.
+
+
+             Default value: ``12``
+
+             Legal values: ``10``, ``12``, ``14``, ``16``
+
+         * - ``clock-frequency``
+           - ``int``
+           - .. code-block:: none
+
+                Frequency of the resolver clock input signal in Hz. Range is 6144000 and 10240000.
+
+
+             This property is **required**.
+
+         * - ``spi-max-frequency``
+           - ``int``
+           - .. code-block:: none
+
+                Maximum clock frequency of device's SPI interface in Hz
+
+
+             This property is **required**.
+
+         * - ``duplex``
+           - ``int``
+           - .. code-block:: none
+
+                Duplex mode, full or half. By default it's always full duplex thus 0
+                as this is, by far, the most common mode.
+                Use the macros not the actual enum value, here is the concordance
+                list (see dt-bindings/spi/spi.h)
+                  0    SPI_FULL_DUPLEX
+                  2048 SPI_HALF_DUPLEX
+
+
+
+             Legal values: ``0``, ``2048``
+
+         * - ``frame-format``
+           - ``int``
+           - .. code-block:: none
+
+                Motorola or TI frame format. By default it's always Motorola's,
+                thus 0 as this is, by far, the most common format.
+                Use the macros not the actual enum value, here is the concordance
+                list (see dt-bindings/spi/spi.h)
+                  0     SPI_FRAME_FORMAT_MOTOROLA
+                  32768 SPI_FRAME_FORMAT_TI
+
+
+
+             Legal values: ``0``, ``32768``
+
+         * - ``spi-cpol``
+           - ``boolean``
+           - .. code-block:: none
+
+                SPI clock polarity which indicates the clock idle state.
+                If it is used, the clock idle state is logic high; otherwise, low.
+
+
+
+         * - ``spi-cpha``
+           - ``boolean``
+           - .. code-block:: none
+
+                SPI clock phase that indicates on which edge data is sampled.
+                If it is used, data is sampled on the second edge; otherwise, on the first edge.
+
+
+
+         * - ``spi-lsb-first``
+           - ``boolean``
+           - .. code-block:: none
+
+                The device requires least significant bit first data mode.
+
+
+         * - ``spi-hold-cs``
+           - ``boolean``
+           - .. code-block:: none
+
+                In some cases, it is necessary for the master to manage SPI chip select
+                under software control, so that multiple spi transactions can be performed
+                without releasing it. A typical use case is variable length SPI packets
+                where the first spi transaction reads the length and the second spi transaction
+                reads length bytes.
+
+
+
+         * - ``spi-cs-high``
+           - ``boolean``
+           - .. code-block:: none
+
+                The device requires the chip select to be active high.
+
+
+         * - ``spi-interframe-delay-ns``
+           - ``int``
+           - .. code-block:: none
+
+                Delay in nanoseconds between SPI words.
+                Default of 0 is special value which will assume to mean half of the SCK period.
+
+
+
+         * - ``spi-cs-setup-delay-ns``
+           - ``int``
+           - .. code-block:: none
+
+                Delay in nanoseconds to be introduced by the controller after CS is asserted.
+                Also known as enable lead time.
+
+
+
+         * - ``spi-cs-hold-delay-ns``
+           - ``int``
+           - .. code-block:: none
+
+                Delay in nanoseconds to be introduced by the controller before the CS is de-asserted.
+                 Also known as enable lag time.
+
+
+
+         * - ``supply-gpios``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                GPIO specifier that controls power to the device.
+
+                This property should be provided when the device has a dedicated
+                switch that controls power to the device.  The supply state is
+                entirely the responsibility of the device driver.
+
+                Contrast with vin-supply.
+
+
+
+         * - ``vin-supply``
+           - ``phandle``
+           - .. code-block:: none
+
+                Reference to the regulator that controls power to the device.
+                The referenced devicetree node must have a regulator compatible.
+
+                This property should be provided when device power is supplied
+                by a shared regulator.  The supply state is dependent on the
+                request status of all devices fed by the regulator.
+
+                Contrast with supply-gpios.  If both properties are provided
+                then the regulator must be requested before the supply GPIOS is
+                set to an active state, and the supply GPIOS must be set to an
+                inactive state before releasing the regulator.
+
+
+
+         * - ``friendly-name``
+           - ``string``
+           - .. code-block:: none
+
+                Human readable string describing the sensor. It can be used to
+                distinguish multiple instances of the same model (e.g., lid accelerometer
+                vs. base accelerometer in a laptop) to a host operating system.
+
+                This property is defined in the Generic Sensor Property Usages of the HID
+                Usage Tables specification
+                (https://usb.org/sites/default/files/hut1_3_0.pdf, section 22.5).
+
+
+
+
+
+   .. group-tab:: Deprecated node specific properties
+
+      Deprecated properties not inherited from the base binding file.
+
+      (None)
+
+   .. group-tab:: Base properties
+
+      Properties inherited from the base binding file, which defines
+      common properties that may be set on many nodes. Not all of these
+      may apply to the "adi,ad2s1210" compatible.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``reg``
+           - ``array``
+           - .. code-block:: none
+
+                Information used to address the device. The value is specific to
+                the device (i.e. is different depending on the compatible
+                property).
+
+                The "reg" property is typically a sequence of (address, length) pairs.
+                Each pair is called a "register block". Values are
+                conventionally written in hex.
+
+                For details, see "2.3.6 reg" in Devicetree Specification v0.4.
+
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``status``
+           - ``string``
+           - .. code-block:: none
+
+                Indicates the operational status of the hardware or other
+                resource that the node represents. In particular:
+
+                  - "okay" means the resource is operational and, for example,
+                    can be used by device drivers
+                  - "disabled" means the resource is not operational and the system
+                    should treat it as if it is not present
+
+                For details, see "2.3.4 status" in Devicetree Specification v0.4.
+
+
+
+             Legal values: ``okay``, ``disabled``, ``reserved``, ``fail``, ``fail-sss``
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``compatible``
+           - ``string-array``
+           - .. code-block:: none
+
+                This property is a list of strings that essentially define what
+                type of hardware or other resource this devicetree node
+                represents. Each device driver checks for specific compatible
+                property values to find the devicetree nodes that represent
+                resources that the driver should manage.
+
+                The recommended format is "vendor,device", The "vendor" part is
+                an abbreviated name of the vendor. The "device" is usually from
+                the datasheet.
+
+                The compatible property can have multiple values, ordered from
+                most- to least-specific. Having additional values is useful when the
+                device is a specific instance of a more general family, to allow the
+                system to match the most specific driver available.
+
+                For details, see "2.3.1 compatible" in Devicetree Specification v0.4.
+
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``reg-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each register block in the "reg" property.
+                For example:
+
+                  / {
+                       soc {
+                           #address-cells = <1>;
+                           #size-cells = <1>;
+
+                           uart@1000 {
+                               reg = <0x1000 0x2000>, <0x3000 0x4000>;
+                               reg-names = "foo", "bar";
+                           };
+                       };
+                  };
+
+                The uart@1000 node has two register blocks:
+
+                  - one with base address 0x1000, size 0x2000, and name "foo"
+                  - another with base address 0x3000, size 0x4000, and name "bar"
+
+
+
+         * - ``interrupts``
+           - ``array``
+           - .. code-block:: none
+
+                Information about interrupts generated by the device, encoded as an array
+                of one or more interrupt specifiers. The format of the data in this property
+                varies by where the device appears in the interrupt tree. Devices with the same
+                "interrupt-parent" will use the same format in their interrupts properties.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``interrupts-extended``
+           - ``compound``
+           - .. code-block:: none
+
+                Extended interrupt specifier for device, used as an alternative to
+                the "interrupts" property.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each interrupt generated by a device.
+                The interrupts themselves are defined in either "interrupts" or
+                "interrupts-extended" properties.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-parent``
+           - ``phandle``
+           - .. code-block:: none
+
+                If present, this refers to the node which handles interrupts generated
+                by this device.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``label``
+           - ``string``
+           - .. code-block:: none
+
+                Human readable string describing the device. Use of this property is
+                deprecated except as needed on a case-by-case basis.
+
+                For details, see "4.1.2 Miscellaneous Properties" in Devicetree
+                Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``clocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Information about the device's clock providers. In general, this property
+                should follow conventions established in the dt-schema binding:
+
+                  https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/clock/clock.yaml
+
+
+
+         * - ``clock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each clock provider in the "clocks" property.
+
+
+
+         * - ``#address-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by address fields
+                in "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+         * - ``#size-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by size fields in
+                "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+         * - ``dmas``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                DMA channel specifiers relevant to the device.
+
+
+
+         * - ``dma-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the DMA channel specifiers in the "dmas" property.
+
+
+
+         * - ``io-channels``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                IO channel specifiers relevant to the device.
+
+
+
+         * - ``io-channel-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the IO channel specifiers in the "io-channels" property.
+
+
+
+         * - ``mboxes``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Mailbox / IPM channel specifiers relevant to the device.
+
+
+
+         * - ``mbox-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the mbox specifiers in the "mboxes" property.
+
+
+
+         * - ``power-domains``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Power domain specifiers relevant to the device.
+
+
+
+         * - ``power-domain-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the power domain specifiers in the "power-domains" property.
+
+
+
+         * - ``#power-domain-cells``
+           - ``int``
+           - .. code-block:: none
+
+                Number of cells in power-domains property
+
+
+
+         * - ``hwlocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                HW spinlock id relevant to the device.
+
+
+
+         * - ``hwlock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the hwlock specifiers in the "hwlocks" property.
+
+
+
+         * - ``zephyr,deferred-init``
+           - ``boolean``
+           - .. code-block:: none
+
+                Do not initialize device automatically on boot. Device should be manually
+                initialized using device_init().
+
+
+
+         * - ``wakeup-source``
+           - ``boolean``
+           - .. code-block:: none
+
+                Property to identify that a device can be used as wake up source.
+
+                When this property is provided a specific flag is set into the
+                device that tells the system that the device is capable of
+                wake up the system.
+
+                Wake up capable devices are disabled (interruptions will not wake up
+                the system) by default but they can be enabled at runtime if necessary.
+
+
+
+         * - ``zephyr,pm-device-runtime-auto``
+           - ``boolean``
+           - .. code-block:: none
+
+                Automatically configure the device for runtime power management after the
+                init function runs.
+
+
+
+         * - ``zephyr,disabling-power-states``
+           - ``phandles``
+           - .. code-block:: none
+
+                List of power states that will disable this device power.
+
+
+
+
+
+

@@ -1,0 +1,938 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>USB device support (deprecated) &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/connectivity/usb/device/usb_device.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="USB device support APIs (deprecated)" href="api/index.html" />
+    <link rel="prev" title="USB" href="../index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Connectivity</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../canbus/index.html">Controller Area Network (CAN) Bus Protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../networking/index.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa and LoRaWAN</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">USB</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">USB device support (deprecated)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#supported-usb-classes">Supported USB classes</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#audio">Audio</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#bluetooth-hci-usb-transport-layer">Bluetooth HCI USB transport layer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#cdc-acm">CDC ACM</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#dfu">DFU</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#usb-human-interface-devices-hid-support">USB Human Interface Devices (HID) support</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#mass-storage-class">Mass Storage Class</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#networking">Networking</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#binary-device-object-store-bos-support">Binary Device Object Store (BOS) support</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#interface-number-and-endpoint-address-assignment">Interface number and endpoint address assignment</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing-over-usbip-in-native-sim">Testing over USBIP in native_sim</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usb-vendor-and-product-identifiers">USB Vendor and Product identifiers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/index.html">USB device support APIs (deprecated)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../device_next/usb_device.html">USB device support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../device_next/vid_pid.html">USB Vendor and Product identifiers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../device_next/cdc_acm.html">USB device CDC ACM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../device_next/api/index.html">USB device support APIs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../host/api/index.html">USB host support APIs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../host/usbip.html">USB/IP protocol support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pd/ucds.html">USB-C device stack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/hid.html">Human Interface Devices (HID)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Connectivity</a> &raquo;</li>
+  
+     <li><a href="../index.html">USB</a> &raquo;</li>
+  
+  <li>USB device support (deprecated)</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/connectivity/usb/device/usb_device.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27connectivity%2Fusb%2Fdevice%2Fusb_device%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+USB&env=-+Page%3A+connectivity%2Fusb%2Fdevice%2Fusb_device%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="usb-device-support-deprecated">
+<span id="usb-device-stack"></span><h1>USB device support (deprecated)<a class="headerlink" href="#usb-device-support-deprecated" title="Link to this heading"></a></h1>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id1">Overview</a></p></li>
+<li><p><a class="reference internal" href="#supported-usb-classes" id="id2">Supported USB classes</a></p>
+<ul>
+<li><p><a class="reference internal" href="#audio" id="id3">Audio</a></p></li>
+<li><p><a class="reference internal" href="#bluetooth-hci-usb-transport-layer" id="id4">Bluetooth HCI USB transport layer</a></p></li>
+<li><p><a class="reference internal" href="#cdc-acm" id="id5">CDC ACM</a></p>
+<ul>
+<li><p><a class="reference internal" href="#console-over-cdc-acm-uart" id="id6">Console over CDC ACM UART</a></p></li>
+<li><p><a class="reference internal" href="#cdc-acm-uart-as-backend" id="id7">CDC ACM UART as backend</a></p></li>
+<li><p><a class="reference internal" href="#posix-default-tty-echo-mitigation" id="id8">POSIX default tty ECHO mitigation</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#dfu" id="id9">DFU</a></p></li>
+<li><p><a class="reference internal" href="#usb-human-interface-devices-hid-support" id="id10">USB Human Interface Devices (HID) support</a></p></li>
+<li><p><a class="reference internal" href="#mass-storage-class" id="id11">Mass Storage Class</a></p></li>
+<li><p><a class="reference internal" href="#networking" id="id12">Networking</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#binary-device-object-store-bos-support" id="id13">Binary Device Object Store (BOS) support</a></p></li>
+<li><p><a class="reference internal" href="#interface-number-and-endpoint-address-assignment" id="id14">Interface number and endpoint address assignment</a></p></li>
+<li><p><a class="reference internal" href="#testing-over-usbip-in-native-sim" id="id15">Testing over USBIP in native_sim</a></p></li>
+<li><p><a class="reference internal" href="#usb-vendor-and-product-identifiers" id="id16">USB Vendor and Product identifiers</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Overview</a><a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The USB device stack is a hardware independent interface between USB
+device controller driver and USB device class drivers or customer applications.
+It is a port of the LPCUSB device stack and has been modified and expanded
+over time. It provides the following functionalities:</p>
+<ul class="simple">
+<li><p>Uses the <a class="reference internal" href="api/usb_dc.html#usb-dc-api"><span class="std std-ref">USB device controller driver API (deprecated)</span></a> provided by the device controller drivers to interact with
+the USB device controller.</p></li>
+<li><p>Responds to standard device requests and returns standard descriptors,
+essentially handling ‘Chapter 9’ processing, specifically the standard
+device requests in table 9-3 from the universal serial bus specification
+revision 2.0.</p></li>
+<li><p>Provides a programming interface to be used by USB device classes or
+customer applications. The APIs is described in
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/usb/usb_device.h">include/zephyr/usb/usb_device.h</a></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All APIs listed in <a class="reference internal" href="api/index.html#usb-api"><span class="std std-ref">USB device support APIs (deprecated)</span></a> and the functions that depend on them are
+deprecated and will be remove in v4.5.0. Please use the new USB device
+support represented by the APIs in <a class="reference internal" href="../device_next/api/index.html#usb-device-next-api"><span class="std std-ref">USB device support APIs</span></a>.</p>
+</div>
+</section>
+<section id="supported-usb-classes">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Supported USB classes</a><a class="headerlink" href="#supported-usb-classes" title="Link to this heading"></a></h2>
+<section id="audio">
+<h3><a class="toc-backref" href="#id3" role="doc-backlink">Audio</a><a class="headerlink" href="#audio" title="Link to this heading"></a></h3>
+<p>There is an experimental implementation of the Audio class. It follows specification
+version 1.00 (<code class="docutils literal notranslate"><span class="pre">bcdADC</span> <span class="pre">0x0100</span></code>) and supports synchronous synchronisation type only.
+See <a class="reference internal" href="../../../samples/subsys/usb/legacy/audio_headphones_microphone/README.html#usb-audio-headphones-microphone" title="Implement a USB Audio microphone + headphones device with audio IN/OUT loopback.">Legacy USB Audio microphone &amp; headphones</a> and
+<a class="reference internal" href="../../../samples/subsys/usb/legacy/audio_headset/README.html#usb-audio-headset" title="Implement a USB Audio headset device with audio IN/OUT loopback.">Legacy USB Audio headset</a> samples for reference.</p>
+</section>
+<section id="bluetooth-hci-usb-transport-layer">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">Bluetooth HCI USB transport layer</a><a class="headerlink" href="#bluetooth-hci-usb-transport-layer" title="Link to this heading"></a></h3>
+<p>Bluetooth HCI USB transport layer implementation uses <a class="reference internal" href="../../bluetooth/api/hci_raw.html#bt-hci-raw"><span class="std std-ref">HCI RAW channel</span></a>
+to expose HCI interface to the host. It is not fully in line with the description
+in the Bluetooth specification and consists only of an interface with the endpoint
+configuration:</p>
+<ul class="simple">
+<li><p>HCI commands through control endpoint (host-to-device only)</p></li>
+<li><p>HCI events through interrupt IN endpoint</p></li>
+<li><p>ACL data through one bulk IN and one bulk OUT endpoints</p></li>
+</ul>
+<p>A second interface for the voice channels has not been implemented as there is
+no support for this type in <a class="reference internal" href="../../bluetooth/index.html#bluetooth"><span class="std std-ref">Bluetooth</span></a>. It is not a big problem under Linux
+if HCI USB transport layer is the only interface that appears in the configuration,
+the btusb driver would not try to claim a second (isochronous) interface.
+The consequence is that if HCI USB is used in a composite configuration and is
+the first interface, then the Linux btusb driver will claim both the first and
+the next interface, preventing other composite functions from working.
+Because of this problem, HCI USB should not be used in a composite configuration.
+This problem is fixed in the implementation for new USB support.</p>
+<p>See <a class="reference internal" href="../../../samples/bluetooth/hci_usb/README.html#bluetooth_hci_usb" title="Turn a Zephyr board into a USB Bluetooth dongle (compatible with all operating systems).">HCI USB</a> sample for reference.</p>
+</section>
+<section id="cdc-acm">
+<span id="usb-device-cdc-acm"></span><h3><a class="toc-backref" href="#id5" role="doc-backlink">CDC ACM</a><a class="headerlink" href="#cdc-acm" title="Link to this heading"></a></h3>
+<p>The CDC ACM class is used as backend for different subsystems in Zephyr.
+However, its configuration may not be easy for the inexperienced user.
+Below is a description of the different use cases and some pitfalls.</p>
+<p>The interface for CDC ACM user is <a class="reference internal" href="../../../hardware/peripherals/uart.html#uart-api"><span class="std std-ref">Universal Asynchronous Receiver-Transmitter (UART)</span></a> driver API.
+But there are two important differences in behavior to a real UART controller:</p>
+<ul class="simple">
+<li><p>Data transfer is only possible after the USB device stack has been
+initialized and started, until then any data is discarded</p></li>
+<li><p>If device is connected to the host, it still needs an application
+on the host side which requests the data</p></li>
+<li><p>The CDC ACM poll out implementation follows the API and blocks when the TX
+ring buffer is full only if the hw-flow-control property is enabled and
+called from a non-ISR context.</p></li>
+</ul>
+<p>The devicetree compatible property for CDC ACM UART is
+<a class="reference internal" href="../../../build/dts/api/bindings/serial/zephyr%2Ccdc-acm-uart.html#std-dtcompatible-zephyr-cdc-acm-uart"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,cdc-acm-uart</span></code></a>.
+CDC ACM support is automatically selected when USB device support is enabled
+and a compatible node in the devicetree sources is present. If necessary,
+CDC ACM support can be explicitly disabled by <a class="reference internal" href="../../../kconfig.html#CONFIG_USB_CDC_ACM" title="CONFIG_USB_CDC_ACM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USB_CDC_ACM</span></code></a>.
+About four CDC ACM UART instances can be defined and used,
+limited by the maximum number of supported endpoints on the controller.</p>
+<p>CDC ACM UART node is supposed to be child of a USB device controller node.
+Since the designation of the controller nodes varies from vendor to vendor,
+and our samples and application should be as generic as possible,
+the default USB device controller is usually assigned an <code class="docutils literal notranslate"><span class="pre">zephyr_udc0</span></code>
+node label. Often, CDC ACM UART is described in a devicetree overlay file
+and looks like this:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">zephyr_udc0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nl">cdc_acm_uart0</span><span class="p">:</span><span class="w"> </span><span class="nf">cdc_acm_uart0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,cdc-acm-uart&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;CDC_ACM_0&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Sample <a class="reference internal" href="../../../samples/subsys/usb/cdc_acm/README.html#usb-cdc-acm" title="Use USB CDC ACM UART driver to implement a serial port echo.">USB CDC ACM UART sample</a> has similar overlay files.
+And since no special properties are present, it may seem overkill to use
+devicetree to describe CDC ACM UART.  The motivation behind using devicetree
+is the easy interchangeability of a real UART controller and CDC ACM UART
+in applications.</p>
+<section id="console-over-cdc-acm-uart">
+<h4><a class="toc-backref" href="#id6" role="doc-backlink">Console over CDC ACM UART</a><a class="headerlink" href="#console-over-cdc-acm-uart" title="Link to this heading"></a></h4>
+<p>With the CDC ACM UART node from above and <code class="docutils literal notranslate"><span class="pre">zephyr,console</span></code> property of the
+chosen node, we can describe that CDC ACM UART is to be used with the console.
+A similar overlay file is used by the <a class="reference internal" href="../../../samples/subsys/usb/console/README.html#usb-cdc-acm-console" title="Output &quot;Hello World!&quot; to the console over USB CDC ACM.">Console over USB CDC ACM</a> sample.</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nf">chosen</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">zephyr</span><span class="p">,</span><span class="n">console</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">cdc_acm_uart0</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="o">&amp;</span><span class="nf">zephyr_udc0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nl">cdc_acm_uart0</span><span class="p">:</span><span class="w"> </span><span class="nf">cdc_acm_uart0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,cdc-acm-uart&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;CDC_ACM_0&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Before the application uses the console, it is recommended to wait for
+the DTR signal:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="k">const</span><span class="w"> </span><span class="n">dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEVICE_DT_GET</span><span class="p">(</span><span class="n">DT_CHOSEN</span><span class="p">(</span><span class="n">zephyr_console</span><span class="p">));</span>
+<span class="kt">uint32_t</span><span class="w"> </span><span class="n">dtr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">usb_enable</span><span class="p">(</span><span class="nb">NULL</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">dtr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">uart_line_ctrl_get</span><span class="p">(</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="n">UART_LINE_CTRL_DTR</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">dtr</span><span class="p">);</span>
+<span class="w">        </span><span class="n">k_sleep</span><span class="p">(</span><span class="n">K_MSEC</span><span class="p">(</span><span class="mi">100</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="n">printk</span><span class="p">(</span><span class="s">&quot;nuqneH</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="cdc-acm-uart-as-backend">
+<h4><a class="toc-backref" href="#id7" role="doc-backlink">CDC ACM UART as backend</a><a class="headerlink" href="#cdc-acm-uart-as-backend" title="Link to this heading"></a></h4>
+<p>As for the console sample, it is possible to configure CDC ACM UART as
+backend for other subsystems by setting <a class="reference internal" href="../../../build/dts/api/api.html#devicetree-chosen-nodes"><span class="std std-ref">Chosen nodes</span></a>
+properties.</p>
+<p>List of few Zephyr specific chosen properties which can be used to select
+CDC ACM UART as backend for a subsystem or application:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">zephyr,bt-c2h-uart</span></code> used in Bluetooth,
+for example see <a class="reference internal" href="../../../samples/bluetooth/hci_uart/README.html#bluetooth_hci_uart" title="Expose a Bluetooth controller to another device or CPU over UART.">HCI UART</a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">zephyr,ot-uart</span></code> used in OpenThread,
+for example see <a class="reference internal" href="../../../samples/net/openthread/coprocessor/README.html#openthread-coprocessor" title="Build a Thread border-router using OpenThread's co-processor designs.">OpenThread co-processor</a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">zephyr,shell-uart</span></code> used by shell for serial backend,
+for example see <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/samples/subsys/shell/shell_module">samples/subsys/shell/shell_module</a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">zephyr,uart-mcumgr</span></code> used by <a class="reference internal" href="../../../samples/subsys/mgmt/mcumgr/smp_svr/README.html#smp-svr" title="Implement a Simple Management Protocol (SMP) server.">SMP server</a> sample</p></li>
+</ul>
+</section>
+<section id="posix-default-tty-echo-mitigation">
+<h4><a class="toc-backref" href="#id8" role="doc-backlink">POSIX default tty ECHO mitigation</a><a class="headerlink" href="#posix-default-tty-echo-mitigation" title="Link to this heading"></a></h4>
+<p>POSIX systems, like Linux, default to enabling ECHO on tty devices. Host side
+application can disable ECHO by calling <code class="docutils literal notranslate"><span class="pre">open()</span></code> on the tty device and issuing
+<code class="docutils literal notranslate"><span class="pre">ioctl()</span></code> (preferably via <code class="docutils literal notranslate"><span class="pre">tcsetattr()</span></code>) to disable echo if it is not desired.
+Unfortunately, there is an inherent race between the <code class="docutils literal notranslate"><span class="pre">open()</span></code> and <code class="docutils literal notranslate"><span class="pre">ioctl()</span></code>
+where the ECHO is enabled and any characters received (even if host application
+does not call <code class="docutils literal notranslate"><span class="pre">read()</span></code>) will be echoed back. This issue is especially visible
+when the CDC ACM port is used without any real UART on the other side because
+there is no arbitrary delay due to baud rate.</p>
+<p>To mitigate the issue, Zephyr CDC ACM implementation arms IN endpoint with ZLP
+after device is configured. When the host reads the ZLP, which is pretty much
+the best indication that host application has opened the tty device, Zephyr will
+force <a class="reference internal" href="../../../kconfig.html#CONFIG_CDC_ACM_TX_DELAY_MS" title="CONFIG_CDC_ACM_TX_DELAY_MS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CDC_ACM_TX_DELAY_MS</span></code></a> millisecond delay before real
+payload is sent. This should allow sufficient time for first, and only first,
+application that opens the tty device to disable ECHO if ECHO is not desired.
+If ECHO is not desired at all from CDC ACM device it is best to set up udev rule
+to disable ECHO as soon as device is connected.</p>
+<p>ECHO is particurarly unwanted when CDC ACM instance is used for Zephyr shell,
+because the control characters to set color sent back to shell are interpreted
+as (invalid) command and user will see garbage as a result. While minicom does
+disable ECHO by default, on exit with reset it will restore the termios settings
+to whatever was set on entry. Therefore, if minicom is the first application to
+open the tty device, the exit with reset will enable ECHO back and thus set up
+a problem for the next application (which cannot be mitigated at Zephyr side).
+To prevent the issue it is recommended either to leave minicom without reset or
+to disable ECHO before minicom is started.</p>
+</section>
+</section>
+<section id="dfu">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">DFU</a><a class="headerlink" href="#dfu" title="Link to this heading"></a></h3>
+<p>USB DFU class implementation is tightly coupled to <a class="reference internal" href="../../../services/device_mgmt/dfu.html#dfu"><span class="std std-ref">Device Firmware Upgrade</span></a> and <a class="reference internal" href="../../../services/device_mgmt/dfu.html#mcuboot-api"><span class="std std-ref">MCUBoot API</span></a>.
+This means that the target platform must support the <a class="reference internal" href="../../../services/device_mgmt/dfu.html#flash-img-api"><span class="std std-ref">Flash Image</span></a> API.</p>
+<p>See <a class="reference internal" href="../../../samples/subsys/usb/legacy/dfu/README.html#legacy-usb-dfu" title="Implement device firmware upgrade using the USB DFU class driver.">Legacy USB DFU (Device Firmware Upgrade)</a> sample for reference.</p>
+</section>
+<section id="usb-human-interface-devices-hid-support">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">USB Human Interface Devices (HID) support</a><a class="headerlink" href="#usb-human-interface-devices-hid-support" title="Link to this heading"></a></h3>
+<p>HID support abuses <a class="reference internal" href="../../../kernel/drivers/index.html#device-model-api"><span class="std std-ref">Device Driver Model</span></a> simply to allow applications to use
+the <a class="reference internal" href="../../../doxygen/html/group__device__model.html#ga15386ca9ab38f3e30183c18f604fa835" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">device_get_binding()</span></code></a>. Note that there is no HID device API as such,
+instead the interface is provided by <a class="reference internal" href="../../../doxygen/html/structhid__ops.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">hid_ops</span></code></a>.
+The default instance name is <code class="docutils literal notranslate"><span class="pre">HID_n</span></code>, where n can be {0, 1, 2, …} depending on
+the <a class="reference internal" href="../../../kconfig.html#CONFIG_USB_HID_DEVICE_COUNT" title="CONFIG_USB_HID_DEVICE_COUNT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USB_HID_DEVICE_COUNT</span></code></a>.</p>
+<p>Each HID instance requires a HID report descriptor. The interface to the core
+and the report descriptor must be registered using <a class="reference internal" href="../../../doxygen/html/group__usb__hid__device__api.html#ga8b08b633472ceb1323f09ef81176520f" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">usb_hid_register_device()</span></code></a>.</p>
+<p>As the USB HID specification is not only used by the USB subsystem, the USB HID API
+reference is split into two parts, <a class="reference internal" href="../api/hid.html#usb-hid-common"><span class="std std-ref">Human Interface Devices (HID)</span></a> and <a class="reference internal" href="api/usb_device_hid.html#usb-hid-device"><span class="std std-ref">USB HID Class API (deprecated)</span></a>.
+HID helper macros from <a class="reference internal" href="../api/hid.html#usb-hid-common"><span class="std std-ref">Human Interface Devices (HID)</span></a> should be used to compose a
+HID report descriptor. Macro names correspond to those used in the USB HID specification.</p>
+<p>For the HID class interface, an IN interrupt endpoint is required for each instance,
+an OUT interrupt endpoint is optional. Thus, the minimum implementation requirement
+for <a class="reference internal" href="../../../doxygen/html/structhid__ops.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">hid_ops</span></code></a> is to provide <code class="docutils literal notranslate"><span class="pre">int_in_ready</span></code> callback.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define REPORT_ID               1</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">configured</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">hdev</span><span class="p">;</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">int_in_ready_cb</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">static</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">report</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">REPORT_ID</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">};</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">hid_int_ep_write</span><span class="p">(</span><span class="n">hdev</span><span class="p">,</span><span class="w"> </span><span class="n">report</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">report</span><span class="p">),</span><span class="w"> </span><span class="nb">NULL</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">LOG_ERR</span><span class="p">(</span><span class="s">&quot;Failed to submit report&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">report</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">status_cb</span><span class="p">(</span><span class="k">enum</span><span class="w"> </span><span class="n">usb_dc_status_code</span><span class="w"> </span><span class="n">status</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">param</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">USB_DC_RESET</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">configured</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">USB_DC_CONFIGURED</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">configured</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">int_in_ready_cb</span><span class="p">(</span><span class="n">hdev</span><span class="p">);</span>
+<span class="w">                </span><span class="n">configured</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">hid_report_desc</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">HID_USAGE_PAGE</span><span class="p">(</span><span class="n">HID_USAGE_GEN_DESKTOP</span><span class="p">),</span>
+<span class="w">        </span><span class="n">HID_USAGE</span><span class="p">(</span><span class="n">HID_USAGE_GEN_DESKTOP_UNDEFINED</span><span class="p">),</span>
+<span class="w">        </span><span class="n">HID_COLLECTION</span><span class="p">(</span><span class="n">HID_COLLECTION_APPLICATION</span><span class="p">),</span>
+<span class="w">        </span><span class="n">HID_LOGICAL_MIN8</span><span class="p">(</span><span class="mh">0x00</span><span class="p">),</span>
+<span class="w">        </span><span class="n">HID_LOGICAL_MAX16</span><span class="p">(</span><span class="mh">0xFF</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">),</span>
+<span class="w">        </span><span class="n">HID_REPORT_ID</span><span class="p">(</span><span class="n">REPORT_ID</span><span class="p">),</span>
+<span class="w">        </span><span class="n">HID_REPORT_SIZE</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span>
+<span class="w">        </span><span class="n">HID_REPORT_COUNT</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+<span class="w">        </span><span class="n">HID_USAGE</span><span class="p">(</span><span class="n">HID_USAGE_GEN_DESKTOP_UNDEFINED</span><span class="p">),</span>
+<span class="w">        </span><span class="n">HID_INPUT</span><span class="p">(</span><span class="mh">0x02</span><span class="p">),</span>
+<span class="w">        </span><span class="n">HID_END_COLLECTION</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">hid_ops</span><span class="w"> </span><span class="n">my_ops</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">int_in_ready</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">int_in_ready_cb</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">hdev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">device_get_binding</span><span class="p">(</span><span class="s">&quot;HID_0&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">hdev</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">NULL</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="n">ENODEV</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">usb_hid_register_device</span><span class="p">(</span><span class="n">hdev</span><span class="p">,</span><span class="w"> </span><span class="n">hid_report_desc</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">hid_report_desc</span><span class="p">),</span>
+<span class="w">                                </span><span class="o">&amp;</span><span class="n">my_ops</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">usb_hid_init</span><span class="p">(</span><span class="n">hdev</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">usb_enable</span><span class="p">(</span><span class="n">status_cb</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If the application wishes to receive output reports via the OUT interrupt endpoint,
+it must enable <a class="reference internal" href="../../../kconfig.html#CONFIG_ENABLE_HID_INT_OUT_EP" title="CONFIG_ENABLE_HID_INT_OUT_EP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ENABLE_HID_INT_OUT_EP</span></code></a> and provide
+<code class="docutils literal notranslate"><span class="pre">int_out_ready</span></code> callback.
+The disadvantage of this is that Kconfig options such as
+<a class="reference internal" href="../../../kconfig.html#CONFIG_ENABLE_HID_INT_OUT_EP" title="CONFIG_ENABLE_HID_INT_OUT_EP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ENABLE_HID_INT_OUT_EP</span></code></a> or
+<a class="reference internal" href="../../../kconfig.html#CONFIG_HID_INTERRUPT_EP_MPS" title="CONFIG_HID_INTERRUPT_EP_MPS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HID_INTERRUPT_EP_MPS</span></code></a> apply to all instances. This design
+issue will be fixed in the HID class implementation for the new USB support.</p>
+<p>See <a class="reference internal" href="../../../samples/subsys/usb/hid-mouse/README.html#usb-hid-mouse" title="Implement a basic HID mouse device.">USB HID mouse</a> sample for reference.</p>
+</section>
+<section id="mass-storage-class">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">Mass Storage Class</a><a class="headerlink" href="#mass-storage-class" title="Link to this heading"></a></h3>
+<p>MSC follows Bulk-Only Transport specification and uses <a class="reference internal" href="../../../services/storage/disk/access.html#disk-access-api"><span class="std std-ref">Disk Access</span></a> to
+access and expose a RAM disk, emulated block device on a flash partition,
+or SD Card to the host. Only one disk instance can be exported at a time.</p>
+<p>The disc to be used by the implementation is set by the
+<a class="reference internal" href="../../../kconfig.html#CONFIG_MASS_STORAGE_DISK_NAME" title="CONFIG_MASS_STORAGE_DISK_NAME"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MASS_STORAGE_DISK_NAME</span></code></a> and should be the same as the
+name used by the disc access driver that the application wants to expose to the
+host. Flash, RAM, and SDMMC/MMC disk drivers use node property <code class="docutils literal notranslate"><span class="pre">disk-name</span></code> to
+set the disk name.</p>
+<p>For the emulated block device on a flash partition, the flash partition and
+flash disk to be used must be described in the devicetree. If a storage partition
+is already described at the board level, application devicetree overlay must also
+delete <code class="docutils literal notranslate"><span class="pre">storage_partition</span></code> node first. <a class="reference internal" href="../../../kconfig.html#CONFIG_MASS_STORAGE_DISK_NAME" title="CONFIG_MASS_STORAGE_DISK_NAME"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MASS_STORAGE_DISK_NAME</span></code></a>
+should be the same as <code class="docutils literal notranslate"><span class="pre">disk-name</span></code> property.</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cp">/delete-node/</span><span class="cm"> </span><span class="cp">&amp;storage_partition</span><span class="p">;</span>
+
+<span class="o">&amp;</span><span class="nf">mx25r64</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nf">partitions</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;fixed-partitions&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="kr">#address-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                </span><span class="kr">#size-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">                </span><span class="nl">storage_partition</span><span class="p">:</span><span class="w"> </span><span class="nf">partition</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;storage&quot;</span><span class="p">;</span>
+<span class="w">                        </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x00000000</span><span class="w"> </span><span class="mh">0x00020000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                </span><span class="p">};</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nf">msc_disk0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,flash-disk&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="n">partition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">storage_partition</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                </span><span class="n">disk-name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;NAND&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="n">cache-size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">4096</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">disk-property</span></code> “NAND” may be confusing, but it is simply how some file
+systems identifies the disc. Therefore, if the application also accesses the
+file system on the exposed disc, default names should be used, see
+<a class="reference internal" href="../../../samples/subsys/usb/mass/README.html#usb-mass" title="Expose board's RAM or FLASH as a USB disk using USB Mass Storage driver.">USB Mass Storage</a> sample for reference.</p>
+</section>
+<section id="networking">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">Networking</a><a class="headerlink" href="#networking" title="Link to this heading"></a></h3>
+<p>There are three implementations that work in a similar way, providing a virtual
+Ethernet connection between the remote (USB host) and Zephyr network support.</p>
+<ul class="simple">
+<li><p>CDC ECM class, enabled with <a class="reference internal" href="../../../kconfig.html#CONFIG_USB_DEVICE_NETWORK_ECM" title="CONFIG_USB_DEVICE_NETWORK_ECM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USB_DEVICE_NETWORK_ECM</span></code></a></p></li>
+<li><p>CDC EEM class, enabled with <a class="reference internal" href="../../../kconfig.html#CONFIG_USB_DEVICE_NETWORK_EEM" title="CONFIG_USB_DEVICE_NETWORK_EEM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USB_DEVICE_NETWORK_EEM</span></code></a></p></li>
+<li><p>RNDIS support, enabled with <a class="reference internal" href="../../../kconfig.html#CONFIG_USB_DEVICE_NETWORK_RNDIS" title="CONFIG_USB_DEVICE_NETWORK_RNDIS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USB_DEVICE_NETWORK_RNDIS</span></code></a></p></li>
+</ul>
+<p>See <a class="reference internal" href="../../../samples/subsys/usb/legacy/netusb/README.html#legacy-netusb" title="Use USB CDC EEM/ECM or RNDIS implementation">Legacy USB device netusb sample</a> sample for reference.</p>
+<p>Applications using RNDIS support should enable <a class="reference internal" href="../../../kconfig.html#CONFIG_USB_DEVICE_OS_DESC" title="CONFIG_USB_DEVICE_OS_DESC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USB_DEVICE_OS_DESC</span></code></a>
+for a better user experience on a host running Microsoft Windows OS.</p>
+</section>
+</section>
+<section id="binary-device-object-store-bos-support">
+<h2><a class="toc-backref" href="#id13" role="doc-backlink">Binary Device Object Store (BOS) support</a><a class="headerlink" href="#binary-device-object-store-bos-support" title="Link to this heading"></a></h2>
+<p>BOS handling can be enabled with Kconfig option <a class="reference internal" href="../../../kconfig.html#CONFIG_USB_DEVICE_BOS" title="CONFIG_USB_DEVICE_BOS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USB_DEVICE_BOS</span></code></a>.
+This option also has the effect of changing device descriptor <code class="docutils literal notranslate"><span class="pre">bcdUSB</span></code> to <code class="docutils literal notranslate"><span class="pre">0210</span></code>.
+The application should register descriptors such as Capability Descriptor
+using <a class="reference internal" href="../../../doxygen/html/group____usb__device__core__api.html#ga1bf8ec88cf752e98234d9f8bb57f976a" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">usb_bos_register_cap()</span></code></a>. Registered descriptors are added to the root
+BOS descriptor and handled by the stack.</p>
+<p>See <a class="reference internal" href="../../../samples/subsys/usb/legacy/webusb/README.html#legacy-webusb" title="Receive and echo data from a web page using WebUSB API.">Legacy WebUSB</a> sample for reference.</p>
+</section>
+<section id="interface-number-and-endpoint-address-assignment">
+<h2><a class="toc-backref" href="#id14" role="doc-backlink">Interface number and endpoint address assignment</a><a class="headerlink" href="#interface-number-and-endpoint-address-assignment" title="Link to this heading"></a></h2>
+<p>In USB terminology, a <code class="docutils literal notranslate"><span class="pre">function</span></code> is a device that provides a capability to the
+host, such as a HID class device that implements a keyboard. A function
+contains a collection of <code class="docutils literal notranslate"><span class="pre">interfaces</span></code>; at least one interface is required. An
+interface may contain device <code class="docutils literal notranslate"><span class="pre">endpoints</span></code>; for example, at least one input
+endpoint is required to implement a HID class device, and no endpoints are
+required to implement a USB DFU class. A USB device that combines functions is
+a multifunction USB device, for example, a combination of a HID class device
+and a CDC ACM device.</p>
+<p>With Zephyr RTOS USB support, various combinations are possible with built-in USB
+classes/functions or custom user implementations. The limitation is the number
+of available device endpoints. Each device endpoint is uniquely addressable.
+The endpoint address is a combination of endpoint direction and endpoint
+number, a four-bit value. Endpoint number zero is used for the default control
+method to initialize and configure a USB device. By specification, a maximum of
+<code class="docutils literal notranslate"><span class="pre">15</span> <span class="pre">IN</span></code> and <code class="docutils literal notranslate"><span class="pre">15</span> <span class="pre">OUT</span></code> device endpoints are also available for use in functions.
+The actual number depends on the device controller used. Not all controllers
+support the maximum number of endpoints and all endpoint types. For example, a
+device controller might support one IN and one OUT isochronous endpoint, but
+only for endpoint number 8, resulting in endpoint addresses 0x88 and 0x08.
+Also, one controller may be able to have IN/OUT endpoints on the same endpoint
+number, interrupt IN endpoint 0x81 and bulk OUT endpoint 0x01, while the other
+may only be able to handle one endpoint per endpoint number. Information about
+the number of interfaces, interface associations, endpoint types, and addresses
+is provided to the host by the interface, interface specific, and endpoint
+descriptors.</p>
+<p>Host driver for specific function, uses interface and endpoint descriptor to
+obtain endpoint addresses, types, and other properties. This allows function
+host drivers to be generic, for example, a multi-function device consisting of
+one or more CDC ACM and one or more CDC ECM class implementations is possible
+and no specific drivers are required.</p>
+<p>Interface and endpoint descriptors of built-in USB class/function
+implementations in Zephyr RTOS typically have default interface numbers and
+endpoint addresses assigned in ascending order. During initialization,
+default interface numbers may be reassigned based on the number of interfaces in
+a given configuration. Endpoint addresses are reassigned based on controller
+capabilities, since certain endpoint combinations are not possible with every
+controller, and the number of interfaces in a given configuration. This also
+means that the device side class/function in the Zephyr RTOS must check the
+actual interface and endpoint descriptor values at runtime.
+This mechanism also allows as to provide generic samples and generic
+multifunction samples that are limited only by the resources provided by the
+controller, such as the number of endpoints and the size of the endpoint FIFOs.</p>
+<p>There may be host drivers for a specific function, for example in the Linux
+Kernel, where the function driver does not read interface and endpoint
+descriptors to check interface numbers or endpoint addresses, but instead uses
+hardcoded values. Therefore, the host driver cannot be used in a generic way,
+meaning it cannot be used with different device controllers and different
+device configurations in combination with other functions. This may also be
+because the driver is designed for a specific hardware and is not intended to
+be used with a clone of this specific hardware. On the contrary, if the driver
+is generic in nature and should work with different hardware variants, then it
+must not use hardcoded interface numbers and endpoint addresses.
+It is not possible to disable endpoint reassignment in Zephyr RTOS, which may
+prevent you from implementing a hardware-clone firmware. Instead, if possible,
+the host driver implementation should be fixed to use values from the interface
+and endpoint descriptor.</p>
+</section>
+<section id="testing-over-usbip-in-native-sim">
+<span id="testing-usb-native-sim"></span><h2><a class="toc-backref" href="#id15" role="doc-backlink">Testing over USBIP in native_sim</a><a class="headerlink" href="#testing-over-usbip-in-native-sim" title="Link to this heading"></a></h2>
+<p>A virtual USB controller implemented through USBIP might be used to test the USB
+device stack. Follow the general build procedure to build the USB sample for
+the <a class="reference internal" href="../../../boards/native/native_sim/doc/index.html#native_sim"><span class="xref zephyr zephyr-board">native_sim</span></a> configuration.</p>
+<p>Run built sample with:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west build -t run</span>
+</pre></div>
+</div>
+<p>In a terminal window, run the following command to list USB devices:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>usbip<span class="w"> </span>list<span class="w"> </span>-r<span class="w"> </span>localhost
+<span class="go">Exportable USB devices</span>
+<span class="go">======================</span>
+<span class="go"> - 127.0.0.1</span>
+<span class="go">        1-1: unknown vendor : unknown product (2fe3:0100)</span>
+<span class="go">           : /sys/devices/pci0000:00/0000:00:01.2/usb1/1-1</span>
+<span class="go">           : (Defined at Interface level) (00/00/00)</span>
+<span class="go">           :  0 - Vendor Specific Class / unknown subclass / unknown protocol (ff/00/00)</span>
+</pre></div>
+</div>
+<p>In a terminal window, run the following command to attach the USB device:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>usbip<span class="w"> </span>attach<span class="w"> </span>-r<span class="w"> </span>localhost<span class="w"> </span>-b<span class="w"> </span><span class="m">1</span>-1
+</pre></div>
+</div>
+<p>The USB device should be connected to your Linux host, and verified with the
+following commands:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>usbip<span class="w"> </span>port
+<span class="go">Imported USB devices</span>
+<span class="go">====================</span>
+<span class="go">Port 00: &lt;Port in Use&gt; at Full Speed(12Mbps)</span>
+<span class="go">       unknown vendor : unknown product (2fe3:0100)</span>
+<span class="go">       7-1 -&gt; usbip://localhost:3240/1-1</span>
+<span class="go">           -&gt; remote bus/dev 001/002</span>
+<span class="gp">$ </span>lsusb<span class="w"> </span>-d<span class="w"> </span>2fe3:0100
+<span class="go">Bus 007 Device 004: ID 2fe3:0100</span>
+</pre></div>
+</div>
+</section>
+<section id="usb-vendor-and-product-identifiers">
+<h2><a class="toc-backref" href="#id16" role="doc-backlink">USB Vendor and Product identifiers</a><a class="headerlink" href="#usb-vendor-and-product-identifiers" title="Link to this heading"></a></h2>
+<p>The USB Vendor ID for the Zephyr project is <code class="docutils literal notranslate"><span class="pre">0x2FE3</span></code>.
+This USB Vendor ID must not be used when a vendor
+integrates Zephyr USB device support into its own product.</p>
+<p>Each USB <a class="reference internal" href="../../../samples/subsys/usb/usb.html#usb"><span class="xref zephyr zephyr-code-sample-category">sample</span></a> has its own unique Product ID.
+The USB maintainer, if one is assigned, or otherwise the Zephyr Technical
+Steering Committee, may allocate other USB Product IDs based on well-motivated
+and documented requests.</p>
+<p>The following Product IDs are currently used:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Sample</p></th>
+<th class="head"><p>PID</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="../../../samples/subsys/usb/cdc_acm/README.html#usb-cdc-acm" title="Use USB CDC ACM UART driver to implement a serial port echo.">USB CDC ACM UART sample</a></p></td>
+<td><p>0x0001</p></td>
+</tr>
+<tr class="row-odd"><td><p>Reserved (previously: usb-cdc-acm-composite)</p></td>
+<td><p>0x0002</p></td>
+</tr>
+<tr class="row-even"><td><p>Reserved (previously: usb-hid-cdc)</p></td>
+<td><p>0x0003</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../../samples/subsys/usb/console/README.html#usb-cdc-acm-console" title="Output &quot;Hello World!&quot; to the console over USB CDC ACM.">Console over USB CDC ACM</a></p></td>
+<td><p>0x0004</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../../samples/subsys/usb/dfu/README.html#usb-dfu" title="Implement a basic USB DFU device">USB DFU</a> (Run-Time)</p></td>
+<td><p>0x0005</p></td>
+</tr>
+<tr class="row-odd"><td><p>Reserved (previously: usb-hid)</p></td>
+<td><p>0x0006</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../../samples/subsys/usb/hid-mouse/README.html#usb-hid-mouse" title="Implement a basic HID mouse device.">USB HID mouse</a></p></td>
+<td><p>0x0007</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../../samples/subsys/usb/mass/README.html#usb-mass" title="Expose board's RAM or FLASH as a USB disk using USB Mass Storage driver.">USB Mass Storage</a></p></td>
+<td><p>0x0008</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../../samples/subsys/usb/testusb/README.html#testusb-app" title="Test USB device drivers using a loopback function.">USB device testing application</a></p></td>
+<td><p>0x0009</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../../samples/subsys/usb/webusb/README.html#webusb" title="Receive and echo data from a web page using WebUSB API.">WebUSB</a></p></td>
+<td><p>0x000A</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../../samples/bluetooth/hci_usb/README.html#bluetooth_hci_usb" title="Turn a Zephyr board into a USB Bluetooth dongle (compatible with all operating systems).">HCI USB</a></p></td>
+<td><p>0x000B</p></td>
+</tr>
+<tr class="row-odd"><td><p>Reserved (previously: bluetooth_hci_usb_h4)</p></td>
+<td><p>0x000C</p></td>
+</tr>
+<tr class="row-even"><td><p>Reserved (previously: wpan-usb)</p></td>
+<td><p>0x000D</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../../samples/subsys/usb/uac2_explicit_feedback/README.html#uac2-explicit-feedback" title="USB Audio 2 explicit feedback sample playing audio on I2S.">USB Audio asynchronous explicit feedback sample</a></p></td>
+<td><p>0x000E</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../../samples/subsys/usb/uac2_implicit_feedback/README.html#uac2-implicit-feedback" title="USB Audio 2 implicit feedback sample playing stereo and recording mono audio on I2S interface.">USB Audio asynchronous implicit feedback sample</a></p></td>
+<td><p>0x000F</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../../samples/subsys/usb/uvc/README.html#uvc" title="Send video frames over USB.">USB Video webcam</a></p></td>
+<td><p>0x0011</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../../samples/subsys/usb/dfu/README.html#usb-dfu" title="Implement a basic USB DFU device">USB DFU</a> (DFU Mode)</p></td>
+<td><p>0xFFFF</p></td>
+</tr>
+</tbody>
+</table>
+<p>The USB device descriptor field <code class="docutils literal notranslate"><span class="pre">bcdDevice</span></code> (Device Release Number) represents
+the Zephyr kernel major and minor versions as a binary coded decimal value.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

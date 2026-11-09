@@ -1,0 +1,851 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: ti,tps55287
+.. _dtbinding_ti_tps55287:
+
+ti,tps55287 (on i2c bus)
+########################
+
+.. sidebar:: Overview
+
+   :Name: ``ti,tps55287``
+   :Vendor: :ref:`Texas Instruments <dt_vendor_ti>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=ti,tps55287>` using
+               this compatible
+   :Driver: :zephyr_file:`drivers/regulator/regulator_tps55287.c`
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   TPS55287 regulator
+
+Properties
+**********
+
+.. tabs::
+
+   .. group-tab:: Node specific properties
+
+      Properties not inherited from the base binding file.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``en-gpios``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                GPIOs connected to the EN/UVLO signal, used to reset the device at
+                initialization.
+
+
+
+         * - ``cdc``
+           - ``int``
+           - .. code-block:: none
+
+                Cable droop compensation:
+                0 = disabled (default)
+                1 = 0.1V output voltage raise with 50mV at Visp - Visn
+                2 = 0.2V output voltage raise with 50mV at Visp - Visn
+                3 = 0.3V output voltage raise with 50mV at Visp - Visn
+                4 = 0.4V output voltage raise with 50mV at Visp - Visn
+                5 = 0.5V output voltage raise with 50mV at Visp - Visn
+                6 = 0.6V output voltage raise with 50mV at Visp - Visn
+                7 = 0.7V output voltage raise with 50mV at Visp - Visn
+
+
+
+             Legal values: ``0``, ``1``, ``2``, ``3``, ``4``, ``5``, ``6``, ``7``
+
+         * - ``r-is-milliohm``
+           - ``int``
+           - .. code-block:: none
+
+                Value of the current sense shunt resistor in milliohm, required for
+                current limit APIs.
+
+
+
+         * - ``supply-gpios``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                GPIO specifier that controls power to the device.
+
+                This property should be provided when the device has a dedicated
+                switch that controls power to the device.  The supply state is
+                entirely the responsibility of the device driver.
+
+                Contrast with vin-supply.
+
+
+
+         * - ``vin-supply``
+           - ``phandle``
+           - .. code-block:: none
+
+                Reference to the regulator that controls power to the device.
+                The referenced devicetree node must have a regulator compatible.
+
+                This property should be provided when device power is supplied
+                by a shared regulator.  The supply state is dependent on the
+                request status of all devices fed by the regulator.
+
+                Contrast with supply-gpios.  If both properties are provided
+                then the regulator must be requested before the supply GPIOS is
+                set to an active state, and the supply GPIOS must be set to an
+                inactive state before releasing the regulator.
+
+
+
+         * - ``regulator-name``
+           - ``string``
+           - .. code-block:: none
+
+                A string used as a descriptive name for regulator outputs
+
+
+         * - ``regulator-init-microvolt``
+           - ``int``
+           - .. code-block:: none
+
+                Voltage set during initialisation
+
+
+         * - ``regulator-min-microvolt``
+           - ``int``
+           - .. code-block:: none
+
+                smallest voltage consumers may set
+
+
+         * - ``regulator-max-microvolt``
+           - ``int``
+           - .. code-block:: none
+
+                largest voltage consumers may set
+
+
+         * - ``regulator-microvolt-offset``
+           - ``int``
+           - .. code-block:: none
+
+                Offset applied to voltages to compensate for voltage drops
+
+
+         * - ``regulator-init-microamp``
+           - ``int``
+           - .. code-block:: none
+
+                Current set during initialisation
+
+
+         * - ``regulator-min-microamp``
+           - ``int``
+           - .. code-block:: none
+
+                smallest current consumers may set
+
+
+         * - ``regulator-max-microamp``
+           - ``int``
+           - .. code-block:: none
+
+                largest current consumers may set
+
+
+         * - ``regulator-input-current-limit-microamp``
+           - ``int``
+           - .. code-block:: none
+
+                maximum input current regulator allows
+
+
+         * - ``regulator-always-on``
+           - ``boolean``
+           - .. code-block:: none
+
+                boolean, regulator should never be disabled
+
+
+         * - ``regulator-boot-on``
+           - ``boolean``
+           - .. code-block:: none
+
+                bootloader/firmware enabled regulator.
+                It's expected that this regulator was left on by the bootloader.
+                If the bootloader didn't leave it on then OS should turn it on
+                at boot but shouldn't prevent it from being turned off later.
+                This property is intended to only be used for regulators where
+                software cannot read the state of the regulator.
+
+
+
+         * - ``regulator-boot-off``
+           - ``boolean``
+           - .. code-block:: none
+
+                Regulator should be disabled on boot.
+
+
+
+         * - ``regulator-allow-bypass``
+           - ``boolean``
+           - .. code-block:: none
+
+                allow the regulator to go into bypass mode
+
+
+         * - ``regulator-allow-set-load``
+           - ``boolean``
+           - .. code-block:: none
+
+                allow the regulator performance level to be configured
+
+
+         * - ``regulator-ramp-delay``
+           - ``int``
+           - .. code-block:: none
+
+                ramp delay for regulator(in uV/us) For hardware which supports disabling
+                ramp rate, it should be explicitly initialised to zero
+                (regulator-ramp-delay = <0>) for disabling ramp delay.
+
+
+
+         * - ``regulator-enable-ramp-delay``
+           - ``int``
+           - .. code-block:: none
+
+                The time taken, in microseconds, for the supply rail to reach the target
+                voltage, plus/minus whatever tolerance the board design requires. This
+                property describes the total system ramp time required due to the
+                combination of internal ramping of the regulator itself, and board design
+                issues such as trace capacitance and load on the supply.
+
+
+
+         * - ``regulator-settling-time-us``
+           - ``int``
+           - .. code-block:: none
+
+                Settling time, in microseconds, for voltage change if regulator have the
+                constant time for any level voltage change. This is useful when regulator
+                have exponential voltage change.
+
+
+
+         * - ``regulator-settling-time-up-us``
+           - ``int``
+           - .. code-block:: none
+
+                Settling time, in microseconds, for voltage increase if the regulator
+                needs a constant time to settle after voltage increases of any level. This
+                is useful for regulators with exponential voltage changes.
+
+
+
+         * - ``regulator-settling-time-down-us``
+           - ``int``
+           - .. code-block:: none
+
+                Settling time, in microseconds, for voltage decrease if the regulator
+                needs a constant time to settle after voltage decreases of any level. This
+                is useful for regulators with exponential voltage changes.
+
+
+
+         * - ``regulator-soft-start``
+           - ``boolean``
+           - .. code-block:: none
+
+                Enable soft start so that voltage ramps slowly
+
+
+         * - ``regulator-initial-mode``
+           - ``int``
+           - .. code-block:: none
+
+                Initial operating mode. The set of possible operating modes depends on the
+                capabilities of every hardware so each device binding documentation
+                explains which values the regulator supports.
+
+
+
+         * - ``regulator-allowed-modes``
+           - ``array``
+           - .. code-block:: none
+
+                List of operating modes that software is allowed to configure for the
+                regulator at run-time. Elements may be specified in any order. The set of
+                possible operating modes depends on the capabilities of every hardware so
+                each device binding document explains which values the regulator supports.
+
+
+
+         * - ``regulator-system-load``
+           - ``int``
+           - .. code-block:: none
+
+                Load in uA present on regulator that is not captured by any consumer
+                request.
+
+
+
+         * - ``regulator-pull-down``
+           - ``boolean``
+           - .. code-block:: none
+
+                Enable pull down resistor when the regulator is disabled.
+
+
+         * - ``regulator-over-current-protection``
+           - ``boolean``
+           - .. code-block:: none
+
+                Enable over current protection.
+
+
+         * - ``regulator-oc-protection-microamp``
+           - ``int``
+           - .. code-block:: none
+
+                Set over current protection limit. This is a limit where hardware performs
+                emergency shutdown. Zero can be passed to disable protection and value '1'
+                indicates that protection should be enabled but limit setting can be
+                omitted.
+
+
+
+         * - ``regulator-oc-error-microamp``
+           - ``int``
+           - .. code-block:: none
+
+                Set over current error limit. This is a limit where part of the hardware
+                probably is malfunctional and damage prevention is requested. Zero can be
+                passed to disable error detection and value '1' indicates that detection
+                should be enabled but limit setting can be omitted.
+
+
+
+         * - ``regulator-oc-warn-microamp``
+           - ``int``
+           - .. code-block:: none
+
+                Set over current warning limit. This is a limit where hardware is assumed
+                still to be functional but approaching limit where it gets damaged.
+                Recovery actions should be initiated. Zero can be passed to disable
+                detection and value '1' indicates that detection should be enabled but
+                limit setting can be omitted.
+
+
+
+         * - ``regulator-ov-protection-microvolt``
+           - ``int``
+           - .. code-block:: none
+
+                Set over voltage protection limit. This is a limit where hardware performs
+                emergency shutdown. Zero can be passed to disable protection and value '1'
+                indicates that protection should be enabled but limit setting can be
+                omitted. Limit is given as microvolt offset from voltage set to regulator.
+
+
+
+         * - ``regulator-ov-error-microvolt``
+           - ``int``
+           - .. code-block:: none
+
+                Set over voltage error limit. This is a limit where part of the hardware
+                probably is malfunctional and damage prevention is requested Zero can be
+                passed to disable error detection and value '1' indicates that detection
+                should be enabled but limit setting can be omitted. Limit is given as
+                microvolt offset from voltage set to regulator.
+
+
+
+         * - ``regulator-ov-warn-microvolt``
+           - ``int``
+           - .. code-block:: none
+
+                Set over voltage warning limit. This is a limit where hardware is assumed
+                still to be functional but approaching limit where it gets damaged.
+                Recovery actions should be initiated. Zero can be passed to disable
+                detection and value '1' indicates that detection should be enabled but
+                limit setting can be omitted. Limit is given as microvolt offset from
+                voltage set to regulator.
+
+
+
+         * - ``regulator-uv-protection-microvolt``
+           - ``int``
+           - .. code-block:: none
+
+                Set over under voltage protection limit. This is a limit where hardware
+                performs emergency shutdown. Zero can be passed to disable protection and
+                value '1' indicates that protection should be enabled but limit setting
+                can be omitted. Limit is given as microvolt offset from voltage set to
+                regulator.
+
+
+
+         * - ``regulator-uv-error-microvolt``
+           - ``int``
+           - .. code-block:: none
+
+                Set under voltage error limit. This is a limit where part of the hardware
+                probably is malfunctional and damage prevention is requested Zero can be
+                passed to disable error detection and value '1' indicates that detection
+                should be enabled but limit setting can be omitted. Limit is given as
+                microvolt offset from voltage set to regulator.
+
+
+
+         * - ``regulator-uv-warn-microvolt``
+           - ``int``
+           - .. code-block:: none
+
+                Set over under voltage warning limit. This is a limit where hardware is
+                assumed still to be functional but approaching limit where it gets
+                damaged. Recovery actions should be initiated. Zero can be passed to
+                disable detection and value '1' indicates that detection should be enabled
+                but limit setting can be omitted. Limit is given as microvolt offset from
+                voltage set to regulator.
+
+
+
+         * - ``regulator-temp-protection-kelvin``
+           - ``int``
+           - .. code-block:: none
+
+                Set over temperature protection limit. This is a limit where hardware
+                performs emergency shutdown. Zero can be passed to disable protection and
+                value '1' indicates that protection should be enabled but limit setting
+                can be omitted.
+
+
+
+         * - ``regulator-temp-error-kelvin``
+           - ``int``
+           - .. code-block:: none
+
+                Set over temperature error limit. This is a limit where part of the
+                hardware probably is malfunctional and damage prevention is requested Zero
+                can be passed to disable error detection and value '1' indicates that
+                detection should be enabled but limit setting can be omitted.
+
+
+
+         * - ``regulator-temp-warn-kelvin``
+           - ``int``
+           - .. code-block:: none
+
+                Set over temperature warning limit. This is a limit where hardware is
+                assumed still to be functional but approaching limit where it gets
+                damaged. Recovery actions should be initiated. Zero can be passed to
+                disable detection and value '1' indicates that detection should be enabled
+                but limit setting can be omitted.
+
+
+
+         * - ``regulator-active-discharge``
+           - ``int``
+           - .. code-block:: none
+
+                tristate, enable/disable active discharge of regulators. The values are:
+                0: Disable active discharge.
+                1: Enable active discharge.
+                Absence of this property will leave configuration to default.
+
+
+
+             Legal values: ``0``, ``1``
+
+         * - ``regulator-max-step-microvolt``
+           - ``int``
+           - .. code-block:: none
+
+                Maximum difference between current and target voltages that can be changed
+                safely in a single step.
+
+
+
+         * - ``startup-delay-us``
+           - ``int``
+           - .. code-block:: none
+
+                Startup time, in microseconds
+
+
+         * - ``off-on-delay-us``
+           - ``int``
+           - .. code-block:: none
+
+                Off to on delay time, in microseconds
+
+
+
+
+   .. group-tab:: Deprecated node specific properties
+
+      Deprecated properties not inherited from the base binding file.
+
+      (None)
+
+   .. group-tab:: Base properties
+
+      Properties inherited from the base binding file, which defines
+      common properties that may be set on many nodes. Not all of these
+      may apply to the "ti,tps55287" compatible.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``reg``
+           - ``array``
+           - .. code-block:: none
+
+                device address on i2c bus
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``status``
+           - ``string``
+           - .. code-block:: none
+
+                Indicates the operational status of the hardware or other
+                resource that the node represents. In particular:
+
+                  - "okay" means the resource is operational and, for example,
+                    can be used by device drivers
+                  - "disabled" means the resource is not operational and the system
+                    should treat it as if it is not present
+
+                For details, see "2.3.4 status" in Devicetree Specification v0.4.
+
+
+
+             Legal values: ``okay``, ``disabled``, ``reserved``, ``fail``, ``fail-sss``
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``compatible``
+           - ``string-array``
+           - .. code-block:: none
+
+                This property is a list of strings that essentially define what
+                type of hardware or other resource this devicetree node
+                represents. Each device driver checks for specific compatible
+                property values to find the devicetree nodes that represent
+                resources that the driver should manage.
+
+                The recommended format is "vendor,device", The "vendor" part is
+                an abbreviated name of the vendor. The "device" is usually from
+                the datasheet.
+
+                The compatible property can have multiple values, ordered from
+                most- to least-specific. Having additional values is useful when the
+                device is a specific instance of a more general family, to allow the
+                system to match the most specific driver available.
+
+                For details, see "2.3.1 compatible" in Devicetree Specification v0.4.
+
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``reg-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each register block in the "reg" property.
+                For example:
+
+                  / {
+                       soc {
+                           #address-cells = <1>;
+                           #size-cells = <1>;
+
+                           uart@1000 {
+                               reg = <0x1000 0x2000>, <0x3000 0x4000>;
+                               reg-names = "foo", "bar";
+                           };
+                       };
+                  };
+
+                The uart@1000 node has two register blocks:
+
+                  - one with base address 0x1000, size 0x2000, and name "foo"
+                  - another with base address 0x3000, size 0x4000, and name "bar"
+
+
+
+         * - ``interrupts``
+           - ``array``
+           - .. code-block:: none
+
+                Information about interrupts generated by the device, encoded as an array
+                of one or more interrupt specifiers. The format of the data in this property
+                varies by where the device appears in the interrupt tree. Devices with the same
+                "interrupt-parent" will use the same format in their interrupts properties.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``interrupts-extended``
+           - ``compound``
+           - .. code-block:: none
+
+                Extended interrupt specifier for device, used as an alternative to
+                the "interrupts" property.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each interrupt generated by a device.
+                The interrupts themselves are defined in either "interrupts" or
+                "interrupts-extended" properties.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-parent``
+           - ``phandle``
+           - .. code-block:: none
+
+                If present, this refers to the node which handles interrupts generated
+                by this device.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``label``
+           - ``string``
+           - .. code-block:: none
+
+                Human readable string describing the device. Use of this property is
+                deprecated except as needed on a case-by-case basis.
+
+                For details, see "4.1.2 Miscellaneous Properties" in Devicetree
+                Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``clocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Information about the device's clock providers. In general, this property
+                should follow conventions established in the dt-schema binding:
+
+                  https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/clock/clock.yaml
+
+
+
+         * - ``clock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each clock provider in the "clocks" property.
+
+
+
+         * - ``#address-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by address fields
+                in "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+         * - ``#size-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by size fields in
+                "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+         * - ``dmas``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                DMA channel specifiers relevant to the device.
+
+
+
+         * - ``dma-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the DMA channel specifiers in the "dmas" property.
+
+
+
+         * - ``io-channels``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                IO channel specifiers relevant to the device.
+
+
+
+         * - ``io-channel-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the IO channel specifiers in the "io-channels" property.
+
+
+
+         * - ``mboxes``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Mailbox / IPM channel specifiers relevant to the device.
+
+
+
+         * - ``mbox-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the mbox specifiers in the "mboxes" property.
+
+
+
+         * - ``power-domains``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Power domain specifiers relevant to the device.
+
+
+
+         * - ``power-domain-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the power domain specifiers in the "power-domains" property.
+
+
+
+         * - ``#power-domain-cells``
+           - ``int``
+           - .. code-block:: none
+
+                Number of cells in power-domains property
+
+
+
+         * - ``hwlocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                HW spinlock id relevant to the device.
+
+
+
+         * - ``hwlock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the hwlock specifiers in the "hwlocks" property.
+
+
+
+         * - ``zephyr,deferred-init``
+           - ``boolean``
+           - .. code-block:: none
+
+                Do not initialize device automatically on boot. Device should be manually
+                initialized using device_init().
+
+
+
+         * - ``wakeup-source``
+           - ``boolean``
+           - .. code-block:: none
+
+                Property to identify that a device can be used as wake up source.
+
+                When this property is provided a specific flag is set into the
+                device that tells the system that the device is capable of
+                wake up the system.
+
+                Wake up capable devices are disabled (interruptions will not wake up
+                the system) by default but they can be enabled at runtime if necessary.
+
+
+
+         * - ``zephyr,pm-device-runtime-auto``
+           - ``boolean``
+           - .. code-block:: none
+
+                Automatically configure the device for runtime power management after the
+                init function runs.
+
+
+
+         * - ``zephyr,disabling-power-states``
+           - ``phandles``
+           - .. code-block:: none
+
+                List of power states that will disable this device power.
+
+
+
+
+
+

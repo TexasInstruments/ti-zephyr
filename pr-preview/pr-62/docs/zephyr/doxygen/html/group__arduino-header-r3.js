@@ -1,0 +1,26 @@
+var group__arduino_header_r3 =
+[
+    [ "arduino-header-r3.h", "arduino-header-r3_8h.html", null ],
+    [ "ARDUINO_HEADER_R3_A0", "group__arduino-header-r3.html#ga1b31f4179f7b88f2c737912eb9c9c953", null ],
+    [ "ARDUINO_HEADER_R3_A1", "group__arduino-header-r3.html#ga50a7c3dd0c6b7150c854633251cd8865", null ],
+    [ "ARDUINO_HEADER_R3_A2", "group__arduino-header-r3.html#gab0795f06118f2ad4d3297b83049d055f", null ],
+    [ "ARDUINO_HEADER_R3_A3", "group__arduino-header-r3.html#gaa4d9b5429b96f98613b1c60098978497", null ],
+    [ "ARDUINO_HEADER_R3_A4", "group__arduino-header-r3.html#ga3e1fe5bffc4fbe06505ce2440b13e5c4", null ],
+    [ "ARDUINO_HEADER_R3_A5", "group__arduino-header-r3.html#gab55346b065620105baaa3dfb239be2a4", null ],
+    [ "ARDUINO_HEADER_R3_D0", "group__arduino-header-r3.html#gaec90cc0e407d994a7581f1ac7c5ca150", null ],
+    [ "ARDUINO_HEADER_R3_D1", "group__arduino-header-r3.html#ga958753d2ea3ea04ac80e4d4a7b401ff0", null ],
+    [ "ARDUINO_HEADER_R3_D10", "group__arduino-header-r3.html#gab974189e48c70f94053d8bb172e69fb8", null ],
+    [ "ARDUINO_HEADER_R3_D11", "group__arduino-header-r3.html#gad030916657d94f35080a92113314ff8e", null ],
+    [ "ARDUINO_HEADER_R3_D12", "group__arduino-header-r3.html#ga8de4df2b6a532647842b910a6e419685", null ],
+    [ "ARDUINO_HEADER_R3_D13", "group__arduino-header-r3.html#gabc188447a3d7fe5fd804156924a297b8", null ],
+    [ "ARDUINO_HEADER_R3_D14", "group__arduino-header-r3.html#ga210b8d02106c009017a1520e126a3a08", null ],
+    [ "ARDUINO_HEADER_R3_D15", "group__arduino-header-r3.html#ga612a0390fef6f6c6c00205eae659e8ed", null ],
+    [ "ARDUINO_HEADER_R3_D2", "group__arduino-header-r3.html#gab0299dfa6ad7d2f2c23a078daf313c29", null ],
+    [ "ARDUINO_HEADER_R3_D3", "group__arduino-header-r3.html#ga11ea3664fb3c2b5aac319e6f317f28ec", null ],
+    [ "ARDUINO_HEADER_R3_D4", "group__arduino-header-r3.html#ga91e4124d55f34aaeb1f9277c3c5d0f2e", null ],
+    [ "ARDUINO_HEADER_R3_D5", "group__arduino-header-r3.html#gac6c91eadc260ff22e18654f87fb2fff1", null ],
+    [ "ARDUINO_HEADER_R3_D6", "group__arduino-header-r3.html#gaa018a91efd441b363a162c4dca837bc2", null ],
+    [ "ARDUINO_HEADER_R3_D7", "group__arduino-header-r3.html#gac5b245b8a570ce1cc975a6eaac2e8cc7", null ],
+    [ "ARDUINO_HEADER_R3_D8", "group__arduino-header-r3.html#gad93489a0ea837175a2116cc97389cb18", null ],
+    [ "ARDUINO_HEADER_R3_D9", "group__arduino-header-r3.html#gaa64cb96e89c19354c4801650576fe208", null ]
+];

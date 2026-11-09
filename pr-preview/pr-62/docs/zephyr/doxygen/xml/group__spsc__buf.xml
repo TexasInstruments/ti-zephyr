@@ -1,0 +1,508 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="group__spsc__buf" kind="group">
+    <compoundname>spsc_buf</compoundname>
+    <title>SPSC (Single producer, single consumer) packet buffer API</title>
+    <innerclass refid="structspsc__pbuf__common" prot="public">spsc_pbuf_common</innerclass>
+    <innerclass refid="structspsc__pbuf__ext__cache" prot="public">spsc_pbuf_ext_cache</innerclass>
+    <innerclass refid="structspsc__pbuf__ext__nocache" prot="public">spsc_pbuf_ext_nocache</innerclass>
+    <innerclass refid="structspsc__pbuf" prot="public">spsc_pbuf</innerclass>
+    <innergroup refid="group__SPSC__PBUF__FLAGS">SPSC packet buffer flags</innergroup>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="group__spsc__buf_1ga02955c21404d71ac3ceeb9aa82cb18af" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="stdint_8h_1a0a8582351ac627ee8bde2973c825e47f" kindref="member">uint32_t</ref></type>
+        <definition>static uint32_t spsc_pbuf_capacity</definition>
+        <argsstring>(struct spsc_pbuf *pb)</argsstring>
+        <name>spsc_pbuf_capacity</name>
+        <param>
+          <type>struct <ref refid="structspsc__pbuf" kindref="compound">spsc_pbuf</ref> *</type>
+          <declname>pb</declname>
+        </param>
+        <briefdescription>
+<para>Get buffer capacity. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This value is the amount of data that is dedicated for storing packets. Since each packet is prefixed with 2 byte length header, longest possible packet is less than that.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pb</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A buffer.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Packet buffer capacity. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_pbuf.h" line="123" column="24" bodyfile="zephyr/sys/spsc_pbuf.h" bodystart="123" bodyend="126"/>
+      </memberdef>
+      <memberdef kind="function" id="group__spsc__buf_1ga6db38d6a0200a2468db02815cfe3bb6e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>struct <ref refid="structspsc__pbuf" kindref="compound">spsc_pbuf</ref> *</type>
+        <definition>struct spsc_pbuf * spsc_pbuf_init</definition>
+        <argsstring>(void *buf, size_t blen, uint32_t flags)</argsstring>
+        <name>spsc_pbuf_init</name>
+        <param>
+          <type>void *</type>
+          <declname>buf</declname>
+        </param>
+        <param>
+          <type><ref refid="retained__mem_8h_1a36713c339c3c5ec6d6bd481480bdb6f9" kindref="member">size_t</ref></type>
+          <declname>blen</declname>
+        </param>
+        <param>
+          <type><ref refid="stdint_8h_1a0a8582351ac627ee8bde2973c825e47f" kindref="member">uint32_t</ref></type>
+          <declname>flags</declname>
+        </param>
+        <briefdescription>
+<para>Initialize the packet buffer. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function initializes the packet buffer on top of a dedicated memory region.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>buf</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to a memory region on which buffer is created. When cache is used it must be aligned to Z_SPSC_PBUF_DCACHE_LINE, otherwise it must be 32 bit word aligned. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>blen</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Length of the buffer. Must be large enough to contain the internal structure and at least two bytes of data (one is reserved for written messages length). </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>flags</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Option flags. See <ref refid="group__SPSC__PBUF__FLAGS" kindref="compound">SPSC packet buffer flags</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>struct spsc_pbuf* Pointer to the created buffer. The pointer points to the same address as buf. </para>
+</simplesect>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>NULL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Invalid buffer alignment. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_pbuf.h" line="147" column="16" declfile="zephyr/sys/spsc_pbuf.h" declline="147" declcolumn="16"/>
+      </memberdef>
+      <memberdef kind="function" id="group__spsc__buf_1ga492c895f1723567445ce23c73ed3d0ef" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int spsc_pbuf_write</definition>
+        <argsstring>(struct spsc_pbuf *pb, const char *buf, uint16_t len)</argsstring>
+        <name>spsc_pbuf_write</name>
+        <param>
+          <type>struct <ref refid="structspsc__pbuf" kindref="compound">spsc_pbuf</ref> *</type>
+          <declname>pb</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>buf</declname>
+        </param>
+        <param>
+          <type><ref refid="stdint_8h_1a5debae8b2a1ec20a6694c0c443ee399e" kindref="member">uint16_t</ref></type>
+          <declname>len</declname>
+        </param>
+        <briefdescription>
+<para>Write specified amount of data to the packet buffer. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>It combines <ref refid="group__spsc__buf_1ga44485fd6756810f56c6bf7d41b3b447c" kindref="member">spsc_pbuf_alloc</ref> and <ref refid="group__spsc__buf_1ga664da6f26fd99e7f1ce76828273408a0" kindref="member">spsc_pbuf_commit</ref> into a single call.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pb</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A buffer to which to write. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>buf</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the data to be written to the buffer. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>len</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of bytes to be written to the buffer. Must be positive but less than <ref refid="group__spsc__buf_1gaec777dd30be52c1773dcf9e9ec1f6f9d" kindref="member">SPSC_PBUF_MAX_LEN</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>int</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of bytes written, negative error code on fail. -EINVAL, if len == 0. -ENOMEM, if len is bigger than the buffer can fit. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_pbuf.h" line="162" column="5" declfile="zephyr/sys/spsc_pbuf.h" declline="162" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__spsc__buf_1ga44485fd6756810f56c6bf7d41b3b447c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int spsc_pbuf_alloc</definition>
+        <argsstring>(struct spsc_pbuf *pb, uint16_t len, char **buf)</argsstring>
+        <name>spsc_pbuf_alloc</name>
+        <param>
+          <type>struct <ref refid="structspsc__pbuf" kindref="compound">spsc_pbuf</ref> *</type>
+          <declname>pb</declname>
+        </param>
+        <param>
+          <type><ref refid="stdint_8h_1a5debae8b2a1ec20a6694c0c443ee399e" kindref="member">uint16_t</ref></type>
+          <declname>len</declname>
+        </param>
+        <param>
+          <type>char **</type>
+          <declname>buf</declname>
+        </param>
+        <briefdescription>
+<para>Allocate space in the packet buffer. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function attempts to allocate <computeroutput>len</computeroutput> bytes of continuous memory within the packet buffer. An internal padding is added at the end of the buffer, if wrapping occurred during allocation. Apart from padding, allocation does not change the state of the buffer so if after allocation packet is not needed a commit is not needed.</para>
+<para>Allocated buffer must be committed (<ref refid="group__spsc__buf_1ga664da6f26fd99e7f1ce76828273408a0" kindref="member">spsc_pbuf_commit</ref>) to make the packet available for reading.</para>
+<para>Packet buffer ensures that allocated buffers are 32 bit word aligned.</para>
+<para><simplesect kind="note"><para>If data cache is used, it is the user responsibility to write back the new data.</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">pb</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A buffer to which to write. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">len</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Allocation length. Must be positive. If less than <ref refid="group__spsc__buf_1gaec777dd30be52c1773dcf9e9ec1f6f9d" kindref="member">SPSC_PBUF_MAX_LEN</ref> then if requested length cannot be allocated, an attempt to allocate largest possible is performed (which may include adding wrap padding). If <ref refid="group__spsc__buf_1gaec777dd30be52c1773dcf9e9ec1f6f9d" kindref="member">SPSC_PBUF_MAX_LEN</ref> is used then an attempt to allocate largest buffer without applying wrap padding is performed. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="out">buf</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Location where buffer address is written on successful allocation.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>non-negative amount of space that got allocated. Can be equal or smaller than p len. </para>
+</simplesect>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>-EINVAL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if <computeroutput>len</computeroutput> is forbidden. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_pbuf.h" line="192" column="5" declfile="zephyr/sys/spsc_pbuf.h" declline="192" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__spsc__buf_1ga664da6f26fd99e7f1ce76828273408a0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void spsc_pbuf_commit</definition>
+        <argsstring>(struct spsc_pbuf *pb, uint16_t len)</argsstring>
+        <name>spsc_pbuf_commit</name>
+        <param>
+          <type>struct <ref refid="structspsc__pbuf" kindref="compound">spsc_pbuf</ref> *</type>
+          <declname>pb</declname>
+        </param>
+        <param>
+          <type><ref refid="stdint_8h_1a5debae8b2a1ec20a6694c0c443ee399e" kindref="member">uint16_t</ref></type>
+          <declname>len</declname>
+        </param>
+        <briefdescription>
+<para>Commit packet to the buffer. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Commit a packet which was previously allocated (<ref refid="group__spsc__buf_1ga44485fd6756810f56c6bf7d41b3b447c" kindref="member">spsc_pbuf_alloc</ref>). If cache is used, cache writeback is performed on the written data.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pb</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A buffer to which to write. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>len</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Packet length. Must be equal or less than the length used for allocation. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_pbuf.h" line="203" column="6" declfile="zephyr/sys/spsc_pbuf.h" declline="203" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group__spsc__buf_1ga24d4cc2a41fd2c42c6085e106bf71c0c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int spsc_pbuf_read</definition>
+        <argsstring>(struct spsc_pbuf *pb, char *buf, uint16_t len)</argsstring>
+        <name>spsc_pbuf_read</name>
+        <param>
+          <type>struct <ref refid="structspsc__pbuf" kindref="compound">spsc_pbuf</ref> *</type>
+          <declname>pb</declname>
+        </param>
+        <param>
+          <type>char *</type>
+          <declname>buf</declname>
+        </param>
+        <param>
+          <type><ref refid="stdint_8h_1a5debae8b2a1ec20a6694c0c443ee399e" kindref="member">uint16_t</ref></type>
+          <declname>len</declname>
+        </param>
+        <briefdescription>
+<para>Read specified amount of data from the packet buffer. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Single read allows to read the message send by the single write. The provided p buf must be big enough to store the whole message.</para>
+<para>It combines <ref refid="group__spsc__buf_1ga6727d38e40a780f9116d5d7b1c0ae8c4" kindref="member">spsc_pbuf_claim</ref> and <ref refid="group__spsc__buf_1ga28ea4f10fcab4d04f9e831f2057822ca" kindref="member">spsc_pbuf_free</ref> into a single call.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pb</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A buffer from which data will be read. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>buf</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Data pointer to which read data will be written. If NULL, len of stored message is returned. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>len</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of bytes to be read from the buffer. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>int</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Bytes read, negative error code on fail. Bytes to be read, if buf == NULL. -ENOMEM, if message can not fit in provided buf. -EAGAIN, if not whole message is ready yet. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_pbuf.h" line="222" column="5" declfile="zephyr/sys/spsc_pbuf.h" declline="222" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__spsc__buf_1ga6727d38e40a780f9116d5d7b1c0ae8c4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="stdint_8h_1a5debae8b2a1ec20a6694c0c443ee399e" kindref="member">uint16_t</ref></type>
+        <definition>uint16_t spsc_pbuf_claim</definition>
+        <argsstring>(struct spsc_pbuf *pb, char **buf)</argsstring>
+        <name>spsc_pbuf_claim</name>
+        <param>
+          <type>struct <ref refid="structspsc__pbuf" kindref="compound">spsc_pbuf</ref> *</type>
+          <declname>pb</declname>
+        </param>
+        <param>
+          <type>char **</type>
+          <declname>buf</declname>
+        </param>
+        <briefdescription>
+<para>Claim packet from the buffer. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>It claims a single packet from the buffer in the order of the commitment by the <ref refid="group__spsc__buf_1ga664da6f26fd99e7f1ce76828273408a0" kindref="member">spsc_pbuf_commit</ref> function. The first committed packet will be claimed first. The returned buffer is 32 bit word aligned and points to the continuous memory. Claimed packet must be freed using the <ref refid="group__spsc__buf_1ga28ea4f10fcab4d04f9e831f2057822ca" kindref="member">spsc_pbuf_free</ref> function.</para>
+<para><simplesect kind="note"><para>If data cache is used, cache is invalidate on the packet.</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">pb</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A buffer from which packet will be claimed. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="inout">buf</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A location where claimed packet address is written. It is 32 bit word aligned and points to the continuous memory.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>0</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>No packets in the buffer. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>positive packet length. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_pbuf.h" line="241" column="10" declfile="zephyr/sys/spsc_pbuf.h" declline="241" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="group__spsc__buf_1ga28ea4f10fcab4d04f9e831f2057822ca" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void spsc_pbuf_free</definition>
+        <argsstring>(struct spsc_pbuf *pb, uint16_t len)</argsstring>
+        <name>spsc_pbuf_free</name>
+        <param>
+          <type>struct <ref refid="structspsc__pbuf" kindref="compound">spsc_pbuf</ref> *</type>
+          <declname>pb</declname>
+        </param>
+        <param>
+          <type><ref refid="stdint_8h_1a5debae8b2a1ec20a6694c0c443ee399e" kindref="member">uint16_t</ref></type>
+          <declname>len</declname>
+        </param>
+        <briefdescription>
+<para>Free the packet to the buffer. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Packet must be claimed (<ref refid="group__spsc__buf_1ga6727d38e40a780f9116d5d7b1c0ae8c4" kindref="member">spsc_pbuf_claim</ref>) before it can be freed.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pb</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A packet buffer from which packet was claimed. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>len</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Claimed packet length. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_pbuf.h" line="251" column="6" declfile="zephyr/sys/spsc_pbuf.h" declline="251" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group__spsc__buf_1gae3f455db53147709d40a7a86406a9311" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int spsc_pbuf_get_utilization</definition>
+        <argsstring>(struct spsc_pbuf *pb)</argsstring>
+        <name>spsc_pbuf_get_utilization</name>
+        <param>
+          <type>struct <ref refid="structspsc__pbuf" kindref="compound">spsc_pbuf</ref> *</type>
+          <declname>pb</declname>
+        </param>
+        <briefdescription>
+<para>Get maximum utilization of the packet buffer. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Function can be used to tune the buffer size. Feature is enabled by CONFIG_SPSC_PBUF_UTILIZATION. Utilization is updated by the consumer.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>pb</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A packet buffer.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>-ENOTSUP</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Feature not enabled. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>non-negative Maximum utilization. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_pbuf.h" line="264" column="5" declfile="zephyr/sys/spsc_pbuf.h" declline="264" declcolumn="5"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="group__spsc__buf_1ga01f1a8120df7afe197f5ed9d1c667370" prot="public" static="no">
+        <name>CONFIG_SPSC_PBUF_REMOTE_DCACHE_LINE</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_pbuf.h" line="50" column="9" bodyfile="zephyr/sys/spsc_pbuf.h" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__spsc__buf_1gaec777dd30be52c1773dcf9e9ec1f6f9d" prot="public" static="no">
+        <name>SPSC_PBUF_MAX_LEN</name>
+        <initializer>0xFF00</initializer>
+        <briefdescription>
+<para>Maximum packet length. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_pbuf.h" line="57" column="9" bodyfile="zephyr/sys/spsc_pbuf.h" bodystart="57" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Single producer, single consumer packet buffer API. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

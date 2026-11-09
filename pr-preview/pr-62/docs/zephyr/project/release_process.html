@@ -1,0 +1,989 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Release Process &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=b2ece5be" />
+      <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=a5c4661c" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/project/release_process.html" />
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script src="../_static/tabs.js?v=3030b3cb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Feature Tracking" href="proposals.html" />
+    <link rel="prev" title="TSC Working Groups" href="working_groups.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Project and Governance</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tsc.html">Technical Steering Committee (TSC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_roles.html">TSC Project Roles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="working_groups.html">TSC Working Groups</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Release Process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#development-phase">Development Phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stabilization-phase">Stabilization Phase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#merge-criteria">Merge Criteria</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#release-criteria">Release Criteria</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#blocker-bugs">Blocker Bugs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#release-milestones">Release Milestones</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#releases">Releases</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#long-term-support-lts">Long Term Support (LTS)</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#product-focused">Product Focused</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#extended-stabilisation-period">Extended Stabilisation Period</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#stable-apis">Stable APIs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#quality-driven-process">Quality Driven Process</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#long-term-support-and-maintenance">Long Term Support and Maintenance</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#auditable-code-base">Auditable Code Base</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#host-tools-support-policy">Host Tools Support Policy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#python-version-policy">Python Version Policy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hardware-support-tiers">Hardware Support Tiers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tier-0-emulation-platforms">Tier 0: Emulation Platforms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tier-1-supported-platforms">Tier 1: Supported Platforms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tier-2-community-platforms">Tier 2: Community Platforms</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tier-3-deprecated-and-unsupported-platforms">Tier 3: Deprecated and unsupported Platforms</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#release-procedure">Release Procedure</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#release-checklist">Release Checklist</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tagging">Tagging</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="proposals.html">Feature Tracking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code_flow.html">Code Flow and Branches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev_env_and_tools.html">Development Environment and Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="issues.html">Bug Reporting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="communication.html">Communication and Collaboration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documentation.html">Code Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#terminology">Terminology</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="index.html">Project and Governance</a> &raquo;</li>
+  
+  <li>Release Process</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/project/release_process.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27project%2Frelease_process%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Documentation&env=-+Page%3A+project%2Frelease_process%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="release-process">
+<span id="id1"></span><h1>Release Process<a class="headerlink" href="#release-process" title="Link to this heading"></a></h1>
+<p>The Zephyr project releases on a time-based cycle, rather than a feature-driven
+one. Zephyr releases represent an aggregation of the work of many contributors,
+companies, and individuals from the community.</p>
+<p>A time-based release process enables the Zephyr project to provide users with a
+balance of the latest technologies and features and excellent overall quality. A
+roughly 6-month release cycle allows the project to coordinate development of
+the features that have actually been implemented, allowing the project to
+maintain the quality of the overall release without delays because of one or two
+features that are not ready yet.</p>
+<p>Each release period will consist of a development phase followed by a
+stabilization phase. Release candidates will be created during the stabilization
+phase.</p>
+<figure class="align-center" id="id4">
+<a class="reference internal image-reference" href="../_images/release_cycle.svg"><img alt="Release Cycle" src="../_images/release_cycle.svg" style="width: 80%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Release Cycle</span><a class="headerlink" href="#id4" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The milestones for the current major version can be found on the
+<a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/wiki/Release-Management">Official GitHub Wiki</a>.
+Information on previous releases can be found <a class="reference internal" href="../releases/index.html#zephyr-release-notes"><span class="std std-ref">here</span></a>.</p>
+</div>
+<section id="development-phase">
+<h2>Development Phase<a class="headerlink" href="#development-phase" title="Link to this heading"></a></h2>
+<p>A relatively straightforward discipline is followed with regard to the merging
+of patches for each release.  At the beginning of each development cycle, the
+main branch is said to be open for development.  At that time, code which is deemed to be
+sufficiently stable (and which is accepted by the maintainers and the wide community) is
+merged into the mainline tree.  The bulk of changes for a new development cycle
+(and all of the major changes) will be merged during this time.</p>
+<p>The development phase lasts for approximately five months.  At the end of this time,
+the release owner will declare that the development phase is over and releases the first
+of the release candidates.  For the codebase release which is destined to be
+3.1.0, for example, the release which happens at the end of the development phase
+will be called 3.1.0-rc1.  The -rc1 release is the signal that the time to merge
+new features has passed, and that the time to stabilize the next release of the
+code base has begun.</p>
+</section>
+<section id="stabilization-phase">
+<h2>Stabilization Phase<a class="headerlink" href="#stabilization-phase" title="Link to this heading"></a></h2>
+<p>Over the following weeks and depending on the release milestone, only stabilization,
+cosmetic updates, bug fixes, documentation improvements, and new tests for
+existing features are permitted. (See <a class="reference internal" href="#release-milestones"><span class="std std-ref">table</span></a> below).</p>
+<p>On occasion, more significant changes and new features will be allowed, but such
+occasions are rare and require a TSC approval and a justification. As a general
+rule, if you miss submitting your code during the development phase for a given
+feature, the best thing to do is to wait for the next development cycle. (An
+occasional exception is made for drivers for previously unsupported hardware; if
+they do not touch any other in-tree code, they cannot cause regressions and
+should be safe to add at any time).</p>
+<p>As fixes make their way into the mainline, the patch rate will slow over time.
+The mainline release owner releases new -rc drops once or twice a week; a normal
+series will get up to somewhere between -rc4 and -rc6 before the code base is
+considered to be sufficiently stable and the release criteria have been achieved
+at which point the final 3.1.0 release is made.</p>
+<p>At that point, the whole process starts over again.</p>
+</section>
+<section id="merge-criteria">
+<span id="id2"></span><h2>Merge Criteria<a class="headerlink" href="#merge-criteria" title="Link to this heading"></a></h2>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/img_release_activity.png"><img alt="Release Activity" src="../_images/img_release_activity.png" style="width: 663px;" />
+</a>
+</figure>
+<ul class="simple">
+<li><p>All <a class="reference internal" href="../contribute/contributor_expectations.html#pr-requirements"><span class="std std-ref">PR Requirements</span></a> must be met.</p></li>
+<li><p>Minimal of 2 approvals, including an approval by the designated assignee.</p></li>
+<li><p>Pull requests should be reviewed by at least a maintainer or collaborator of
+each affected area; Unless the changes to a given area are considered trivial
+enough, in which case approvals by other affected subsystems
+maintainers/collaborators would suffice.</p></li>
+<li><p>Four eye principle on the organisation level. We already require at least 2
+approvals (basic four eye principle), however, such reviews and approvals
+might be unintentionally biased in the case where the submitter is from the
+same organisation as the approvers. To allow for project wide review and
+approvals, the merge criteria is extended with the guidelines below:</p>
+<ul>
+<li><p>Changes or additions to common and shared code shall have approvals from
+different organisations (at least one approval from an
+organisation different than the submitters’).
+Common and shared code is defined as anything that does not fall under
+<code class="file docutils literal notranslate"><span class="pre">soc</span></code>, <code class="file docutils literal notranslate"><span class="pre">boards</span></code> and <code class="file docutils literal notranslate"><span class="pre">drivers/*/*</span></code>.</p></li>
+<li><p>Changes or additions to hardware support (driver, SoC, boards) shall at
+least have the merger be from a different organisation. This applies only
+to implementation of an API supporting vendor specific hardware and not the
+APIs.</p></li>
+<li><p>Release engineers may make exceptions for areas with contributions primarily
+coming from one organisation and where reviews from other organisations are
+not possible, however, merges shall be completed by a person from a different
+organisation. In such cases, the minimum review period of at least 2 days
+shall be strictly followed to allow for additional reviews.</p></li>
+<li><p>Release engineers shall not merge code changes originating and reviewed
+only by their own organisation. To be able to merge such changes, at least
+one review shall be from a different organisation.</p></li>
+</ul>
+</li>
+<li><p>A minimum review period of 2 business days, 4 hours for trivial changes (see
+<a class="reference internal" href="dev_env_and_tools.html#review-time"><span class="std std-ref">Give reviewers time to review before code merge</span></a>).</p></li>
+<li><p>Hotfixes can be merged at any time after CI has passed and are excluded from
+most of the conditions listed above.</p></li>
+<li><p>All required checks are passing:</p>
+<ul>
+<li><p>Device Tree</p></li>
+<li><p>Documentation</p></li>
+<li><p>Code linters (Gitlint, Pylint, Ruff, Sphinx, etc.)</p></li>
+<li><p>Identity/Emails</p></li>
+<li><p>Kconfig</p></li>
+<li><p>License checks</p></li>
+<li><p>Checkpatch (Coding Style)</p></li>
+<li><p>Integration Tests (Via twister) on emulation/simulation platforms</p></li>
+<li><p>Simulated Bluetooth Tests</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="release-criteria">
+<span id="release-quality-criteria"></span><h2>Release Criteria<a class="headerlink" href="#release-criteria" title="Link to this heading"></a></h2>
+<p>The main motivation is to clearly have the criteria in place that must be met
+for a release. This will help define when a release is “done” in terms that most
+people can understand and in ways that help new people to understand the process
+and participate in creating successful releases:</p>
+<ul class="simple">
+<li><p>The release criteria documents all the requirements of our target audience for
+each Zephyr release</p></li>
+<li><p>The target audiences for each release can be different, and may overlap</p></li>
+<li><p>The criteria at any given time are not set in stone: there may be requirements
+that have been overlooked, or that are new, and in these cases, the criteria
+should be expanded to ensure all needs are covered.</p></li>
+</ul>
+<p>Below is the high level criteria to be met for each release:</p>
+<ul class="simple">
+<li><p>No blocker bugs / blocking issues</p></li>
+<li><p>All relevant tests shall pass on <code class="docutils literal notranslate"><span class="pre">Tier</span> <span class="pre">0</span></code> platforms</p></li>
+<li><p>All relevant tests shall pass on Tier 0 and 1 platforms (at least 1 per
+architecture/architecture variant/Hardware features)</p></li>
+<li><p>All applicable samples/tests shall build on Tiers 0, 1 and 2</p></li>
+<li><p>All high and critical static analysis and security issues addressed</p></li>
+<li><p>Release Notes are up-to-date.</p></li>
+</ul>
+<section id="blocker-bugs">
+<h3>Blocker Bugs<a class="headerlink" href="#blocker-bugs" title="Link to this heading"></a></h3>
+<p>Blocker bug process kicks in during the release process and is in effect after the
+feature freeze milestone. An issue labeled as a blocker practically blocks a
+release from happening. All blocker bugs shall be resolved before a release is
+created.</p>
+<p>A fix for a bug that is granted <code class="docutils literal notranslate"><span class="pre">blocker</span></code> status can be merged to ‘main’ and included in
+the release all the way until the final release date.</p>
+<p>Bugs of moderate severity and higher that have impact on all users are typically
+the candidates to be promoted to blocker bugs</p>
+<p>Contributors and member of the release engineering team shall follow these
+guidelines for release blocker bugs:</p>
+<ul class="simple">
+<li><p>Only mark bugs as blockers if the software (Zephyr) must not be released with
+the bug present.</p></li>
+<li><p>All collaborators can add or remove blocking labels.</p></li>
+<li><p>Evaluate bugs as potential blockers based on their severity and prevalence.</p></li>
+<li><p>Provide detailed rationale whenever adding or removing a blocking label.</p></li>
+<li><p>Ensure all blockers have the milestone tagged.</p></li>
+<li><p>Release managers have final say on blocking status; contact them with any questions.</p></li>
+</ul>
+</section>
+</section>
+<section id="release-milestones">
+<span id="id3"></span><h2>Release Milestones<a class="headerlink" href="#release-milestones" title="Link to this heading"></a></h2>
+<table class="docutils align-default" id="id5">
+<caption><span class="caption-text">Release Milestones</span><a class="headerlink" href="#id5" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 9.1%" />
+<col style="width: 15.2%" />
+<col style="width: 60.6%" />
+<col style="width: 15.2%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Timeline</p></th>
+<th class="head"><p>Checkpoint</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Owner</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>T-5M</p></td>
+<td><p>Planning</p></td>
+<td><p>Finalize dates for release, Assign release owner and agree on project wide goals for this release.</p></td>
+<td><p>TSC</p></td>
+</tr>
+<tr class="row-odd"><td><p>T-7W</p></td>
+<td><p>Review target milestones</p></td>
+<td><p>Finalize target milestones for features in flight.</p></td>
+<td><p>Release Engineering</p></td>
+</tr>
+<tr class="row-even"><td><p>T-5W</p></td>
+<td><p>Release Announcement</p></td>
+<td><p>Release owner announces feature freeze and timeline for release.</p></td>
+<td><p>Release Manager</p></td>
+</tr>
+<tr class="row-odd"><td><p>T-4W</p></td>
+<td><p>Release Timeline reminder</p></td>
+<td><p>Release owner sends a reminder of the feature freeze and timeline for release.</p></td>
+<td><p>Release Manager</p></td>
+</tr>
+<tr class="row-even"><td><p>T-3W</p></td>
+<td><p>Feature Freeze (RC1)</p></td>
+<td><p>After RC1, no new features may be introduced. Only stabilization,
+cosmetic updates, bug fixes, documentation improvements, and new tests
+for existing features are permitted.</p></td>
+<td><p>Release Engineering</p></td>
+</tr>
+<tr class="row-odd"><td><p>T-2W</p></td>
+<td><p>2nd Release Candidate</p></td>
+<td><p>No new features after RC2, ONLY stabilization and cosmetic changes, bug and doc fixes are allowed.</p></td>
+<td><p>Release Manager</p></td>
+</tr>
+<tr class="row-even"><td><p>T-1W</p></td>
+<td><p>Hard Freeze (RC3)</p></td>
+<td><p>Only blocker bug fixes after RC3, documentation improvements and changes
+to release notes are allowed.
+Release notes need to be complete by this checkpoint. Release Criteria is
+met.</p></td>
+<td><p>Release Manager</p></td>
+</tr>
+<tr class="row-odd"><td><p>T-0W</p></td>
+<td><p>Release</p></td>
+<td></td>
+<td><p>Release Manager</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="releases">
+<h2>Releases<a class="headerlink" href="#releases" title="Link to this heading"></a></h2>
+<section id="long-term-support-lts">
+<span id="release-process-lts"></span><h3>Long Term Support (LTS)<a class="headerlink" href="#long-term-support-lts" title="Link to this heading"></a></h3>
+<p>Long-term support releases are designed to be supported and maintained
+for an extended period and are the recommended release for
+products and the auditable branch used for certification.</p>
+<p>An LTS release is defined as:</p>
+<ul class="simple">
+<li><p><strong>Product focused</strong></p></li>
+<li><p><strong>Extended Stabilisation period</strong>: Allow for more testing and bug fixing</p></li>
+<li><p><strong>Stable APIs</strong></p></li>
+<li><p><strong>Quality Driven Process</strong></p></li>
+<li><p><strong>Long Term</strong>: Maintained for an extended period of time (at least 5 years).</p></li>
+</ul>
+<section id="product-focused">
+<h4>Product Focused<a class="headerlink" href="#product-focused" title="Link to this heading"></a></h4>
+<p>Zephyr LTS is the recommended release for product makers with an extended
+support and maintenance which includes general stability and bug fixes,
+security fixes.</p>
+<p>An LTS includes both mature and new features. API and feature maturity is
+documented and tracked. The footprint and scope of mature and stable APIs expands
+as we move from one LTS to the next giving users access to bleeding edge features
+and new hardware while keeping a stable foundation that evolves over time.</p>
+</section>
+<section id="extended-stabilisation-period">
+<h4>Extended Stabilisation Period<a class="headerlink" href="#extended-stabilisation-period" title="Link to this heading"></a></h4>
+<p>Zephyr LTS development cycle differs from regular releases and has an extended
+stabilization period. Feature freeze of regular releases happens 3-4 weeks
+before the scheduled release date. The stabilization period for LTS is extended
+by 3 weeks with the feature freeze occurring 6-7 weeks before the anticipated
+release date. The time between code freeze and release date is extended in this case.</p>
+</section>
+<section id="stable-apis">
+<h4>Stable APIs<a class="headerlink" href="#stable-apis" title="Link to this heading"></a></h4>
+<p>Zephyr LTS provides a stable and long-lived foundation for developing
+products. To guarantee stability of the APIs and the implementation of such
+APIs it is required that any release software that makes the core of the OS
+went through the Zephyr API lifecycle and stabilized over at least 2 releases.
+This guarantees that we release many of the highlighted and core features with
+mature and well-established implementations with stable APIs that are
+supported during the lifetime of the release LTS.</p>
+<ul>
+<li><p>API Freeze (LTS - 2)</p>
+<ul class="simple">
+<li><p>All stable APIs need to be frozen 2 releases before an LTS. APIs can be extended
+with additional features, but the core implementation is not modified. This
+is valid for the following subsystems for example:</p>
+<ul>
+<li><p>Device Drivers (i2c.h, spi.h)…</p></li>
+<li><p>Kernel (k_*):</p></li>
+<li><p>OS services (logging,debugging, ..)</p></li>
+<li><p>DTS: API and bindings stability</p></li>
+<li><p>Kconfig</p></li>
+</ul>
+</li>
+<li><p>New APIs for experimental features can be added at any time as long as they
+are standalone and documented as experimental or unstable features/APIs.</p></li>
+</ul>
+</li>
+<li><p>Feature Freeze (LTS - 1)
+- No new features or overhaul/restructuring of code covering major LTS features.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Kernel + Base OS</p></li>
+<li><p>Additional advertised LTS features</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><p>Auxiliary features on top of and/or extending the base OS and advertised LTS features
+can be added at any time and should be marked as experimental if applicable</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="quality-driven-process">
+<h4>Quality Driven Process<a class="headerlink" href="#quality-driven-process" title="Link to this heading"></a></h4>
+<p>The Zephyr project follows industry standards and processes with the goal of
+providing a quality oriented releases. This is achieved by providing the
+following products to track progress, integrity and quality of the software
+components provided by the project:</p>
+<ul class="simple">
+<li><p>Compliance with published coding guidelines, style guides and naming
+conventions and documentation of deviations.</p></li>
+<li><p>Static analysis reports</p>
+<ul>
+<li><p>Regular static analysis on the complete tree using available commercial and
+open-source tools, and documentation of deviations and false positives.</p></li>
+</ul>
+</li>
+<li><p>Documented components and APIS</p></li>
+<li><p>Requirements Catalog</p></li>
+<li><p>Verification Plans</p></li>
+<li><p>Verification Reports</p></li>
+<li><p>Coverage Reports</p></li>
+<li><p>Requirements Traceability Matrix (RTM)</p></li>
+<li><p>SPDX License Reports</p></li>
+</ul>
+<p>Each release is created with the above products to document the quality and the
+state of the software when it was released.</p>
+</section>
+<section id="long-term-support-and-maintenance">
+<h4>Long Term Support and Maintenance<a class="headerlink" href="#long-term-support-and-maintenance" title="Link to this heading"></a></h4>
+<p>LTS releases are published every 2.5 to 3 years and are branched and maintained independently from
+the main tree for approximately 5 years after they were released.</p>
+<p>Support is provided in three main phases:</p>
+<ul class="simple">
+<li><p><strong>Phase 1 (first 2 years):</strong> General bug fixes and security fixes, including platform and driver
+fixes.</p></li>
+<li><p><strong>Phase 2 (following 3+ years):</strong> Security and OS stability fixes only.</p></li>
+<li><p><strong>Phase 3:</strong> Extended support may be available through third parties (details to be determined).</p></li>
+</ul>
+<p>Support for a given LTS release (LTS <em>N</em>) continues until the initial release of the LTS two
+versions ahead (LTS <em>N+2</em>). A final release of LTS <em>N</em> occurs shortly after the initial release of
+LTS <em>N+2</em>.</p>
+<p>The list of currently supported LTS releases and their EOL dates can be found
+<a class="reference internal" href="../releases/index.html#supported-releases"><span class="std std-ref">here</span></a>.</p>
+<figure class="align-center" id="id6">
+<a class="reference internal image-reference" href="../_images/lts.svg"><img alt="Long Term Support Release" src="../_images/lts.svg" style="width: 80%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Long Term Support Release</span><a class="headerlink" href="#id6" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Changes and fixes flow in both directions. However, changes from main branch to an
+LTS branch will be limited to fixes that apply to both branches and for existing
+features only.</p>
+<p>All fixes for an LTS branch that apply to the mainline tree shall be submitted to
+mainline tree as well.</p>
+</section>
+</section>
+<section id="auditable-code-base">
+<h3>Auditable Code Base<a class="headerlink" href="#auditable-code-base" title="Link to this heading"></a></h3>
+<p>An auditable code base is to be established from a defined subset of Zephyr OS
+features and will be limited in scope. The LTS,  development tree, and the
+auditable code bases shall be kept in sync after the audit branch is created,
+but with a more rigorous process in place for adding new features into the audit
+branch used for certification.</p>
+<p>This process will be applied before new features move into the
+auditable code base.</p>
+<p>The initial and subsequent certification targets will be decided by the Zephyr project
+governing board.</p>
+<p>Processes to achieve selected certification will be determined by the Security and
+Safety Working Groups and coordinated with the TSC.</p>
+</section>
+</section>
+<section id="host-tools-support-policy">
+<h2>Host Tools Support Policy<a class="headerlink" href="#host-tools-support-policy" title="Link to this heading"></a></h2>
+</section>
+<section id="python-version-policy">
+<h2>Python Version Policy<a class="headerlink" href="#python-version-policy" title="Link to this heading"></a></h2>
+<p>Zephyr tracks the <a class="reference external" href="https://devguide.python.org/versions/">Python upstream release schedule</a> when determining its minimum supported Python
+version.</p>
+<p>The minimum supported version is selected to balance long-term support and practical availability in
+mainstream, actively supported Linux distributions (e.g. current Ubuntu LTS and Debian Stable
+releases).</p>
+<p>A Python version is considered for removal when:</p>
+<ul class="simple">
+<li><p>It is approaching or has reached upstream end-of-life (EOL), and</p></li>
+<li><p>Newer Python versions are broadly available in current, actively supported major Linux
+distributions.</p></li>
+</ul>
+</section>
+<section id="hardware-support-tiers">
+<h2>Hardware Support Tiers<a class="headerlink" href="#hardware-support-tiers" title="Link to this heading"></a></h2>
+<section id="tier-0-emulation-platforms">
+<h3>Tier 0: Emulation Platforms<a class="headerlink" href="#tier-0-emulation-platforms" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Tests are both built and run in these platforms in CI, and therefore runtime
+failures can block Pull Requests.</p></li>
+<li><p>Supported by the Zephyr project itself, commitment to fix bugs in releases.</p></li>
+<li><p>One Tier 0 platform is required for each new architecture.</p></li>
+<li><p>Bugs reported against platforms of this tier are to be evaluated and treated as
+a general bug in Zephyr and should be dealt with the highest priority.</p></li>
+</ul>
+</section>
+<section id="tier-1-supported-platforms">
+<h3>Tier 1: Supported Platforms<a class="headerlink" href="#tier-1-supported-platforms" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Commitment from a specific team to run tests using twister device
+testing for the “Zephyr compatibility test suite” (details TBD)
+on a regular basis using open-source and publicly available drivers.</p></li>
+<li><p>Commitment to fix bugs in time for releases. Not supported by “Zephyr Project”
+itself.</p></li>
+<li><p>General availability for purchase</p></li>
+<li><p>Bugs reported against platforms of this tier are to be evaluated and treated
+as a general bug in Zephyr and should be dealt with medium to high priority.</p></li>
+</ul>
+</section>
+<section id="tier-2-community-platforms">
+<h3>Tier 2: Community Platforms<a class="headerlink" href="#tier-2-community-platforms" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Platform implementation is available in upstream, no commitment to testing,
+may not be generally available.</p></li>
+<li><p>Has a dedicated maintainer who commits to respond to issues / review patches.</p></li>
+<li><p>Bugs reported against platforms of this tier are NOT considered as
+a general bug in Zephyr.</p></li>
+</ul>
+</section>
+<section id="tier-3-deprecated-and-unsupported-platforms">
+<h3>Tier 3: Deprecated and unsupported Platforms<a class="headerlink" href="#tier-3-deprecated-and-unsupported-platforms" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Platform implementation is available, but no owner or unresponsive owner.</p></li>
+<li><p>No commitment to support is available.</p></li>
+<li><p>May be removed from upstream if no one works to bring it up to tier 2 or better.</p></li>
+<li><p>Bugs reported against platforms of this tier are NOT considered as
+a general bug in Zephyr.</p></li>
+</ul>
+</section>
+</section>
+<section id="release-procedure">
+<h2>Release Procedure<a class="headerlink" href="#release-procedure" title="Link to this heading"></a></h2>
+<p>This section documents the Release manager responsibilities so that it serves as
+a knowledge repository for Release managers.</p>
+<section id="release-checklist">
+<h3>Release Checklist<a class="headerlink" href="#release-checklist" title="Link to this heading"></a></h3>
+<p>Each release has a GitHub issue associated with it that contains the full
+checklist. After a release is complete, a checklist for the next release is
+created.</p>
+</section>
+<section id="tagging">
+<h3>Tagging<a class="headerlink" href="#tagging" title="Link to this heading"></a></h3>
+<p>The following syntax should be used for releases and tags in Git:</p>
+<ul class="simple">
+<li><p>Release [Major].[Minor].[Patch Level]</p></li>
+<li><p>Release Candidate [Major].[Minor].[Patch Level]-rc[RC Number]</p></li>
+<li><p>Tagging:</p>
+<ul>
+<li><p>v[Major].[Minor].[Patch Level]-rc[RC Number]</p></li>
+<li><p>v[Major].[Minor].[Patch Level]</p></li>
+<li><p>v[Major].[Minor].99 - A tag applied to main branch to signify that work on
+v[Major].[Minor+1] has started. For example, v1.7.99 will be tagged at the
+start of v1.8 process. The tag corresponds to
+VERSION_MAJOR/VERSION_MINOR/PATCHLEVEL macros as defined for a
+work-in-progress main branch version. Presence of this tag allows generation of
+sensible output for “git describe” on main branch, as typically used for
+automated builds and CI tools.</p></li>
+</ul>
+</li>
+</ul>
+<figure class="align-center" id="id7">
+<a class="reference internal image-reference" href="../_images/release_flow.png"><img alt="Releases" src="../_images/release_flow.png" style="width: 80%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Zephyr Code and Releases</span><a class="headerlink" href="#id7" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The final release and each release candidate shall be tagged using the following
+steps:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Tagging needs to be done via explicit git commands and not via GitHub’s release
+interface.  The GitHub release interface does not generate annotated tags (it
+generates ‘lightweight’ tags regardless of release or pre-release). You should
+also upload your gpg public key to your GitHub account, since the instructions
+below involve creating signed tags. However, if you do not have a gpg public
+key you can opt to remove the <code class="docutils literal notranslate"><span class="pre">-s</span></code> option from the commands below.</p>
+</div>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Release Candidate</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Final Release</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This section uses tagging 1.11.0-rc1 as an example, replace with
+the appropriate release candidate version.</p>
+</div>
+<ol class="arabic">
+<li><p>Update the version variables in the <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/VERSION">VERSION</a> file
+located in the root of the Git repository to match the version for
+this release candidate. The <code class="docutils literal notranslate"><span class="pre">EXTRAVERSION</span></code> variable is used to
+identify the rc[RC Number] value for this candidate:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>EXTRAVERSION = rc1
+</pre></div>
+</div>
+</li>
+<li><p>Post a PR with the updated <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/VERSION">VERSION</a> file using
+<code class="docutils literal notranslate"><span class="pre">release:</span> <span class="pre">Zephyr</span> <span class="pre">1.11.0-rc1</span></code> as the commit subject. Merge
+the PR after successful CI.</p></li>
+<li><p>Tag and push the version, using an annotated tag:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ git pull
+$ git tag -s -m &quot;Zephyr 1.11.0-rc1&quot; v1.11.0-rc1
+</pre></div>
+</div>
+</li>
+<li><p>Verify that the tag has been signed correctly, <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">show</span></code> for the
+tag must contain a signature (look for the <code class="docutils literal notranslate"><span class="pre">BEGIN</span> <span class="pre">PGP</span> <span class="pre">SIGNATURE</span></code>
+or <code class="docutils literal notranslate"><span class="pre">BEGIN</span> <span class="pre">SSH</span> <span class="pre">SIGNATURE</span></code> marker in the output):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ git show v1.11.0-rc1
+</pre></div>
+</div>
+</li>
+<li><p>Push the tag:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ git push git@github.com:zephyrproject-rtos/zephyr.git v1.11.0-rc1
+</pre></div>
+</div>
+</li>
+<li><p>Send an email to the mailing lists (<code class="docutils literal notranslate"><span class="pre">announce</span></code> and <code class="docutils literal notranslate"><span class="pre">devel</span></code>)
+with a link to the release</p></li>
+</ol>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This section uses tagging 1.11.0 as an example, replace with the
+appropriate final release version.</p>
+</div>
+<p>When all final release criteria has been met and the final release notes
+have been approved and merged into the repository, the final release version
+will be set and repository tagged using the following procedure:</p>
+<ol class="arabic">
+<li><p>Update the version variables in the <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/VERSION">VERSION</a> file
+located in the root of the Git repository. Set <code class="docutils literal notranslate"><span class="pre">EXTRAVERSION</span></code>
+variable to an empty string to indicate final release:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>EXTRAVERSION =
+</pre></div>
+</div>
+</li>
+<li><p>Post a PR with the updated <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/VERSION">VERSION</a> file using
+<code class="docutils literal notranslate"><span class="pre">release:</span> <span class="pre">Zephyr</span> <span class="pre">1.11.0</span></code> as the commit subject. Merge
+the PR after successful CI.</p></li>
+<li><p>Tag and push the version, using two annotated tags:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ git pull
+$ git tag -s -m &quot;Zephyr 1.11.0&quot; v1.11.0
+</pre></div>
+</div>
+</li>
+<li><p>Verify that the tag has been signed correctly, <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">show</span></code> for the
+tag must contain a signature (look for the <code class="docutils literal notranslate"><span class="pre">BEGIN</span> <span class="pre">PGP</span> <span class="pre">SIGNATURE</span></code>
+or <code class="docutils literal notranslate"><span class="pre">BEGIN</span> <span class="pre">SSH</span> <span class="pre">SIGNATURE</span></code> marker in the output):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ git show v1.11.0
+</pre></div>
+</div>
+</li>
+<li><p>Push the tag:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ git push git@github.com:zephyrproject-rtos/zephyr.git v1.11.0
+</pre></div>
+</div>
+</li>
+<li><p>Find the new <code class="docutils literal notranslate"><span class="pre">v1.11.0</span></code> tag at the top of the releases page and
+edit the release with the <code class="docutils literal notranslate"><span class="pre">Edit</span> <span class="pre">tag</span></code> button with the following:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Copy the overview of <code class="docutils literal notranslate"><span class="pre">docs/releases/release-notes-1.11.rst</span></code>
+into the release notes textbox and link to the full release notes
+file on docs.zephyrproject.org.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Send an email to the mailing lists (<code class="docutils literal notranslate"><span class="pre">announce</span></code> and <code class="docutils literal notranslate"><span class="pre">devel</span></code>) with a link
+to the release</p></li>
+</ol>
+</div></div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

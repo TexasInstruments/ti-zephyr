@@ -1,0 +1,672 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SoC Porting Guide &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/hardware/porting/soc_porting.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Board Porting Guide" href="board_porting.html" />
+    <link rel="prev" title="Architecture Porting Guide" href="arch.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Hardware Support</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../arch/index.html">Architecture-related Guides</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../barriers/index.html">Barriers API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cache/index.html">Caching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/index.html">Zephyr’s device emulators/simulators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/bus_emulators.html">External Bus and Bus Connected Peripherals Emulators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../peripherals/index.html">Peripherals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pinctrl/index.html">Pin Control</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Porting</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="arch.html">Architecture Porting Guide</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">SoC Porting Guide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#soc-definitions">SoC Definitions</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#architecture">Architecture</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#create-your-soc-directory">Create your SoC directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#write-your-soc-yaml">Write your SoC YAML</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#write-your-soc-devicetree">Write your SoC devicetree</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#multiple-cpu-clusters">Multiple CPU clusters</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#write-kconfig-files">Write Kconfig files</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id2">Multiple CPU clusters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="board_porting.html">Board Porting Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shields.html">Shields</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">Virtualization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Hardware Support</a> &raquo;</li>
+  
+     <li><a href="index.html">Porting</a> &raquo;</li>
+  
+  <li>SoC Porting Guide</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/hardware/porting/soc_porting.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27hardware%2Fporting%2Fsoc_porting%27&labels=bug%2Carea%3A+Documentation&env=-+Page%3A+hardware%2Fporting%2Fsoc_porting%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="soc-porting-guide">
+<span id="id1"></span><h1>SoC Porting Guide<a class="headerlink" href="#soc-porting-guide" title="Link to this heading"></a></h1>
+<p>This page describes how to add support for a new <a class="reference internal" href="../../glossary.html#term-SoC"><span class="xref std std-term">SoC</span></a> in Zephyr, be it in
+the upstream Zephyr project or locally in your own repository.</p>
+<section id="soc-definitions">
+<h2>SoC Definitions<a class="headerlink" href="#soc-definitions" title="Link to this heading"></a></h2>
+<p>It is expected that you are familiar with the board concept in Zephyr.
+A high level overview of the hardware support hierarchy and terms used in the
+Zephyr documentation can be seen in <a class="reference internal" href="board_porting.html#hw-support-hierarchy"><span class="std std-ref">Hardware support hierarchy</span></a>.</p>
+<p>For SoC porting, the most important terms are:</p>
+<ul class="simple">
+<li><p>SoC: the exact system on a chip the board’s CPU is part of.</p></li>
+<li><p>SoC series: a group of tightly related SoCs.</p></li>
+<li><p>SoC family: a wider group of SoCs with similar characteristics.</p></li>
+<li><p>CPU cluster: a cluster of one or more CPU cores.</p></li>
+<li><p>CPU core: a particular CPU instance of a given architecture.</p></li>
+<li><p>Architecture: an instruction set architecture.</p></li>
+</ul>
+<section id="architecture">
+<h3>Architecture<a class="headerlink" href="#architecture" title="Link to this heading"></a></h3>
+<p>See <a class="reference internal" href="arch.html#architecture-porting-guide"><span class="std std-ref">Architecture Porting Guide</span></a>.</p>
+</section>
+</section>
+<section id="create-your-soc-directory">
+<h2>Create your SoC directory<a class="headerlink" href="#create-your-soc-directory" title="Link to this heading"></a></h2>
+<p>Each SoC must have a unique name. Use the official name given by the SoC vendor
+and check that it’s not already in use. In some cases someone else may have
+contributed a SoC with identical name. If the SoC name is already in use, then
+you should probably improve the existing SoC instead of creating a new one.
+The script <code class="docutils literal notranslate"><span class="pre">list_hardware</span></code> can be used to retrieve a list of all SoCs known
+in Zephyr, for example <code class="docutils literal notranslate"><span class="pre">./scripts/list_hardware.py</span> <span class="pre">--soc-root=.</span> <span class="pre">--socs</span></code> from
+the Zephyr base directory for a list of names that are already in use.</p>
+<p>Start by creating the directory <code class="docutils literal notranslate"><span class="pre">zephyr/soc/&lt;VENDOR&gt;/soc1</span></code>, where
+<code class="docutils literal notranslate"><span class="pre">&lt;VENDOR&gt;</span></code> is your vendor subdirectory.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">&lt;VENDOR&gt;</span></code> subdirectory is mandatory if contributing your SoC
+to Zephyr, but if your SoC is placed in a local repo, then any folder
+structure under <code class="docutils literal notranslate"><span class="pre">&lt;your-repo&gt;/soc</span></code> is permitted.
+The <code class="docutils literal notranslate"><span class="pre">&lt;VENDOR&gt;</span></code> subdirectory must match a vendor defined in the list in
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/dts/bindings/vendor-prefixes.txt">dts/bindings/vendor-prefixes.txt</a>. If the SoC vendor does not
+have a prefix in that list, then one must be created.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The SoC directory name does not need to match the name of the SoC.
+Multiple SoCs can even be defined in one directory. In Zephyr, SoCs are often
+organized in sub-folders in a common SoC Family or SoC Series tree.</p>
+</div>
+<p>Your SoC directory should look like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>soc/&lt;VENDOR&gt;/&lt;soc-name&gt;
+├── soc.yml
+├── soc.h
+├── CMakeLists.txt
+├── Kconfig
+├── Kconfig.soc
+└── Kconfig.defconfig
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">&lt;soc-name&gt;</span></code> with your SoC’s name.</p>
+<p>The mandatory files are:</p>
+<ol class="arabic simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">soc.yml</span></code>: a YAML file describing the high-level meta data of the
+SoC such as:</p>
+<ul class="simple">
+<li><p>SoC name: the name of the SoC</p></li>
+<li><p>CPU clusters: CPU clusters if the SoC contains one or more clusters</p></li>
+<li><p>SoC series: the SoC series to which the SoC belong</p></li>
+<li><p>SoC family: the SoC family to which the series belong</p></li>
+</ul>
+</li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">soc.h</span></code>: a header file which can be used to describe or provide
+configuration macros for the SoC. The <code class="file docutils literal notranslate"><span class="pre">soc.h</span></code> will often be included in
+drivers, sub-systems, boards, and other source code found in Zephyr.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">Kconfig.soc</span></code>: the base SoC configuration which defines a Kconfig SoC
+symbol in the form of <code class="docutils literal notranslate"><span class="pre">config</span> <span class="pre">SOC_&lt;soc-name&gt;</span></code> and provides the SoC name to
+the Kconfig <code class="docutils literal notranslate"><span class="pre">SOC</span></code> setting.
+If the <code class="docutils literal notranslate"><span class="pre">soc.yml</span></code> describes a SoC family and series, then those must also
+be defined in this file. Kconfig settings outside of the SoC tree must not be
+selected. To select general Zephyr Kconfig settings the <code class="file docutils literal notranslate"><span class="pre">Kconfig</span></code> file
+must be used.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>: CMake file loaded by the Zephyr build system. This
+CMake file can define additional include paths and/or source files to be used
+when a build targets the SoC. Also the base line linker script to use must be
+defined.</p></li>
+</ol>
+<p>The optional files are:</p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">Kconfig</span></code>, <code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code> software configuration in
+<a class="reference internal" href="../../build/kconfig/index.html#kconfig"><span class="std std-ref">Configuration System (Kconfig)</span></a> format. These select the architecture and peripherals
+available.</p></li>
+</ul>
+</section>
+<section id="write-your-soc-yaml">
+<h2>Write your SoC YAML<a class="headerlink" href="#write-your-soc-yaml" title="Link to this heading"></a></h2>
+<p>The SoC YAML file describes the SoC family, SoC series, and SoC at a high level.</p>
+<p>Detailed configurations, such as hardware description and configuration are done
+in devicetree and Kconfig.</p>
+<p>The skeleton of a simple SoC YAML file containing just one SoC is:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">socs</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;soc1&gt;</span>
+</pre></div>
+</div>
+<p>It is possible to have multiple SoC located in the SoC folder.
+For example if they belong to a common family or series it is recommended to
+locate such SoC in a common tree.
+Multiple SoCs and SoC series in a common folder can be described in the
+<code class="file docutils literal notranslate"><span class="pre">soc.yml</span></code> file as:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">family</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;family-name&gt;</span>
+<span class="w">    </span><span class="nt">series</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;series-1-name&gt;</span>
+<span class="w">        </span><span class="nt">socs</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;soc1&gt;</span>
+<span class="w">            </span><span class="nt">cpuclusters</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;coreA&gt;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;coreB&gt;</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;soc2&gt;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;series-2-name&gt;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</pre></div>
+</div>
+</section>
+<section id="write-your-soc-devicetree">
+<h2>Write your SoC devicetree<a class="headerlink" href="#write-your-soc-devicetree" title="Link to this heading"></a></h2>
+<p>SoC devicetree include files are located in the <code class="file docutils literal notranslate"><span class="pre">&lt;zephyr-repo&gt;/dts</span></code> folder
+under a corresponding <code class="file docutils literal notranslate"><span class="pre">&lt;ARCH&gt;/&lt;VENDOR&gt;</span></code>.</p>
+<p>The SoC <code class="file docutils literal notranslate"><span class="pre">dts/&lt;ARCH&gt;/&lt;VENDOR&gt;/&lt;soc&gt;.dtsi</span></code> describes your SoC hardware in
+the Devicetree Source (DTS) format and must be included by any boards which use
+the SoC.</p>
+<p>If a highlevel <code class="file docutils literal notranslate"><span class="pre">&lt;arch&gt;.dtsi</span></code> file exists, then a good starting point is to
+include this file in your <code class="file docutils literal notranslate"><span class="pre">&lt;soc&gt;.dtsi</span></code>.</p>
+<p>In general, <code class="file docutils literal notranslate"><span class="pre">&lt;soc&gt;.dtsi</span></code> should look like this:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="cm"> </span><span class="cpf">&lt;arch&gt;/&lt;arch&gt;.dtsi</span>
+
+<span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nf">chosen</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="cm">/* common chosen settings for your SoC */</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="nf">cpus</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">#address-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">m</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                </span><span class="kr">#size-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">n</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">                </span><span class="nf">cpu</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">device_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;cpu&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;&lt;compatibles&gt;&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="cm">/* ... your CPU definitions ... */</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="nf">soc</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="cm">/* Your SoC definitions and peripherals */</span>
+<span class="w">                </span><span class="cm">/* such as ram, clock, buses, peripherals. */</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>It is possible to structure multiple <code class="file docutils literal notranslate"><span class="pre">&lt;VENDOR&gt;/&lt;soc&gt;.dtsi</span></code> files in
+sub-directories for a cleaner file system structure. For example organized
+pre SoC series, like this: <code class="file docutils literal notranslate"><span class="pre">&lt;VENDOR&gt;/&lt;SERIES&gt;/&lt;soc&gt;.dtsi</span></code>.</p>
+</div>
+<section id="multiple-cpu-clusters">
+<h3>Multiple CPU clusters<a class="headerlink" href="#multiple-cpu-clusters" title="Link to this heading"></a></h3>
+<p>Devicetree reflects the hardware. The memory space and peripherals available to
+one CPU cluster can be very different from another CPU cluster, therefore each
+CPU cluster will often have its own <code class="file docutils literal notranslate"><span class="pre">.dtsi</span></code> file.</p>
+<p>CPU cluster <code class="file docutils literal notranslate"><span class="pre">.dtsi</span></code> files should follow the naming scheme
+<code class="file docutils literal notranslate"><span class="pre">&lt;soc&gt;_&lt;cluster&gt;.dtsi</span></code>. A <code class="file docutils literal notranslate"><span class="pre">&lt;soc&gt;_&lt;cluster&gt;.dtsi</span></code> file will look
+similar to a SoC <code class="file docutils literal notranslate"><span class="pre">.dtsi</span></code> without CPU clusters.</p>
+</section>
+</section>
+<section id="write-kconfig-files">
+<h2>Write Kconfig files<a class="headerlink" href="#write-kconfig-files" title="Link to this heading"></a></h2>
+<p>Zephyr uses the Kconfig language to configure software features. Your SoC
+needs to provide some Kconfig settings before you can compile a Zephyr
+application for it.</p>
+<p>Setting Kconfig configuration values is documented in detail in
+<a class="reference internal" href="../../build/kconfig/setting.html#setting-configuration-values"><span class="std std-ref">Setting Kconfig configuration values</span></a>.</p>
+<p>There is one mandatory Kconfig file in the SoC directory, and two optional
+files for a SoC:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>soc/&lt;vendor&gt;/&lt;your soc&gt;
+├── Kconfig.soc
+├── Kconfig
+└── Kconfig.defconfig
+</pre></div>
+</div>
+<dl>
+<dt><code class="file docutils literal notranslate"><span class="pre">Kconfig.soc</span></code></dt><dd><p>A shared Kconfig file which can be sourced both in Zephyr Kconfig and sysbuild
+Kconfig trees.</p>
+<p>This file selects the SoC family and series in the Kconfig tree and potential
+other SoC related Kconfig settings. In some cases a SOC_PART_NUMBER.
+This file must not select anything outside the reusable Kconfig SoC tree.</p>
+<p>A <code class="file docutils literal notranslate"><span class="pre">Kconfig.soc</span></code> may look like this:</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">config</span><span class="w"> </span>SOC_FAMILY_&lt;SOC_FAMILY_NAME&gt;
+<span class="w">        </span><span class="nb">bool</span>
+
+<span class="k">config</span><span class="w"> </span>SOC_SERIES_&lt;SOC_SERIES_NAME&gt;
+<span class="w">        </span><span class="nb">bool</span>
+<span class="w">        </span><span class="k">select</span><span class="w"> </span>SOC_FAMILY_&lt;SOC_FAMILY_NAME&gt;
+
+<span class="k">config</span><span class="w"> </span>SOC_&lt;SOC_NAME&gt;
+<span class="w">        </span><span class="nb">bool</span>
+<span class="w">        </span><span class="k">select</span><span class="w"> </span>SOC_SERIES_&lt;SOC_SERIES_NAME&gt;
+
+<span class="k">config</span><span class="w"> </span>SOC_FAMILY
+<span class="w">        </span><span class="k">default</span><span class="w"> </span><span class="s2">&quot;&lt;soc_family_name&gt;&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span>SOC_FAMILY_&lt;SOC_FAMILY_NAME&gt;
+
+<span class="k">config</span><span class="w"> </span>SOC_SERIES
+<span class="w">        </span><span class="k">default</span><span class="w"> </span><span class="s2">&quot;&lt;soc_series_name&gt;&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span>SOC_SERIES_&lt;SOC_SERIES_NAME&gt;
+
+<span class="k">config</span><span class="w"> </span>SOC
+<span class="w">        </span><span class="k">default</span><span class="w"> </span><span class="s2">&quot;&lt;soc_name&gt;&quot;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span>SOC_&lt;SOC_NAME&gt;
+</pre></div>
+</div>
+<p>Notice that <code class="docutils literal notranslate"><span class="pre">SOC_NAME</span></code> is a pure uppercase version of the SoC name, <code class="docutils literal notranslate"><span class="pre">SOC_SERIES_NAME</span></code> is
+a pure uppercase version of SoC series name and <code class="docutils literal notranslate"><span class="pre">SOC_FAMILY_NAME</span></code> is a pure uppercase version
+of the SoC family name. If these fields do not appear in the <code class="file docutils literal notranslate"><span class="pre">soc.yml</span></code> file then they
+should not be present in the <code class="file docutils literal notranslate"><span class="pre">Kconfig.soc</span></code> file.</p>
+<p>The Kconfigs <code class="docutils literal notranslate"><span class="pre">SOC</span></code>, <code class="docutils literal notranslate"><span class="pre">SOC_SERIES</span></code> and <code class="docutils literal notranslate"><span class="pre">SOC_FAMILY</span></code> settings are globally defined as
+strings and therefore the <code class="file docutils literal notranslate"><span class="pre">Kconfig.soc</span></code> file shall only define the default string values
+and not the types. Notice that the string values must match the values used in the
+<code class="file docutils literal notranslate"><span class="pre">soc.yml</span></code> file.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The build system supports any variation of case for <code class="docutils literal notranslate"><span class="pre">soc_name</span></code>, <code class="docutils literal notranslate"><span class="pre">soc_series_name</span></code> and
+<code class="docutils literal notranslate"><span class="pre">soc_family_mame</span></code>, but when submitting boards for inclusion in Zephyr itself, these must be
+purely lowercase versions of the Kconfig names</p>
+</div>
+<dl>
+<dt><code class="file docutils literal notranslate"><span class="pre">Kconfig</span></code></dt><dd><p>Included by <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/soc/Kconfig">soc/Kconfig</a>.</p>
+<p>This file can add Kconfig settings which are specific to the current SoC.</p>
+<p>The <code class="file docutils literal notranslate"><span class="pre">Kconfig</span></code> will often indicate given hardware support using a setting
+of the form <code class="docutils literal notranslate"><span class="pre">HAS_&lt;support&gt;</span></code>.</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">config</span><span class="w"> </span>SOC_&lt;SOC_NAME&gt;
+<span class="w">        </span><span class="k">select</span><span class="w"> </span>ARM
+<span class="w">        </span><span class="k">select</span><span class="w"> </span>CPU_HAS_FPU
+</pre></div>
+</div>
+<p>If the setting name is identical to an existing Kconfig setting in Zephyr and
+only modifies the default value of said setting, then
+<code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code> should be used  instead.</p>
+</dd>
+<dt><code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code></dt><dd><p>SoC specific default values for Kconfig options.</p>
+<p>Not all SoCs have a <code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code> file.</p>
+<p>The entire file should be inside a pair of <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">SOC_&lt;SOC_NAME&gt;</span></code> / <code class="docutils literal notranslate"><span class="pre">endif</span></code>
+or <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">SOC_SERIES_&lt;SERIES_NAME&gt;</span></code> / <code class="docutils literal notranslate"><span class="pre">endif</span></code>, like this:</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span>SOC_&lt;SOC_NAME&gt;
+
+<span class="k">config</span><span class="w"> </span>NUM_IRQS
+<span class="w">        </span><span class="k">default</span><span class="w"> </span><span class="mi">32</span>
+
+<span class="k">endif</span><span class="w"> </span><span class="c1"># SOC_&lt;SOC_NAME&gt;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<section id="id2">
+<h3>Multiple CPU clusters<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<p>CPU clusters must provide additional Kconfig settings in the <code class="file docutils literal notranslate"><span class="pre">Kconfig.soc</span></code>
+file. This will usually be in the form of <code class="docutils literal notranslate"><span class="pre">SOC_&lt;SOC_NAME&gt;_&lt;CLUSTER&gt;</span></code> so for
+a given <code class="docutils literal notranslate"><span class="pre">soc1</span></code> with two clusters <code class="docutils literal notranslate"><span class="pre">clusterA</span></code> and <code class="docutils literal notranslate"><span class="pre">clusterB</span></code>, then this
+will look like:</p>
+<p>SoC’s When a SoC defines CPU cluster</p>
+<blockquote>
+<div><div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">config</span><span class="w"> </span>SOC_SOC1_CLUSTERA
+<span class="w">        </span><span class="nb">bool</span>
+<span class="w">        </span><span class="k">select</span><span class="w"> </span>SOC_SOC1
+
+<span class="k">config</span><span class="w"> </span>SOC_SOC1_CLUSTERB
+<span class="w">        </span><span class="nb">bool</span>
+<span class="w">        </span><span class="k">select</span><span class="w"> </span>SOC_SOC1
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,786 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Memory Protection Design &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/kernel/usermode/memory_domain.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Kernel Objects" href="kernelobjects.html" />
+    <link rel="prev" title="Overview" href="overview.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Kernel</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../services/index.html">Kernel Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drivers/index.html">Device Driver Model</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">User Mode</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Memory Protection Design</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#boot-time-memory-configuration">Boot Time Memory Configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hardware-stack-overflow">Hardware Stack Overflow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#thread-stack">Thread Stack</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#thread-resource-pools">Thread Resource Pools</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#memory-domains">Memory Domains</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#memory-partitions">Memory Partitions</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#memory-domain-usage">Memory Domain Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="kernelobjects.html">Kernel Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls.html">System Calls</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mpu_stack_objects.html">MPU Stack Objects</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mpu_userspace.html">MPU Backed Userspace</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management/index.html">Memory Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data_structures/index.html">Data Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timing_functions/index.html">Executing Time Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../object_cores/index.html">Object Cores</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timeutil.html">Time Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../util/index.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iterable_sections/index.html">Iterable Sections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../code-relocation.html">Code And Data Relocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanup.html">Scope-based Cleanup Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Kernel</a> &raquo;</li>
+  
+     <li><a href="index.html">User Mode</a> &raquo;</li>
+  
+  <li>Memory Protection Design</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/kernel/usermode/memory_domain.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27kernel%2Fusermode%2Fmemory_domain%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Kernel&env=-+Page%3A+kernel%2Fusermode%2Fmemory_domain%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="memory-protection-design">
+<span id="memory-domain"></span><h1>Memory Protection Design<a class="headerlink" href="#memory-protection-design" title="Link to this heading"></a></h1>
+<p>Zephyr’s memory protection design is geared towards microcontrollers with MPU
+(Memory Protection Unit) hardware. We do support some architectures, such as x86,
+which have a paged MMU (Memory Management Unit), but in that case the MMU is
+used like an MPU with an identity page table.</p>
+<p>All of the discussion below will be using MPU terminology; systems with MMUs
+can be considered to have an MPU with an unlimited number of programmable
+regions.</p>
+<p>There are a few different levels on how memory access is configured when
+Zephyr memory protection features are enabled, which we will describe here:</p>
+<section id="boot-time-memory-configuration">
+<h2>Boot Time Memory Configuration<a class="headerlink" href="#boot-time-memory-configuration" title="Link to this heading"></a></h2>
+<p>This is the configuration of the MPU after the kernel has started up. It should
+contain the following:</p>
+<ul class="simple">
+<li><p>Any configuration of memory regions which need to have special caching or
+write-back policies for basic hardware and driver function. Note that most
+MPUs have the concept of a default memory access policy map, which can be
+enabled as a “background” mapping for any area of memory that doesn’t
+have an MPU region configuring it. It is strongly recommended to use this
+to maximize the number of available MPU regions for the end user. On
+ARMv7-M/ARMv8-M this is called the System Address Map, other CPUs may
+have similar capabilities. See <a class="reference internal" href="../../services/mem_mgmt/index.html#mem-mgmt-api"><span class="std std-ref">Memory Attributes</span></a> for information on
+how to annotate the system map in the device tree.</p></li>
+<li><p>A read-only, executable region or regions for program text and ro-data, that
+is accessible to user mode. This could be further sub-divided into a
+read-only region for ro-data, and a read-only, executable region for text, but
+this will require an additional MPU region. This is required so that
+threads running in user mode can read ro-data and fetch instructions.</p></li>
+<li><p>Depending on configuration, user-accessible read-write regions to support
+extra features like GCOV, HEP, etc.</p></li>
+</ul>
+<p>Assuming there is a background map which allows supervisor mode to access any
+memory it needs, and regions are defined which grant user mode access to
+text/ro-data, this is sufficient for the boot time configuration.</p>
+</section>
+<section id="hardware-stack-overflow">
+<h2>Hardware Stack Overflow<a class="headerlink" href="#hardware-stack-overflow" title="Link to this heading"></a></h2>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_HW_STACK_PROTECTION" title="CONFIG_HW_STACK_PROTECTION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HW_STACK_PROTECTION</span></code></a> is an optional feature which detects stack
+buffer overflows when the system is running in supervisor mode. This
+catches issues when the entire stack buffer has overflowed, and not
+individual stack frames, use compiler-assisted <a class="reference internal" href="../../kconfig.html#CONFIG_STACK_CANARIES" title="CONFIG_STACK_CANARIES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_STACK_CANARIES</span></code></a>
+for that.</p>
+<p>Like any crash in supervisor mode, no guarantees can be made about the overall
+health of the system after a supervisor mode stack overflow, and any instances
+of this should be treated as a serious error. However it’s still very useful to
+know when these overflows happen, as without robust detection logic the system
+will either crash in mysterious ways or behave in an undefined manner when the
+stack buffer overflows.</p>
+<p>Some systems implement this feature by creating at runtime a ‘guard’ MPU region
+which is set to be read-only and is at either the beginning or immediately
+preceding the supervisor mode stack buffer.  If the stack overflows an
+exception will be generated.</p>
+<p>This feature is optional and is not required to catch stack overflows in user
+mode; disabling this may free 1-2 MPU regions depending on the MPU design.</p>
+<p>Other systems may have dedicated CPU support for catching stack overflows
+and no extra MPU regions will be required.</p>
+</section>
+<section id="thread-stack">
+<h2>Thread Stack<a class="headerlink" href="#thread-stack" title="Link to this heading"></a></h2>
+<p>Any thread running in user mode will need access to its own stack buffer.
+On context switch into a user mode thread, a dedicated MPU region or MMU
+page table entries will be programmed with the bounds of the stack buffer.
+A thread exceeding its stack buffer will start pushing data onto memory
+it doesn’t have access to and a memory access violation exception will be
+generated.</p>
+<p>Note that user threads have access to the stacks of other user threads in
+the same memory domain. This is the minimum required for architectures to
+support memory domains. Architecture can further restrict access to stacks
+so each user thread only has access to its own stack if such architecture
+advertises this capability via
+<a class="reference internal" href="../../kconfig.html#CONFIG_ARCH_MEM_DOMAIN_SUPPORTS_ISOLATED_STACKS" title="CONFIG_ARCH_MEM_DOMAIN_SUPPORTS_ISOLATED_STACKS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARCH_MEM_DOMAIN_SUPPORTS_ISOLATED_STACKS</span></code></a>.
+This behavior is enabled by default if supported and can be selectively
+disabled via <a class="reference internal" href="../../kconfig.html#CONFIG_MEM_DOMAIN_ISOLATED_STACKS" title="CONFIG_MEM_DOMAIN_ISOLATED_STACKS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MEM_DOMAIN_ISOLATED_STACKS</span></code></a> if
+architecture supports both operating modes. However, some architectures
+may decide to enable this all the time, and thus this option cannot be
+disabled. Regardless of these kconfigs, user threads cannot access
+the stacks of other user threads outside of their memory domains.</p>
+</section>
+<section id="thread-resource-pools">
+<h2>Thread Resource Pools<a class="headerlink" href="#thread-resource-pools" title="Link to this heading"></a></h2>
+<p>A small subset of kernel APIs, invoked as system calls, require heap memory
+allocations. This memory is used only by the kernel and is not accessible
+directly by user mode. In order to use these system calls, invoking threads
+must assign themselves to a resource pool, which is a <a class="reference internal" href="../../doxygen/html/structk__heap.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">k_heap</span></code></a>
+object. Memory is drawn from a thread’s resource pool using
+<code class="xref c c-func docutils literal notranslate"><span class="pre">z_thread_malloc()</span></code> and freed with <a class="reference internal" href="../../doxygen/html/group__heap__apis.html#ga79b63cc93b3358cf82d74f40e73b69d5" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_free()</span></code></a>.</p>
+<p>The APIs which use resource pools are as follows, with any alternatives
+noted for users who do not want heap allocations within their application:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="../../doxygen/html/group__stack__apis.html#gab97d924db1aef3f6adade156a107d45c" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_stack_alloc_init()</span></code></a> sets up a k_stack with its storage
+buffer allocated out of a resource pool instead of a buffer provided by the
+user. An alternative is to declare k_stacks that are automatically
+initialized at boot with <a class="reference internal" href="../../doxygen/html/group__stack__apis.html#ga8c9ca77e5de3c9757dcd4ecb55797835" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_STACK_DEFINE()</span></code></a>, or to initialize the
+k_stack in supervisor mode with <a class="reference internal" href="../../doxygen/html/group__stack__apis.html#ga4400a39ef48289305cf66a092d5c6c7d" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_stack_init()</span></code></a>.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__msgq__apis.html#gabe7305b8f442ebdc147dbbc6e8cf92fc" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_msgq_alloc_init()</span></code></a> sets up a k_msgq object with its
+storage buffer allocated out of a resource pool instead of a buffer provided
+by the user. An alternative is to declare a k_msgq that is automatically
+initialized at boot with <a class="reference internal" href="../../doxygen/html/group__msgq__apis.html#ga95ef93002766901511d09c8cd8f8293b" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_MSGQ_DEFINE()</span></code></a>, or to initialize the
+k_msgq in supervisor mode with <a class="reference internal" href="../../doxygen/html/group__msgq__apis.html#ga54a5cdcaea2236c383ace433fedc0d39" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_msgq_init()</span></code></a>.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__poll__apis.html#gac550dc93662ce164fb22a5a91d6830db" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_poll()</span></code></a> when invoked from user mode, needs to make a kernel-side
+copy of the provided events array while waiting for an event. This copy is
+freed when <a class="reference internal" href="../../doxygen/html/group__poll__apis.html#gac550dc93662ce164fb22a5a91d6830db" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_poll()</span></code></a> returns for any reason.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__queue__apis.html#gacf3dba40125073c11075e5a134919f88" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_queue_alloc_prepend()</span></code></a> and <a class="reference internal" href="../../doxygen/html/group__queue__apis.html#ga690f3a1450e946d75f31b3e499d1d06a" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_queue_alloc_append()</span></code></a>
+allocate a container structure to place the data in, since the internal
+bookkeeping information that defines the queue cannot be placed in the
+memory provided by the user.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__usermode__apis.html#ga5bba3a354fbc63673c76c9815db40812" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_object_alloc()</span></code></a> allows for entire kernel objects to be
+dynamically allocated at runtime and a usable pointer to them returned to
+the caller.</p></li>
+</ul>
+</div></blockquote>
+<p>The relevant API is <a class="reference internal" href="../../doxygen/html/group__thread__apis.html#ga3f46c06833add2a2e0ddb7242f06702c" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_heap_assign()</span></code></a> which assigns
+a k_heap to draw these allocations from for the target thread.</p>
+<p>If the system heap is enabled, then the system heap may be used with
+<code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_system_pool_assign()</span></code>, but it is preferable for different
+logical applications running on the system to have their own pools.</p>
+</section>
+<section id="memory-domains">
+<h2>Memory Domains<a class="headerlink" href="#memory-domains" title="Link to this heading"></a></h2>
+<p>The kernel ensures that any user thread will have access to its own stack
+buffer, plus program text and read-only data. The memory domain APIs are the
+way to grant access to additional blocks of memory to a user thread.</p>
+<p>Conceptually, a memory domain is a collection of some number of memory
+partitions. The maximum number of memory partitions in a domain
+is limited by the number of available MPU regions. This is why it is important
+to minimize the number of boot-time MPU regions.</p>
+<p>Memory domains are <em>not</em> intended to control access to memory from supervisor
+mode. In some cases this may be unavoidable; for example some architectures do
+not allow for the definition of regions which are read-only to user mode but
+read-write to supervisor mode. A great deal of care must be taken when working
+with such regions to not unintentionally cause the kernel to crash when
+accessing such a region. Any attempt to use memory domain APIs to control
+supervisor mode access is at best undefined behavior; supervisor mode access
+policy is only intended to be controlled by boot-time memory regions.</p>
+<p>Memory domain APIs are only available to supervisor mode. The only control
+user mode has over memory domains is that any user thread’s child threads
+will automatically become members of the parent’s domain.</p>
+<p>All threads are members of a memory domain, including supervisor threads
+(even though this has no implications on their memory access). There is a
+default domain <code class="docutils literal notranslate"><span class="pre">k_mem_domain_default</span></code> which will be assigned to threads if
+they have not been specifically assigned to a domain, or inherited a memory
+domain membership from their parent thread. The main thread starts as a
+member of the default domain.</p>
+<section id="memory-partitions">
+<h3>Memory Partitions<a class="headerlink" href="#memory-partitions" title="Link to this heading"></a></h3>
+<p>Each memory partition consists of a memory address, a size,
+and access attributes. It is intended that memory partitions are used to
+control access to system memory. Defining memory partitions are subject
+to the following constraints:</p>
+<ul class="simple">
+<li><p>The partition must represent a memory region that can be programmed by
+the underlying memory management hardware, and needs to conform to any
+underlying hardware constraints. For example, many MPU-based systems require
+that partitions be sized to some power of two, and aligned to their own
+size. For MMU-based systems, the partition must be aligned to a page and
+the size some multiple of the page size.</p></li>
+<li><p>Partitions within the same memory domain may not overlap each other. There is
+no notion of precedence among partitions within a memory domain.  Partitions
+within a memory domain are assumed to have a higher precedence than any
+boot-time memory regions, however whether a memory domain partition can
+overlap a boot-time memory region is architecture specific.</p></li>
+<li><p>The same partition may be specified in multiple memory domains. For example
+there may be a shared memory area that multiple domains grant access to.</p></li>
+<li><p>Care must be taken in determining what memory to expose in a partition.
+It is not appropriate to provide direct user mode access to any memory
+containing private kernel data.</p></li>
+<li><p>Memory domain partitions are intended to control access to system RAM.
+Configuration of memory partitions which do not correspond to RAM
+may not be supported by the architecture; this is true for MMU-based systems.</p></li>
+</ul>
+<p>There are two ways to define memory partitions: either manually or
+automatically.</p>
+<section id="manual-memory-partitions">
+<h4>Manual Memory Partitions<a class="headerlink" href="#manual-memory-partitions" title="Link to this heading"></a></h4>
+<p>The following code declares a global array <code class="docutils literal notranslate"><span class="pre">buf</span></code>, and then declares
+a read-write partition for it which may be added to a domain:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">uint8_t</span><span class="w"> </span><span class="nf">__aligned</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="n">buf</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
+
+<span class="n">K_MEM_PARTITION_DEFINE</span><span class="p">(</span><span class="n">my_partition</span><span class="p">,</span><span class="w"> </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">buf</span><span class="p">),</span>
+<span class="w">                       </span><span class="n">K_MEM_PARTITION_P_RW_U_RW</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This does not scale particularly well when we are trying to contain multiple
+objects spread out across several C files into a single partition.</p>
+</section>
+<section id="automatic-memory-partitions">
+<h4>Automatic Memory Partitions<a class="headerlink" href="#automatic-memory-partitions" title="Link to this heading"></a></h4>
+<p>Automatic memory partitions are created by the build system. All globals
+which need to be placed inside a partition are tagged with their destination
+partition. The build system will then coalesce all of these into a single
+contiguous block of memory, zero any BSS variables at boot, and define
+a memory partition of appropriate base address and size which contains all
+the tagged data.</p>
+<figure class="align-center" id="id1">
+<img alt="Automatic Memory Domain build flow" src="../../_images/auto_mem_domain.png" />
+<figcaption>
+<p><span class="caption-text">Automatic Memory Domain build flow</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Automatic memory partitions are only configured as read-write
+regions. They are defined with <a class="reference internal" href="../../doxygen/html/group__mem__domain__apis__app.html#gaba1614a7fa1a2ce2fc7cfd6ecfc02796" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_APPMEM_PARTITION_DEFINE()</span></code></a>.
+Global variables are then routed to this partition using
+<a class="reference internal" href="../../doxygen/html/group__mem__domain__apis__app.html#gace571a7f6ee313a732976cc863b5d0e6" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_APP_DMEM()</span></code></a> for initialized data and <a class="reference internal" href="../../doxygen/html/group__mem__domain__apis__app.html#ga8fd691f9c9007ec80432c19f7ce84881" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_APP_BMEM()</span></code></a> for
+BSS.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/app_memory/app_memdomain.h&gt;</span>
+
+<span class="cm">/* Declare a k_mem_partition &quot;my_partition&quot; that is read-write to</span>
+<span class="cm"> * user mode. Note that we do not specify a base address or size.</span>
+<span class="cm"> */</span>
+<span class="n">K_APPMEM_PARTITION_DEFINE</span><span class="p">(</span><span class="n">my_partition</span><span class="p">);</span>
+
+<span class="cm">/* The global variable var1 will be inside the bounds of my_partition</span>
+<span class="cm"> * and be initialized with 37 at boot.</span>
+<span class="cm"> */</span>
+<span class="n">K_APP_DMEM</span><span class="p">(</span><span class="n">my_partition</span><span class="p">)</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">var1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">37</span><span class="p">;</span>
+
+<span class="cm">/* The global variable var2 will be inside the bounds of my_partition</span>
+<span class="cm"> * and be zeroed at boot size K_APP_BMEM() was used, indicating a BSS</span>
+<span class="cm"> * variable.</span>
+<span class="cm"> */</span>
+<span class="n">K_APP_BMEM</span><span class="p">(</span><span class="n">my_partition</span><span class="p">)</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">var2</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The build system will ensure that the base address of <code class="docutils literal notranslate"><span class="pre">my_partition</span></code> will
+be properly aligned, and the total size of the region conforms to the memory
+management hardware requirements, adding padding if necessary.</p>
+<p>If multiple partitions are being created, a variadic preprocessor macro can be
+used as provided in <code class="docutils literal notranslate"><span class="pre">app_macro_support.h</span></code>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">FOR_EACH</span><span class="p">(</span><span class="n">K_APPMEM_PARTITION_DEFINE</span><span class="p">,</span><span class="w"> </span><span class="n">part0</span><span class="p">,</span><span class="w"> </span><span class="n">part1</span><span class="p">,</span><span class="w"> </span><span class="n">part2</span><span class="p">);</span>
+</pre></div>
+</div>
+<section id="automatic-partitions-for-static-library-globals">
+<h5>Automatic Partitions for Static Library Globals<a class="headerlink" href="#automatic-partitions-for-static-library-globals" title="Link to this heading"></a></h5>
+<p>The build-time logic for setting up automatic memory partitions is in
+<code class="docutils literal notranslate"><span class="pre">scripts/build/gen_app_partitions.py</span></code>. If a static library is linked into Zephyr,
+it is possible to route all the globals in that library to a specific
+memory partition with the <code class="docutils literal notranslate"><span class="pre">--library</span></code> argument.</p>
+<p>For example, if the Newlib C library is enabled, the Newlib globals all need
+to be placed in <code class="docutils literal notranslate"><span class="pre">z_libc_partition</span></code>. The invocation of the script in the
+top-level <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> adds the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>gen_app_partitions.py ... --library libc.a z_libc_partition ..
+</pre></div>
+</div>
+<p>For pre-compiled libraries there is no support for expressing this in the
+project-level configuration or build files; the toplevel <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> must
+be edited.</p>
+<p>For Zephyr libraries created using <code class="docutils literal notranslate"><span class="pre">zephyr_library</span></code> or <code class="docutils literal notranslate"><span class="pre">zephyr_library_named</span></code>
+the <code class="docutils literal notranslate"><span class="pre">zephyr_library_app_memory</span></code> function can be used to specify the memory
+partition where all globals in the library should be placed.</p>
+</section>
+</section>
+<section id="pre-defined-memory-partitions">
+<span id="memory-domain-predefined-partitions"></span><h4>Pre-defined Memory Partitions<a class="headerlink" href="#pre-defined-memory-partitions" title="Link to this heading"></a></h4>
+<p>There are a few memory partitions which are pre-defined by the system:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">z_malloc_partition</span></code> - This partition contains the system-wide pool of
+memory used by libc malloc(). Due to possible starvation issues, it is
+not recommended to draw heap memory from a global pool, instead
+it is better to define various sys_heap objects and assign them
+to specific memory domains.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">z_libc_partition</span></code> - Contains globals required by the C library and runtime.
+Required when using either the Minimal C library or the Newlib C Library.
+Required when <a class="reference internal" href="../../kconfig.html#CONFIG_STACK_CANARIES" title="CONFIG_STACK_CANARIES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_STACK_CANARIES</span></code></a> is enabled.</p></li>
+</ul>
+</div></blockquote>
+<p>Library-specific partitions are listed in <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/app_memory/partitions.h">include/zephyr/app_memory/partitions.h</a>.
+For example, to use the MBEDTLS library from user mode, the
+<code class="docutils literal notranslate"><span class="pre">k_mbedtls_partition</span></code> must be added to the domain.</p>
+</section>
+</section>
+<section id="memory-domain-usage">
+<h3>Memory Domain Usage<a class="headerlink" href="#memory-domain-usage" title="Link to this heading"></a></h3>
+<section id="create-a-memory-domain">
+<h4>Create a Memory Domain<a class="headerlink" href="#create-a-memory-domain" title="Link to this heading"></a></h4>
+<p>A memory domain is defined using a variable of type
+<a class="reference internal" href="../../doxygen/html/structk__mem__domain.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">k_mem_domain</span></code></a>. It must then be initialized by calling
+<a class="reference internal" href="../../doxygen/html/group__mem__domain__apis.html#ga8a987bc85c02925685fe87213fe26c5a" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_domain_init()</span></code></a>.</p>
+<p>The following code defines and initializes an empty memory domain.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">k_mem_domain</span><span class="w"> </span><span class="n">app0_domain</span><span class="p">;</span>
+
+<span class="n">k_mem_domain_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">app0_domain</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="add-memory-partitions-into-a-memory-domain">
+<h4>Add Memory Partitions into a Memory Domain<a class="headerlink" href="#add-memory-partitions-into-a-memory-domain" title="Link to this heading"></a></h4>
+<p>There are two ways to add memory partitions into a memory domain.</p>
+<p>This first code sample shows how to add memory partitions while creating
+a memory domain.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* the start address of the MPU region needs to align with its size */</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="nf">__aligned</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="n">app0_buf</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="nf">__aligned</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="n">app1_buf</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
+
+<span class="n">K_MEM_PARTITION_DEFINE</span><span class="p">(</span><span class="n">app0_part0</span><span class="p">,</span><span class="w"> </span><span class="n">app0_buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">app0_buf</span><span class="p">),</span>
+<span class="w">                       </span><span class="n">K_MEM_PARTITION_P_RW_U_RW</span><span class="p">);</span>
+
+<span class="n">K_MEM_PARTITION_DEFINE</span><span class="p">(</span><span class="n">app0_part1</span><span class="p">,</span><span class="w"> </span><span class="n">app1_buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">app1_buf</span><span class="p">),</span>
+<span class="w">                       </span><span class="n">K_MEM_PARTITION_P_RW_U_RO</span><span class="p">);</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">k_mem_partition</span><span class="w"> </span><span class="o">*</span><span class="n">app0_parts</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">app0_part0</span><span class="p">,</span>
+<span class="w">    </span><span class="n">app0_part1</span>
+<span class="p">};</span>
+
+<span class="n">k_mem_domain_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">app0_domain</span><span class="p">,</span><span class="w"> </span><span class="n">ARRAY_SIZE</span><span class="p">(</span><span class="n">app0_parts</span><span class="p">),</span><span class="w"> </span><span class="n">app0_parts</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This second code sample shows how to add memory partitions into an initialized
+memory domain one by one.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* the start address of the MPU region needs to align with its size */</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="nf">__aligned</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="n">app0_buf</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="nf">__aligned</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="n">app1_buf</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
+
+<span class="n">K_MEM_PARTITION_DEFINE</span><span class="p">(</span><span class="n">app0_part0</span><span class="p">,</span><span class="w"> </span><span class="n">app0_buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">app0_buf</span><span class="p">),</span>
+<span class="w">                       </span><span class="n">K_MEM_PARTITION_P_RW_U_RW</span><span class="p">);</span>
+
+<span class="n">K_MEM_PARTITION_DEFINE</span><span class="p">(</span><span class="n">app0_part1</span><span class="p">,</span><span class="w"> </span><span class="n">app1_buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">app1_buf</span><span class="p">),</span>
+<span class="w">                       </span><span class="n">K_MEM_PARTITION_P_RW_U_RO</span><span class="p">);</span>
+
+<span class="n">k_mem_domain_add_partition</span><span class="p">(</span><span class="o">&amp;</span><span class="n">app0_domain</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">app0_part0</span><span class="p">);</span>
+<span class="n">k_mem_domain_add_partition</span><span class="p">(</span><span class="o">&amp;</span><span class="n">app0_domain</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">app0_part1</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The maximum number of memory partitions is limited by the maximum
+number of MPU regions or the maximum number of MMU tables.</p>
+</div>
+</section>
+<section id="memory-domain-assignment">
+<h4>Memory Domain Assignment<a class="headerlink" href="#memory-domain-assignment" title="Link to this heading"></a></h4>
+<p>Any thread may join a memory domain, and any memory domain may have multiple
+threads assigned to it. Threads are assigned to memory domains with an API
+call:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">k_mem_domain_add_thread</span><span class="p">(</span><span class="o">&amp;</span><span class="n">app0_domain</span><span class="p">,</span><span class="w"> </span><span class="n">app_thread_id</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>If the thread was already a member of some other domain (including the
+default domain), it will be removed from it in favor of the new one.</p>
+<p>In addition, if a thread is a member of a memory domain, and it creates a
+child thread, that thread will belong to the domain as well.</p>
+</section>
+<section id="remove-a-memory-partition-from-a-memory-domain">
+<h4>Remove a Memory Partition from a Memory Domain<a class="headerlink" href="#remove-a-memory-partition-from-a-memory-domain" title="Link to this heading"></a></h4>
+<p>The following code shows how to remove a memory partition from a memory
+domain.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">k_mem_domain_remove_partition</span><span class="p">(</span><span class="o">&amp;</span><span class="n">app0_domain</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">app0_part1</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The k_mem_domain_remove_partition() API finds the memory partition
+that matches the given parameter and removes that partition from the
+memory domain.</p>
+</section>
+<section id="available-partition-attributes">
+<h4>Available Partition Attributes<a class="headerlink" href="#available-partition-attributes" title="Link to this heading"></a></h4>
+<p>When defining a partition, we need to set access permission attributes
+to the partition. Since the access control of memory partitions relies on
+either an MPU or MMU, the available partition attributes would be architecture
+dependent.</p>
+<p>The complete list of available partition attributes for a specific architecture
+is found in the architecture-specific include file
+<code class="docutils literal notranslate"><span class="pre">include/zephyr/arch/&lt;arch</span> <span class="pre">name&gt;/arch.h</span></code>, (for example, <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/arch/arm/arch.h">include/zephyr/arch/arm/arch.h</a>.)
+Some examples of partition attributes are:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Denote partition is privileged read/write, unprivileged read/write */</span>
+<span class="n">K_MEM_PARTITION_P_RW_U_RW</span>
+<span class="cm">/* Denote partition is privileged read/write, unprivileged read-only */</span>
+<span class="n">K_MEM_PARTITION_P_RW_U_RO</span>
+</pre></div>
+</div>
+<p>In almost all cases <code class="docutils literal notranslate"><span class="pre">K_MEM_PARTITION_P_RW_U_RW</span></code> is the right choice.</p>
+</section>
+</section>
+</section>
+<section id="configuration-options">
+<h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Link to this heading"></a></h2>
+<p>Related configuration options:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MAX_DOMAIN_PARTITIONS" title="CONFIG_MAX_DOMAIN_PARTITIONS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MAX_DOMAIN_PARTITIONS</span></code></a></p></li>
+</ul>
+</section>
+<section id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<p>The following memory domain APIs are provided by <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/kernel.h">include/zephyr/kernel.h</a>:</p>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__mem__domain__apis.html" title=""><span class="pre">Memory</span> <span class="pre">domain</span> <span class="pre">APIs</span></a></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+var asm_macro_64_bit_mwdt_8h =
+[
+    [ "$narg", "asm-macro-64-bit-mwdt_8h.html#ad1385b31668df52491c21319ebd92fd9", null ],
+    [ "ADD2R", "asm-macro-64-bit-mwdt_8h.html#abae854c7c1e2bbdf09afd83e4a2f931b", null ],
+    [ "ADD3R", "asm-macro-64-bit-mwdt_8h.html#addcee75a0f02e7c0e6509a645faef441", null ],
+    [ "ADDR", "asm-macro-64-bit-mwdt_8h.html#abdb73303312677832377cec11ddbcfb2", null ],
+    [ "ANDR", "asm-macro-64-bit-mwdt_8h.html#a77faee894232464d5aebec81651b4ec2", null ],
+    [ "ASLR", "asm-macro-64-bit-mwdt_8h.html#a2029c0d417dae61e19843d312739a317", null ],
+    [ "BMSKNR", "asm-macro-64-bit-mwdt_8h.html#aa5f8df7d6794de4e8b999d6f27eb26cd", null ],
+    [ "BREQR", "asm-macro-64-bit-mwdt_8h.html#af7748ddc29f3b0f94995b1b0393a7089", null ],
+    [ "BRR", "asm-macro-64-bit-mwdt_8h.html#a669b40b4c5c00c6c38d327ca6f8fb9f5", null ],
+    [ "CMPR", "asm-macro-64-bit-mwdt_8h.html#a112901bfa2cae27eead5f1b117b276e6", null ],
+    [ "d", "asm-macro-64-bit-mwdt_8h.html#a115a46bcc971f5b76b0c10997a1902e9", null ],
+    [ "LDR", "asm-macro-64-bit-mwdt_8h.html#a4bfaf9dfe8fddd7526716c9007a7cd87", null ],
+    [ "LRR", "asm-macro-64-bit-mwdt_8h.html#a917ec782be0164288e0437198ff99026", null ],
+    [ "LSRR", "asm-macro-64-bit-mwdt_8h.html#aeb496276f0b24fe5026aa43a92ec6be1", null ],
+    [ "MOVR", "asm-macro-64-bit-mwdt_8h.html#a62c92c2e7e269b0afb80256c5207da7b", null ],
+    [ "op1", "asm-macro-64-bit-mwdt_8h.html#a1aab4b8f06d98e34b6f619d279e48194", null ],
+    [ "ORR", "asm-macro-64-bit-mwdt_8h.html#aed2483697c78bf1e9bef39e9d9d4c11d", null ],
+    [ "POPR", "asm-macro-64-bit-mwdt_8h.html#ae0f954f282eaa7ea513662f4c6f5b86b", null ],
+    [ "PUSHR", "asm-macro-64-bit-mwdt_8h.html#a816d3dff509e4fbd6f919c24ea6baa00", null ],
+    [ "s", "asm-macro-64-bit-mwdt_8h.html#a8592182fba37f6a5ad2e67576130f9df", null ],
+    [ "SRR", "asm-macro-64-bit-mwdt_8h.html#a72534d5417fa70333c420b0b6e4b014f", null ],
+    [ "STR", "asm-macro-64-bit-mwdt_8h.html#ae60b8dec93a8b22478b4a3c0e5e3041e", null ],
+    [ "SUBR", "asm-macro-64-bit-mwdt_8h.html#aae8940805d698ecb34d3e7f37a4c4f34", null ]
+];

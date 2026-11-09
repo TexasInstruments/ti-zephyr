@@ -1,0 +1,28 @@
+var structppp__context =
+[
+    [ "flags", "structppp__context.html#a6b327cafe07a0807163589471a9bdae8", null ],
+    [ "fsm", "structppp__context.html#ac555024228a1e1d830c915a098428bc5", null ],
+    [ "iface", "structppp__context.html#a3b0bfb9c3ceece34565b282efa74390e", null ],
+    [ "is_enable_done", "structppp__context.html#acdee16f229cb6aa0672630de1d3ee39b", null ],
+    [ "is_enabled", "structppp__context.html#a7f103857c7412a6ee9471b6c67baea71", null ],
+    [ "is_ipcp_open", "structppp__context.html#a7ef9ac6bb1f86ea417032fe93fc7e8a0", null ],
+    [ "is_ipcp_up", "structppp__context.html#a861216f943c5af5d5db58f10ba4263ac", null ],
+    [ "is_ipv6cp_open", "structppp__context.html#ab139c8d6f1d16c702cb9ca92a7f82178", null ],
+    [ "is_ipv6cp_up", "structppp__context.html#a7b4ee6988626cb69c012a0b58c27bef5", null ],
+    [ "is_pap_open", "structppp__context.html#a80c2c3248c47fac7fce8d463cfbc0c9f", null ],
+    [ "is_pap_up", "structppp__context.html#a52227a05ce8a63f3a4f7535e60fdf979", null ],
+    [ "is_ready_to_serve", "structppp__context.html#a3d97c93b183ca455daf0e3bc2b9c25e1", null ],
+    [ "lcp", "structppp__context.html#a7705aedba900cf1de66b02ad488b7161", null ],
+    [ "magic", "structppp__context.html#a4d91bf9e6e36415b13be02ccf03d3e40", null ],
+    [ "mgmt_evt_cb", "structppp__context.html#a141cb0b4f4b99313de63a5bff2b7cafc", null ],
+    [ "my_options", "structppp__context.html#a37f609192ee6b739d7018d5a07ce179f", null ],
+    [ "my_options_data", "structppp__context.html#aec24ddc41138484c2e7608481d78f155", null ],
+    [ "network_protos_open", "structppp__context.html#a2e04c6e411fe5b07d9d2cda1a61db57f", null ],
+    [ "network_protos_up", "structppp__context.html#a9dd6e156897c53d488344bbbe05d4ae1", null ],
+    [ "peer_options", "structppp__context.html#a80fffd30b145b0842e36299ac78d5da8", null ],
+    [ "phase", "structppp__context.html#a6afb964ef87696fdadb5cb0c714bd841", null ],
+    [ "ppp_l2_flags", "structppp__context.html#a1c6674bad19047abcc3097bf5ff5f31d", null ],
+    [ "startup", "structppp__context.html#a5671d7ba465c424004f0460e5ed0d3ba", null ],
+    [ "wait_ppp_link_down", "structppp__context.html#ae784688e2d78f7427c6672583e326d94", null ],
+    [ "wait_ppp_link_terminated", "structppp__context.html#a1afa42c99b098407f8bba11e50178c84", null ]
+];

@@ -1,0 +1,761 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ring Buffers &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/kernel/data_structures/ring_buffers.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Multi Producer Single Consumer Lock Free Queue" href="mpsc_lockfree.html" />
+    <link rel="prev" title="Balanced Red/Black Tree" href="rbtree.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Kernel</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../services/index.html">Kernel Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drivers/index.html">Device Driver Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usermode/index.html">User Mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management/index.html">Memory Management</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Data Structures</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="slist.html">Single-linked List</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dlist.html">Double-linked List</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mpsc_pbuf.html">Multi Producer Single Consumer Packet Buffer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spsc_pbuf.html">Single Producer Single Consumer Packet Buffer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbtree.html">Balanced Red/Black Tree</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Ring Buffers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#concepts">Concepts</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#byte-mode">Byte mode</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#data-item-mode">Data item mode</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#concurrency">Concurrency</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#internal-operation">Internal Operation</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">Implementation</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#defining-a-ring-buffer">Defining a Ring Buffer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#enqueuing-data">Enqueuing Data</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#retrieving-data">Retrieving Data</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mpsc_lockfree.html">Multi Producer Single Consumer Lock Free Queue</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spsc_lockfree.html">Single Producer Single Consumer Lock Free Queue</a></li>
+<li class="toctree-l3"><a class="reference internal" href="min_heap.html">Min-Heap Data Structure</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../timing_functions/index.html">Executing Time Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../object_cores/index.html">Object Cores</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timeutil.html">Time Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../util/index.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iterable_sections/index.html">Iterable Sections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../code-relocation.html">Code And Data Relocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanup.html">Scope-based Cleanup Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Kernel</a> &raquo;</li>
+  
+     <li><a href="index.html">Data Structures</a> &raquo;</li>
+  
+  <li>Ring Buffers</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/kernel/data_structures/ring_buffers.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27kernel%2Fdata_structures%2Fring_buffers%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Kernel&env=-+Page%3A+kernel%2Fdata_structures%2Fring_buffers%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="ring-buffers">
+<span id="ring-buffers-v2"></span><h1>Ring Buffers<a class="headerlink" href="#ring-buffers" title="Link to this heading"></a></h1>
+<p>A <em class="dfn">ring buffer</em> is a circular buffer, whose contents are stored in
+first-in-first-out order.</p>
+<p>For circumstances where an application needs to implement asynchronous
+“streaming” copying of data, Zephyr provides a <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ring_buf</span></code>
+abstraction to manage copies of such data in and out of a shared
+buffer of memory.</p>
+<p>Two content data modes are supported:</p>
+<ul class="simple">
+<li><p><strong>Byte mode</strong>: raw bytes can be enqueued and dequeued.</p></li>
+<li><p><strong>Data item mode</strong>: Multiple 32-bit word data items with metadata
+can be enqueued and dequeued from the ring buffer in
+chunks of up to 1020 bytes.  Each data item also has two
+associated metadata values:  a type identifier and a 16-bit
+integer value, both of which are application-specific.</p></li>
+</ul>
+<p>While the underlying data structure is the same, it is not
+legal to mix these two modes on a single ring buffer instance.  A ring
+buffer initialized with a byte count must be used only with the
+“bytes” API, one initialized with a word count must use the “items”
+calls.</p>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#concepts" id="id1">Concepts</a></p>
+<ul>
+<li><p><a class="reference internal" href="#byte-mode" id="id2">Byte mode</a></p></li>
+<li><p><a class="reference internal" href="#data-item-mode" id="id3">Data item mode</a></p></li>
+<li><p><a class="reference internal" href="#concurrency" id="id4">Concurrency</a></p></li>
+<li><p><a class="reference internal" href="#internal-operation" id="id5">Internal Operation</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#implementation" id="id6">Implementation</a></p>
+<ul>
+<li><p><a class="reference internal" href="#defining-a-ring-buffer" id="id7">Defining a Ring Buffer</a></p></li>
+<li><p><a class="reference internal" href="#enqueuing-data" id="id8">Enqueuing Data</a></p></li>
+<li><p><a class="reference internal" href="#retrieving-data" id="id9">Retrieving Data</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#configuration-options" id="id10">Configuration Options</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id11">API Reference</a></p></li>
+</ul>
+</nav>
+<section id="concepts">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Concepts</a><a class="headerlink" href="#concepts" title="Link to this heading"></a></h2>
+<p>Any number of ring buffers can be defined (limited only by available RAM). Each
+ring buffer is referenced by its memory address.</p>
+<p>A ring buffer has the following key properties:</p>
+<ul class="simple">
+<li><p>A <strong>data buffer</strong> of bytes or 32-bit words. The data buffer contains the raw
+bytes or 32-bit words that have been added to the ring buffer but not yet
+removed.</p></li>
+<li><p>A <strong>data buffer size</strong>, measured in bytes or 32-bit words. This governs
+the maximum amount of data (including possible metadata values) the ring
+buffer can hold.</p></li>
+</ul>
+<p>A ring buffer must be initialized before it can be used. This sets its
+data buffer to empty.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ring_buf</span></code> may be placed anywhere in user-accessible
+memory, and must be initialized with <a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#gac06bc272bf99843c65bf28d851bffd55" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_init()</span></code></a> or
+<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga9d10210160544af25c9a67680aff578d" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_item_init()</span></code></a> before use. This must be provided a region
+of user-controlled memory for use as the buffer itself.  Note carefully that the units of the size of the
+buffer passed change (either bytes or words) depending on how the ring
+buffer will be used later.  Macros for combining these steps in a
+single static declaration exist for convenience.
+<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga803e45abf48ee207fc0ab4028726a82b" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">RING_BUF_DECLARE</span></code></a> will declare and statically initialize a ring
+buffer with a specified byte count, where
+<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga2fc2f4515121ac6bbf6aebf3e029bb5d" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">RING_BUF_ITEM_DECLARE</span></code></a> will declare and statically
+initialize a buffer with a given count of 32 bit words.
+<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga60451a56ed9b742abfa8e75ca320b004" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">RING_BUF_ITEM_SIZEOF</span></code></a> will compute the size in 32-bit words
+corresponding to a type or an expression.  Note: rounds up if the size is
+not a multiple of 32 bits.</p>
+<p>“Bytes” data may be copied into the ring buffer using
+<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga6c7e76e3ca798e994f738d114cb9a7e3" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_put()</span></code></a>, passing a data pointer and byte count.  These
+bytes will be copied into the buffer in order, as many as will fit in
+the allocated buffer.  The total number of bytes copied (which may be
+fewer than provided) will be returned.  Likewise <a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga209bef22c47f3938a36d7eb6c3b3dbc7" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_get()</span></code></a>
+will copy bytes out of the ring buffer in the order that they were
+written, into a user-provided buffer, returning the number of bytes
+that were transferred.</p>
+<p>To avoid multiply-copied-data situations, a “claim” API exists for
+byte mode.  <a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga0381d9c6413d78b9226d32532ef523eb" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_put_claim()</span></code></a> takes a byte size value from the
+user and returns a pointer to memory internal to the ring buffer that
+can be used to receive those bytes, along with a size of the
+contiguous internal region (which may be smaller than requested).  The
+user can then copy data into that region at a later time without
+assembling all the bytes in a single region first.  When complete,
+<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#gaf910aa666eac329813a55db732a21bd8" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_put_finish()</span></code></a> can be used to signal the buffer that the
+transfer is complete, passing the number of bytes actually
+transferred.  At this point a new transfer can be initiated.
+Similarly, <a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#gad7cd6e1fe8e47ab7f6d9c42b87581f19" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_get_claim()</span></code></a> returns a pointer to internal ring
+buffer data from which the user can read without making a verbatim
+copy, and <a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga8ea8ad9949bffd0d6f9b0785e18a6378" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_get_finish()</span></code></a> signals the buffer with how many
+bytes have been consumed and allows for a new transfer to begin.</p>
+<p>“Items” mode works similarly to bytes mode, except that all transfers
+are in units of 32 bit words and all memory is assumed to be aligned
+on 32 bit boundaries.  The write and read operations are
+<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga6cb71d7c1a36b6e142b251f08ed40599" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_item_put()</span></code></a> and <a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#gae0c62af11cab8a661638e50b312b58f8" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_item_get()</span></code></a>, and work
+otherwise identically to the bytes mode APIs.  There no “claim” API
+provided for items mode.  One important difference is that unlike
+<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga6c7e76e3ca798e994f738d114cb9a7e3" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_put()</span></code></a>, <a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga6cb71d7c1a36b6e142b251f08ed40599" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_item_put()</span></code></a> will not do a partial
+transfer; it will return an error in the case where the provided data
+does not fit in its entirety.</p>
+<p>The user can manage the capacity of a ring buffer without modifying it
+using either <a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga5eee438bd5bf08eb3a2da4cf2289903c" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_space_get()</span></code></a> or <a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga39c203f8e599098ce0d308e88d07d084" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_item_space_get()</span></code></a>
+which returns the number of free bytes or free 32-bit item words respectively,
+or by testing the <a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#gac1a8c9e4cc9c3485573082371a4d9574" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_is_empty()</span></code></a> predicate.</p>
+<p>Finally, a <a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga9cc0cd445eeeeba7183c3ac0778c7e18" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_reset()</span></code></a> call exists to immediately empty a
+ring buffer, discarding the tracking of any bytes or items already
+written to the buffer.  It does not modify the memory contents of the
+buffer itself, however.</p>
+<section id="byte-mode">
+<h3><a class="toc-backref" href="#id2" role="doc-backlink">Byte mode</a><a class="headerlink" href="#byte-mode" title="Link to this heading"></a></h3>
+<p>A <strong>byte mode</strong> ring buffer instance is declared using
+<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga803e45abf48ee207fc0ab4028726a82b" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">RING_BUF_DECLARE()</span></code></a> and accessed using:
+<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga0381d9c6413d78b9226d32532ef523eb" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_put_claim()</span></code></a>, <a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#gaf910aa666eac329813a55db732a21bd8" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_put_finish()</span></code></a>,
+<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#gad7cd6e1fe8e47ab7f6d9c42b87581f19" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_get_claim()</span></code></a>, <a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga8ea8ad9949bffd0d6f9b0785e18a6378" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_get_finish()</span></code></a>,
+<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga6c7e76e3ca798e994f738d114cb9a7e3" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_put()</span></code></a> and <a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga209bef22c47f3938a36d7eb6c3b3dbc7" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_get()</span></code></a>.</p>
+<p>Data can be copied into the ring buffer (see
+<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga6c7e76e3ca798e994f738d114cb9a7e3" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_put()</span></code></a>) or ring buffer memory can be used
+directly by the user. In the latter case, the operation is split into three stages:</p>
+<ol class="arabic simple">
+<li><p>allocating the buffer (<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga0381d9c6413d78b9226d32532ef523eb" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_put_claim()</span></code></a>) when
+user requests the destination location where data can be written.</p></li>
+<li><p>writing the data by the user (e.g. buffer written by DMA).</p></li>
+<li><p>indicating the amount of data written to the provided buffer
+(<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#gaf910aa666eac329813a55db732a21bd8" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_put_finish()</span></code></a>). The amount
+can be less than or equal to the allocated amount.</p></li>
+</ol>
+<p>Data can be retrieved from a ring buffer through copying
+(see <a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga209bef22c47f3938a36d7eb6c3b3dbc7" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_get()</span></code></a>) or accessed directly by address. In the latter
+case, the operation is split into three stages:</p>
+<ol class="arabic simple">
+<li><p>retrieving source location with valid data written to a ring buffer
+(see <a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#gad7cd6e1fe8e47ab7f6d9c42b87581f19" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_get_claim()</span></code></a>).</p></li>
+<li><p>processing data</p></li>
+<li><p>freeing processed data (see <a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga8ea8ad9949bffd0d6f9b0785e18a6378" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_get_finish()</span></code></a>).
+The amount freed can be less than or equal or to the retrieved amount.</p></li>
+</ol>
+</section>
+<section id="data-item-mode">
+<h3><a class="toc-backref" href="#id3" role="doc-backlink">Data item mode</a><a class="headerlink" href="#data-item-mode" title="Link to this heading"></a></h3>
+<p>A <strong>data item mode</strong> ring buffer instance is declared using
+<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga2fc2f4515121ac6bbf6aebf3e029bb5d" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">RING_BUF_ITEM_DECLARE()</span></code></a> and accessed using
+<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga6cb71d7c1a36b6e142b251f08ed40599" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_item_put()</span></code></a> and <a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#gae0c62af11cab8a661638e50b312b58f8" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_item_get()</span></code></a>.</p>
+<p>A ring buffer <strong>data item</strong> is an array of 32-bit words from 0 to 1020 bytes
+in length. When a data item is <strong>enqueued</strong> (<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga6cb71d7c1a36b6e142b251f08ed40599" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_item_put()</span></code></a>)
+its contents are copied to the data buffer, along with its associated metadata
+values (which occupy one additional 32-bit word). If the ring buffer has
+insufficient space to hold the new data item the enqueue operation fails.</p>
+<p>A data item is <strong>dequeued</strong> (<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#gae0c62af11cab8a661638e50b312b58f8" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_item_get()</span></code></a>) from a ring
+buffer by removing the oldest enqueued item. The contents of the dequeued data
+item, as well as its two metadata values, are copied to areas supplied by the
+retriever. If the ring buffer is empty, or if the data array supplied by the
+retriever is not large enough to hold the data item’s data, the dequeue
+operation fails.</p>
+</section>
+<section id="concurrency">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">Concurrency</a><a class="headerlink" href="#concurrency" title="Link to this heading"></a></h3>
+<p>The ring buffer APIs do not provide any concurrency control.
+Depending on usage (particularly with respect to number of concurrent
+readers/writers) applications may need to protect the ring buffer with
+mutexes and/or use semaphores to notify consumers that there is data to
+read.</p>
+<p>For the trivial case of one producer and one consumer, concurrency
+control shouldn’t be needed.</p>
+</section>
+<section id="internal-operation">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">Internal Operation</a><a class="headerlink" href="#internal-operation" title="Link to this heading"></a></h3>
+<p>Data streamed through a ring buffer is always written to the next byte
+within the buffer, wrapping around to the first element after reaching
+the end, thus the “ring” structure.  Internally, the <code class="docutils literal notranslate"><span class="pre">struct</span>
+<span class="pre">ring_buf</span></code> contains its own buffer pointer and its size, and also a
+set of “head” and “tail” indices representing where the next read and write
+operations may occur.</p>
+<p>This boundary is invisible to the user using the normal put/get APIs,
+but becomes a barrier to the “claim” API, because obviously no
+contiguous region can be returned that crosses the end of the buffer.
+This can be surprising to application code, and produce performance
+artifacts when transfers need to happen close to the end of the
+buffer, as the number of calls to claim/finish needs to double for such
+transfers.</p>
+</section>
+</section>
+<section id="implementation">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Implementation</a><a class="headerlink" href="#implementation" title="Link to this heading"></a></h2>
+<section id="defining-a-ring-buffer">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">Defining a Ring Buffer</a><a class="headerlink" href="#defining-a-ring-buffer" title="Link to this heading"></a></h3>
+<p>A ring buffer is defined using a variable of type <a class="reference internal" href="../../doxygen/html/structring__buf.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">ring_buf</span></code></a>.
+It must then be initialized by calling <a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#gac06bc272bf99843c65bf28d851bffd55" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_init()</span></code></a> or
+<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga9d10210160544af25c9a67680aff578d" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_item_init()</span></code></a>.</p>
+<p>The following code defines and initializes an empty <strong>data item mode</strong> ring
+buffer (which is part of a larger data structure). The ring buffer’s data buffer
+is capable of holding 64 words of data and metadata information.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define MY_RING_BUF_WORDS 64</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">my_struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">ring_buf</span><span class="w"> </span><span class="n">rb</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">buffer</span><span class="p">[</span><span class="n">MY_RING_BUF_WORDS</span><span class="p">];</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">};</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">my_struct</span><span class="w"> </span><span class="n">ms</span><span class="p">;</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">init_my_struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">ring_buf_item_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ms</span><span class="p">.</span><span class="n">rb</span><span class="p">,</span><span class="w"> </span><span class="n">MY_RING_BUF_WORDS</span><span class="p">,</span><span class="w"> </span><span class="n">ms</span><span class="p">.</span><span class="n">buffer</span><span class="p">);</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Alternatively, a ring buffer can be defined and initialized at compile time
+using one of two macros at file scope. Each macro defines both the ring
+buffer itself and its data buffer.</p>
+<p>The following code defines a <strong>data item mode</strong> ring buffer:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define MY_RING_BUF_WORDS 93</span>
+<span class="n">RING_BUF_ITEM_DECLARE</span><span class="p">(</span><span class="n">my_ring_buf</span><span class="p">,</span><span class="w"> </span><span class="n">MY_RING_BUF_WORDS</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The following code defines a ring buffer intended to be used for raw bytes:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define MY_RING_BUF_BYTES 93</span>
+<span class="n">RING_BUF_DECLARE</span><span class="p">(</span><span class="n">my_ring_buf</span><span class="p">,</span><span class="w"> </span><span class="n">MY_RING_BUF_BYTES</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="enqueuing-data">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">Enqueuing Data</a><a class="headerlink" href="#enqueuing-data" title="Link to this heading"></a></h3>
+<p>Bytes are copied to a <strong>byte mode</strong> ring buffer by calling
+<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga6c7e76e3ca798e994f738d114cb9a7e3" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_put()</span></code></a>.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">my_data</span><span class="p">[</span><span class="n">MY_RING_BUF_BYTES</span><span class="p">];</span>
+<span class="kt">uint32_t</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ring_buf_put</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ring_buf</span><span class="p">,</span><span class="w"> </span><span class="n">my_data</span><span class="p">,</span><span class="w"> </span><span class="n">MY_RING_BUF_BYTES</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">MY_RING_BUF_BYTES</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* not enough room, partial copy. */</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Data can be added to a <strong>byte mode</strong> ring buffer by directly accessing the
+ring buffer’s memory.  For example:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="kt">uint32_t</span><span class="w"> </span><span class="n">rx_size</span><span class="p">;</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">data</span><span class="p">;</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">err</span><span class="p">;</span>
+
+<span class="cm">/* Allocate buffer within a ring buffer memory. */</span>
+<span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ring_buf_put_claim</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ring_buf</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">MY_RING_BUF_BYTES</span><span class="p">);</span>
+
+<span class="cm">/* Work directly on a ring buffer memory. */</span>
+<span class="n">rx_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uart_rx</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">);</span>
+
+<span class="cm">/* Indicate amount of valid data. rx_size can be equal or less than size. */</span>
+<span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ring_buf_put_finish</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ring_buf</span><span class="p">,</span><span class="w"> </span><span class="n">rx_size</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* This shouldn&#39;t happen unless rx_size &gt; size */</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>A data item is added to a ring buffer by calling
+<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga6cb71d7c1a36b6e142b251f08ed40599" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_item_put()</span></code></a>.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">data</span><span class="p">[</span><span class="n">MY_DATA_WORDS</span><span class="p">];</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ring_buf_item_put</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ring_buf</span><span class="p">,</span><span class="w"> </span><span class="n">TYPE_FOO</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">MY_DATA_WORDS</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">-</span><span class="n">EMSGSIZE</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* not enough room for the data item */</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>If the data item requires only the type or application-specific integer value
+(i.e. it has no data array), a size of 0 and data pointer of <a class="reference internal" href="../../doxygen/html/iar__missing__defs_8h.html#a070d2ce7b6bb7e5c05602aa8c308d0c4" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">NULL</span></code></a>
+can be specified.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ring_buf_item_put</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ring_buf</span><span class="p">,</span><span class="w"> </span><span class="n">TYPE_BAR</span><span class="p">,</span><span class="w"> </span><span class="mi">17</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">-</span><span class="n">EMSGSIZE</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* not enough room for the data item */</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="retrieving-data">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">Retrieving Data</a><a class="headerlink" href="#retrieving-data" title="Link to this heading"></a></h3>
+<p>Data bytes are copied out from a <strong>byte mode</strong> ring buffer by calling
+<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#ga209bef22c47f3938a36d7eb6c3b3dbc7" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_get()</span></code></a>. For example:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">my_data</span><span class="p">[</span><span class="n">MY_DATA_BYTES</span><span class="p">];</span>
+<span class="kt">size_t</span><span class="w">  </span><span class="n">ret</span><span class="p">;</span>
+
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ring_buf_get</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ring_buf</span><span class="p">,</span><span class="w"> </span><span class="n">my_data</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">my_data</span><span class="p">));</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">my_data</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* Fewer bytes copied. */</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* Requested amount of bytes retrieved. */</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Data can be retrieved from a <strong>byte mode</strong> ring buffer by direct
+operations on the ring buffer’s memory.  For example:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="kt">uint32_t</span><span class="w"> </span><span class="n">proc_size</span><span class="p">;</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">data</span><span class="p">;</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">err</span><span class="p">;</span>
+
+<span class="cm">/* Get buffer within a ring buffer memory. */</span>
+<span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ring_buf_get_claim</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ring_buf</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">MY_RING_BUF_BYTES</span><span class="p">);</span>
+
+<span class="cm">/* Work directly on a ring buffer memory. */</span>
+<span class="n">proc_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">process</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">);</span>
+
+<span class="cm">/* Indicate amount of data that can be freed. proc_size can be equal or less</span>
+<span class="cm"> * than size.</span>
+<span class="cm"> */</span>
+<span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ring_buf_get_finish</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ring_buf</span><span class="p">,</span><span class="w"> </span><span class="n">proc_size</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* proc_size exceeds amount of valid data in a ring buffer. */</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>A data item is removed from a ring buffer by calling
+<a class="reference internal" href="../../doxygen/html/group__ring__buffer__apis.html#gae0c62af11cab8a661638e50b312b58f8" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ring_buf_item_get()</span></code></a>.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">my_data</span><span class="p">[</span><span class="n">MY_DATA_WORDS</span><span class="p">];</span>
+<span class="kt">uint16_t</span><span class="w"> </span><span class="n">my_type</span><span class="p">;</span>
+<span class="kt">uint8_t</span><span class="w">  </span><span class="n">my_value</span><span class="p">;</span>
+<span class="kt">uint8_t</span><span class="w">  </span><span class="n">my_size</span><span class="p">;</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+
+<span class="n">my_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MY_DATA_WORDS</span><span class="p">;</span>
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ring_buf_item_get</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ring_buf</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_type</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_value</span><span class="p">,</span><span class="w"> </span><span class="n">my_data</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_size</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">-</span><span class="n">EMSGSIZE</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">printk</span><span class="p">(</span><span class="s">&quot;Buffer is too small, need %d uint32_t</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">my_size</span><span class="p">);</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">-</span><span class="n">EAGAIN</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">printk</span><span class="p">(</span><span class="s">&quot;Ring buffer is empty</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">printk</span><span class="p">(</span><span class="s">&quot;Got item of type %u value &amp;u of size %u dwords</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+<span class="w">           </span><span class="n">my_type</span><span class="p">,</span><span class="w"> </span><span class="n">my_value</span><span class="p">,</span><span class="w"> </span><span class="n">my_size</span><span class="p">);</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="configuration-options">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">Configuration Options</a><a class="headerlink" href="#configuration-options" title="Link to this heading"></a></h2>
+<p>Related configuration options:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_RING_BUFFER" title="CONFIG_RING_BUFFER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_RING_BUFFER</span></code></a>: Enable ring buffer.</p></li>
+</ul>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">API Reference</a><a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<p>The following ring buffer APIs are provided by <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/sys/ring_buffer.h">include/zephyr/sys/ring_buffer.h</a>:</p>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__ring__buffer__apis.html" title=""><span class="pre">Ring</span> <span class="pre">Buffer</span> <span class="pre">APIs</span></a></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

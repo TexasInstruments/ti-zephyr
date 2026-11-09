@@ -1,0 +1,529 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Network Interface &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/connectivity/networking/api/net_if.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="L2 Layer Management" href="net_l2.html" />
+    <link rel="prev" title="Network Core Helpers" href="net_core.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Connectivity</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../canbus/index.html">Controller Area Network (CAN) Bus Protocols</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Networking</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../net-stack-architecture.html">Network Stack Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../net_config_guide.html">Network Configuration Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../networking_with_host.html">Networking with the host system</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../network_monitoring.html">Monitor Network Traffic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../network_tracing.html">Network Tracing</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Networking APIs</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="apis.html">Network APIs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="buf_mgmt.html">Network Packet Management</a></li>
+<li class="toctree-l4"><a class="reference internal" href="net_tech.html">Networking Technologies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="protocols.html">Protocols</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="system_mgmt.html">Network System Management</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="net_config.html">Network Configuration Library</a></li>
+<li class="toctree-l5"><a class="reference internal" href="dhcpv4.html">DHCPv4</a></li>
+<li class="toctree-l5"><a class="reference internal" href="dhcpv6.html">DHCPv6</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_hostname.html">Hostname Configuration</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_core.html">Network Core Helpers</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">Network Interface</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_l2.html">L2 Layer Management</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_offload.html">Network Traffic Offloading</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_linkaddr.html">Link Layer Address Handling</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ethernet_mgmt.html">Ethernet Management</a></li>
+<li class="toctree-l5"><a class="reference internal" href="traffic-class.html">Traffic Classification</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_pkt_filter.html">Network Packet Filtering</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_shell.html">Network Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="tls_credentials_shell.html">TLS Credentials Shell</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="tsn.html">Time Sensitive Networking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="zperf.html">zperf: Network Traffic Generator</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../conn_mgr/index.html">Connection Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dsa.html">Distributed Switch Architecture (DSA)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa and LoRaWAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../usb/index.html">USB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Connectivity</a> &raquo;</li>
+  
+     <li><a href="../index.html">Networking</a> &raquo;</li>
+  
+     <li><a href="index.html">Networking APIs</a> &raquo;</li>
+  
+     <li><a href="system_mgmt.html">Network System Management</a> &raquo;</li>
+  
+  <li>Network Interface</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/connectivity/networking/api/net_if.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27connectivity%2Fnetworking%2Fapi%2Fnet_if%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Networking&env=-+Page%3A+connectivity%2Fnetworking%2Fapi%2Fnet_if%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="network-interface">
+<span id="net-if-interface"></span><h1>Network Interface<a class="headerlink" href="#network-interface" title="Link to this heading"></a></h1>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id1">Overview</a></p></li>
+<li><p><a class="reference internal" href="#network-interface-state-management" id="id2">Network interface state management</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id3">API Reference</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Overview</a><a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The network interface is a nexus that ties the network device drivers
+and the upper part of the network stack together. All the sent and received
+data is transferred via a network interface. The network interfaces cannot be
+created at runtime. A special linker section will contain information about them
+and that section is populated at linking time.</p>
+<p>Network interfaces are created by <code class="docutils literal notranslate"><span class="pre">NET_DEVICE_INIT()</span></code> macro.
+For Ethernet network, a macro called <code class="docutils literal notranslate"><span class="pre">ETH_NET_DEVICE_INIT()</span></code> should be used
+instead as it will create VLAN interfaces automatically if
+<a class="reference internal" href="../../../kconfig.html#CONFIG_NET_VLAN" title="CONFIG_NET_VLAN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_VLAN</span></code></a> is enabled. These macros are typically used in
+network device driver source code.</p>
+<p>The network interface can be turned ON by calling <code class="docutils literal notranslate"><span class="pre">net_if_up()</span></code> and OFF
+by calling <code class="docutils literal notranslate"><span class="pre">net_if_down()</span></code>. When the device is powered ON, the network
+interface is also turned ON by default.</p>
+<p>The network interfaces can be referenced either by a <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">net_if</span> <span class="pre">*</span></code>
+pointer or by a network interface index. The network interface can be
+resolved from its index by calling <code class="docutils literal notranslate"><span class="pre">net_if_get_by_index()</span></code> and from interface
+pointer by calling <code class="docutils literal notranslate"><span class="pre">net_if_get_by_iface()</span></code>.</p>
+<p id="net-if-interface-ip-management">The IP address for network devices must be set for them to be connectable.
+In a typical dynamic network environment, IP addresses are set automatically
+by DHCPv4, for example. If needed though, the application can set a device’s
+IP address manually.  See the API documentation below for functions such as
+<code class="docutils literal notranslate"><span class="pre">net_if_ipv4_addr_add()</span></code> that do that.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">net_if_get_default()</span></code> returns a <em>default</em> network interface. What
+this default interface means can be configured via options like
+<a class="reference internal" href="../../../kconfig.html#CONFIG_NET_DEFAULT_IF_FIRST" title="CONFIG_NET_DEFAULT_IF_FIRST"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_DEFAULT_IF_FIRST</span></code></a> and
+<a class="reference internal" href="../../../kconfig.html#CONFIG_NET_DEFAULT_IF_ETHERNET" title="CONFIG_NET_DEFAULT_IF_ETHERNET"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_DEFAULT_IF_ETHERNET</span></code></a>.
+See Kconfig file <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/subsys/net/ip/Kconfig">subsys/net/ip/Kconfig</a> what options are available for
+selecting the default network interface.</p>
+<p>The transmitted and received network packets can be classified via a network
+packet priority. This is typically done in Ethernet networks when virtual LANs
+(VLANs) are used. Higher priority packets can be sent or received earlier than
+lower priority packets. The traffic class setup can be configured by
+<a class="reference internal" href="../../../kconfig.html#CONFIG_NET_TC_TX_COUNT" title="CONFIG_NET_TC_TX_COUNT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_TC_TX_COUNT</span></code></a> and <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_TC_RX_COUNT" title="CONFIG_NET_TC_RX_COUNT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_TC_RX_COUNT</span></code></a> options.</p>
+<p>If the <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_PROMISCUOUS_MODE" title="CONFIG_NET_PROMISCUOUS_MODE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_PROMISCUOUS_MODE</span></code></a> is enabled and if the underlying
+network technology supports promiscuous mode, then it is possible to receive
+all the network packets that the network device driver is able to receive.
+See <a class="reference internal" href="promiscuous.html#promiscuous-interface"><span class="std std-ref">Promiscuous Mode</span></a> API for more details.</p>
+</section>
+<section id="network-interface-state-management">
+<span id="net-if-interface-state-management"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">Network interface state management</a><a class="headerlink" href="#network-interface-state-management" title="Link to this heading"></a></h2>
+<p>Zephyr distinguishes between two interface states: administrative state and
+operational state, as described in RFC 2863. The administrative state indicate
+whether an interface is turned ON or OFF. This state is represented by
+<a class="reference internal" href="../../../doxygen/html/group__net__if.html#ggae691e5537917ffce27ad0db82c730371ab0ab7393d643354c46c3437d74c15840" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">NET_IF_UP</span></code></a> flag and is controlled by the application. It can be
+changed by calling <a class="reference internal" href="../../../doxygen/html/group__net__if.html#ga02644cc623fc7a8878c17d54984e4210" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">net_if_up()</span></code></a> or <a class="reference internal" href="../../../doxygen/html/group__net__if.html#ga2187650062d6139b9f4b81745a206803" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">net_if_down()</span></code></a> functions.
+Network drivers or L2 implementations should not change administrative state on
+their own.</p>
+<p>Bringing an interface up however not always means that the interface is ready to
+transmit packets. Because of that, operational state, which represents the
+internal interface status, was implemented. The operational state is updated
+whenever one of the following conditions take place:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The interface is brought up/down by the application (administrative state
+changes).</p></li>
+<li><p>The interface is notified by the driver/L2 that PHY status has changed.</p></li>
+<li><p>The interface is notified by the driver/L2 that it joined/left a network.</p></li>
+</ul>
+</div></blockquote>
+<p>The PHY status is represented with <a class="reference internal" href="../../../doxygen/html/group__net__if.html#ggae691e5537917ffce27ad0db82c730371ab1a529826bad6b4bcd04185372f97d6d" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">NET_IF_LOWER_UP</span></code></a> flag and can
+be changed with <a class="reference internal" href="../../../doxygen/html/group__net__if.html#ga35e5db3a631ac9039f14d86e59fc0dcc" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">net_if_carrier_on()</span></code></a> and <a class="reference internal" href="../../../doxygen/html/group__net__if.html#ga6839941422a88c1f707ab70ea34df323" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">net_if_carrier_off()</span></code></a>. By
+default, the flag is set on a newly initialized interface. An example of an
+event that changes the carrier state is Ethernet cable being plugged in or out.</p>
+<p>The network association status is represented with <a class="reference internal" href="../../../doxygen/html/group__net__if.html#ggae691e5537917ffce27ad0db82c730371a7dd1db72a37b1fbc4c4491ce1c75238d" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">NET_IF_DORMANT</span></code></a>
+flag and can be changed with <a class="reference internal" href="../../../doxygen/html/group__net__if.html#ga89a3374d4bb116460a7b7c50a750b593" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">net_if_dormant_on()</span></code></a> and
+<a class="reference internal" href="../../../doxygen/html/group__net__if.html#ga1c31fac887d944ac0a16aad70e889496" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">net_if_dormant_off()</span></code></a>. By default, the flag is cleared on a newly
+initialized interface. An example of an event that changes the dormant state is
+a Wi-Fi driver successfully connecting to an access point. In this scenario,
+driver should set the dormant state to ON during initialization, and once it
+detects that it connected to a Wi-Fi network, the dormant state should be set
+to OFF.</p>
+<p>The operational state of an interface is updated as follows:</p>
+<blockquote>
+<div><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">!net_if_is_admin_up()</span></code></p>
+<p>Interface is in <a class="reference internal" href="../../../doxygen/html/group__net__if.html#ggadfe9d90f24046cd9bd4bbee096e747b9adb20a95215310c420f8dae7e17a2f367" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">NET_IF_OPER_DOWN</span></code></a>.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">net_if_is_admin_up()</span> <span class="pre">&amp;&amp;</span> <span class="pre">!net_if_is_carrier_ok()</span></code></p>
+<p>Interface is in <a class="reference internal" href="../../../doxygen/html/group__net__if.html#ggadfe9d90f24046cd9bd4bbee096e747b9adb20a95215310c420f8dae7e17a2f367" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">NET_IF_OPER_DOWN</span></code></a> or
+<a class="reference internal" href="../../../doxygen/html/group__net__if.html#ggadfe9d90f24046cd9bd4bbee096e747b9ae7e9b8b12ae618a5ee1483dee916aab4" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">NET_IF_OPER_LOWERLAYERDOWN</span></code></a> if the interface is stacked
+(virtual).</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">net_if_is_admin_up()</span> <span class="pre">&amp;&amp;</span> <span class="pre">net_if_is_carrier_ok()</span> <span class="pre">&amp;&amp;</span> <span class="pre">net_if_is_dormant()</span></code></p>
+<p>Interface is in <a class="reference internal" href="../../../doxygen/html/group__net__if.html#ggadfe9d90f24046cd9bd4bbee096e747b9a5cbe2aa27a444444d4acf122113d430d" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">NET_IF_OPER_DORMANT</span></code></a>.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">net_if_is_admin_up()</span> <span class="pre">&amp;&amp;</span> <span class="pre">net_if_is_carrier_ok()</span> <span class="pre">&amp;&amp;</span> <span class="pre">!net_if_is_dormant()</span></code></p>
+<p>Interface is in <a class="reference internal" href="../../../doxygen/html/group__net__if.html#ggadfe9d90f24046cd9bd4bbee096e747b9a6b99bfc28d831292029761d74209ee03" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">NET_IF_OPER_UP</span></code></a>.</p>
+</li>
+</ul>
+</div></blockquote>
+<p>Only after an interface enters <a class="reference internal" href="../../../doxygen/html/group__net__if.html#ggadfe9d90f24046cd9bd4bbee096e747b9a6b99bfc28d831292029761d74209ee03" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">NET_IF_OPER_UP</span></code></a> state the
+<a class="reference internal" href="../../../doxygen/html/group__net__if.html#ggae691e5537917ffce27ad0db82c730371add3e2ecdcd5de3154f9bd2836428a25a" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">NET_IF_RUNNING</span></code></a> flag is set on the interface indicating that the
+interface is ready to be used by the application.</p>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">API Reference</a><a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../doxygen/html/group__net__if.html" title=""><span class="pre">Network</span> <span class="pre">Interface</span> <span class="pre">abstraction</span> <span class="pre">layer</span></a></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/ethernet/bridge/README.html#bridge" title="Test and debug Ethernet bridge">bridge</a></span><span class="code-sample-description">Test and debug Ethernet bridge</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/ipv4_autoconf/README.html#ipv4-autoconf" title="Perform IPv4 autoconfiguration and self-assign a random IPv4 address">IPv4 autoconf client</a></span><span class="code-sample-description">Perform IPv4 autoconfiguration and self-assign a random IPv4 address</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/net_mgmt/README.html#sockets-net-mgmt" title="Listen to network management events using a network management socket.">Network management socket</a></span><span class="code-sample-description">Listen to network management events using a network management socket.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/telnet/README.html#telnet-console" title="Access Zephyr shell over telnet.">Telnet console</a></span><span class="code-sample-description">Access Zephyr shell over telnet.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/ethernet/vlan/README.html#vlan" title="Setup two virtual LAN networks and use net-shell to view the networks' settings.">Virtual LAN</a></span><span class="code-sample-description">Setup two virtual LAN networks and use net-shell to view the networks' settings.</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

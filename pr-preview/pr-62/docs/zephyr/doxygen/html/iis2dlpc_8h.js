@@ -1,0 +1,26 @@
+var iis2dlpc_8h =
+[
+    [ "IIS2DLPC_DT_FF_THRESHOLD_156_mg", "iis2dlpc_8h.html#a31b120d2c9f9271f6d6c0e6270d6869c", null ],
+    [ "IIS2DLPC_DT_FF_THRESHOLD_219_mg", "iis2dlpc_8h.html#aa03f24ea0546d41d75b7b27980ec4a03", null ],
+    [ "IIS2DLPC_DT_FF_THRESHOLD_250_mg", "iis2dlpc_8h.html#aa97f60a94b60643bf8fd53ba93a213b5", null ],
+    [ "IIS2DLPC_DT_FF_THRESHOLD_312_mg", "iis2dlpc_8h.html#a6958c72e3b6a4202c2e393802f44c045", null ],
+    [ "IIS2DLPC_DT_FF_THRESHOLD_344_mg", "iis2dlpc_8h.html#a368134487e769d5b6a9a8c43caf75fb4", null ],
+    [ "IIS2DLPC_DT_FF_THRESHOLD_406_mg", "iis2dlpc_8h.html#a189b31dc699c5c7698289502d1d4a2c2", null ],
+    [ "IIS2DLPC_DT_FF_THRESHOLD_469_mg", "iis2dlpc_8h.html#abb23c1eaaa0b82d566e3c6fb24b4bf75", null ],
+    [ "IIS2DLPC_DT_FF_THRESHOLD_500_mg", "iis2dlpc_8h.html#a84b6e0ed1a646f349e7e166e18ef3b5d", null ],
+    [ "IIS2DLPC_DT_FILTER_BW_ODR_DIV_10", "iis2dlpc_8h.html#ae701e403e5b068c4188bf6ecebc5e088", null ],
+    [ "IIS2DLPC_DT_FILTER_BW_ODR_DIV_2", "iis2dlpc_8h.html#abf53338af02c9036850d61f4942123fe", null ],
+    [ "IIS2DLPC_DT_FILTER_BW_ODR_DIV_20", "iis2dlpc_8h.html#ab453a45f6561c03f6c2657b025fb8280", null ],
+    [ "IIS2DLPC_DT_FILTER_BW_ODR_DIV_4", "iis2dlpc_8h.html#a24ba2864f9a1c76f73636ab40ce977cc", null ],
+    [ "IIS2DLPC_DT_HP_MODE", "iis2dlpc_8h.html#a623fd5c18feaac196c33265ea84aa0e8", null ],
+    [ "IIS2DLPC_DT_LP_M1", "iis2dlpc_8h.html#a1e1c2a12612d55d0d1a60e6df5cc3050", null ],
+    [ "IIS2DLPC_DT_LP_M2", "iis2dlpc_8h.html#a52571a5d3d8e7a042a442f8d8b55029e", null ],
+    [ "IIS2DLPC_DT_LP_M3", "iis2dlpc_8h.html#ada77b7def23ffce8089c4773204a5ed0", null ],
+    [ "IIS2DLPC_DT_LP_M4", "iis2dlpc_8h.html#aa39b8641e427747eb81ab276b30447f9", null ],
+    [ "IIS2DLPC_DT_SINGLE_DOUBLE_TAP", "iis2dlpc_8h.html#ae49fca709c40c78ae3001454d2277761", null ],
+    [ "IIS2DLPC_DT_SINGLE_TAP", "iis2dlpc_8h.html#a52c4b179f307100adfbe341dcc8756b1", null ],
+    [ "IIS2DLPC_DT_WAKEUP_1_ODR", "iis2dlpc_8h.html#ad369d4265e7542856d5ccd052fcb3025", null ],
+    [ "IIS2DLPC_DT_WAKEUP_2_ODR", "iis2dlpc_8h.html#ad7f6fb74463c30e726dc34ef9462993c", null ],
+    [ "IIS2DLPC_DT_WAKEUP_3_ODR", "iis2dlpc_8h.html#ad3f89e84420074c53fc9e13a30f116a8", null ],
+    [ "IIS2DLPC_DT_WAKEUP_4_ODR", "iis2dlpc_8h.html#a651cadb8f638381169876dbd5291714a", null ]
+];

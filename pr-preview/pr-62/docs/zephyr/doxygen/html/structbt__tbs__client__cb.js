@@ -1,0 +1,25 @@
+var structbt__tbs__client__cb =
+[
+    [ "accept_call", "structbt__tbs__client__cb.html#a41242d76c976eef102d480965f977537", null ],
+    [ "bearer_provider_name", "structbt__tbs__client__cb.html#a36d8ea1717e57b9440e9b58e9411422a", null ],
+    [ "bearer_uci", "structbt__tbs__client__cb.html#a15ccb7de457631620983e7d2d0372967", null ],
+    [ "call_state", "structbt__tbs__client__cb.html#a88cb69ef54c9399bceb5641202eeabce", null ],
+    [ "call_uri", "structbt__tbs__client__cb.html#ae95494a76e1f3275f48204dcd4798712", null ],
+    [ "ccid", "structbt__tbs__client__cb.html#a90acde153f8893b5cba891884529d86c", null ],
+    [ "current_calls", "structbt__tbs__client__cb.html#a10dc9404533db388b3ae1058542efd66", null ],
+    [ "discover", "structbt__tbs__client__cb.html#abfd4542a0781ff5676a191249f121e91", null ],
+    [ "friendly_name", "structbt__tbs__client__cb.html#ad2089050db76453b7f9c51c3d2fa4d17", null ],
+    [ "hold_call", "structbt__tbs__client__cb.html#a304a5fd373f1ba5ccb2eb77fcdbbd380", null ],
+    [ "join_calls", "structbt__tbs__client__cb.html#a2d6b7acd90d05c61f60f27236ab6f1ee", null ],
+    [ "optional_opcodes", "structbt__tbs__client__cb.html#a91c61b29c16a43fd3f781fd7e0ab4618", null ],
+    [ "originate_call", "structbt__tbs__client__cb.html#a0bc51181f188a1249407f2e50431d9fd", null ],
+    [ "remote_uri", "structbt__tbs__client__cb.html#a354ba5d21376813adc5c9765a5da1a09", null ],
+    [ "retrieve_call", "structbt__tbs__client__cb.html#a2a5fb7de5c3c4aab290c0163c0b40858", null ],
+    [ "signal_interval", "structbt__tbs__client__cb.html#a01426c4a84e71a9395cce2963e2e83a3", null ],
+    [ "signal_strength", "structbt__tbs__client__cb.html#a96df90461159f97f5dc8cbb72cd0cbc4", null ],
+    [ "status_flags", "structbt__tbs__client__cb.html#a94c3bfc1e88518de9e29e947064ec8dc", null ],
+    [ "technology", "structbt__tbs__client__cb.html#a803d8268ee1271f41aec68f6d9b811bf", null ],
+    [ "terminate_call", "structbt__tbs__client__cb.html#aa78425597fe7fd0db09d69c3ed757293", null ],
+    [ "termination_reason", "structbt__tbs__client__cb.html#ae8e5cbe52cbb300e1cd919d24c85c4df", null ],
+    [ "uri_list", "structbt__tbs__client__cb.html#a7f64cf8e3d0bc4ec21c44bd4fea6d7ee", null ]
+];

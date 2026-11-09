@@ -1,0 +1,683 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multi-domain logging using ARM Coresight STM &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/services/logging/cs_stm.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Tracing" href="../tracing/index.html" />
+    <link rel="prev" title="Logging" href="index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">OS Services</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../binary_descriptors/index.html">Binary Descriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../console.html">Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cpu_freq/index.html">CPU Frequency Scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cpu_load/index.html">CPU Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../crc/index.html">CRC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../crypto/index.html">Cryptography</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debugging/index.html">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">Device Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dsp/index.html">Digital Signal Processing (DSP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../formatted_output.html">Formatted Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../input/index.html">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../instrumentation/index.html">Instrumentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ipc/index.html">Interprocessor Communication (IPC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../jwt/index.html">JSON Web Token (JWT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../llext/index.html">Linkable Loadable Extensions (LLEXT)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Logging</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html#global-kconfig-options">Global Kconfig Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#usage">Usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#rate-limited-logging">Rate-limited logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#logging-panic">Logging panic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#printk">Printk</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#architecture">Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#recommendations-and-limitations">Recommendations and limitations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#benchmark">Benchmark</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#stack-usage">Stack usage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#logging-using-arm-coresight-stm">Logging using ARM Coresight STM</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#api-reference">API Reference</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="index.html#logger-api">Logger API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#logger-control">Logger control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#id15">Log message</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#logger-backend-interface">Logger backend interface</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html#logger-output-formatting">Logger output formatting</a><ul class="current">
+<li class="toctree-l5 current"><a class="current reference internal" href="#">Multi-domain logging using ARM Coresight STM</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tracing/index.html">Tracing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resource_management/index.html">Resource Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mem_mgmt/index.html">Memory Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../net_buf/index.html">Network Buffers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modem/index.html">Modem modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notify.html">Asynchronous Notifications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pm/index.html">Power Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">OS Abstraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../poweroff.html">Power off</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../profiling/index.html">Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../shell/index.html">Shell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../serialization/index.html">Serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../smf/index.html">State Machine Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sensing/index.html">Sensing Subsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../task_wdt/index.html">Task Watchdog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tfm/index.html">Trusted Firmware-M (TF-M)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../uuid/index.html">UUID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rtio/index.html">Real Time I/O (RTIO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../zbus/index.html">Zephyr bus (zbus)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">OS Services</a> &raquo;</li>
+  
+     <li><a href="index.html">Logging</a> &raquo;</li>
+  
+  <li>Multi-domain logging using ARM Coresight STM</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/services/logging/cs_stm.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27services%2Flogging%2Fcs_stm%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Logging&env=-+Page%3A+services%2Flogging%2Fcs_stm%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="multi-domain-logging-using-arm-coresight-stm">
+<span id="logging-cs-stm"></span><h1>Multi-domain logging using ARM Coresight STM<a class="headerlink" href="#multi-domain-logging-using-arm-coresight-stm" title="Link to this heading"></a></h1>
+<p>The Arm CoreSight SoC-400 is a comprehensive library of components for the creation of debug and
+trace functionality within a system. The STM (System Trace Macrocell) is a trace source that
+is integrated into a CoreSight system, designed primarily for high-bandwidth trace of
+instrumentation embedded into software. This instrumentation is made up of memory-mapped writes to
+the STMESP (STM Extended Stimulus Port) peripheral registers. Multiple cores can share and directly
+access the STM without being aware of each other. Each core has 65536 stimulus ports (identical
+register sets) which can be independently accessed thus there is no need for locking when various
+contexts want to log the data.</p>
+<section id="stm-extended-stimulus-port-stmesp">
+<h2>STM Extended Stimulus Port (STMESP)<a class="headerlink" href="#stm-extended-stimulus-port-stmesp" title="Link to this heading"></a></h2>
+<p>Local domain (each core) has access to its own set of STMESP peripherals. Each set has registers for writing data (with or without timestamp and with or without marking) and writing a flag. Each write
+to STMESP register results in the user data being encoded into MIPI System Trace Protocol v2 (STPv2).
+Hardware manages multiplexing of data from different STMESP register sets and from different cores
+by adding Major and Channel opcodes into the stream when necessary. Timestamp (from common source for all cores) and synchronization opcodes are autonomously added by the STM.</p>
+<p>Data stream generated by STM can end up in various sinks. For example it can be directly send to
+TPIU (Trace Port Interface Unit) or saved in the RAM Circular Buffer which is called ETR (Embedded
+Trace Router). TPIU is a 5 pin interface (4 data pins and clock) and external tool is required to
+capture the data (e.g. J-Trace PRO).
+When ETR is used then one core in the system is responsible for processing that data, for example
+dumping it over UART to the host.</p>
+</section>
+<section id="arm-coresight-embedded-trace-router-etr">
+<h2>ARM Coresight Embedded Trace Router (ETR)<a class="headerlink" href="#arm-coresight-embedded-trace-router-etr" title="Link to this heading"></a></h2>
+<p>ETR is a circular RAM buffer to which tracing data is saved. Since it may contain data from
+various sources additional wrapping protocol is used to multiplex them. <code class="docutils literal notranslate"><span class="pre">Coresight</span> <span class="pre">Trace</span>
+<span class="pre">Formatter</span></code> is used for that. Data is encoded into 16 bytes frames which holds up to 15 byte
+of data. Circular RAM buffer size is limited to 4k thus there is a risk of data overflow. If
+overflow occurs then data is lost but due to presence of synchronization opcodes in the STPv2
+data stream synchronization can be restored.</p>
+<p>Data from ETR is handled on the device. It can be forwarded as-is to the host (e.g. using UART),
+where a host tool is decoding the data or data can be decoded on-chip to output the data in human readable format.</p>
+<p>Nordic Semiconductor NRF54H20 implementation instead of using ETR peripheral for getting
+buffer busyness is using own wrapper: Trace Buffer Monitor (TBM).</p>
+</section>
+<section id="stmesp-logging-frontend">
+<h2>STMESP Logging frontend<a class="headerlink" href="#stmesp-logging-frontend" title="Link to this heading"></a></h2>
+<p><a class="reference internal" href="index.html#log-frontend"><span class="std std-ref">Custom Frontend</span></a> API is implemented. Custom frontend assumes that all required operations are executed in the context of the logging macro call. It is also assumed that frontend provides the timestamp. Frontend utilizes a fact that there are multiple STMESP register sets and use multiple sets to avoid locking context. The atomically incremented channel counter is used to pick unique STMESP set and
+whole message is written to that STMESP. Limited pool of sets is used leaving most of channels for
+other purposes.</p>
+<section id="early-logging">
+<h3>Early logging<a class="headerlink" href="#early-logging" title="Link to this heading"></a></h3>
+<p>STMESP cannot be used before STM or ETR/TPIU is setup. In order to support early logging,
+before infrastructure is ready a dedicated RAM buffer is used to which data is written. When
+STM infrastructure readiness is notified (<a class="reference internal" href="../../doxygen/html/log__frontend__stmesp_8h.html#afdfa76ad219bd073b54825ae50cf13d3" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">log_frontend_stmesp_etr_ready()</span></code></a>) then RAM buffer
+content is written to STMESP. Early logging is applicable only to the core which owns and configures
+Coresight infrastructure (e.g. in case of NRF54H20 it is the Secure core).</p>
+</section>
+<section id="trace-points">
+<h3>Trace points<a class="headerlink" href="#trace-points" title="Link to this heading"></a></h3>
+<p>There may be cases when logging is too slow (even though it is very fast). For cases like that a dedicated <code class="docutils literal notranslate"><span class="pre">trace</span> <span class="pre">point</span></code> API is added. It is extremely fast because it is just a single
+write to one STMESP register. There are 2 functions in the API:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../doxygen/html/log__frontend__stmesp_8h.html#ab2b829f38108c54490090dcd97719cec" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">log_frontend_stmesp_tp()</span></code></a> - It accepts single argument - index. Index is between
+0 and 65280.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/log__frontend__stmesp_8h.html#a68b8bdb65457ffa2c0ab7c97b8414600" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">log_frontend_stmesp_tp_d32()</span></code></a> - It accepts two arguments - index and user data.
+Index is between 0 and 65280. User data is 32 bit word.</p></li>
+</ul>
+<p>It takes less than 100 ns to log a single trace point on NRF54H20 and it is approx. 7 times faster than the fastest log message.</p>
+</section>
+</section>
+<section id="logging-using-stm">
+<h2>Logging using STM<a class="headerlink" href="#logging-using-stm" title="Link to this heading"></a></h2>
+<p>STM logging has 2 modes of operations:</p>
+<ul class="simple">
+<li><p>Dictionary-based - assisted mode which is using dictionary-based logging. In this mode logging
+strings can be removed from the binary because they are only needed for decoding and decoding
+is performed by the host tool. This mode takes less memory and is faster (2-3 times faster).
+There is less data written so there is less chance of data overflow in ETR buffer.</p></li>
+<li><p>Standalone - data is decoded on chip and human-readable strings are printed. This mode requires
+more device resources and processing power.</p></li>
+</ul>
+<p>Following figure presents multi-domain logging using ARM Coresight STM.</p>
+<figure class="align-default">
+<img alt="../../_images/coresight_architecture.png" src="../../_images/coresight_architecture.png" />
+</figure>
+<p>Each core (local domain) is using logging frontend which writes logging data to STMESP registers.</p>
+<p>If TPIU is used as the output then there is no more software components needed. STPv2 stream
+of data is composed by STM and send over TPIU.</p>
+<p>If ETR RAM buffer is used then buffer owner core (<code class="docutils literal notranslate"><span class="pre">proxy</span></code>) is responsible for handling that data.
+If dictionary-based logging is used then proxy just sends data as-is over UART.
+If standalone logging is used then proxy is using <a class="reference internal" href="../debugging/cs_trace_defmt.html#cs-trace-defmt"><span class="std std-ref">ARM Coresight Trace Deformatter</span></a> and
+<a class="reference internal" href="../debugging/mipi_stp_decoder.html#mipi-stp-decoder"><span class="std std-ref">MIPI STP Decoder</span></a> to decode data and demultiplex messages. Messages are formatted to human
+readable strings using logging <a class="reference internal" href="index.html#log-output"><span class="std std-ref">Message formatting</span></a>.</p>
+<section id="dictionary-based-logging">
+<h3>Dictionary-based logging<a class="headerlink" href="#dictionary-based-logging" title="Link to this heading"></a></h3>
+<p>Assisted multicore logging uses dictionary-based logging to send messages without redundant strings
+to STM, and is based on the <a class="reference internal" href="index.html#logging-guide-dictionary"><span class="std std-ref">Dictionary-based Logging</span></a> feature of the logging API provided by
+Zephyr.
+Instead of including the format strings in the log messages, it logs the addresses (message IDs)
+where the strings are stored, which reduces the size of the logging subsystem.
+If the data goes to the ETR buffer, the proxy core’s responsibility is to dump this data.
+The host PC, equipped with a decoder tool, translates these addresses back into human-readable text
+using a JSON database generated during the build process.</p>
+<p>When using logs, this method has the following advantages:</p>
+<ul class="simple">
+<li><p>It reduces the size of the binary, as the strings used in the log messages are not stored in the binary itself. Logging infrastructure is also very limited. On local domains it is just the frontend. There is even no need to have string formatting function.</p></li>
+<li><p>It reduces the amount of data that needs to be sent to and processed by the application core, as the string formatting is offloaded to the host side.</p></li>
+<li><p>Logging is fast. It takes less than 1 us to log a simple message (up to 2 arguments) on NRF54H20.</p></li>
+</ul>
+<p>Proxy core is using Nordic specific peripheral (TBM) to get ETR buffer busyness and send data over
+UART. Nordic specific driver for ETR buffer is located in
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/drivers/debug/debug_nrf_etr.c">drivers/debug/debug_nrf_etr.c</a>.</p>
+<section id="configuration">
+<h4>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h4>
+<p>For Nordic SoC a dedicated snippet (<a class="reference internal" href="../../snippets/nordic/nordic-log-stm-dict/README.html#nordic-log-stm-dict"><span class="std std-ref">Nordic Dictionary-based STM logging snippet (nordic-log-stm-dict)</span></a>) shall be used to enable logging.
+Each core shall be build with that snippet. If any core wants to use it then application core is
+required to have it enabled too since it acts as the proxy (ETR buffer processing). All cores must use the same configuration of the logging.</p>
+</section>
+<section id="reading-the-logs">
+<h4>Reading the logs<a class="headerlink" href="#reading-the-logs" title="Link to this heading"></a></h4>
+<p>To read the dictionary-based STM log output, do the following:</p>
+<ol class="arabic">
+<li><p>Set up the log capture.</p>
+<p>Use the <code class="docutils literal notranslate"><span class="pre">nrfutil</span> <span class="pre">trace</span> <span class="pre">stm</span></code> command to start capturing logs from the device, specifying the database configuration for each domain ID, as well as the serial port, the baud rate, and the output file name:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>nrfutil trace stm --database-config 34:build/zephyr/log_dictionary.json,35:build_rad/zephyr/log_dictionary.json --input-serialport /dev/ttyACM1 --baudrate 115200 --output-ascii out.txt
+</pre></div>
+</div>
+</li>
+<li><p>Capture and decode the logs.</p>
+<p>nrfutil will capture the log data from the specified UART port and use the provided dictionary databases to decode the logs into a human-readable format.
+The decoded logs will be saved in the specified output file (the <code class="file docutils literal notranslate"><span class="pre">out.txt</span></code> file in the previous example).</p>
+</li>
+<li><p>Open the output file to review the decoded log messages.</p>
+<p>The file will contain timestamps and the log messages in a format that is human-readable.</p>
+</li>
+</ol>
+<p>If the log capture fails to find a sync, rerun the capture process.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Decoding artifacts or incorrect timestamps might occur when rerunning the process.</p>
+</div>
+<p>Each log line contains a domain-related or core-related prefix between the log level and the module name, indicating the core that generated the log entry.
+The following are the prefixes used to indicate the cores:</p>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">nRF54H20 log prefixes</span><a class="headerlink" href="#id3" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Core</p></th>
+<th class="head"><p>Prefix</p></th>
+<th class="head"><p>ID</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Secure Domain</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sec</span></code></p></td>
+<td><p>0x21</p></td>
+</tr>
+<tr class="row-odd"><td><p>Application core</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">app</span></code></p></td>
+<td><p>0x22</p></td>
+</tr>
+<tr class="row-even"><td><p>Radio core</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">rad</span></code></p></td>
+<td><p>0x23</p></td>
+</tr>
+<tr class="row-odd"><td><p>System Controller (SysCtrl)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sys</span></code></p></td>
+<td><p>0x2c</p></td>
+</tr>
+<tr class="row-even"><td><p>Fast Lightweight Processor (FLPR)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">flpr</span></code></p></td>
+<td><p>0x2d</p></td>
+</tr>
+<tr class="row-odd"><td><p>Peripheral Processor (PPR)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ppr</span></code></p></td>
+<td><p>0x2e</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mod</span></code></p></td>
+<td><p>0x24</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="stand-alone-logging">
+<h3>Stand-alone logging<a class="headerlink" href="#stand-alone-logging" title="Link to this heading"></a></h3>
+<p>Frontend is writing to STMESP registers. Message format is aligned with the on chip decoder
+in <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/subsys/logging/frontends/log_frontend_stmesp_demux.c">subsys/logging/frontends/log_frontend_stmesp_demux.c</a>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Proxy</span></code> is using Nordic specific peripheral (TBM) to get ETR buffer busyness and read and
+decode data and send human-readable data over UART. Nordic specific driver for ETR buffer is
+located in <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/drivers/debug/debug_nrf_etr.c">drivers/debug/debug_nrf_etr.c</a>. It is using <a class="reference internal" href="../debugging/cs_trace_defmt.html#cs-trace-defmt"><span class="std std-ref">ARM Coresight Trace Deformatter</span></a> and
+<a class="reference internal" href="../debugging/mipi_stp_decoder.html#mipi-stp-decoder"><span class="std std-ref">MIPI STP Decoder</span></a> and above-mentioned demultiplexer to decode messages.</p>
+<p>Logging messages contains read-only format string used in the logging macros thus they cannot be
+removed from the binary. This mode uses more read-only memory and has lower throughput because
+messages are longer and processing is time consuming. Compared to the dictionary-based mode logging
+is 2-3 slower.</p>
+<section id="id1">
+<h4>Configuration<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<p>For Nordic SoC a dedicated snippet (<a class="reference internal" href="../../snippets/nordic/nordic-log-stm/README.html#nordic-log-stm"><span class="std std-ref">Nordic Standalone STM logging snippet (nordic-log-stm)</span></a>) shall be used to enable logging.
+Each core shall be build with that snippet. If any core wants to use it then application core is
+required to have it enabled too since it acts as the proxy (ETR buffer processing). All cores must use the same configuration of the logging.</p>
+</section>
+<section id="id2">
+<h4>Reading the logs<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
+<p>Logs are printed using Console UART.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To use UART in your application, the UART’s node must be described in devicetree.
+For more details, see <a class="reference internal" href="../../build/dts/intro.html#devicetree-intro"><span class="std std-ref">Introduction to devicetree</span></a>.</p>
+</div>
+<p>The following is an example log output:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[00:00:00.154,790] &lt;inf&gt; app/spsc_pbuf: alloc in 0x2f0df800
+[00:00:00.163,319] &lt;inf&gt; app/spsc_pbuf: alloc 0x2f0df800 wr_idx:20
+[00:00:00.181,112] &lt;inf&gt; app/spsc_pbuf: commit in 0x2f0df800
+[00:00:00.189,090] &lt;inf&gt; app/spsc_pbuf: commit 0x2f0df800, len:20 wr_idx: 44
+[00:00:00.202,577] &lt;inf&gt; rad/icmsg: mbox_callback
+[00:00:00.214,750] &lt;inf&gt; rad/spsc_pbuf: claim 0x2f0df800 rd_idx:20
+[00:00:00.235,823] &lt;inf&gt; rad/spsc_pbuf: free 0x2f0df800 len:20 rd_idx: 44
+[00:00:00.244,507] &lt;inf&gt; rad/spsc_pbuf: read done 0x2f0df800 len:20
+[00:00:00.272,444] &lt;inf&gt; rad/host: ep recv 0x330021f0, len:20
+[00:00:00.283,939] &lt;inf&gt; rad/host: rx:00 exp:00
+[00:00:00.292,200] &lt;inf&gt; rad/icmsg: read 0
+[00:00:05.077,026] &lt;inf&gt; rad/spsc_pbuf: alloc in 0x2f0df000
+[00:00:05.077,068] &lt;inf&gt; rad/spsc_pbuf: alloc 0x2f0df000 wr_idx:44
+[00:00:05.077,098] &lt;inf&gt; rad/spsc_pbuf: commit in 0x2f0df000
+[00:00:05.077,134] &lt;inf&gt; rad/spsc_pbuf: commit 0x2f0df000, len:20 wr_idx
+</pre></div>
+</div>
+<p>Each log line contains a domain-related or core-related prefix between the log level and the module name, indicating the core that generated the log entry.
+The following are the prefixes used to indicate the cores:</p>
+<table class="docutils align-default" id="id4">
+<caption><span class="caption-text">nRF54H20 log prefixes</span><a class="headerlink" href="#id4" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Core</p></th>
+<th class="head"><p>Prefix</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Secure Domain</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sec</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Application core</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">app</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Radio core</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">rad</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>System Controller (SysCtrl)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sys</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Fast Lightweight Processor (FLPR)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">flpr</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Peripheral Processor (PPR)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ppr</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="additional-considerations">
+<h3>Additional considerations<a class="headerlink" href="#additional-considerations" title="Link to this heading"></a></h3>
+<p>When using STM logging, consider the following:</p>
+<ul class="simple">
+<li><p>Use optimized log macros (having up to 2 word size numeric arguments, like <code class="docutils literal notranslate"><span class="pre">LOG_INF(&quot;%d</span> <span class="pre">%c&quot;,</span> <span class="pre">(int)x,</span> <span class="pre">(char)y)</span></code>) to improve the size and speed of logging.</p></li>
+<li><p>For memory constrained applications (for example, when running on the PPR core), disable the <code class="docutils literal notranslate"><span class="pre">printk()</span></code> function by setting both the <a class="reference internal" href="../../kconfig.html#CONFIG_PRINTK" title="CONFIG_PRINTK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PRINTK</span></code></a> and <a class="reference internal" href="../../kconfig.html#CONFIG_BOOT_BANNER" title="CONFIG_BOOT_BANNER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BOOT_BANNER</span></code></a> Kconfig options to <code class="docutils literal notranslate"><span class="pre">n</span></code> in your project configuration.</p></li>
+<li><p>When working with multiple domains, such as the Radio core and Application core, ensure that each database is prefixed with the correct domain ID.</p></li>
+<li><p>Some log messages might be dropped due to the limited size of the RAM buffer that stores STM logs.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

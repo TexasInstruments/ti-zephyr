@@ -1,0 +1,902 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coccinelle &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/develop/tools/coccinelle.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="STM32CubeIDE" href="stm32cubeide.html" />
+    <link rel="prev" title="CLion" href="clion.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developing with Zephyr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/index.html">Getting Started Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beyond-GSG.html">Beyond the Getting Started Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env_vars.html">Environment Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../application/index.html">Application Development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debug/index.html">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/index.html">API Status and Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../languages/index.html">Language Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optimizations/index.html">Optimizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flash_debug/index.html">Flashing and Hardware Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html">Modules (External projects)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../west/index.html">West (Zephyr’s meta-tool)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../test/index.html">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sca/index.html">Static Code Analysis (SCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains/index.html">Toolchains</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Tools and IDEs</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="clion.html">CLion</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Coccinelle</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#getting-coccinelle">Getting Coccinelle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#supplemental-documentation">Supplemental documentation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-coccinelle-on-zephyr">Using Coccinelle on Zephyr</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#coccinelle-parallelization">Coccinelle parallelization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-coccinelle-with-a-single-semantic-patch">Using Coccinelle with a single semantic patch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#controlling-which-files-are-processed-by-coccinelle">Controlling which files are processed by Coccinelle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#debugging-coccinelle-smpl-patches">Debugging Coccinelle SmPL patches</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#additional-flags">Additional Flags</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#smpl-patch-specific-options">SmPL patch specific options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#proposing-new-semantic-patches">Proposing new semantic patches</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#example">Example</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#id2">Example</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#id3">Example</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#id4">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#detailed-description-of-the-report-mode">Detailed description of the <code class="docutils literal notranslate"><span class="pre">report</span></code> mode</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id5">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#detailed-description-of-the-patch-mode">Detailed description of the <code class="docutils literal notranslate"><span class="pre">patch</span></code> mode</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id6">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#detailed-description-of-the-context-mode">Detailed description of the <code class="docutils literal notranslate"><span class="pre">context</span></code> mode</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id7">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#detailed-description-of-the-org-mode">Detailed description of the <code class="docutils literal notranslate"><span class="pre">org</span></code> mode</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id8">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#coccinelle-mailing-list">Coccinelle Mailing List</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="stm32cubeide.html">STM32CubeIDE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vscode.html">Visual Studio Code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workbench_for_zephyr.html">Workbench for Zephyr</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Developing with Zephyr</a> &raquo;</li>
+  
+     <li><a href="index.html">Tools and IDEs</a> &raquo;</li>
+  
+  <li>Coccinelle</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/develop/tools/coccinelle.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27develop%2Ftools%2Fcoccinelle%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Documentation&env=-+Page%3A+develop%2Ftools%2Fcoccinelle%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <span class="target" id="coccinelle"></span><section id="id1">
+<h1>Coccinelle<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>Coccinelle is a tool for pattern matching and text transformation that has
+many uses in kernel development, including the application of complex,
+tree-wide patches and detection of problematic programming patterns.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Linux and macOS development environments are supported, but not Windows.</p>
+</div>
+<section id="getting-coccinelle">
+<h2>Getting Coccinelle<a class="headerlink" href="#getting-coccinelle" title="Link to this heading"></a></h2>
+<p>The semantic patches included in the kernel use features and options
+which are provided by Coccinelle version 1.0.0-rc11 and above.
+Using earlier versions will fail as the option names used by
+the Coccinelle files and <code class="docutils literal notranslate"><span class="pre">coccicheck</span></code> have been updated.</p>
+<p>Coccinelle is available through the package manager
+of many distributions, e.g. :</p>
+<ul class="rst-columns simple">
+<li><p>Debian</p></li>
+<li><p>Fedora</p></li>
+<li><p>Ubuntu</p></li>
+<li><p>OpenSUSE</p></li>
+<li><p>Arch Linux</p></li>
+<li><p>NetBSD</p></li>
+<li><p>FreeBSD</p></li>
+</ul>
+<p>Some distribution packages are obsolete and it is recommended
+to use the latest version released from the Coccinelle homepage at
+<a class="reference external" href="https://coccinelle.lip6.fr/">https://coccinelle.lip6.fr/</a></p>
+<p>Or from Github at:</p>
+<p><a class="reference external" href="https://github.com/coccinelle/coccinelle">https://github.com/coccinelle/coccinelle</a></p>
+<p>Once you have it, run the following commands:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./autogen</span>
+<span class="go">./configure</span>
+<span class="go">make</span>
+</pre></div>
+</div>
+<p>as a regular user, and install it with:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sudo make install</span>
+</pre></div>
+</div>
+<p>More detailed installation instructions to build from source can be
+found at:</p>
+<p><a class="reference external" href="https://github.com/coccinelle/coccinelle/blob/master/install.txt">https://github.com/coccinelle/coccinelle/blob/master/install.txt</a></p>
+</section>
+<section id="supplemental-documentation">
+<h2>Supplemental documentation<a class="headerlink" href="#supplemental-documentation" title="Link to this heading"></a></h2>
+<p>For Semantic Patch Language(SmPL) grammar documentation refer to:</p>
+<p><a class="reference external" href="https://coccinelle.gitlabpages.inria.fr/website/documentation.html">https://coccinelle.gitlabpages.inria.fr/website/documentation.html</a></p>
+</section>
+<section id="using-coccinelle-on-zephyr">
+<h2>Using Coccinelle on Zephyr<a class="headerlink" href="#using-coccinelle-on-zephyr" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">coccicheck</span></code> checker is the front-end to the Coccinelle infrastructure
+and has various modes:</p>
+<p>Four basic modes are defined: <code class="docutils literal notranslate"><span class="pre">patch</span></code>, <code class="docutils literal notranslate"><span class="pre">report</span></code>, <code class="docutils literal notranslate"><span class="pre">context</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">org</span></code>. The mode to use is specified by setting <code class="docutils literal notranslate"><span class="pre">--mode=&lt;mode&gt;</span></code> or
+<code class="docutils literal notranslate"><span class="pre">-m=&lt;mode&gt;</span></code>.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">patch</span></code> proposes a fix, when possible.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">report</span></code> generates a list in the following format:
+<a class="reference external" href="file:line:column-column">file:line:column-column</a>: message</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">context</span></code> highlights lines of interest and their context in a
+diff-like style.Lines of interest are indicated with <code class="docutils literal notranslate"><span class="pre">-</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">org</span></code> generates a report in the Org mode format of Emacs.</p></li>
+</ul>
+<p>Note that not all semantic patches implement all modes. For easy use
+of Coccinelle, the default mode is <code class="docutils literal notranslate"><span class="pre">report</span></code>.</p>
+<p>Two other modes provide some common combinations of these modes.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">chain</span></code> tries the previous modes in the order above until one succeeds.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rep+ctxt</span></code> runs successively the report mode and the context mode.
+It should be used with the C option (described later)
+which checks the code on a file basis.</p></li>
+</ul>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<p>To make a report for every semantic patch, run the following command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/coccicheck --mode=report</span>
+</pre></div>
+</div>
+<p>To produce patches, run:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/coccicheck --mode=patch</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">coccicheck</span></code> target applies every semantic patch available in the
+sub-directories of <code class="docutils literal notranslate"><span class="pre">scripts/coccinelle</span></code> to the entire source code tree.</p>
+<p>For each semantic patch, a commit message is proposed.  It gives a
+description of the problem being checked by the semantic patch, and
+includes a reference to Coccinelle.</p>
+<p>As any static code analyzer, Coccinelle produces false
+positives. Thus, reports must be carefully checked, and patches reviewed.</p>
+<p>To enable verbose messages set <code class="docutils literal notranslate"><span class="pre">--verbose=1</span></code> option, for example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/coccicheck --mode=report --verbose=1</span>
+</pre></div>
+</div>
+</section>
+<section id="coccinelle-parallelization">
+<h2>Coccinelle parallelization<a class="headerlink" href="#coccinelle-parallelization" title="Link to this heading"></a></h2>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">coccicheck</span></code> tries to run as parallel as possible. To change
+the parallelism, set the <code class="docutils literal notranslate"><span class="pre">--jobs=&lt;number&gt;</span></code> option. For example, to run
+across 4 CPUs:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/coccicheck --mode=report --jobs=4</span>
+</pre></div>
+</div>
+<p>As of Coccinelle 1.0.2 Coccinelle uses Ocaml parmap for parallelization,
+if support for this is detected you will benefit from parmap parallelization.</p>
+<p>When parmap is enabled <code class="docutils literal notranslate"><span class="pre">coccicheck</span></code> will enable dynamic load balancing by using
+<code class="docutils literal notranslate"><span class="pre">--chunksize</span> <span class="pre">1</span></code> argument, this ensures we keep feeding threads with work
+one by one, so that we avoid the situation where most work gets done by only
+a few threads. With dynamic load balancing, if a thread finishes early we keep
+feeding it more work.</p>
+<p>When parmap is enabled, if an error occurs in Coccinelle, this error
+value is propagated back, the return value of the <code class="docutils literal notranslate"><span class="pre">coccicheck</span></code>
+command captures this return value.</p>
+</section>
+<section id="using-coccinelle-with-a-single-semantic-patch">
+<h2>Using Coccinelle with a single semantic patch<a class="headerlink" href="#using-coccinelle-with-a-single-semantic-patch" title="Link to this heading"></a></h2>
+<p>The option <code class="docutils literal notranslate"><span class="pre">--cocci</span></code> can be used to check a single
+semantic patch. In that case, the variable must be initialized with
+the name of the semantic patch to apply.</p>
+<p>For instance:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/coccicheck --mode=report --cocci=&lt;example.cocci&gt;</span>
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/coccicheck --mode=report --cocci=./path/to/&lt;example.cocci&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="controlling-which-files-are-processed-by-coccinelle">
+<h2>Controlling which files are processed by Coccinelle<a class="headerlink" href="#controlling-which-files-are-processed-by-coccinelle" title="Link to this heading"></a></h2>
+<p>By default the entire source tree is checked.</p>
+<p>To apply Coccinelle to a specific directory, pass the path of specific
+directory as an argument.</p>
+<p>For example, to check <code class="docutils literal notranslate"><span class="pre">drivers/usb/</span></code> one may write:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/coccicheck --mode=patch drivers/usb/</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">report</span></code> mode is the default. You can select another one with the
+<code class="docutils literal notranslate"><span class="pre">--mode=&lt;mode&gt;</span></code> option explained above.</p>
+</section>
+<section id="debugging-coccinelle-smpl-patches">
+<h2>Debugging Coccinelle SmPL patches<a class="headerlink" href="#debugging-coccinelle-smpl-patches" title="Link to this heading"></a></h2>
+<p>Using <code class="docutils literal notranslate"><span class="pre">coccicheck</span></code> is best as it provides in the spatch command line
+include options matching the options used when we compile the kernel.
+You can learn what these options are by using verbose option, you could
+then manually run Coccinelle with debug options added.</p>
+<p>Alternatively you can debug running Coccinelle against SmPL patches
+by asking for stderr to be redirected to stderr, by default stderr
+is redirected to /dev/null, if you’d like to capture stderr you
+can specify the <code class="docutils literal notranslate"><span class="pre">--debug=file.err</span></code> option to <code class="docutils literal notranslate"><span class="pre">coccicheck</span></code>. For
+instance:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">rm -f cocci.err</span>
+<span class="go">./scripts/coccicheck --mode=patch --debug=cocci.err</span>
+<span class="go">cat cocci.err</span>
+</pre></div>
+</div>
+<p>Debugging support is only supported when using Coccinelle &gt;= 1.0.2.</p>
+</section>
+<section id="additional-flags">
+<h2>Additional Flags<a class="headerlink" href="#additional-flags" title="Link to this heading"></a></h2>
+<p>Additional flags can be passed to spatch through the SPFLAGS
+variable. This works as Coccinelle respects the last flags
+given to it when options are in conflict.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/coccicheck --sp-flag=&quot;--use-glimpse&quot;</span>
+</pre></div>
+</div>
+<p>Coccinelle supports idutils as well but requires coccinelle &gt;= 1.0.6.
+When no ID file is specified coccinelle assumes your ID database file
+is in the file .id-utils.index on the top level of the kernel, coccinelle
+carries a script scripts/idutils_index.sh which creates the database with:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">mkid -i C --output .id-utils.index</span>
+</pre></div>
+</div>
+<p>If you have another database filename you can also just symlink with this
+name.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/coccicheck --sp-flag=&quot;--use-idutils&quot;</span>
+</pre></div>
+</div>
+<p>Alternatively you can specify the database filename explicitly, for
+instance:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/coccicheck --sp-flag=&quot;--use-idutils /full-path/to/ID&quot;</span>
+</pre></div>
+</div>
+<p>Sometimes coccinelle doesn’t recognize or parse complex macro variables
+due to insufficient definition. Therefore, to make it parsable we
+explicitly provide the prototype of the complex macro using the
+<code class="docutils literal notranslate"><span class="pre">---macro-file-builtins</span> <span class="pre">&lt;headerfile.h&gt;</span></code> flag.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">&lt;headerfile.h&gt;</span></code> should contain the complete prototype of
+the complex macro from which spatch engine can extract the type
+information required during transformation.</p>
+<p>For example:</p>
+<p><code class="docutils literal notranslate"><span class="pre">Z_SYSCALL_HANDLER</span></code> is not recognized by coccinelle. Therefore, we
+put its prototype in a header file, say for example <code class="docutils literal notranslate"><span class="pre">mymacros.h</span></code>.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>cat<span class="w"> </span>mymacros.h
+<span class="gp">#</span>define<span class="w"> </span>Z_SYSCALL_HANDLER<span class="w"> </span>int<span class="w"> </span>xxx
+</pre></div>
+</div>
+<p>Now we pass the header file <code class="docutils literal notranslate"><span class="pre">mymacros.h</span></code> during transformation:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/coccicheck --sp-flag=&quot;---macro-file-builtins mymacros.h&quot;</span>
+</pre></div>
+</div>
+<p>See <code class="docutils literal notranslate"><span class="pre">spatch</span> <span class="pre">--help</span></code> to learn more about spatch options.</p>
+<p>Note that the <code class="docutils literal notranslate"><span class="pre">--use-glimpse</span></code> and <code class="docutils literal notranslate"><span class="pre">--use-idutils</span></code> options
+require external tools for indexing the code. None of them is
+thus active by default. However, by indexing the code with
+one of these tools, and according to the cocci file used,
+spatch could proceed the entire code base more quickly.</p>
+</section>
+<section id="smpl-patch-specific-options">
+<h2>SmPL patch specific options<a class="headerlink" href="#smpl-patch-specific-options" title="Link to this heading"></a></h2>
+<p>SmPL patches can have their own requirements for options passed
+to Coccinelle. SmPL patch specific options can be provided by
+providing them at the top of the SmPL patch, for instance:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">// Options: --no-includes --include-headers</span>
+</pre></div>
+</div>
+</section>
+<section id="proposing-new-semantic-patches">
+<h2>Proposing new semantic patches<a class="headerlink" href="#proposing-new-semantic-patches" title="Link to this heading"></a></h2>
+<p>New semantic patches can be proposed and submitted by kernel
+developers. For sake of clarity, they should be organized in the
+sub-directories of <code class="docutils literal notranslate"><span class="pre">scripts/coccinelle/</span></code>.</p>
+<p>The cocci script should have the following properties:</p>
+<ul class="simple">
+<li><p>The script <strong>must</strong> have <code class="docutils literal notranslate"><span class="pre">report</span></code> mode.</p></li>
+<li><p>The first few lines should state the purpose of the script
+using <code class="docutils literal notranslate"><span class="pre">///</span></code> comments . Usually, this message would be used as the
+commit log when proposing a patch based on the script.</p></li>
+</ul>
+<section id="example">
+<h3>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">/// Use ARRAY_SIZE instead of dividing sizeof array with sizeof an element</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>A more detailed information about the script with exceptional cases
+or false positives (if any) can be listed using <code class="docutils literal notranslate"><span class="pre">//#</span></code> comments.</p></li>
+</ul>
+</section>
+<section id="id2">
+<h3>Example<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">//# This makes an effort to find cases where ARRAY_SIZE can be used such as</span>
+<span class="go">//# where there is a division of sizeof the array by the sizeof its first</span>
+<span class="go">//# element or by any indexed element or the element type. It replaces the</span>
+<span class="go">//# division of the two sizeofs by ARRAY_SIZE.</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Confidence: It is a property defined to specify the accuracy level of
+the script. It can be either <code class="docutils literal notranslate"><span class="pre">High</span></code>, <code class="docutils literal notranslate"><span class="pre">Moderate</span></code> or <code class="docutils literal notranslate"><span class="pre">Low</span></code> depending
+upon the number of false positives observed.</p></li>
+</ul>
+</section>
+<section id="id3">
+<h3>Example<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">// Confidence: High</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Virtual rules: These are required to support the various modes framed
+in the script. The virtual rule specified in the script should have
+the corresponding mode handling rule.</p></li>
+</ul>
+</section>
+<section id="id4">
+<h3>Example<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">virtual context</span>
+
+<span class="go">@depends on context@</span>
+<span class="go">type T;</span>
+<span class="go">T[] E;</span>
+<span class="go">@@</span>
+<span class="go">(</span>
+<span class="go">* (sizeof(E)/sizeof(*E))</span>
+<span class="go">|</span>
+<span class="go">* (sizeof(E)/sizeof(E[...]))</span>
+<span class="go">|</span>
+<span class="go">* (sizeof(E)/sizeof(T))</span>
+<span class="go">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="detailed-description-of-the-report-mode">
+<h2>Detailed description of the <code class="docutils literal notranslate"><span class="pre">report</span></code> mode<a class="headerlink" href="#detailed-description-of-the-report-mode" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">report</span></code> generates a list in the following format:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">file:line:column-column: message</span>
+</pre></div>
+</div>
+<section id="id5">
+<h3>Example<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<p>Running:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/coccicheck --mode=report --cocci=scripts/coccinelle/array_size.cocci</span>
+</pre></div>
+</div>
+<p>will execute the following part of the SmPL script:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&lt;smpl&gt;</span>
+
+<span class="go">@r depends on (org || report)@</span>
+<span class="go">type T;</span>
+<span class="go">T[] E;</span>
+<span class="go">position p;</span>
+<span class="go">@@</span>
+<span class="go">(</span>
+<span class="gp gp-VirtualEnv">(sizeof(E)</span><span class="go">@p /sizeof(*E))</span>
+<span class="go">|</span>
+<span class="gp gp-VirtualEnv">(sizeof(E)</span><span class="go">@p /sizeof(E[...]))</span>
+<span class="go">|</span>
+<span class="gp gp-VirtualEnv">(sizeof(E)</span><span class="go">@p /sizeof(T))</span>
+<span class="go">)</span>
+
+<span class="go">@script:python depends on report@</span>
+<span class="go">p &lt;&lt; r.p;</span>
+<span class="go">@@</span>
+
+<span class="go">msg=&quot;WARNING: Use ARRAY_SIZE&quot;</span>
+<span class="go">coccilib.report.print_report(p[0], msg)</span>
+
+<span class="go">&lt;/smpl&gt;</span>
+</pre></div>
+</div>
+<p>This SmPL excerpt generates entries on the standard output, as
+illustrated below:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ext/hal/nxp/mcux/drivers/lpc/fsl_wwdt.c:66:49-50: WARNING: Use ARRAY_SIZE</span>
+<span class="go">ext/hal/nxp/mcux/drivers/lpc/fsl_ctimer.c:74:53-54: WARNING: Use ARRAY_SIZE</span>
+<span class="go">ext/hal/nxp/mcux/drivers/imx/fsl_dcp.c:944:45-46: WARNING: Use ARRAY_SIZE</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="detailed-description-of-the-patch-mode">
+<h2>Detailed description of the <code class="docutils literal notranslate"><span class="pre">patch</span></code> mode<a class="headerlink" href="#detailed-description-of-the-patch-mode" title="Link to this heading"></a></h2>
+<p>When the <code class="docutils literal notranslate"><span class="pre">patch</span></code> mode is available, it proposes a fix for each problem
+identified.</p>
+<section id="id6">
+<h3>Example<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<p>Running:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/coccicheck --mode=patch --cocci=scripts/coccinelle/misc/array_size.cocci</span>
+</pre></div>
+</div>
+<p>will execute the following part of the SmPL script:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&lt;smpl&gt;</span>
+
+<span class="go">@depends on patch@</span>
+<span class="go">type T;</span>
+<span class="go">T[] E;</span>
+<span class="go">@@</span>
+<span class="go">(</span>
+<span class="go">- (sizeof(E)/sizeof(*E))</span>
+<span class="go">+ ARRAY_SIZE(E)</span>
+<span class="go">|</span>
+<span class="go">- (sizeof(E)/sizeof(E[...]))</span>
+<span class="go">+ ARRAY_SIZE(E)</span>
+<span class="go">|</span>
+<span class="go">- (sizeof(E)/sizeof(T))</span>
+<span class="go">+ ARRAY_SIZE(E)</span>
+<span class="go">)</span>
+
+<span class="go">&lt;/smpl&gt;</span>
+</pre></div>
+</div>
+<p>This SmPL excerpt generates patch hunks on the standard output, as
+illustrated below:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">diff -u -p a/ext/lib/encoding/tinycbor/src/cborvalidation.c b/ext/lib/encoding/tinycbor/src/cborvalidation.c</span>
+<span class="go">--- a/ext/lib/encoding/tinycbor/src/cborvalidation.c</span>
+<span class="go">+++ b/ext/lib/encoding/tinycbor/src/cborvalidation.c</span>
+<span class="go">@@ -325,7 +325,7 @@ static inline CborError validate_number(</span>
+<span class="go">static inline CborError validate_tag(CborValue *it, CborTag tag, int flags, int recursionLeft)</span>
+<span class="go">{</span>
+<span class="go">  CborType type = cbor_value_get_type(it);</span>
+<span class="go">-    const size_t knownTagCount = sizeof(knownTagData) / sizeof(knownTagData[0]);</span>
+<span class="go">+    const size_t knownTagCount = ARRAY_SIZE(knownTagData);</span>
+<span class="go">   const struct KnownTagData *tagData = knownTagData;</span>
+<span class="go">   const struct KnownTagData * const knownTagDataEnd = knownTagData + knownTagCount;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="detailed-description-of-the-context-mode">
+<h2>Detailed description of the <code class="docutils literal notranslate"><span class="pre">context</span></code> mode<a class="headerlink" href="#detailed-description-of-the-context-mode" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">context</span></code> highlights lines of interest and their context
+in a diff-like style.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The diff-like output generated is NOT an applicable patch. The
+intent of the <code class="docutils literal notranslate"><span class="pre">context</span></code> mode is to highlight the important lines
+(annotated with minus, <code class="docutils literal notranslate"><span class="pre">-</span></code>) and gives some surrounding context
+lines around. This output can be used with the diff mode of
+Emacs to review the code.</p>
+</div>
+<section id="id7">
+<h3>Example<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<p>Running:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/coccicheck --mode=context --cocci=scripts/coccinelle/array_size.cocci</span>
+</pre></div>
+</div>
+<p>will execute the following part of the SmPL script:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&lt;smpl&gt;</span>
+
+<span class="go">@depends on context@</span>
+<span class="go">type T;</span>
+<span class="go">T[] E;</span>
+<span class="go">@@</span>
+<span class="go">(</span>
+<span class="go">* (sizeof(E)/sizeof(*E))</span>
+<span class="go">|</span>
+<span class="go">* (sizeof(E)/sizeof(E[...]))</span>
+<span class="go">|</span>
+<span class="go">* (sizeof(E)/sizeof(T))</span>
+<span class="go">)</span>
+
+<span class="go">&lt;/smpl&gt;</span>
+</pre></div>
+</div>
+<p>This SmPL excerpt generates diff hunks on the standard output, as
+illustrated below:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">diff -u -p ext/lib/encoding/tinycbor/src/cborvalidation.c /tmp/nothing/ext/lib/encoding/tinycbor/src/cborvalidation.c</span>
+<span class="go">--- ext/lib/encoding/tinycbor/src/cborvalidation.c</span>
+<span class="go">+++ /tmp/nothing/ext/lib/encoding/tinycbor/src/cborvalidation.c</span>
+<span class="go">@@ -325,7 +325,6 @@ static inline CborError validate_number(</span>
+<span class="go">static inline CborError validate_tag(CborValue *it, CborTag tag, int flags, int recursionLeft)</span>
+<span class="go">{</span>
+<span class="go">  CborType type = cbor_value_get_type(it);</span>
+<span class="go">-    const size_t knownTagCount = sizeof(knownTagData) / sizeof(knownTagData[0]);</span>
+<span class="go">   const struct KnownTagData *tagData = knownTagData;</span>
+<span class="go">   const struct KnownTagData * const knownTagDataEnd = knownTagData + knownTagCount;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="detailed-description-of-the-org-mode">
+<h2>Detailed description of the <code class="docutils literal notranslate"><span class="pre">org</span></code> mode<a class="headerlink" href="#detailed-description-of-the-org-mode" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">org</span></code> generates a report in the Org mode format of Emacs.</p>
+<section id="id8">
+<h3>Example<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<p>Running:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/coccicheck --mode=org --cocci=scripts/coccinelle/misc/array_size.cocci</span>
+</pre></div>
+</div>
+<p>will execute the following part of the SmPL script:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&lt;smpl&gt;</span>
+
+<span class="go">@r depends on (org || report)@</span>
+<span class="go">type T;</span>
+<span class="go">T[] E;</span>
+<span class="go">position p;</span>
+<span class="go">@@</span>
+<span class="go">(</span>
+<span class="gp gp-VirtualEnv">(sizeof(E)</span><span class="go">@p /sizeof(*E))</span>
+<span class="go">|</span>
+<span class="gp gp-VirtualEnv">(sizeof(E)</span><span class="go">@p /sizeof(E[...]))</span>
+<span class="go">|</span>
+<span class="gp gp-VirtualEnv">(sizeof(E)</span><span class="go">@p /sizeof(T))</span>
+<span class="go">)</span>
+
+<span class="go">@script:python depends on org@</span>
+<span class="go">p &lt;&lt; r.p;</span>
+<span class="go">@@</span>
+<span class="go">coccilib.org.print_todo(p[0], &quot;WARNING should use ARRAY_SIZE&quot;)</span>
+
+<span class="go">&lt;/smpl&gt;</span>
+</pre></div>
+</div>
+<p>This SmPL excerpt generates Org entries on the standard output, as
+illustrated below:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">* TODO [[view:ext/lib/encoding/tinycbor/src/cborvalidation.c::face=ovl-face1::linb=328::colb=52::cole=53][WARNING should use ARRAY_SIZE]]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="coccinelle-mailing-list">
+<h2>Coccinelle Mailing List<a class="headerlink" href="#coccinelle-mailing-list" title="Link to this heading"></a></h2>
+<p>Subscribe to the coccinelle mailing list:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://systeme.lip6.fr/mailman/listinfo/cocci">https://systeme.lip6.fr/mailman/listinfo/cocci</a></p></li>
+</ul>
+<p>Archives:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://lore.kernel.org/cocci/">https://lore.kernel.org/cocci/</a></p></li>
+<li><p><a class="reference external" href="https://systeme.lip6.fr/pipermail/cocci/">https://systeme.lip6.fr/pipermail/cocci/</a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

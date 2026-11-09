@@ -1,0 +1,519 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Picolibc &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/develop/languages/c/picolibc.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="C++ Language Support" href="../cpp/index.html" />
+    <link rel="prev" title="Newlib" href="newlib.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Developing with Zephyr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/index.html">Getting Started Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../beyond-GSG.html">Beyond the Getting Started Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../env_vars.html">Environment Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../application/index.html">Application Development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../debug/index.html">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/index.html">API Status and Guidelines</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Language Support</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">C Language Support</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="index.html#language-standards">Language Standards</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html#standard-library">Standard Library</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="common_libc.html">Common C library code</a></li>
+<li class="toctree-l5"><a class="reference internal" href="minimal_libc.html">Minimal libc</a></li>
+<li class="toctree-l5"><a class="reference internal" href="newlib.html">Newlib</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">Picolibc</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#formatted-output">Formatted Output</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#dynamic-memory-management">Dynamic Memory Management</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cpp/index.html">C++ Language Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../rust/index.html">Rust Language Support</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimizations/index.html">Optimizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../flash_debug/index.html">Flashing and Hardware Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html">Modules (External projects)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../west/index.html">West (Zephyr’s meta-tool)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../test/index.html">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sca/index.html">Static Code Analysis (SCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../toolchains/index.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/index.html">Tools and IDEs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Developing with Zephyr</a> &raquo;</li>
+  
+     <li><a href="../index.html">Language Support</a> &raquo;</li>
+  
+     <li><a href="index.html">C Language Support</a> &raquo;</li>
+  
+  <li>Picolibc</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/develop/languages/c/picolibc.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27develop%2Flanguages%2Fc%2Fpicolibc%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Documentation&env=-+Page%3A+develop%2Flanguages%2Fc%2Fpicolibc%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="picolibc">
+<span id="c-library-picolibc"></span><h1>Picolibc<a class="headerlink" href="#picolibc" title="Link to this heading"></a></h1>
+<p><a class="reference external" href="https://github.com/picolibc/picolibc">Picolibc</a> is a complete C library implementation written for the
+embedded systems, targeting <a class="reference external" href="https://www.iso.org/standard/74528.html">C17 (ISO/IEC 9899:2018)</a> and <a class="reference external" href="https://pubs.opengroup.org/onlinepubs/9699919799/functions/printf.html">POSIX 2018
+(IEEE Std 1003.1-2017)</a> standards. Picolibc is an external open
+source project which is provided for Zephyr as a module, and included
+as part of the <a class="reference internal" href="../../toolchains/zephyr_sdk.html#toolchain-zephyr-sdk"><span class="std std-ref">Zephyr SDK</span></a> in precompiled form for
+each supported architecture (<code class="file docutils literal notranslate"><span class="pre">libc.a</span></code>).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Picolibc is also available for other 3rd-party toolchains, such as
+<a class="reference internal" href="../../toolchains/gnu_arm_embedded.html#toolchain-gnuarmemb"><span class="std std-ref">GNU Arm Embedded</span></a>.</p>
+</div>
+<p>Zephyr implements the “API hook” functions that are invoked by the C
+standard library functions in the Picolibc. These hook functions are
+implemented in <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/lib/libc/picolibc/">lib/libc/picolibc/</a> and translate
+the library internal system calls to the equivalent Zephyr API calls.</p>
+<section id="picolibc-module">
+<span id="c-library-picolibc-module"></span><h2>Picolibc Module<a class="headerlink" href="#picolibc-module" title="Link to this heading"></a></h2>
+<p>When built as a Zephyr module, there are several configuration knobs
+available to adjust the feature set in the library, balancing what the
+library supports versus the code size of the resulting
+functions. Because the standard C++ library must be compiled for the
+target C library, the Picolibc module cannot be used with applications
+which use the standard C++ library. Building the Picolibc module will
+increase the time it takes to compile the application.</p>
+<p>The Picolibc module can be enabled by selecting
+<a class="reference internal" href="../../../kconfig.html#CONFIG_PICOLIBC_USE_MODULE" title="CONFIG_PICOLIBC_USE_MODULE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PICOLIBC_USE_MODULE</span></code></a> in the application
+configuration file.</p>
+<p>When updating the Picolibc module to a newer version, the
+<a class="reference internal" href="#c-library-picolibc-toolchain"><span class="std std-ref">toolchain-bundled Picolibc in the Zephyr SDK</span></a> must also be updated to the same version.</p>
+</section>
+<section id="toolchain-picolibc">
+<span id="c-library-picolibc-toolchain"></span><h2>Toolchain Picolibc<a class="headerlink" href="#toolchain-picolibc" title="Link to this heading"></a></h2>
+<p>Starting with version 0.16, the Zephyr SDK includes precompiled
+versions of Picolibc for every target architecture, along with
+precompiled versions of libstdc++.</p>
+<p>The toolchain version of Picolibc can be enabled by de-selecting
+<a class="reference internal" href="../../../kconfig.html#CONFIG_PICOLIBC_USE_MODULE" title="CONFIG_PICOLIBC_USE_MODULE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PICOLIBC_USE_MODULE</span></code></a> in the application
+configuration file.</p>
+<p>For every release of Zephyr, the toolchain-bundled Picolibc and the
+<a class="reference internal" href="#c-library-picolibc-module"><span class="std std-ref">Picolibc module</span></a> are guaranteed to be in
+sync when using the
+<a class="reference internal" href="../../toolchains/zephyr_sdk.html#toolchain-zephyr-sdk-compatibility"><span class="std std-ref">recommended version of Zephyr SDK</span></a>.</p>
+<section id="building-without-toolchain-bundled-picolibc">
+<h3>Building Without Toolchain bundled Picolibc<a class="headerlink" href="#building-without-toolchain-bundled-picolibc" title="Link to this heading"></a></h3>
+<p>For toolchain where there is no bundled Picolibc, it is still
+possible to use Picolibc by building it from source. Note that
+any restrictions mentioned in <a class="reference internal" href="#c-library-picolibc-module"><span class="std std-ref">Picolibc Module</span></a>
+still apply.</p>
+<p>To build without toolchain bundled Picolibc, the toolchain must
+enable <a class="reference internal" href="../../../kconfig.html#CONFIG_PICOLIBC_SUPPORTED" title="CONFIG_PICOLIBC_SUPPORTED"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PICOLIBC_SUPPORTED</span></code></a>. For example,
+this needs to be added to the toolchain Kconfig file:</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">config</span><span class="w"> </span>TOOLCHAIN_&lt;name&gt;_PICOLIBC_SUPPORTED
+<span class="w">   </span>def_bool<span class="w"> </span>y
+<span class="w">   </span><span class="k">select</span><span class="w"> </span>PICOLIBC_SUPPORTED
+</pre></div>
+</div>
+<p>By enabling <a class="reference internal" href="../../../kconfig.html#CONFIG_PICOLIBC_SUPPORTED" title="CONFIG_PICOLIBC_SUPPORTED"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PICOLIBC_SUPPORTED</span></code></a>, the build
+system would automatically build Picolibc from source with its module
+when there is no toolchain bundled Picolibc.</p>
+<section id="formatted-output">
+<h4>Formatted Output<a class="headerlink" href="#formatted-output" title="Link to this heading"></a></h4>
+<p>Picolibc supports all standard C formatted input and output functions,
+including <a class="reference internal" href="../../../doxygen/html/stdio_8h.html#a6c67912b5a18e7d7ac03ca4e77425715" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">printf()</span></code></a>, <a class="reference internal" href="../../../doxygen/html/stdio_8h.html#af097ff94eaf1896faa4664dd91858778" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">fprintf()</span></code></a>, <a class="reference internal" href="../../../doxygen/html/stdio_8h.html#aa6f061fe9cbedf135d97a91b0f7c0ca8" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sprintf()</span></code></a> and
+<code class="xref c c-func docutils literal notranslate"><span class="pre">sscanf()</span></code>.</p>
+<p>Picolibc formatted input and output function implementation supports
+all format specifiers defined by the C17 and POSIX 2018 standards with
+the following exceptions:</p>
+<ul class="simple">
+<li><p>Floating point format specifiers (e.g. <code class="docutils literal notranslate"><span class="pre">%f</span></code>) require
+<a class="reference internal" href="../../../kconfig.html#CONFIG_PICOLIBC_IO_FLOAT" title="CONFIG_PICOLIBC_IO_FLOAT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PICOLIBC_IO_FLOAT</span></code></a>.</p></li>
+<li><p>Long long format specifiers (e.g. <code class="docutils literal notranslate"><span class="pre">%lld</span></code>) require
+<a class="reference internal" href="../../../kconfig.html#CONFIG_PICOLIBC_IO_LONG_LONG" title="CONFIG_PICOLIBC_IO_LONG_LONG"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PICOLIBC_IO_LONG_LONG</span></code></a>. This option is
+automatically enabled with <a class="reference internal" href="../../../kconfig.html#CONFIG_PICOLIBC_IO_FLOAT" title="CONFIG_PICOLIBC_IO_FLOAT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PICOLIBC_IO_FLOAT</span></code></a>.</p></li>
+</ul>
+</section>
+<section id="printk-cbprintf-and-friends">
+<h4>Printk, cbprintf and friends<a class="headerlink" href="#printk-cbprintf-and-friends" title="Link to this heading"></a></h4>
+<p>When using Picolibc, Zephyr formatted output functions are
+implemented in terms of stdio calls. This includes:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>printk, snprintk and vsnprintk</p></li>
+<li><p>cbprintf and cbvprintf</p></li>
+<li><p>fprintfcb, vfprintfcb, printfcb, vprintfcb, snprintfcb and vsnprintfcb</p></li>
+</ul>
+</div></blockquote>
+<p>When using tagged args
+(<a class="reference internal" href="../../../kconfig.html#CONFIG_CBPRINTF_PACKAGE_SUPPORT_TAGGED_ARGUMENTS" title="CONFIG_CBPRINTF_PACKAGE_SUPPORT_TAGGED_ARGUMENTS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CBPRINTF_PACKAGE_SUPPORT_TAGGED_ARGUMENTS</span></code></a> and
+<a class="reference internal" href="../../../doxygen/html/group__CBPRINTF__PACKAGE__FLAGS.html#gaa8edaf31e7acfb7cb113afa873efa126" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">CBPRINTF_PACKAGE_ARGS_ARE_TAGGED</span></code></a>), calls to cbpprintf will
+not use Picolibc, so formatting of output using those code will differ
+from Picolibc results as the cbprintf functions are not completely
+C/POSIX compliant.</p>
+</section>
+<section id="math-functions">
+<h4>Math Functions<a class="headerlink" href="#math-functions" title="Link to this heading"></a></h4>
+<p>Picolibc provides full C17/<a class="reference external" href="https://ieeexplore.ieee.org/document/8766229">IEEE STD 754-2019</a> support for float,
+double and long double math operations, except for long double
+versions of the Bessel functions.</p>
+</section>
+<section id="thread-local-storage">
+<h4>Thread Local Storage<a class="headerlink" href="#thread-local-storage" title="Link to this heading"></a></h4>
+<p>Picolibc uses Thread Local Storage (TLS) (where supported) for data
+which is supposed to remain local to each thread, like
+<a class="reference internal" href="../../../doxygen/html/group__system__errno.html#gab03f640d90fbc5bcb75285d08a0f25ed" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">errno</span></code></a>. This means that TLS support is enabled when using
+Picolibc. As all TLS variables are allocated out of the thread stack
+area, this can affect stack size requirements by a few bytes.</p>
+</section>
+<section id="c-library-local-variables">
+<h4>C Library Local Variables<a class="headerlink" href="#c-library-local-variables" title="Link to this heading"></a></h4>
+<p>Picolibc uses a few internal variables for things like heap
+management. These are collected in a dedicated memory partition called
+<code class="xref c c-var docutils literal notranslate"><span class="pre">z_libc_partition</span></code>. Applications using
+<a class="reference internal" href="../../../kconfig.html#CONFIG_USERSPACE" title="CONFIG_USERSPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code></a> and memory domains must ensure that
+this partition is included in any domain active during Picolibc calls.</p>
+</section>
+<section id="dynamic-memory-management">
+<h4>Dynamic Memory Management<a class="headerlink" href="#dynamic-memory-management" title="Link to this heading"></a></h4>
+<p>Picolibc uses the malloc api family implementation provided by the
+<a class="reference internal" href="common_libc.html#c-library-common"><span class="std std-ref">common C library</span></a>, which itself is built upon the
+<a class="reference internal" href="../../../kernel/memory_management/heap.html#heap-v2"><span class="std std-ref">kernel memory heap API</span></a>.</p>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

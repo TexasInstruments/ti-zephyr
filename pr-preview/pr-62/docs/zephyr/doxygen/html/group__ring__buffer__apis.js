@@ -1,0 +1,27 @@
+var group__ring__buffer__apis =
+[
+    [ "ring_buf", "structring__buf.html", null ],
+    [ "RING_BUF_DECLARE", "group__ring__buffer__apis.html#ga803e45abf48ee207fc0ab4028726a82b", null ],
+    [ "RING_BUF_INIT", "group__ring__buffer__apis.html#ga2ab4af6d5e79ed9ad8cfca22ec3a7107", null ],
+    [ "RING_BUF_ITEM_DECLARE", "group__ring__buffer__apis.html#ga2fc2f4515121ac6bbf6aebf3e029bb5d", null ],
+    [ "RING_BUF_ITEM_DECLARE_POW2", "group__ring__buffer__apis.html#gaca98f407b222dff12e2bbfcf3746a9e3", null ],
+    [ "RING_BUF_ITEM_DECLARE_SIZE", "group__ring__buffer__apis.html#ga205e93b5431112da0d191526906c7e01", null ],
+    [ "RING_BUF_ITEM_SIZEOF", "group__ring__buffer__apis.html#ga60451a56ed9b742abfa8e75ca320b004", null ],
+    [ "ring_buf_capacity_get", "group__ring__buffer__apis.html#ga9589ff6b763eeafacb65a3af283db3cd", null ],
+    [ "ring_buf_get", "group__ring__buffer__apis.html#ga209bef22c47f3938a36d7eb6c3b3dbc7", null ],
+    [ "ring_buf_get_claim", "group__ring__buffer__apis.html#gad7cd6e1fe8e47ab7f6d9c42b87581f19", null ],
+    [ "ring_buf_get_finish", "group__ring__buffer__apis.html#ga8ea8ad9949bffd0d6f9b0785e18a6378", null ],
+    [ "ring_buf_init", "group__ring__buffer__apis.html#gac06bc272bf99843c65bf28d851bffd55", null ],
+    [ "ring_buf_is_empty", "group__ring__buffer__apis.html#gac1a8c9e4cc9c3485573082371a4d9574", null ],
+    [ "ring_buf_item_get", "group__ring__buffer__apis.html#gae0c62af11cab8a661638e50b312b58f8", null ],
+    [ "ring_buf_item_init", "group__ring__buffer__apis.html#ga9d10210160544af25c9a67680aff578d", null ],
+    [ "ring_buf_item_put", "group__ring__buffer__apis.html#ga6cb71d7c1a36b6e142b251f08ed40599", null ],
+    [ "ring_buf_item_space_get", "group__ring__buffer__apis.html#ga39c203f8e599098ce0d308e88d07d084", null ],
+    [ "ring_buf_peek", "group__ring__buffer__apis.html#ga8ba75a313b2ad7d55e390fa3f1fcadc1", null ],
+    [ "ring_buf_put", "group__ring__buffer__apis.html#ga6c7e76e3ca798e994f738d114cb9a7e3", null ],
+    [ "ring_buf_put_claim", "group__ring__buffer__apis.html#ga0381d9c6413d78b9226d32532ef523eb", null ],
+    [ "ring_buf_put_finish", "group__ring__buffer__apis.html#gaf910aa666eac329813a55db732a21bd8", null ],
+    [ "ring_buf_reset", "group__ring__buffer__apis.html#ga9cc0cd445eeeeba7183c3ac0778c7e18", null ],
+    [ "ring_buf_size_get", "group__ring__buffer__apis.html#ga5f0017eb22d84b9cb177adfe090e6a92", null ],
+    [ "ring_buf_space_get", "group__ring__buffer__apis.html#ga5eee438bd5bf08eb3a2da4cf2289903c", null ]
+];

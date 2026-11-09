@@ -1,0 +1,25 @@
+var mcuboot_8h =
+[
+    [ "BOOT_IMG_VER_STRLEN_MAX", "group__mcuboot__api.html#ga1e697351ff503f9a53b17916e63cce06", null ],
+    [ "BOOT_SWAP_TYPE_FAIL", "group__mcuboot__api.html#ga28cb43e6bfacdd285d95751cda80de13", null ],
+    [ "BOOT_SWAP_TYPE_NONE", "group__mcuboot__api.html#gabb6482b898e8307074d8aef01b1102b7", null ],
+    [ "BOOT_SWAP_TYPE_PERM", "group__mcuboot__api.html#ga09ebc9ba28e294e71388480bb9e4f677", null ],
+    [ "BOOT_SWAP_TYPE_REVERT", "group__mcuboot__api.html#ga8ca7bd765c6ab669db0774c0b0122494", null ],
+    [ "BOOT_SWAP_TYPE_TEST", "group__mcuboot__api.html#ga3aa4415c47231a120c4cab455ea0beef", null ],
+    [ "BOOT_UPGRADE_PERMANENT", "group__mcuboot__api.html#gab48b79d246df6ebc712040c5ee00aa73", null ],
+    [ "BOOT_UPGRADE_TEST", "group__mcuboot__api.html#ga9ed69fcd1ebf57cc356ce2bb835853f7", null ],
+    [ "SWAP_USING_OFFSET_SECTOR_UPDATE_BEGIN", "group__mcuboot__api.html#ga68aeea51973f08c06dc664f02b935ff7", null ],
+    [ "boot_erase_img_bank", "group__mcuboot__api.html#ga03b691762d00e4cab6a5bd91979d8d80", null ],
+    [ "boot_fetch_active_slot", "group__mcuboot__api.html#ga4ce6857cd516204fba5f7fb5c1c6272c", null ],
+    [ "boot_get_area_trailer_status_offset", "group__mcuboot__api.html#ga6fa12d4058bbb78b7d8f35b436f0009c", null ],
+    [ "boot_get_image_start_offset", "group__mcuboot__api.html#ga85c68e5758724d541586f8a6d61869d0", null ],
+    [ "boot_get_trailer_status_offset", "group__mcuboot__api.html#ga7b4443f339f2935895f01dfb80c6b460", null ],
+    [ "boot_is_img_confirmed", "group__mcuboot__api.html#ga2eadd700521a8b94dea3d3d04c9f5bd8", null ],
+    [ "boot_read_bank_header", "group__mcuboot__api.html#ga652ffad55e2917c62a62f6463935fe59", null ],
+    [ "boot_request_upgrade", "group__mcuboot__api.html#gad47f2356938a7b5acf8e0bbe4d9e4494", null ],
+    [ "boot_request_upgrade_multi", "group__mcuboot__api.html#gae9e0e43663c3671aa4b4df6d30511d39", null ],
+    [ "boot_write_img_confirmed", "group__mcuboot__api.html#ga95ccc9e1c7460fec16b9ce9ac8ad7a72", null ],
+    [ "boot_write_img_confirmed_multi", "group__mcuboot__api.html#gaa0f2410f520ef57e6d793c169639a6f8", null ],
+    [ "mcuboot_swap_type", "group__mcuboot__api.html#gaa0ce517ba1c0b21c4898762fab959b12", null ],
+    [ "mcuboot_swap_type_multi", "group__mcuboot__api.html#ga1e679c6fefe7deaaed9a2265ce69cf1e", null ]
+];

@@ -1,0 +1,646 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Device Runtime Power Management &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/services/pm/device_runtime.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Power Domain" href="power_domain.html" />
+    <link rel="prev" title="Device Power Management" href="device.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">OS Services</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../binary_descriptors/index.html">Binary Descriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../console.html">Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cpu_freq/index.html">CPU Frequency Scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cpu_load/index.html">CPU Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../crc/index.html">CRC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../crypto/index.html">Cryptography</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debugging/index.html">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">Device Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dsp/index.html">Digital Signal Processing (DSP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../formatted_output.html">Formatted Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../input/index.html">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../instrumentation/index.html">Instrumentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ipc/index.html">Interprocessor Communication (IPC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../jwt/index.html">JSON Web Token (JWT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../llext/index.html">Linkable Loadable Extensions (LLEXT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../logging/index.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tracing/index.html">Tracing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resource_management/index.html">Resource Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../mem_mgmt/index.html">Memory Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../net_buf/index.html">Network Buffers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modem/index.html">Modem modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notify.html">Asynchronous Notifications</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Power Management</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">System Power Management</a></li>
+<li class="toctree-l3"><a class="reference internal" href="device.html">Device Power Management</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Device Runtime Power Management</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#design-principles">Design principles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation-guidelines">Implementation guidelines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="power_domain.html">Power Domain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/index.html">Power Management APIs</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">OS Abstraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../poweroff.html">Power off</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../profiling/index.html">Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../shell/index.html">Shell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../serialization/index.html">Serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../smf/index.html">State Machine Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sensing/index.html">Sensing Subsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../task_wdt/index.html">Task Watchdog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tfm/index.html">Trusted Firmware-M (TF-M)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../uuid/index.html">UUID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rtio/index.html">Real Time I/O (RTIO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../zbus/index.html">Zephyr bus (zbus)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">OS Services</a> &raquo;</li>
+  
+     <li><a href="index.html">Power Management</a> &raquo;</li>
+  
+  <li>Device Runtime Power Management</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/services/pm/device_runtime.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27services%2Fpm%2Fdevice_runtime%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Power+Management&env=-+Page%3A+services%2Fpm%2Fdevice_runtime%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="device-runtime-power-management">
+<span id="pm-device-runtime"></span><h1>Device Runtime Power Management<a class="headerlink" href="#device-runtime-power-management" title="Link to this heading"></a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
+<p>The device runtime power management (PM) framework is an active power management
+mechanism which reduces the overall system power consumption by suspending the
+devices which are idle or not used independently of the system state. It can be
+enabled by setting <a class="reference internal" href="../../kconfig.html#CONFIG_PM_DEVICE_RUNTIME" title="CONFIG_PM_DEVICE_RUNTIME"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PM_DEVICE_RUNTIME</span></code></a>. In this model the device
+driver is responsible to indicate when it needs the device and when it does not.
+This information is used to determine when to suspend or resume a device based
+on usage count.</p>
+<p>When device runtime power management is enabled on a device, its state will be
+initially set to a <a class="reference internal" href="../../doxygen/html/group__subsys__pm__device.html#gga561c0789071e3c3963f21f4c4a1bb2c6a03f61cb7cd5e4820c1c731500fd053b5" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">PM_DEVICE_STATE_SUSPENDED</span></code></a> indicating it is
+not used. On the first device request, it will be resumed and so put into the
+<a class="reference internal" href="../../doxygen/html/group__subsys__pm__device.html#gga561c0789071e3c3963f21f4c4a1bb2c6a54b207e01b4dfc5e1ff56149817120c7" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">PM_DEVICE_STATE_ACTIVE</span></code></a> state. The device will remain in this
+state until it is no longer used. At this point, the device will be suspended
+until the next device request. If the suspension is performed synchronously the
+device will be immediately put into the
+<a class="reference internal" href="../../doxygen/html/group__subsys__pm__device.html#gga561c0789071e3c3963f21f4c4a1bb2c6a03f61cb7cd5e4820c1c731500fd053b5" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">PM_DEVICE_STATE_SUSPENDED</span></code></a> state, whereas if it is performed
+asynchronously, it will be put into the
+<a class="reference internal" href="../../doxygen/html/group__subsys__pm__device.html#gga561c0789071e3c3963f21f4c4a1bb2c6a51a5904aff980deff73d29568b6f7deb" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">PM_DEVICE_STATE_SUSPENDING</span></code></a> state first and then into the
+<a class="reference internal" href="../../doxygen/html/group__subsys__pm__device.html#gga561c0789071e3c3963f21f4c4a1bb2c6a03f61cb7cd5e4820c1c731500fd053b5" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">PM_DEVICE_STATE_SUSPENDED</span></code></a> state when the action is run.</p>
+<p>For devices on a power domain (via the devicetree ‘power-domains’ property), device runtime
+power management automatically attempts to request and release the dependent domain
+in response to <a class="reference internal" href="../../doxygen/html/group__subsys__pm__device__runtime.html#ga530d4be65757fb2276ab6f631953e045" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pm_device_runtime_get()</span></code></a> and <a class="reference internal" href="../../doxygen/html/group__subsys__pm__device__runtime.html#ga98daba53a992fb6bd2c2b31cb445844f" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pm_device_runtime_put()</span></code></a>
+calls on the child device.</p>
+<p>For the previous to automatically control the power domain state, device runtime PM must be enabled
+on the power domain device. To enable device runtime PM globally, enable
+<a class="reference internal" href="../../kconfig.html#CONFIG_PM_DEVICE_RUNTIME_DEFAULT_ENABLE" title="CONFIG_PM_DEVICE_RUNTIME_DEFAULT_ENABLE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PM_DEVICE_RUNTIME_DEFAULT_ENABLE</span></code></a>. To enable device runtime PM only for
+select devices, set the <code class="docutils literal notranslate"><span class="pre">zephyr,pm-device-runtime-auto</span></code> devicetree property, or use
+<a class="reference internal" href="../../doxygen/html/group__subsys__pm__device__runtime.html#gaabcd2cc694c9e201dd87bf42f02b454c" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pm_device_runtime_enable()</span></code></a> for the select devices.</p>
+<figure class="align-default" id="id1">
+<div class="graphviz"><object data="../../_images/graphviz-de97bdbe2195aacda5f1d2c5e008c90d9c59329c.svg" type="image/svg+xml" class="graphviz">
+<p class="warning">digraph {
+     node [shape=box];
+     init [shape=point];
+
+     SUSPENDED [label=PM_DEVICE_STATE_SUSPENDED];
+     ACTIVE [label=PM_DEVICE_STATE_ACTIVE];
+     SUSPENDING [label=PM_DEVICE_STATE_SUSPENDING];
+
+     init -&gt; SUSPENDED;
+     SUSPENDED -&gt; ACTIVE;
+     ACTIVE -&gt; SUSPENDED;
+     ACTIVE -&gt; SUSPENDING [constraint=false]
+     SUSPENDING -&gt; SUSPENDED [constraint=false];
+     SUSPENDED -&gt; SUSPENDING [style=invis];
+     SUSPENDING -&gt; ACTIVE [style=invis];
+ }</p></object></div>
+<figcaption>
+<p><span class="caption-text">Device states and transitions</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The device runtime power management framework has been designed to minimize
+devices power consumption with minimal application work. Device drivers are
+responsible for indicating when they need the device to be operational and
+when they do not. Therefore, applications can not manually suspend or resume a
+device. An application can, however, decide when to disable or enable runtime
+power management for a device. This can be useful, for example, if an
+application wants a particular device to be always active.</p>
+</section>
+<section id="design-principles">
+<h2>Design principles<a class="headerlink" href="#design-principles" title="Link to this heading"></a></h2>
+<p>When runtime PM is enabled on a device it will no longer be resumed or suspended
+during system power transitions. Instead, the device is fully responsible to
+indicate when it needs a device and when it does not. The device runtime PM API
+uses reference counting to keep track of device’s usage. This allows the API to
+determine when a device needs to be resumed or suspended. The API uses the <em>get</em>
+and <em>put</em> terminology to indicate when a device is needed or not, respectively.
+This mechanism plays a key role when we account for device dependencies. For
+example, if a bus device is used by multiple sensors, we can keep the bus active
+until the last sensor has finished using it.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As of today, the device runtime power management API does not manage device
+dependencies. This effectively means that, if a device depends on other
+devices to operate (e.g. a sensor may depend on a bus device), the bus will
+be resumed and suspended on every transaction. In general, it is more
+efficient to keep parent devices active when their children are used, since
+the children may perform multiple transactions in a short period of time.
+Until this feature is added, devices can manually <em>get</em> or <em>put</em> their
+dependencies.</p>
+</div>
+<p>The <a class="reference internal" href="../../doxygen/html/group__subsys__pm__device__runtime.html#ga530d4be65757fb2276ab6f631953e045" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pm_device_runtime_get()</span></code></a> function can be used by a device driver to
+indicate it <em>needs</em> the device to be active or operational. This function will
+increase device usage count and resume the device if necessary. Similarly, the
+<a class="reference internal" href="../../doxygen/html/group__subsys__pm__device__runtime.html#ga98daba53a992fb6bd2c2b31cb445844f" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pm_device_runtime_put()</span></code></a> function can be used to indicate that the device
+is no longer needed. This function will decrease the device usage count and
+suspend the device if necessary. It is worth to note that in both cases, the
+operation is carried out synchronously. The sequence diagram shown below
+illustrates how a device can use this API and the expected sequence of events.</p>
+<figure class="align-default" id="id2">
+<img alt="../../_images/devr-sync-ops.svg" src="../../_images/devr-sync-ops.svg" />
+<figcaption>
+<p><span class="caption-text">Synchronous operation on a single device</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The synchronous model is as simple as it gets. However, it may introduce
+unnecessary delays since the application will not get the operation result until
+the device is suspended (in case device is no longer used). It will likely not
+be a problem if the operation is fast, e.g. a register toggle. However, the
+situation will not be the same if suspension involves sending packets through a
+slow bus. For this reason the device drivers can also make use of the
+<a class="reference internal" href="../../doxygen/html/group__subsys__pm__device__runtime.html#ga9e90089b0ab78f365905418646e196c6" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pm_device_runtime_put_async()</span></code></a> function. This function will schedule
+the suspend operation, again, if device is no longer used.</p>
+<p>By default, runtime PM operations are offloaded to the system work queue.
+However, device drivers must not perform any blocking operations during suspend, as
+this can stall the system work queue and negatively impact system responsiveness.</p>
+<p>To address this, applications can configure runtime PM to use a dedicated work queue
+by enabling <a class="reference internal" href="../../kconfig.html#CONFIG_PM_DEVICE_RUNTIME_USE_DEDICATED_WQ" title="CONFIG_PM_DEVICE_RUNTIME_USE_DEDICATED_WQ"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PM_DEVICE_RUNTIME_USE_DEDICATED_WQ</span></code></a>.</p>
+<p>If blocking behavior is required—for example, when accessing a slow peripheral
+or waiting for a bus transaction—the PM subsystem work queue must be used instead.
+Drivers that require this behavior can explicitly request it by enabling
+<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PM_DEVICE_DRIVER_NEEDS_DEDICATED_WQ</span></code>.</p>
+<p>For targets with constrained resources that do not need asynchronous
+operations, this functionality can be disabled altogether by
+de-selecting <a class="reference internal" href="../../kconfig.html#CONFIG_PM_DEVICE_RUNTIME_ASYNC" title="CONFIG_PM_DEVICE_RUNTIME_ASYNC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PM_DEVICE_RUNTIME_ASYNC</span></code></a>, reducing
+memory usage and system complexity.</p>
+<figure class="align-default" id="id3">
+<img alt="../../_images/devr-async-ops.svg" src="../../_images/devr-async-ops.svg" />
+<figcaption>
+<p><span class="caption-text">Asynchronous operation on a single device</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="implementation-guidelines">
+<h2>Implementation guidelines<a class="headerlink" href="#implementation-guidelines" title="Link to this heading"></a></h2>
+<p>In a first place, a device driver needs to implement the PM action callback used
+by the PM subsystem to suspend or resume devices.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">mydev_pm_action</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span>
+<span class="w">                           </span><span class="k">enum</span><span class="w"> </span><span class="n">pm_device_action</span><span class="w"> </span><span class="n">action</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">action</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">PM_DEVICE_ACTION_SUSPEND</span><span class="p">:</span>
+<span class="w">        </span><span class="cm">/* suspend the device */</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">PM_DEVICE_ACTION_RESUME</span><span class="p">:</span>
+<span class="w">        </span><span class="cm">/* resume the device */</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="k">default</span><span class="o">:</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="n">ENOTSUP</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The PM action callback calls are serialized by the PM subsystem, therefore, no
+special synchronization is required.</p>
+<p>To enable device runtime power management on a device, the driver needs to call
+<a class="reference internal" href="../../doxygen/html/group__subsys__pm__device__runtime.html#gaabcd2cc694c9e201dd87bf42f02b454c" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pm_device_runtime_enable()</span></code></a> at initialization time. Note that this
+function will suspend the device if its state is
+<a class="reference internal" href="../../doxygen/html/group__subsys__pm__device.html#gga561c0789071e3c3963f21f4c4a1bb2c6a54b207e01b4dfc5e1ff56149817120c7" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">PM_DEVICE_STATE_ACTIVE</span></code></a>. In case the device is physically
+suspended, the init function should call
+<a class="reference internal" href="../../doxygen/html/group__subsys__pm__device.html#ga4c366f49e326a8b8e01d90cb2ee424ba" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pm_device_init_suspended()</span></code></a> before calling
+<a class="reference internal" href="../../doxygen/html/group__subsys__pm__device__runtime.html#gaabcd2cc694c9e201dd87bf42f02b454c" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pm_device_runtime_enable()</span></code></a>.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* device driver initialization function */</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">mydev_init</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="w">    </span><span class="p">...</span>
+
+<span class="w">    </span><span class="cm">/* OPTIONAL: mark device as suspended if it is physically suspended */</span>
+<span class="w">    </span><span class="n">pm_device_init_suspended</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+
+<span class="w">    </span><span class="cm">/* enable device runtime power management */</span>
+<span class="w">    </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pm_device_runtime_enable</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Device runtime power management can also be automatically enabled on a device
+instance by adding the <code class="docutils literal notranslate"><span class="pre">zephyr,pm-device-runtime-auto</span></code> flag onto the corresponding
+devicetree node. If enabled, <a class="reference internal" href="../../doxygen/html/group__subsys__pm__device__runtime.html#gaabcd2cc694c9e201dd87bf42f02b454c" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pm_device_runtime_enable()</span></code></a> is called immediately
+after the <code class="docutils literal notranslate"><span class="pre">init</span></code> function of the device runs and returns successfully.</p>
+<div class="highlight-dts notranslate"><div class="highlight"><pre><span></span><span class="nf">foo</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* ... */</span>
+<span class="w">    </span><span class="n">zephyr</span><span class="p">,</span><span class="n">pm-device-runtime-auto</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Assuming an example device driver that implements an <code class="docutils literal notranslate"><span class="pre">operation</span></code> API call, the
+<em>get</em> and <em>put</em> operations could be carried out as follows:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">mydev_operation</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/* &quot;get&quot; device (increases usage count, resumes device if suspended) */</span>
+<span class="w">    </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pm_device_runtime_get</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/* do something with the device */</span>
+<span class="w">    </span><span class="p">...</span>
+
+<span class="w">    </span><span class="cm">/* &quot;put&quot; device (decreases usage count, suspends device if no more users) */</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">pm_device_runtime_put</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In case the suspend operation is <em>slow</em>, the device driver can use the
+asynchronous API:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">mydev_operation</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/* &quot;get&quot; device (increases usage count, resumes device if suspended) */</span>
+<span class="w">    </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pm_device_runtime_get</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/* do something with the device */</span>
+<span class="w">    </span><span class="p">...</span>
+
+<span class="w">    </span><span class="cm">/* &quot;put&quot; device (decreases usage count, schedule suspend if no more users) */</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">pm_device_runtime_put_async</span><span class="p">(</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="n">K_NO_WAIT</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<p>Some helpful examples showing device runtime power management features:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/tests/subsys/pm/device_runtime_api/">tests/subsys/pm/device_runtime_api/</a></p></li>
+<li><p><a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/tests/subsys/pm/device_power_domains/">tests/subsys/pm/device_power_domains/</a></p></li>
+<li><p><a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/tests/subsys/pm/power_domain/">tests/subsys/pm/power_domain/</a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

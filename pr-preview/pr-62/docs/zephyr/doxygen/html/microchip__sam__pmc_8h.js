@@ -1,0 +1,28 @@
+var microchip__sam__pmc_8h =
+[
+    [ "PMC_AUDIOIOPLL", "microchip__sam__pmc_8h.html#a2374e2a9b2baf97196cb9900ab41f2b1", null ],
+    [ "PMC_AUDIOPMCPLL", "microchip__sam__pmc_8h.html#af716bb9061d8d6a5a96ade2c0102f4c0", null ],
+    [ "PMC_BAUDPLL", "microchip__sam__pmc_8h.html#aae1ca2d39f81fa9fc9094619ce3b19c4", null ],
+    [ "PMC_CPU", "microchip__sam__pmc_8h.html#a79ea6d33c03bc659e505516f10dd4909", null ],
+    [ "PMC_CPUPLL", "microchip__sam__pmc_8h.html#a1f28358ab0151521b3121ff4d57ca700", null ],
+    [ "PMC_DDRPLL", "microchip__sam__pmc_8h.html#ab8a01a73ca6952f39be1ed7a3791feb3", null ],
+    [ "PMC_ETHPLL", "microchip__sam__pmc_8h.html#a2707b5189d0c0a383e8765aa4dc0c702", null ],
+    [ "PMC_IMGPLL", "microchip__sam__pmc_8h.html#a441d7b97d246e52e75bf348ac3b90c76", null ],
+    [ "PMC_LVDSPLL", "microchip__sam__pmc_8h.html#af7ababade336761d419000117f26729b", null ],
+    [ "PMC_MAIN", "microchip__sam__pmc_8h.html#a072e63108608597768994a00b21d955d", null ],
+    [ "PMC_MCK", "microchip__sam__pmc_8h.html#a2d6b8cadcedb6522e88264b09da73d7d", null ],
+    [ "PMC_MCK1", "microchip__sam__pmc_8h.html#a373a027bd6c4c22ba1bb333109c4b4b5", null ],
+    [ "PMC_MCK3", "microchip__sam__pmc_8h.html#a26c4f89876d53e70aaa08503a1e376ca", null ],
+    [ "PMC_MCK5", "microchip__sam__pmc_8h.html#af08ab4f17eff3aa6f62de4d7addbdf68", null ],
+    [ "PMC_SLOW", "microchip__sam__pmc_8h.html#a854154863c97c71801ff4684a407e237", null ],
+    [ "PMC_SYSPLL", "microchip__sam__pmc_8h.html#a996cc1d45786ee499ccc23355a05db37", null ],
+    [ "PMC_TYPE_CORE", "microchip__sam__pmc_8h.html#a2b1fc195c22e06289bfe1955086d42dd", null ],
+    [ "PMC_TYPE_GCK", "microchip__sam__pmc_8h.html#ab998f9758b4c3e603ca20bfd262f3327", null ],
+    [ "PMC_TYPE_PERIPHERAL", "microchip__sam__pmc_8h.html#a60e3c44dd11ea566f718972995374019", null ],
+    [ "PMC_TYPE_PROGRAMMABLE", "microchip__sam__pmc_8h.html#a7fc62d1954529184d102cb7585973fb5", null ],
+    [ "PMC_TYPE_SYSTEM", "microchip__sam__pmc_8h.html#a5745534115e0096059c693406055573b", null ],
+    [ "PMC_UTMI", "microchip__sam__pmc_8h.html#a5a54df8ddd142b8e6ed67b72d7bab401", null ],
+    [ "UTMI1", "microchip__sam__pmc_8h.html#acf4ff24d07135ac8ba9095f4b0e8202f", null ],
+    [ "UTMI2", "microchip__sam__pmc_8h.html#a536bbd6e8cf19611a64b62a6173bebae", null ],
+    [ "UTMI3", "microchip__sam__pmc_8h.html#ab950647ecce7b6ed9a94770434a9504c", null ]
+];

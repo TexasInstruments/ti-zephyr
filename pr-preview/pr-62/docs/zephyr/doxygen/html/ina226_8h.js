@@ -1,0 +1,28 @@
+var ina226_8h =
+[
+    [ "INA226_AVG_MODE_1", "ina226_8h.html#a5fb596bda9235774ae63f602366b7f75", null ],
+    [ "INA226_AVG_MODE_1024", "ina226_8h.html#a035c1834dcf1ae41135371b2d9e64110", null ],
+    [ "INA226_AVG_MODE_128", "ina226_8h.html#a22345ffb861e057d34a31e4df7340d04", null ],
+    [ "INA226_AVG_MODE_16", "ina226_8h.html#a55785fdf8ae4aa57531dc5107303dce6", null ],
+    [ "INA226_AVG_MODE_256", "ina226_8h.html#adc89cd11a9ece7a53f85c5fb2d81842c", null ],
+    [ "INA226_AVG_MODE_4", "ina226_8h.html#a23954364dead3a9df1a878c106939275", null ],
+    [ "INA226_AVG_MODE_512", "ina226_8h.html#af02590f29166255a35e63305e39be4e0", null ],
+    [ "INA226_AVG_MODE_64", "ina226_8h.html#a6d0365e097575da1f80cc9dfa20a69f3", null ],
+    [ "INA226_CONV_TIME_1100", "ina226_8h.html#ae063a0b167607657e1ffc1f8e68b2a6c", null ],
+    [ "INA226_CONV_TIME_140", "ina226_8h.html#a95a71cdbb30e0eddfd05f336c53a0bbb", null ],
+    [ "INA226_CONV_TIME_204", "ina226_8h.html#a49a08f6e61463403ac18fd89f9f6facb", null ],
+    [ "INA226_CONV_TIME_2116", "ina226_8h.html#a83b8bb8b54b2e4857793bf014d9f57af", null ],
+    [ "INA226_CONV_TIME_332", "ina226_8h.html#a6f45151cb3e367e9b2a66184fbd1ebf8", null ],
+    [ "INA226_CONV_TIME_4156", "ina226_8h.html#a02b694b57e4304736d88639d64cebec4", null ],
+    [ "INA226_CONV_TIME_588", "ina226_8h.html#a445eaee2b6aa6bbdb1caa106580b6036", null ],
+    [ "INA226_CONV_TIME_8244", "ina226_8h.html#af3037329e3f8b9c984308bf8f4fef851", null ],
+    [ "INA226_OPER_MODE_BUS_VOLTAGE_CONT", "ina226_8h.html#adcf4265f1272f33a8385cf6a8c20bc42", null ],
+    [ "INA226_OPER_MODE_BUS_VOLTAGE_TRIG", "ina226_8h.html#a88aa0c1378cfe356b643c89bf1418e3e", null ],
+    [ "INA226_OPER_MODE_POWER_DOWN", "ina226_8h.html#a8780c1da54c2e5ae863efb7ef1b310b9", null ],
+    [ "INA226_OPER_MODE_SHUNT_BUS_VOLTAGE_CONT", "ina226_8h.html#aba344632242e46fcd392eaf7f114f820", null ],
+    [ "INA226_OPER_MODE_SHUNT_BUS_VOLTAGE_TRIG", "ina226_8h.html#a7e88c1ab79bed8425f3074b37903113b", null ],
+    [ "INA226_OPER_MODE_SHUNT_VOLTAGE_CONT", "ina226_8h.html#afad378147deb5e1789a40e5dd7611de9", null ],
+    [ "INA226_OPER_MODE_SHUNT_VOLTAGE_TRIG", "ina226_8h.html#aed00293346e09e6ef3114dd3167d1ce5", null ],
+    [ "INA226_RST_NORMAL_OPERATION", "ina226_8h.html#a8174524d294a89bcedeec335538cc373", null ],
+    [ "INA226_RST_SYSTEM_RESET", "ina226_8h.html#a1369ecef1266f83dd93f970002ff61b7", null ]
+];

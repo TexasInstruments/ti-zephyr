@@ -1,0 +1,628 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Twister blackbox tests &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/develop/test/twister/twister_blackbox.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Integration with pytest test framework" href="../pytest.html" />
+    <link rel="prev" title="Twister Status" href="../twister_statuses.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Developing with Zephyr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/index.html">Getting Started Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../beyond-GSG.html">Beyond the Getting Started Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../env_vars.html">Environment Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../application/index.html">Application Development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../debug/index.html">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/index.html">API Status and Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../languages/index.html">Language Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimizations/index.html">Optimizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../flash_debug/index.html">Flashing and Hardware Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html">Modules (External projects)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../west/index.html">West (Zephyr’s meta-tool)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Testing</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../ztest.html">Test Framework</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../benchmark.html">Benchmarking Framework</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../twister.html">Test Runner (Twister)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../twister_statuses.html">Twister Status</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Twister blackbox tests</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#basics">Basics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sample-test-file">Sample test file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#comparison-with-cli">Comparison with CLI</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#other-functionalities">Other functionalities</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#decorators">Decorators</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#fixtures">Fixtures</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#how-do-i">How do I…</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#call-twister-multiple-times-in-one-test">Call Twister multiple times in one test?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../pytest.html">Integration with pytest test framework</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../coverage.html">Generating coverage reports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../bsim.html">BabbleSim</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../sca/index.html">Static Code Analysis (SCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../toolchains/index.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/index.html">Tools and IDEs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Developing with Zephyr</a> &raquo;</li>
+  
+     <li><a href="../index.html">Testing</a> &raquo;</li>
+  
+  <li>Twister blackbox tests</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/develop/test/twister/twister_blackbox.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27develop%2Ftest%2Ftwister%2Ftwister_blackbox%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Testsuite&env=-+Page%3A+develop%2Ftest%2Ftwister%2Ftwister_blackbox%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="twister-blackbox-tests">
+<span id="twister-blackbox"></span><h1>Twister blackbox tests<a class="headerlink" href="#twister-blackbox-tests" title="Link to this heading"></a></h1>
+<p>This guide aims to explain the structure of a test file so the reader will be able
+to understand existing files and create their own. All developers should fix any tests
+they break and create new ones when introducing new features, so this knowledge is
+important for any Twister developer.</p>
+<section id="basics">
+<h2>Basics<a class="headerlink" href="#basics" title="Link to this heading"></a></h2>
+<p>Twister blackbox tests are written in python, using the <code class="docutils literal notranslate"><span class="pre">pytest</span></code> library.
+Read up on it <a class="reference internal" href="../pytest.html#integration-with-pytest"><span class="std std-ref">here</span></a> .
+Auxiliary test data follows whichever format it was in originally.
+Tests and data are wholly contained in the <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/scripts/tests/twister_blackbox">scripts/tests/twister_blackbox</a>
+directory and prepended with <code class="docutils literal notranslate"><span class="pre">test_</span></code>.</p>
+<p>Blackbox tests should not be aware of the internal twister code. Instead, they should
+call twister as user would and check the results.</p>
+</section>
+<section id="sample-test-file">
+<h2>Sample test file<a class="headerlink" href="#sample-test-file" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos"> 2</span><span class="c1"># Copyright (c) 2024 Intel Corporation</span>
+<span class="linenos"> 3</span><span class="c1">#</span>
+<span class="linenos"> 4</span><span class="c1"># SPDX-License-Identifier: Apache-2.0</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+<span class="linenos"> 7</span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="linenos"> 8</span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="linenos"> 9</span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="linenos">10</span><span class="kn">from</span><span class="w"> </span><span class="nn">unittest</span><span class="w"> </span><span class="kn">import</span> <span class="n">mock</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="linenos">13</span><span class="kn">from</span><span class="w"> </span><span class="nn">conftest</span><span class="w"> </span><span class="kn">import</span> <span class="n">TEST_DATA</span><span class="p">,</span> <span class="n">ZEPHYR_BASE</span><span class="p">,</span> <span class="n">suite_filename_mock</span>
+<span class="linenos">14</span><span class="kn">from</span><span class="w"> </span><span class="nn">twisterlib.testplan</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestPlan</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="k">class</span><span class="w"> </span><span class="nc">TestDummy</span><span class="p">:</span>
+<span class="linenos">18</span>    <span class="n">TESTDATA_X</span> <span class="o">=</span> <span class="p">[</span>
+<span class="linenos">19</span>        <span class="p">(</span><span class="s2">&quot;smoke&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+<span class="linenos">20</span>        <span class="p">(</span><span class="s2">&quot;acceptance&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+<span class="linenos">21</span>    <span class="p">]</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span>    <span class="nd">@classmethod</span>
+<span class="linenos">24</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup_class</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="linenos">25</span>        <span class="n">apath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ZEPHYR_BASE</span><span class="p">,</span> <span class="s2">&quot;scripts&quot;</span><span class="p">,</span> <span class="s2">&quot;twister&quot;</span><span class="p">)</span>
+<span class="linenos">26</span>        <span class="bp">cls</span><span class="o">.</span><span class="n">loader</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">machinery</span><span class="o">.</span><span class="n">SourceFileLoader</span><span class="p">(</span><span class="s2">&quot;__main__&quot;</span><span class="p">,</span> <span class="n">apath</span><span class="p">)</span>
+<span class="linenos">27</span>        <span class="bp">cls</span><span class="o">.</span><span class="n">spec</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">spec_from_loader</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">loader</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">loader</span><span class="p">)</span>
+<span class="linenos">28</span>        <span class="bp">cls</span><span class="o">.</span><span class="n">twister_module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">module_from_spec</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">spec</span><span class="p">)</span>
+<span class="linenos">29</span>
+<span class="linenos">30</span>    <span class="nd">@classmethod</span>
+<span class="linenos">31</span>    <span class="k">def</span><span class="w"> </span><span class="nf">teardown_class</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="linenos">32</span>        <span class="k">pass</span>
+<span class="linenos">33</span>
+<span class="linenos">34</span>    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+<span class="linenos">35</span>        <span class="s2">&quot;level, expected_tests&quot;</span><span class="p">,</span> <span class="n">TESTDATA_X</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;smoke&quot;</span><span class="p">,</span> <span class="s2">&quot;acceptance&quot;</span><span class="p">]</span>
+<span class="linenos">36</span>    <span class="p">)</span>
+<span class="linenos">37</span>    <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">TestPlan</span><span class="p">,</span> <span class="s2">&quot;TESTSUITE_FILENAME&quot;</span><span class="p">,</span> <span class="n">suite_filename_mock</span><span class="p">)</span>
+<span class="linenos">38</span>    <span class="k">def</span><span class="w"> </span><span class="nf">test_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">capfd</span><span class="p">,</span> <span class="n">out_path</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">expected_tests</span><span class="p">):</span>
+<span class="linenos">39</span>        <span class="c1"># Select platforms used for the tests</span>
+<span class="linenos">40</span>        <span class="n">test_platforms</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;qemu_x86&quot;</span><span class="p">,</span> <span class="s2">&quot;frdm_k64f&quot;</span><span class="p">]</span>
+<span class="linenos">41</span>        <span class="c1"># Select test root</span>
+<span class="linenos">42</span>        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">TEST_DATA</span><span class="p">,</span> <span class="s2">&quot;tests&quot;</span><span class="p">)</span>
+<span class="linenos">43</span>        <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">TEST_DATA</span><span class="p">,</span> <span class="s2">&quot;test_config.yaml&quot;</span><span class="p">)</span>
+<span class="linenos">44</span>
+<span class="linenos">45</span>        <span class="c1"># Set flags for our Twister command as a list of strs</span>
+<span class="linenos">46</span>        <span class="n">args</span> <span class="o">=</span> <span class="p">(</span>
+<span class="linenos">47</span>            <span class="c1"># Flags related to the generic test setup:</span>
+<span class="linenos">48</span>            <span class="c1"># * Control the level of detail in stdout/err</span>
+<span class="linenos">49</span>            <span class="c1"># * Establish the output directory</span>
+<span class="linenos">50</span>            <span class="c1"># * Select Zephyr tests to use</span>
+<span class="linenos">51</span>            <span class="c1"># * Control whether to only build or build and run aforementioned tests</span>
+<span class="linenos">52</span>            <span class="p">[</span><span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;--outdir&quot;</span><span class="p">,</span> <span class="n">out_path</span><span class="p">,</span> <span class="s2">&quot;-T&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="s2">&quot;-y&quot;</span><span class="p">]</span>
+<span class="linenos">53</span>            <span class="c1"># Flags under test</span>
+<span class="linenos">54</span>            <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;--level&quot;</span><span class="p">,</span> <span class="n">level</span><span class="p">]</span>
+<span class="linenos">55</span>            <span class="c1"># Flags required for the test</span>
+<span class="linenos">56</span>            <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;--test-config&quot;</span><span class="p">,</span> <span class="n">config_path</span><span class="p">]</span>
+<span class="linenos">57</span>            <span class="c1"># Flags related to platform selection</span>
+<span class="linenos">58</span>            <span class="o">+</span> <span class="p">[</span>
+<span class="linenos">59</span>                <span class="n">val</span>
+<span class="linenos">60</span>                <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="s2">&quot;-p&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_platforms</span><span class="p">),</span> <span class="n">test_platforms</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">61</span>                <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">pair</span>
+<span class="linenos">62</span>            <span class="p">]</span>
+<span class="linenos">63</span>        <span class="p">)</span>
+<span class="linenos">64</span>
+<span class="linenos">65</span>        <span class="c1"># First, provide the args variable as our Twister command line arguments.</span>
+<span class="linenos">66</span>        <span class="c1"># Then, catch the exit code in the sys_exit variable.</span>
+<span class="linenos">67</span>        <span class="k">with</span> <span class="n">mock</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;argv&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="n">args</span><span class="p">),</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span>
+<span class="linenos">68</span>            <span class="ne">SystemExit</span>
+<span class="linenos">69</span>        <span class="p">)</span> <span class="k">as</span> <span class="n">sys_exit</span><span class="p">:</span>
+<span class="linenos">70</span>            <span class="c1"># Execute the Twister call itself.</span>
+<span class="linenos">71</span>            <span class="bp">self</span><span class="o">.</span><span class="n">loader</span><span class="o">.</span><span class="n">exec_module</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">twister_module</span><span class="p">)</span>
+<span class="linenos">72</span>
+<span class="linenos">73</span>        <span class="c1"># Check whether the Twister call succeeded</span>
+<span class="linenos">74</span>        <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">sys_exit</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span>
+<span class="linenos">75</span>
+<span class="linenos">76</span>        <span class="c1"># Access to the test file output</span>
+<span class="linenos">77</span>        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span> <span class="s2">&quot;testplan.json&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="linenos">78</span>            <span class="n">j</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="linenos">79</span>        <span class="n">filtered_j</span> <span class="o">=</span> <span class="p">[</span>
+<span class="linenos">80</span>            <span class="p">(</span><span class="n">ts</span><span class="p">[</span><span class="s2">&quot;platform&quot;</span><span class="p">],</span> <span class="n">ts</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">tc</span><span class="p">[</span><span class="s2">&quot;identifier&quot;</span><span class="p">])</span>
+<span class="linenos">81</span>            <span class="k">for</span> <span class="n">ts</span> <span class="ow">in</span> <span class="n">j</span><span class="p">[</span><span class="s2">&quot;testsuites&quot;</span><span class="p">]</span>
+<span class="linenos">82</span>            <span class="k">for</span> <span class="n">tc</span> <span class="ow">in</span> <span class="n">ts</span><span class="p">[</span><span class="s2">&quot;testcases&quot;</span><span class="p">]</span>
+<span class="linenos">83</span>            <span class="k">if</span> <span class="s2">&quot;reason&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tc</span>
+<span class="linenos">84</span>        <span class="p">]</span>
+<span class="linenos">85</span>
+<span class="linenos">86</span>        <span class="c1"># Read stdout and stderr to out and err variables respectively</span>
+<span class="linenos">87</span>        <span class="n">out</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capfd</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+<span class="linenos">88</span>        <span class="c1"># Rewrite the captured buffers to stdout and stderr so the user can still read them</span>
+<span class="linenos">89</span>        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+<span class="linenos">90</span>        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+<span class="linenos">91</span>
+<span class="linenos">92</span>        <span class="c1"># Test-relevant checks</span>
+<span class="linenos">93</span>        <span class="k">assert</span> <span class="n">expected_tests</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">filtered_j</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="comparison-with-cli">
+<h2>Comparison with CLI<a class="headerlink" href="#comparison-with-cli" title="Link to this heading"></a></h2>
+<p>Test above runs the command</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">twister -i --outdir $OUTDIR -T $TEST_DATA/tests -y --level $LEVEL</span>
+<span class="go">--test-config $TEST_DATA/test_config.yaml -p qemu_x86 -p frdm_k64f</span>
+</pre></div>
+</div>
+<p>It presumes a CLI with the <code class="docutils literal notranslate"><span class="pre">zephyr-env.sh</span></code> or <code class="docutils literal notranslate"><span class="pre">zephyr-env.cmd</span></code> already run.</p>
+<p>Such a test provides us with all the outputs we typically expect of a Twister run thanks to
+<code class="docutils literal notranslate"><span class="pre">importlib</span></code> ‘s <code class="docutils literal notranslate"><span class="pre">exec_module()</span></code> <a class="footnote-reference brackets" href="#f1" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> .
+We can easily set up all flags that we expect from a Twister call via <code class="docutils literal notranslate"><span class="pre">args</span></code> variable <a class="footnote-reference brackets" href="#f2" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a> .
+We can check the standard output or stderr in <code class="docutils literal notranslate"><span class="pre">out</span></code> and <code class="docutils literal notranslate"><span class="pre">err</span></code> variables.</p>
+<p>Beside the standard outputs, we can also investigate the file outputs, normally placed in
+<code class="docutils literal notranslate"><span class="pre">twister-out</span></code> directories. Most of the time, we will use the <code class="docutils literal notranslate"><span class="pre">out_path</span></code> fixture in conjunction
+with <code class="docutils literal notranslate"><span class="pre">--outdir</span></code> flag (L52) to keep test-generated files in temporary directories.
+Typical files read in blackbox tests are <code class="docutils literal notranslate"><span class="pre">testplan.json</span></code> , <code class="docutils literal notranslate"><span class="pre">twister.xml</span></code> and <code class="docutils literal notranslate"><span class="pre">twister.log</span></code> .</p>
+</section>
+<section id="other-functionalities">
+<h2>Other functionalities<a class="headerlink" href="#other-functionalities" title="Link to this heading"></a></h2>
+<section id="decorators">
+<h3>Decorators<a class="headerlink" href="#decorators" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">&#64;pytest.mark.usefixtures('clear_log')</span></code></dt><dd><ul>
+<li><p>allows us to use <code class="docutils literal notranslate"><span class="pre">clear_log</span></code> fixture from <code class="docutils literal notranslate"><span class="pre">conftest.py</span></code> .
+The fixture is to become <code class="docutils literal notranslate"><span class="pre">autouse</span></code> in the future.
+After that, this decorator can be removed.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">&#64;pytest.mark.parametrize('level,</span> <span class="pre">expected_tests',</span> <span class="pre">TESTDATA_X,</span> <span class="pre">ids=['smoke',</span> <span class="pre">'acceptance'])</span></code></dt><dd><ul>
+<li><p>this is an example of <code class="docutils literal notranslate"><span class="pre">pytest</span></code> ‘s test parametrization.
+Read up on it <a class="reference external" href="https://docs.pytest.org/en/7.1.x/example/parametrize.html#different-options-for-test-ids">here</a>.
+TESTDATAs are most often declared as class fields.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">&#64;mock.patch.object(TestPlan,</span> <span class="pre">'TESTSUITE_FILENAME',</span> <span class="pre">suite_filename_mock)</span></code></dt><dd><ul>
+<li><p>this decorator allows us to use only tests defined in the <code class="docutils literal notranslate"><span class="pre">test_data</span></code> and
+ignore the Zephyr testcases in the <code class="docutils literal notranslate"><span class="pre">tests</span></code> directory. <strong>Note that all ``test_data``
+tests use</strong> <code class="docutils literal notranslate"><span class="pre">test_data.yaml</span></code> <strong>as a filename, not</strong> <code class="docutils literal notranslate"><span class="pre">testcase.yaml</span></code> <strong>!</strong>
+Read up on the <code class="docutils literal notranslate"><span class="pre">mock</span></code> library
+<a class="reference external" href="https://docs.python.org/3/library/unittest.mock.html">here</a>.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="fixtures">
+<h3>Fixtures<a class="headerlink" href="#fixtures" title="Link to this heading"></a></h3>
+<p>Blackbox tests use <code class="docutils literal notranslate"><span class="pre">pytest</span></code> ‘s fixtures, further reading on which is available
+<a class="reference external" href="https://docs.pytest.org/en/6.2.x/fixture.html">here</a>.</p>
+<p>If you would like to add your own fixtures,
+consider whether they will be used in just one test file, or in many.</p>
+<ul>
+<li><p>If in many, create such a fixture in the
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/scripts/tests/twister_blackbox/conftest.py">scripts/tests/twister_blackbox/conftest.py</a> file.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/scripts/tests/twister_blackbox/conftest.py">scripts/tests/twister_blackbox/conftest.py</a> already contains some fixtures -
+take a look there for an example.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>If in just one, declare it in that file.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Consider using class fields instead - look at TESTDATAs for an example.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+</section>
+<section id="how-do-i">
+<h2>How do I…<a class="headerlink" href="#how-do-i" title="Link to this heading"></a></h2>
+<section id="call-twister-multiple-times-in-one-test">
+<h3>Call Twister multiple times in one test?<a class="headerlink" href="#call-twister-multiple-times-in-one-test" title="Link to this heading"></a></h3>
+<p>Sometimes we want to test something that requires prior Twister use. <code class="docutils literal notranslate"><span class="pre">--test-only</span></code>
+flag would be a typical example, as it is to be coupled with previous <code class="docutils literal notranslate"><span class="pre">--build-only</span></code>
+Twister call. How should we approach that?</p>
+<p>If we just call the <code class="docutils literal notranslate"><span class="pre">importlib</span></code> ‘s <code class="docutils literal notranslate"><span class="pre">exec_module</span></code> two times, we will experience log
+duplication. <code class="docutils literal notranslate"><span class="pre">twister.log</span></code> will duplicate every line (triplicate if we call it three times, etc.)
+instead of overwriting the log or appending to the end of it.</p>
+<p>It is caused by the use of logger module variables in the Twister files.
+Thus us executing the module again causes the loggers to have multiple handles.</p>
+<p>To overcome this, between the calls you ought to use</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">capfd</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>   <span class="c1"># To remove output from the buffer</span>
+                     <span class="c1"># Note that if you want output from all runs after each other,</span>
+                     <span class="c1"># skip this line.</span>
+<span class="n">clear_log_in_test</span><span class="p">()</span>  <span class="c1"># To remove log duplication</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<p class="rubric">Footnotes</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="f1" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Take note of the <code class="docutils literal notranslate"><span class="pre">setup_class()</span></code> class function, which allows us to run
+<code class="docutils literal notranslate"><span class="pre">twister</span></code> python file as if it were called directly
+(bypassing the <code class="docutils literal notranslate"><span class="pre">__name__</span> <span class="pre">==</span> <span class="pre">'__main__'</span></code> check).</p>
+</aside>
+<aside class="footnote brackets" id="f2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>We advise you to keep the first section of <code class="docutils literal notranslate"><span class="pre">args</span></code> definition intact in almost all
+of your tests, as it is used for the common test setup.</p>
+</aside>
+</aside>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1233 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Devicetree access from C/C++ &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/build/dts/api-usage.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Phandles" href="phandles.html" />
+    <link rel="prev" title="Rules for upstream bindings" href="bindings-upstream.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Build and Configuration Systems</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../cmake/index.html">Build System (CMake)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Devicetree</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#devicetree-guide">Devicetree Guide</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="intro.html">Introduction to devicetree</a></li>
+<li class="toctree-l4"><a class="reference internal" href="design.html">Design goals</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bindings.html">Devicetree bindings</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Devicetree access from C/C++</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#a-note-for-linux-developers">A note for Linux developers</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#node-identifiers">Node identifiers</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#node-identifiers-are-not-values">Node identifiers are not values</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#property-access">Property access</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#other-apis">Other APIs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#device-driver-conveniences">Device driver conveniences</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#hardware-specific-apis">Hardware specific APIs</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#generated-macros">Generated macros</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="phandles.html">Phandles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="zephyr-user-node.html">The <code class="docutils literal notranslate"><span class="pre">/zephyr,user</span></code> node</a></li>
+<li class="toctree-l4"><a class="reference internal" href="howtos.html">Devicetree HOWTOs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="troubleshooting.html">Troubleshooting devicetree</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dt-vs-kconfig.html">Devicetree versus Kconfig</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#devicetree-reference">Devicetree Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../kconfig/index.html">Configuration System (Kconfig)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../snippets/index.html">Snippets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../zephyr_cmake_package.html">Zephyr CMake Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sysbuild/index.html">Sysbuild (System build)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../version/index.html">Application version management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flashing/index.html">Flashing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signing/index.html">Signing Binaries</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Build and Configuration Systems</a> &raquo;</li>
+  
+     <li><a href="index.html">Devicetree</a> &raquo;</li>
+  
+  <li>Devicetree access from C/C++</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/build/dts/api-usage.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27build%2Fdts%2Fapi-usage%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Devicetree&env=-+Page%3A+build%2Fdts%2Fapi-usage%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="devicetree-access-from-c-c">
+<span id="dt-from-c"></span><h1>Devicetree access from C/C++<a class="headerlink" href="#devicetree-access-from-c-c" title="Link to this heading"></a></h1>
+<p>This guide describes Zephyr’s <code class="docutils literal notranslate"><span class="pre">&lt;zephyr/devicetree.h&gt;</span></code> API for reading the
+devicetree from C source files. It assumes you’re familiar with the concepts in
+<a class="reference internal" href="intro.html#devicetree-intro"><span class="std std-ref">Introduction to devicetree</span></a> and <a class="reference internal" href="bindings.html#dt-bindings"><span class="std std-ref">Devicetree bindings</span></a>. See <a class="reference internal" href="index.html#dt-reference"><span class="std std-ref">Devicetree Reference</span></a> for
+reference material.</p>
+<section id="a-note-for-linux-developers">
+<h2>A note for Linux developers<a class="headerlink" href="#a-note-for-linux-developers" title="Link to this heading"></a></h2>
+<p>Linux developers familiar with devicetree should be warned that the API
+described here differs significantly from how devicetree is used on Linux.</p>
+<p>Instead of generating a C header with all the devicetree data which is then
+abstracted behind a macro API, the Linux kernel would instead read the
+devicetree data structure in its binary form. The binary representation is
+parsed at runtime, for example to load and initialize device drivers.</p>
+<p>Zephyr does not work this way because the size of the devicetree binary and
+associated handling code would be too large to fit comfortably on the
+relatively constrained devices Zephyr supports.</p>
+</section>
+<section id="node-identifiers">
+<span id="dt-node-identifiers"></span><h2>Node identifiers<a class="headerlink" href="#node-identifiers" title="Link to this heading"></a></h2>
+<p>To get information about a particular devicetree node, you need a <em>node
+identifier</em> for it. This is a just a C macro that refers to the node.</p>
+<p>These are the main ways to get a node identifier:</p>
+<dl class="simple">
+<dt>By path</dt><dd><p>Use <a class="reference internal" href="../../doxygen/html/group__devicetree-generic-id.html#ga015b4819473797982e83cae497697086" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_PATH()</span></code></a> along with the node’s full path in the devicetree,
+starting from the root node. This is mostly useful if you happen to know the
+exact node you’re looking for.</p>
+</dd>
+<dt>By node label</dt><dd><p>Use <a class="reference internal" href="../../doxygen/html/group__devicetree-generic-id.html#gab7d23294a6bf7fd44a98b48ec47d8a79" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_NODELABEL()</span></code></a> to get a node identifier from a <a class="reference internal" href="intro-syntax-structure.html#dt-node-labels"><span class="std std-ref">node
+label</span></a>. Node labels are often provided by SoC <code class="file docutils literal notranslate"><span class="pre">.dtsi</span></code>
+files to give nodes names that match the SoC datasheet, like <code class="docutils literal notranslate"><span class="pre">i2c1</span></code>,
+<code class="docutils literal notranslate"><span class="pre">spi2</span></code>, etc.</p>
+</dd>
+<dt>By alias</dt><dd><p>Use <a class="reference internal" href="../../doxygen/html/group__devicetree-generic-id.html#gaa49e19bbc39dc0d6f16b78a5d02482c9" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_ALIAS()</span></code></a> to get a node identifier for a property of the
+special <code class="docutils literal notranslate"><span class="pre">/aliases</span></code> node. This is sometimes done by applications (like
+<a class="reference internal" href="../../samples/basic/blinky/README.html#blinky" title="Blink an LED forever using the GPIO API.">Blinky</a>, which uses the <code class="docutils literal notranslate"><span class="pre">led0</span></code> alias) that need to
+refer to <em>some</em> device of a particular type (“the board’s user LED”) but
+don’t care which one is used.
+You may also use <a class="reference internal" href="../../doxygen/html/group__devicetree-generic-id.html#ga1f6c459577dbb195192bef33a30c5d51" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_HAS_ALIAS()</span></code></a> to verify whether an alias
+node exists.</p>
+</dd>
+<dt>By instance number</dt><dd><p>This is done primarily by device drivers, as instance numbers are a way to
+refer to individual nodes based on a matching compatible. Get these with
+<a class="reference internal" href="../../doxygen/html/group__devicetree-generic-id.html#gae199b930cb21ff38dab284a696093ead" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_INST()</span></code></a>, but be careful doing so. See below.</p>
+</dd>
+<dt>By chosen node</dt><dd><p>Use <a class="reference internal" href="../../doxygen/html/group__devicetree-generic-chosen.html#ga3412d0acecffa828984cf9e2c89889ed" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_CHOSEN()</span></code></a> to get a node identifier for <code class="docutils literal notranslate"><span class="pre">/chosen</span></code> node
+properties.</p>
+</dd>
+<dt>By parent/child</dt><dd><p>Use <a class="reference internal" href="../../doxygen/html/group__devicetree-generic-id.html#ga3ac56d491510275ee1321446796ab63b" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_PARENT()</span></code></a> and <a class="reference internal" href="../../doxygen/html/group__devicetree-generic-id.html#ga88259608f4e9083ccc2e9ca5ec2c212e" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_CHILD()</span></code></a> to get a node identifier
+for a parent or child node, starting from a node identifier you already have.</p>
+</dd>
+</dl>
+<p>Two node identifiers which refer to the same node are identical and can be used
+interchangeably.</p>
+<p id="dt-node-main-ex">Here’s a DTS fragment for some imaginary hardware we’ll return to throughout
+this file for examples:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cp">/dts-v1/</span><span class="p">;</span>
+
+<span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">	</span><span class="nf">aliases</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">		</span><span class="n">sensor-controller</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">i2c1</span><span class="p">;</span>
+<span class="w">	</span><span class="p">};</span>
+
+<span class="w">	</span><span class="nf">soc</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">		</span><span class="nl">i2c1</span><span class="p">:</span><span class="w"> </span><span class="nf">i2c</span><span class="o">@</span><span class="mi">40002000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">			</span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;vnd,soc-i2c&quot;</span><span class="p">;</span>
+<span class="w">			</span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;I2C_1&quot;</span><span class="p">;</span>
+<span class="w">			</span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x40002000</span><span class="w"> </span><span class="mh">0x1000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">			</span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">			</span><span class="n">clock-frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">100000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">		</span><span class="p">};</span>
+<span class="w">	</span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Here are a few ways to get node identifiers for the <code class="docutils literal notranslate"><span class="pre">i2c&#64;40002000</span></code> node:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">DT_PATH(soc,</span> <span class="pre">i2c_40002000)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DT_NODELABEL(i2c1)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DT_ALIAS(sensor_controller)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DT_INST(x,</span> <span class="pre">vnd_soc_i2c)</span></code> for some unknown number <code class="docutils literal notranslate"><span class="pre">x</span></code>. See the
+<a class="reference internal" href="../../doxygen/html/group__devicetree-generic-id.html#gae199b930cb21ff38dab284a696093ead" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_INST()</span></code></a> documentation for details.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Non-alphanumeric characters like dash (<code class="docutils literal notranslate"><span class="pre">-</span></code>) and the at sign (<code class="docutils literal notranslate"><span class="pre">&#64;</span></code>) in
+devicetree names are converted to underscores (<code class="docutils literal notranslate"><span class="pre">_</span></code>). The names in a DTS
+are also converted to lowercase.</p>
+</div>
+</section>
+<section id="node-identifiers-are-not-values">
+<span id="node-ids-are-not-values"></span><h2>Node identifiers are not values<a class="headerlink" href="#node-identifiers-are-not-values" title="Link to this heading"></a></h2>
+<p>There is no way to store one in a variable. You cannot write:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* These will give you compiler errors: */</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">i2c_0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DT_INST</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">vnd_soc_i2c</span><span class="p">);</span>
+<span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i2c_1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DT_INST</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">vnd_soc_i2c</span><span class="p">);</span>
+<span class="kt">long</span><span class="w"> </span><span class="n">my_i2c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DT_NODELABEL</span><span class="p">(</span><span class="n">i2c1</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>If you want something short to save typing, use C macros:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Use something like this instead: */</span>
+
+<span class="cp">#define MY_I2C DT_NODELABEL(i2c1)</span>
+
+<span class="cp">#define INST(i) DT_INST(i, vnd_soc_i2c)</span>
+<span class="cp">#define I2C_0 INST(0)</span>
+<span class="cp">#define I2C_1 INST(1)</span>
+</pre></div>
+</div>
+</section>
+<section id="property-access">
+<h2>Property access<a class="headerlink" href="#property-access" title="Link to this heading"></a></h2>
+<p>The right API to use to read property values depends on the node and property.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#dt-checking-property-exists"><span class="std std-ref">Checking properties and values</span></a></p></li>
+<li><p><a class="reference internal" href="#simple-properties"><span class="std std-ref">Simple properties</span></a></p></li>
+<li><p><a class="reference internal" href="#reg-properties"><span class="std std-ref">reg properties</span></a></p></li>
+<li><p><a class="reference internal" href="#interrupts-properties"><span class="std std-ref">interrupts properties</span></a></p></li>
+<li><p><a class="reference internal" href="#phandle-properties"><span class="std std-ref">phandle properties</span></a></p></li>
+</ul>
+<section id="checking-properties-and-values">
+<span id="dt-checking-property-exists"></span><h3>Checking properties and values<a class="headerlink" href="#checking-properties-and-values" title="Link to this heading"></a></h3>
+<p>You can use <a class="reference internal" href="../../doxygen/html/group__devicetree-generic-exist.html#gacce67bf20541cd2d07d8540058964692" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_NODE_HAS_PROP()</span></code></a> to check if a node has a property. For
+the <a class="reference internal" href="#dt-node-main-ex"><span class="std std-ref">example devicetree</span></a> above:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">DT_NODE_HAS_PROP</span><span class="p">(</span><span class="n">DT_NODELABEL</span><span class="p">(</span><span class="n">i2c1</span><span class="p">),</span><span class="w"> </span><span class="n">clock_frequency</span><span class="p">)</span><span class="w">  </span><span class="cm">/* expands to 1 */</span>
+<span class="n">DT_NODE_HAS_PROP</span><span class="p">(</span><span class="n">DT_NODELABEL</span><span class="p">(</span><span class="n">i2c1</span><span class="p">),</span><span class="w"> </span><span class="n">not_a_property</span><span class="p">)</span><span class="w">   </span><span class="cm">/* expands to 0 */</span>
+</pre></div>
+</div>
+</section>
+<section id="simple-properties">
+<span id="id1"></span><h3>Simple properties<a class="headerlink" href="#simple-properties" title="Link to this heading"></a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">DT_PROP(node_id,</span> <span class="pre">property)</span></code> to read basic integer, boolean, string,
+numeric array, and string array properties.</p>
+<p>For example, to read the <code class="docutils literal notranslate"><span class="pre">clock-frequency</span></code> property’s value in the
+<a class="reference internal" href="#dt-node-main-ex"><span class="std std-ref">above example</span></a>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">DT_PROP</span><span class="p">(</span><span class="n">DT_PATH</span><span class="p">(</span><span class="n">soc</span><span class="p">,</span><span class="w"> </span><span class="n">i2c_40002000</span><span class="p">),</span><span class="w"> </span><span class="n">clock_frequency</span><span class="p">)</span><span class="w">  </span><span class="cm">/* This is 100000, */</span>
+<span class="n">DT_PROP</span><span class="p">(</span><span class="n">DT_NODELABEL</span><span class="p">(</span><span class="n">i2c1</span><span class="p">),</span><span class="w"> </span><span class="n">clock_frequency</span><span class="p">)</span><span class="w">          </span><span class="cm">/* and so is this, */</span>
+<span class="n">DT_PROP</span><span class="p">(</span><span class="n">DT_ALIAS</span><span class="p">(</span><span class="n">sensor_controller</span><span class="p">),</span><span class="w"> </span><span class="n">clock_frequency</span><span class="p">)</span><span class="w"> </span><span class="cm">/* and this. */</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The DTS property <code class="docutils literal notranslate"><span class="pre">clock-frequency</span></code> is spelled <code class="docutils literal notranslate"><span class="pre">clock_frequency</span></code> in C.
+That is, properties also need special characters converted to underscores.
+Their names are also forced to lowercase.</p>
+</div>
+<p>Properties with <code class="docutils literal notranslate"><span class="pre">string</span></code> and <code class="docutils literal notranslate"><span class="pre">boolean</span></code> types work the exact same way. The
+<code class="docutils literal notranslate"><span class="pre">DT_PROP()</span></code> macro expands to a string literal in the case of strings, and the
+number 0 or 1 in the case of booleans. For example:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define I2C1 DT_NODELABEL(i2c1)</span>
+
+<span class="n">DT_PROP</span><span class="p">(</span><span class="n">I2C1</span><span class="p">,</span><span class="w"> </span><span class="n">status</span><span class="p">)</span><span class="w">  </span><span class="cm">/* expands to the string literal &quot;okay&quot; */</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Don’t use DT_NODE_HAS_PROP() for boolean properties. Use DT_PROP() instead
+as shown above. It will expand to either 0 or 1 depending on if the property
+is present or absent.</p>
+</div>
+<p>Properties with type <code class="docutils literal notranslate"><span class="pre">array</span></code>, <code class="docutils literal notranslate"><span class="pre">uint8-array</span></code>, and <code class="docutils literal notranslate"><span class="pre">string-array</span></code> work
+similarly, except <code class="docutils literal notranslate"><span class="pre">DT_PROP()</span></code> expands to an array initializer in these cases.
+Here is an example devicetree fragment:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nl">foo</span><span class="p">:</span><span class="w"> </span><span class="nf">foo</span><span class="o">@</span><span class="mi">1234</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1000</span><span class="w"> </span><span class="mi">2000</span><span class="w"> </span><span class="mi">3000</span><span class="o">&gt;</span><span class="p">;</span><span class="w"> </span><span class="cm">/* array */</span>
+<span class="w">        </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mh">aa</span><span class="w"> </span><span class="mh">bb</span><span class="w"> </span><span class="mh">cc</span><span class="w"> </span><span class="mh">dd</span><span class="p">];</span><span class="w">    </span><span class="cm">/* uint8-array */</span>
+<span class="w">        </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;bar&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;baz&quot;</span><span class="p">;</span><span class="w">     </span><span class="cm">/* string-array */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Its properties can be accessed like this:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define FOO DT_NODELABEL(foo)</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DT_PROP</span><span class="p">(</span><span class="n">FOO</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">);</span><span class="w">           </span><span class="cm">/* {1000, 2000, 3000} */</span>
+<span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">b</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DT_PROP</span><span class="p">(</span><span class="n">FOO</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">);</span><span class="w"> </span><span class="cm">/* {0xaa, 0xbb, 0xcc, 0xdd} */</span>
+<span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DT_PROP</span><span class="p">(</span><span class="n">FOO</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">);</span><span class="w">         </span><span class="cm">/* {&quot;foo&quot;, &quot;bar&quot;} */</span>
+</pre></div>
+</div>
+<p>You can use <a class="reference internal" href="../../doxygen/html/group__devicetree-generic-prop.html#gaa7f5afcedd1f54be79a5337e8e28a5b6" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_PROP_LEN()</span></code></a> to get logical array lengths in number of
+elements.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">size_t</span><span class="w"> </span><span class="n">a_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DT_PROP_LEN</span><span class="p">(</span><span class="n">FOO</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">);</span><span class="w"> </span><span class="cm">/* 3 */</span>
+<span class="kt">size_t</span><span class="w"> </span><span class="n">b_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DT_PROP_LEN</span><span class="p">(</span><span class="n">FOO</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">);</span><span class="w"> </span><span class="cm">/* 4 */</span>
+<span class="kt">size_t</span><span class="w"> </span><span class="n">c_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DT_PROP_LEN</span><span class="p">(</span><span class="n">FOO</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">);</span><span class="w"> </span><span class="cm">/* 2 */</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">DT_PROP_LEN()</span></code> cannot be used with the special <code class="docutils literal notranslate"><span class="pre">reg</span></code> or <code class="docutils literal notranslate"><span class="pre">interrupts</span></code>
+properties. These have alternative macros which are described next.</p>
+</section>
+<section id="reg-properties">
+<span id="id2"></span><h3>reg properties<a class="headerlink" href="#reg-properties" title="Link to this heading"></a></h3>
+<p>See <a class="reference internal" href="intro-syntax-structure.html#dt-important-props"><span class="std std-ref">Important properties</span></a> for an introduction to <code class="docutils literal notranslate"><span class="pre">reg</span></code>.</p>
+<p>Given a node identifier <code class="docutils literal notranslate"><span class="pre">node_id</span></code>, <code class="docutils literal notranslate"><span class="pre">DT_NUM_REGS(node_id)</span></code> is the
+total number of register blocks in the node’s <code class="docutils literal notranslate"><span class="pre">reg</span></code> property.</p>
+<p>You <strong>cannot</strong> read register block addresses and lengths with <code class="docutils literal notranslate"><span class="pre">DT_PROP(node,</span>
+<span class="pre">reg)</span></code>. Instead, if a node only has one register block, use
+<a class="reference internal" href="../../doxygen/html/group__devicetree-reg-prop.html#gac6d8279c32351ced4c0ac7f32270974e" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_REG_ADDR</span></code></a> or <a class="reference internal" href="../../doxygen/html/group__devicetree-reg-prop.html#gad223efc6c77d008e55c3588953e85bfb" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_REG_SIZE</span></code></a>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">DT_REG_ADDR(node_id)</span></code>: the given node’s register block address</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DT_REG_SIZE(node_id)</span></code>: its size</p></li>
+</ul>
+<p>Use <a class="reference internal" href="../../doxygen/html/group__devicetree-reg-prop.html#gac540b00bb12d0662f6aefe6ac0cff243" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_REG_ADDR_BY_IDX</span></code></a> or <a class="reference internal" href="../../doxygen/html/group__devicetree-reg-prop.html#ga9a703d688e4b983689b8579e0e7d9f48" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_REG_SIZE_BY_IDX</span></code></a> instead if the
+node has multiple register blocks:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">DT_REG_ADDR_BY_IDX(node_id,</span> <span class="pre">idx)</span></code>: address of register block at index
+<code class="docutils literal notranslate"><span class="pre">idx</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DT_REG_SIZE_BY_IDX(node_id,</span> <span class="pre">idx)</span></code>: size of block at index <code class="docutils literal notranslate"><span class="pre">idx</span></code></p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">idx</span></code> argument to these must be an integer literal or a macro that
+expands to one without requiring any arithmetic. In particular, <code class="docutils literal notranslate"><span class="pre">idx</span></code> cannot
+be a variable. This won’t work:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* This will cause a compiler error. */</span>
+
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">DT_NUM_REGS</span><span class="p">(</span><span class="n">node_id</span><span class="p">);</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">size_t</span><span class="w"> </span><span class="n">addr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DT_REG_ADDR_BY_IDX</span><span class="p">(</span><span class="n">node_id</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="interrupts-properties">
+<span id="id3"></span><h3>interrupts properties<a class="headerlink" href="#interrupts-properties" title="Link to this heading"></a></h3>
+<p>See <a class="reference internal" href="intro-syntax-structure.html#dt-important-props"><span class="std std-ref">Important properties</span></a> for a brief introduction to <code class="docutils literal notranslate"><span class="pre">interrupts</span></code>.</p>
+<p>Given a node identifier <code class="docutils literal notranslate"><span class="pre">node_id</span></code>, <code class="docutils literal notranslate"><span class="pre">DT_NUM_IRQS(node_id)</span></code> is the total
+number of interrupt specifiers in the node’s <code class="docutils literal notranslate"><span class="pre">interrupts</span></code> property.</p>
+<p>The most general purpose API macro for accessing these is
+<a class="reference internal" href="../../doxygen/html/group__devicetree-interrupts-prop.html#ga3779b2115eac60ab32adfc8d212e973f" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_IRQ_BY_IDX</span></code></a>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">DT_IRQ_BY_IDX</span><span class="p">(</span><span class="n">node_id</span><span class="p">,</span><span class="w"> </span><span class="n">idx</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here, <code class="docutils literal notranslate"><span class="pre">idx</span></code> is the logical index into the <code class="docutils literal notranslate"><span class="pre">interrupts</span></code> array, i.e. it is
+the index of an individual interrupt specifier in the property. The <code class="docutils literal notranslate"><span class="pre">val</span></code>
+argument is the name of a cell within the interrupt specifier. To use this
+macro, check the bindings file for the node you are interested in to find the
+<code class="docutils literal notranslate"><span class="pre">val</span></code> names.</p>
+<p>Most Zephyr devicetree bindings have a cell named <code class="docutils literal notranslate"><span class="pre">irq</span></code>, which is the
+interrupt number. You can use <a class="reference internal" href="../../doxygen/html/group__devicetree-interrupts-prop.html#ga5e00c208388736ce9b5bc0088a77cd95" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_IRQN</span></code></a> as a convenient way to get a
+processed view of this value.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Here, “processed” reflects Zephyr’s devicetree <a class="reference internal" href="intro-input-output.html#dt-scripts"><span class="std std-ref">Scripts and tools</span></a>, which
+change the <code class="docutils literal notranslate"><span class="pre">irq</span></code> number in <a class="reference internal" href="intro-input-output.html#devicetree-in-out-files"><span class="std std-ref">zephyr.dts</span></a> to
+handle hardware constraints on some SoCs and in accordance with Zephyr’s
+multilevel interrupt numbering.</p>
+<p>This is currently not very well documented, and you’ll need to read the
+scripts’ source code and existing drivers for more details if you are writing
+a device driver.</p>
+</div>
+</section>
+<section id="phandle-properties">
+<span id="id4"></span><h3>phandle properties<a class="headerlink" href="#phandle-properties" title="Link to this heading"></a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>See <a class="reference internal" href="phandles.html#dt-phandles"><span class="std std-ref">Phandles</span></a> for a detailed guide to phandles.</p>
+</div>
+<p>Property values can refer to other nodes using the <code class="docutils literal notranslate"><span class="pre">&amp;another-node</span></code> phandle
+syntax introduced in <a class="reference internal" href="intro-syntax-structure.html#dt-writing-property-values"><span class="std std-ref">Writing property values</span></a>. Properties which
+contain phandles have type <code class="docutils literal notranslate"><span class="pre">phandle</span></code>, <code class="docutils literal notranslate"><span class="pre">phandles</span></code>, or <code class="docutils literal notranslate"><span class="pre">phandle-array</span></code> in
+their bindings. We’ll call these “phandle properties” for short.</p>
+<p>You can convert a phandle to a node identifier using <a class="reference internal" href="../../doxygen/html/group__devicetree-generic-prop.html#ga7bd77c49472ba4547d87f00f40fd7171" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_PHANDLE</span></code></a>,
+<a class="reference internal" href="../../doxygen/html/group__devicetree-generic-prop.html#ga8ff163c240878a988d29d727671671de" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_PHANDLE_BY_IDX</span></code></a>, or <a class="reference internal" href="../../doxygen/html/group__devicetree-generic-prop.html#ga65c90d2d96255b8569c5b869b637c2fd" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_PHANDLE_BY_NAME</span></code></a>, depending on the
+type of property you are working with.</p>
+<p>One common use case for phandle properties is referring to other hardware in
+the tree. In this case, you usually want to convert the devicetree-level
+phandle to a Zephyr driver-level <a class="reference internal" href="../../kernel/drivers/index.html#device-model-api"><span class="std std-ref">struct device</span></a>.
+See <a class="reference internal" href="howtos.html#dt-get-device"><span class="std std-ref">Get a struct device from a devicetree node</span></a> for ways to do that.</p>
+<p>Another common use case is accessing specifier values in a phandle array. The
+general purpose APIs for this are <a class="reference internal" href="../../doxygen/html/group__devicetree-generic-prop.html#ga118b63fd22c20ef940ac2fa073c126ed" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_PHA_BY_IDX</span></code></a> and <a class="reference internal" href="../../doxygen/html/group__devicetree-generic-prop.html#gacef5921973a55433161fe0be3f8f628d" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_PHA</span></code></a>.
+There are also hardware-specific shorthands like <a class="reference internal" href="../../doxygen/html/group__devicetree-gpio.html#ga97bd46d2ab88d392a3f336f4d23184eb" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_GPIO_CTLR_BY_IDX</span></code></a>,
+<a class="reference internal" href="../../doxygen/html/group__devicetree-gpio.html#gafbad7d0d7f7fb9338997482c8da0e566" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_GPIO_CTLR</span></code></a>,
+<a class="reference internal" href="../../doxygen/html/group__devicetree-gpio.html#ga8f7d82567056266bab1603865f8b27af" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_GPIO_PIN_BY_IDX</span></code></a>, <a class="reference internal" href="../../doxygen/html/group__devicetree-gpio.html#ga4e41ec30ece058555333811a9fcee333" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_GPIO_PIN</span></code></a>,
+<a class="reference internal" href="../../doxygen/html/group__devicetree-gpio.html#ga672b2597b99194b8cbd42b3f3401d2b5" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_GPIO_FLAGS_BY_IDX</span></code></a>, and <a class="reference internal" href="../../doxygen/html/group__devicetree-gpio.html#ga32b3383d7ed543602a7b4a031018316f" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_GPIO_FLAGS</span></code></a>.</p>
+<p>See <a class="reference internal" href="../../doxygen/html/group__devicetree-generic-exist.html#gacfbd6a2cb3038e5aba1e2216d65ebc78" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_PHA_HAS_CELL_AT_IDX</span></code></a> and <a class="reference internal" href="../../doxygen/html/group__devicetree-generic-prop.html#ga479dfc704087eea7e7c5af42ae98576c" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_PROP_HAS_IDX</span></code></a> for ways to
+check if a specifier value is present in a phandle property.</p>
+</section>
+</section>
+<section id="other-apis">
+<span id="other-devicetree-apis"></span><h2>Other APIs<a class="headerlink" href="#other-apis" title="Link to this heading"></a></h2>
+<p>Here are pointers to some other available APIs.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../doxygen/html/group__devicetree-generic-chosen.html#ga3412d0acecffa828984cf9e2c89889ed" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_CHOSEN</span></code></a>, <a class="reference internal" href="../../doxygen/html/group__devicetree-generic-chosen.html#ga9df6bacab5f579284f5f3c1e4856cd15" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_HAS_CHOSEN</span></code></a>: for properties
+of the special <code class="docutils literal notranslate"><span class="pre">/chosen</span></code> node</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__devicetree-generic-exist.html#ga916e11b66fdaab46e93c25241b62b52a" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_HAS_COMPAT_STATUS_OKAY</span></code></a>, <a class="reference internal" href="../../doxygen/html/group__devicetree-generic-exist.html#gad8912ba5db980713e72257472ded3ced" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_NODE_HAS_COMPAT</span></code></a>: global- and
+node-specific tests related to the <code class="docutils literal notranslate"><span class="pre">compatible</span></code> property</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__devicetree-generic-bus.html#ga1082d31ac2dafdf9e085d4c23f2169dc" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_BUS</span></code></a>: get a node’s bus controller, if there is one</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__devicetree-generic-prop.html#ga6c1a3b93e30429c1c69a7e2d8fe2d840" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_ENUM_IDX</span></code></a>: for properties whose values are among a fixed list of
+choices</p></li>
+<li><p><a class="reference internal" href="api/api.html#devicetree-flash-api"><span class="std std-ref">Fixed flash partitions</span></a>: APIs for managing fixed flash partitions.
+Also see <a class="reference internal" href="../../services/storage/flash_map/flash_map.html#flash-map-api"><span class="std std-ref">Flash map</span></a>, which wraps this in a more user-friendly API.</p></li>
+</ul>
+</section>
+<section id="device-driver-conveniences">
+<h2>Device driver conveniences<a class="headerlink" href="#device-driver-conveniences" title="Link to this heading"></a></h2>
+<p>Special purpose macros are available for writing device drivers, which usually
+rely on <a class="reference internal" href="#dt-node-identifiers"><span class="std std-ref">instance identifiers</span></a>.</p>
+<p>To use these, you must define <code class="docutils literal notranslate"><span class="pre">DT_DRV_COMPAT</span></code> to the <code class="docutils literal notranslate"><span class="pre">compat</span></code> value your
+driver implements support for. This <code class="docutils literal notranslate"><span class="pre">compat</span></code> value is what you would pass to
+<a class="reference internal" href="../../doxygen/html/group__devicetree-generic-id.html#gae199b930cb21ff38dab284a696093ead" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_INST</span></code></a>.</p>
+<p>If you do that, you can access the properties of individual instances of your
+compatible with less typing, like this:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/devicetree.h&gt;</span>
+
+<span class="cp">#define DT_DRV_COMPAT my_driver_compat</span>
+
+<span class="cm">/* This is same thing as DT_INST(0, my_driver_compat): */</span>
+<span class="n">DT_DRV_INST</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="cm">/*</span>
+<span class="cm"> * This is the same thing as</span>
+<span class="cm"> * DT_PROP(DT_INST(0, my_driver_compat), clock_frequency)</span>
+<span class="cm"> */</span>
+<span class="n">DT_INST_PROP</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">clock_frequency</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="api/api.html#devicetree-inst-apis"><span class="std std-ref">Instance-based APIs</span></a> for a generic API reference.</p>
+</section>
+<section id="hardware-specific-apis">
+<h2>Hardware specific APIs<a class="headerlink" href="#hardware-specific-apis" title="Link to this heading"></a></h2>
+<p>Convenience macros built on top of the above APIs are also defined to help
+readability for hardware specific code. See <a class="reference internal" href="api/api.html#devicetree-hw-api"><span class="std std-ref">Hardware specific APIs</span></a> for
+details.</p>
+</section>
+<section id="generated-macros">
+<h2>Generated macros<a class="headerlink" href="#generated-macros" title="Link to this heading"></a></h2>
+<p>While the <code class="file docutils literal notranslate"><span class="pre">zephyr/devicetree.h</span></code> API is not generated, it does rely on a
+generated C header which is put into every application build directory:
+<a class="reference internal" href="intro-input-output.html#dt-outputs"><span class="std std-ref">devicetree_generated.h</span></a>. This file contains macros with
+devicetree data.</p>
+<p>These macros have tricky naming conventions which the <a class="reference internal" href="api/api.html#devicetree-api"><span class="std std-ref">Devicetree API</span></a> API
+abstracts away. They should be considered an implementation detail, but it’s
+useful to understand them since they will frequently be seen in compiler error
+messages.</p>
+<p>This section contains an Augmented Backus-Naur Form grammar for these
+generated macros, with examples and more details in comments. See <span class="target" id="index-0"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc7405.html"><strong>RFC 7405</strong></a>
+(which extends <span class="target" id="index-1"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc5234.html"><strong>RFC 5234</strong></a>) for a syntax specification.</p>
+<div class="highlight-abnf notranslate"><div class="highlight"><pre><span></span><span class="c1">; An RFC 7405 ABNF grammar for devicetree macros.</span>
+<span class="c1">;</span>
+<span class="c1">; This does *not* cover macros pulled out of DT via Kconfig,</span>
+<span class="c1">; like CONFIG_SRAM_BASE_ADDRESS, etc. It only describes the</span>
+<span class="c1">; ones that start with DT_ and are directly generated.</span>
+
+<span class="c1">; --------------------------------------------------------------------</span>
+<span class="c1">; dt-macro: the top level nonterminal for a devicetree macro</span>
+<span class="c1">;</span>
+<span class="c1">; A dt-macro starts with uppercase &quot;DT_&quot;, and is one of:</span>
+<span class="c1">;</span>
+<span class="c1">; - a &lt;node-macro&gt;, generated for a particular node</span>
+<span class="c1">; - some &lt;other-macro&gt;, a catch-all for other types of macros</span>
+<span class="nc">dt-macro</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">node-macro</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nc">other-macro</span>
+
+<span class="c1">; --------------------------------------------------------------------</span>
+<span class="c1">; node-macro: a macro related to a node</span>
+
+<span class="c1">; A macro about a property value</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="nc">property-macro</span>
+<span class="c1">; A macro about the pinctrl properties in a node.</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="nc">pinctrl-macro</span>
+<span class="c1">; A macro about the GPIO hog properties in a node.</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="nc">gpiohogs-macro</span>
+<span class="c1">; A macro about the map properties in a node.</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="nc">map-macro</span>
+<span class="c1">; EXISTS macro: node exists in the devicetree</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_EXISTS&quot;</span>
+<span class="c1">; Bus macros: the plain BUS is a way to access a node&#39;s bus controller.</span>
+<span class="c1">; The additional dt-name suffix is added to match that node&#39;s bus type;</span>
+<span class="c1">; the dt-name in this case is something like &quot;spi&quot; or &quot;i2c&quot;.</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_BUS&quot;</span><span class="w"> </span><span class="p">[</span><span class="l">&quot;_&quot;</span><span class="w"> </span><span class="nc">dt-name</span><span class="p">]</span>
+<span class="c1">; The reg property is special and has its own macros.</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_REG_NUM&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_REG_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">&quot;_EXISTS&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_REG_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span>
+<span class="w">              </span><span class="l">%s&quot;_VAL_&quot;</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="l">%s&quot;ADDRESS&quot;</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="l">%s&quot;SIZE&quot;</span><span class="p">)</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_REG_NAME_&quot;</span><span class="w"> </span><span class="nc">dt-name</span>
+<span class="w">              </span><span class="l">%s&quot;_VAL_&quot;</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="l">%s&quot;ADDRESS&quot;</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="l">%s&quot;SIZE&quot;</span><span class="p">)</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_REG_NAME_&quot;</span><span class="w"> </span><span class="nc">dt-name</span><span class="w"> </span><span class="l">&quot;_EXISTS&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_FOREACH_REG&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_FOREACH_REG_SEP&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_FOREACH_REG_VARGS&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_FOREACH_REG_SEP_VARGS&quot;</span>
+<span class="c1">; The interrupts property is also special.</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_IRQ_NUM&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_IRQ_LEVEL&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_IRQ_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">&quot;_EXISTS&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_IRQ_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span>
+<span class="w">              </span><span class="l">%s&quot;_VAL_&quot;</span><span class="w"> </span><span class="nc">dt-name</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="l">%s&quot;_EXISTS&quot;</span><span class="w"> </span><span class="p">]</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_CONTROLLER&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_IRQ_NAME_&quot;</span><span class="w"> </span><span class="nc">dt-name</span>
+<span class="w">              </span><span class="l">%s&quot;_VAL_&quot;</span><span class="w"> </span><span class="nc">dt-name</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="l">%s&quot;_EXISTS&quot;</span><span class="w"> </span><span class="p">]</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_IRQ_NAME_&quot;</span><span class="w"> </span><span class="nc">dt-name</span><span class="w"> </span><span class="l">&quot;_CONTROLLER&quot;</span>
+<span class="c1">; The ranges property is also special.</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_RANGES_NUM&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_RANGES_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">&quot;_EXISTS&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_RANGES_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span>
+<span class="w">              </span><span class="l">%s&quot;_VAL_&quot;</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="l">%s&quot;CHILD_BUS_FLAGS&quot;</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="l">%s&quot;CHILD_BUS_ADDRESS&quot;</span><span class="w"> </span><span class="o">/</span>
+<span class="w">                          </span><span class="l">%s&quot;PARENT_BUS_ADDRESS&quot;</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="l">%s&quot;LENGTH&quot;</span><span class="p">)</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_RANGES_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span>
+<span class="w">              </span><span class="l">%s&quot;_VAL_CHILD_BUS_FLAGS_EXISTS&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_FOREACH_RANGE&quot;</span>
+<span class="c1">; Subnodes of the fixed-partitions compatible get macros which contain</span>
+<span class="c1">; a unique ordinal value for each partition</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_PARTITION_ID&quot;</span><span class="w"> </span><span class="k">DIGIT</span>
+<span class="c1">; Macros are generated for each of a node&#39;s compatibles;</span>
+<span class="c1">; dt-name in this case is something like &quot;vnd_device&quot;.</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_COMPAT_MATCHES_&quot;</span><span class="w"> </span><span class="nc">dt-name</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_COMPAT_VENDOR_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">&quot;_EXISTS&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_COMPAT_VENDOR_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_COMPAT_MODEL_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">&quot;_EXISTS&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_COMPAT_MODEL_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span>
+<span class="c1">; Every non-root node gets one of these macros, which expands to the node</span>
+<span class="c1">; identifier for that node&#39;s parent in the devicetree.</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_PARENT&quot;</span>
+<span class="c1">; These are used internally by DT_FOREACH_PROP_ELEM(_SEP)(_VARGS), which</span>
+<span class="c1">; iterates over each property element.</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="l">%s&quot;_FOREACH_PROP_ELEM&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="l">%s&quot;_FOREACH_PROP_ELEM_SEP&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="l">%s&quot;_FOREACH_PROP_ELEM_VARGS&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="l">%s&quot;_FOREACH_PROP_ELEM_SEP_VARGS&quot;</span>
+<span class="c1">; These are used by DT_CHILD_NUM and DT_CHILD_NUM_STATUS_OKAY macros</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_CHILD_NUM&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_CHILD_NUM_STATUS_OKAY&quot;</span>
+<span class="c1">; This is used by DT_CHILD_BY_UNIT_ADDR_INT</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_CHILD_UNIT_ADDR_INT_&quot;</span><span class="w"> </span><span class="k">DIGIT</span>
+<span class="c1">; These are used internally by DT_FOREACH_CHILD, which iterates over</span>
+<span class="c1">; each child node.</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_FOREACH_CHILD&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_FOREACH_CHILD_SEP&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_FOREACH_CHILD_VARGS&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_FOREACH_CHILD_SEP_VARGS&quot;</span>
+<span class="c1">; These are used internally by DT_FOREACH_CHILD_STATUS_OKAY, which iterates</span>
+<span class="c1">; over each child node with status &quot;okay&quot;.</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_FOREACH_CHILD_STATUS_OKAY&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_FOREACH_CHILD_STATUS_OKAY_SEP&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_FOREACH_CHILD_STATUS_OKAY_VARGS&quot;</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_FOREACH_CHILD_STATUS_OKAY_SEP_VARGS&quot;</span>
+<span class="c1">; These are used internally by DT_FOREACH_NODELABEL and</span>
+<span class="c1">; DT_FOREACH_NODELABEL_VARGS, which iterate over a node&#39;s node labels.</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_FOREACH_NODELABEL&quot;</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="l">%s&quot;_VARGS&quot;</span><span class="w"> </span><span class="p">]</span>
+<span class="c1">; These are used internally by DT_NUM_NODELABELS</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_NODELABEL_NUM&quot;</span>
+<span class="c1">; The node&#39;s zero-based index in the list of it&#39;s parent&#39;s child nodes.</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_CHILD_IDX&quot;</span>
+<span class="c1">; The node&#39;s status macro; dt-name in this case is something like &quot;okay&quot;</span>
+<span class="c1">; or &quot;disabled&quot;.</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_STATUS_&quot;</span><span class="w"> </span><span class="nc">dt-name</span>
+<span class="c1">; The node&#39;s dependency ordinal. This is a non-negative integer</span>
+<span class="c1">; value that is used to represent dependency information.</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_ORD&quot;</span>
+<span class="c1">; The node&#39;s path, as a string literal</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_PATH&quot;</span>
+<span class="c1">; The node&#39;s name@unit-addr, as a string literal</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_FULL_NAME&quot;</span>
+<span class="c1">; The dependency ordinals of a node&#39;s requirements (direct dependencies).</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_REQUIRES_ORDS&quot;</span>
+<span class="c1">; The dependency ordinals of a node supports (reverse direct dependencies).</span>
+<span class="nc">node-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_SUPPORTS_ORDS&quot;</span>
+
+<span class="c1">; --------------------------------------------------------------------</span>
+<span class="c1">; pinctrl-macro: a macro related to the pinctrl properties in a node</span>
+<span class="c1">;</span>
+<span class="c1">; These are a bit of a special case because they kind of form an array,</span>
+<span class="c1">; but the array indexes correspond to pinctrl-DIGIT properties in a node.</span>
+<span class="c1">;</span>
+<span class="c1">; So they&#39;re related to a node, but not just one property within the node.</span>
+<span class="c1">;</span>
+<span class="c1">; The following examples assume something like this:</span>
+<span class="c1">;</span>
+<span class="c1">;      foo {</span>
+<span class="c1">;              pinctrl-0 = &lt;&amp;bar&gt;;</span>
+<span class="c1">;              pinctrl-1 = &lt;&amp;baz&gt;;</span>
+<span class="c1">;              pinctrl-names = &quot;default&quot;, &quot;sleep&quot;;</span>
+<span class="c1">;      };</span>
+
+<span class="c1">; Total number of pinctrl-DIGIT properties in the node. May be zero.</span>
+<span class="c1">;</span>
+<span class="c1">;   #define DT_N_&lt;node path&gt;_PINCTRL_NUM 2</span>
+<span class="nc">pinctrl-macro</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_PINCTRL_NUM&quot;</span>
+<span class="c1">; A given pinctrl-DIGIT property exists.</span>
+<span class="c1">;</span>
+<span class="c1">;     #define DT_N_&lt;node path&gt;_PINCTRL_IDX_0_EXISTS 1</span>
+<span class="c1">;     #define DT_N_&lt;node path&gt;_PINCTRL_IDX_1_EXISTS 1</span>
+<span class="nc">pinctrl-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_PINCTRL_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_EXISTS&quot;</span>
+<span class="c1">; A given pinctrl property name exists.</span>
+<span class="c1">;</span>
+<span class="c1">;     #define DT_N_&lt;node path&gt;_PINCTRL_NAME_default_EXISTS 1</span>
+<span class="c1">;     #define DT_N_&lt;node path&gt;_PINCTRL_NAME_sleep_EXISTS 1</span>
+<span class="nc">pinctrl-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_PINCTRL_NAME_&quot;</span><span class="w"> </span><span class="nc">dt-name</span><span class="w"> </span><span class="l">%s&quot;_EXISTS&quot;</span>
+<span class="c1">; The corresponding index number of a named pinctrl property.</span>
+<span class="c1">;</span>
+<span class="c1">;     #define DT_N_&lt;node path&gt;_PINCTRL_NAME_default_IDX 0</span>
+<span class="c1">;     #define DT_N_&lt;node path&gt;_PINCTRL_NAME_sleep_IDX 1</span>
+<span class="nc">pinctrl-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_PINCTRL_NAME_&quot;</span><span class="w"> </span><span class="nc">dt-name</span><span class="w"> </span><span class="l">%s&quot;_IDX&quot;</span>
+<span class="c1">; The node identifier for the phandle in a named pinctrl property.</span>
+<span class="c1">;</span>
+<span class="c1">;    #define DT_N_&lt;node path&gt;_PINCTRL_NAME_default_IDX_0_PH &lt;node id for &#39;bar&#39;&gt;</span>
+<span class="c1">;</span>
+<span class="c1">; There&#39;s no need for a separate macro for access by index: that&#39;s</span>
+<span class="c1">; covered by property-macro. We only need this because the map from</span>
+<span class="c1">; names to properties is implicit in the structure of the DT.</span>
+<span class="nc">pinctrl-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_PINCTRL_NAME_&quot;</span><span class="w"> </span><span class="nc">dt-name</span><span class="w"> </span><span class="l">%s&quot;_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_PH&quot;</span>
+
+<span class="c1">; --------------------------------------------------------------------</span>
+<span class="c1">; gpiohogs-macro: a macro related to GPIO hog nodes</span>
+<span class="c1">;</span>
+<span class="c1">; The following examples assume something like this:</span>
+<span class="c1">;</span>
+<span class="c1">;     gpio1: gpio@... {</span>
+<span class="c1">;       compatible = &quot;vnd,gpio&quot;;</span>
+<span class="c1">;       #gpio-cells = &lt;2&gt;;</span>
+<span class="c1">;</span>
+<span class="c1">;       node-1 {</span>
+<span class="c1">;               gpio-hog;</span>
+<span class="c1">;               gpios = &lt;0x0 0x10&gt;, &lt;0x1 0x20&gt;;</span>
+<span class="c1">;               output-high;</span>
+<span class="c1">;       };</span>
+<span class="c1">;</span>
+<span class="c1">;       node-2 {</span>
+<span class="c1">;               gpio-hog;</span>
+<span class="c1">;               gpios = &lt;0x2 0x30&gt;;</span>
+<span class="c1">;               output-low;</span>
+<span class="c1">;       };</span>
+<span class="c1">;     };</span>
+<span class="c1">;</span>
+<span class="c1">; Bindings fragment for the vnd,gpio compatible:</span>
+<span class="c1">;</span>
+<span class="c1">;     gpio-cells:</span>
+<span class="c1">;       - pin</span>
+<span class="c1">;       - flags</span>
+
+<span class="c1">; The node contains GPIO hogs.</span>
+<span class="c1">;</span>
+<span class="c1">;   #define DT_N_&lt;node-1 path&gt;_GPIO_HOGS_EXISTS 1</span>
+<span class="c1">;   #define DT_N_&lt;node-2 path&gt;_GPIO_HOGS_EXISTS 1</span>
+<span class="nc">gpioshogs-macro</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_GPIO_HOGS_EXISTS&quot;</span>
+<span class="c1">; Number of hogged GPIOs in a node.</span>
+<span class="c1">;</span>
+<span class="c1">;   #define DT_N_&lt;node-1 path&gt;_GPIO_HOGS_NUM 2</span>
+<span class="c1">;   #define DT_N_&lt;node-2 path&gt;_GPIO_HOGS_NUM 1</span>
+<span class="nc">gpioshogs-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_GPIO_HOGS_NUM&quot;</span>
+<span class="c1">; A given logical GPIO hog array index exists.</span>
+<span class="c1">;</span>
+<span class="c1">;   #define DT_N_&lt;node-1 path&gt;_GPIO_HOGS_IDX_0_EXISTS 1</span>
+<span class="c1">;   #define DT_N_&lt;node-1 path&gt;_GPIO_HOGS_IDX_1_EXISTS 1</span>
+<span class="c1">;   #define DT_N_&lt;node-2 path&gt;_GPIO_HOGS_IDX_0_EXISTS 1</span>
+<span class="nc">gpiohogs-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_GPIO_HOGS_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_EXISTS&quot;</span>
+<span class="c1">; The node identifier for the phandle of a logical index in the GPIO hogs array.</span>
+<span class="c1">; These macros are currently unused by Zephyr.</span>
+<span class="c1">;</span>
+<span class="c1">;   #define DT_N_&lt;node-1 path&gt;_GPIO_HOGS_IDX_0_PH &lt;node id for &#39;gpio1&#39;&gt;</span>
+<span class="c1">;   #define DT_N_&lt;node-1 path&gt;_GPIO_HOGS_IDX_1_PH &lt;node id for &#39;gpio1&#39;&gt;</span>
+<span class="c1">;   #define DT_N_&lt;node-2 path&gt;_GPIO_HOGS_IDX_0_PH &lt;node id for &#39;gpio1&#39;&gt;</span>
+<span class="nc">gpiohogs-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_GPIO_HOGS_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_PH&quot;</span>
+<span class="c1">; The pin cell of a logical index in the GPIO hogs array exists.</span>
+<span class="c1">;</span>
+<span class="c1">;   #define DT_N_&lt;node-1 path&gt;_GPIO_HOGS_IDX_0_VAL_pin_EXISTS 1</span>
+<span class="c1">;   #define DT_N_&lt;node-1 path&gt;_GPIO_HOGS_IDX_1_VAL_pin_EXISTS 1</span>
+<span class="c1">;   #define DT_N_&lt;node-2 path&gt;_GPIO_HOGS_IDX_0_VAL_pin_EXISTS 1</span>
+<span class="nc">gpiohogs-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_GPIO_HOGS_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_VAL_pin_EXISTS&quot;</span>
+<span class="c1">; The value of the pin cell of a logical index in the GPIO hogs array.</span>
+<span class="c1">;</span>
+<span class="c1">;   #define DT_N_&lt;node-1 path&gt;_GPIO_HOGS_IDX_0_VAL_pin 0</span>
+<span class="c1">;   #define DT_N_&lt;node-1 path&gt;_GPIO_HOGS_IDX_1_VAL_pin 1</span>
+<span class="c1">;   #define DT_N_&lt;node-2 path&gt;_GPIO_HOGS_IDX_0_VAL_pin 2</span>
+<span class="nc">gpiohogs-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_GPIO_HOGS_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_VAL_pin&quot;</span>
+<span class="c1">; The flags cell of a logical index in the GPIO hogs array exists.</span>
+<span class="c1">;</span>
+<span class="c1">;   #define DT_N_&lt;node-1 path&gt;_GPIO_HOGS_IDX_0_VAL_flags_EXISTS 1</span>
+<span class="c1">;   #define DT_N_&lt;node-1 path&gt;_GPIO_HOGS_IDX_1_VAL_flags_EXISTS 1</span>
+<span class="c1">;   #define DT_N_&lt;node-2 path&gt;_GPIO_HOGS_IDX_0_VAL_flags_EXISTS 1</span>
+<span class="nc">gpiohogs-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_GPIO_HOGS_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_VAL_flags_EXISTS&quot;</span>
+<span class="c1">; The value of the flags cell of a logical index in the GPIO hogs array.</span>
+<span class="c1">;</span>
+<span class="c1">;   #define DT_N_&lt;node-1 path&gt;_GPIO_HOGS_IDX_0_VAL_flags 0x10</span>
+<span class="c1">;   #define DT_N_&lt;node-1 path&gt;_GPIO_HOGS_IDX_1_VAL_flags 0x20</span>
+<span class="c1">;   #define DT_N_&lt;node-2 path&gt;_GPIO_HOGS_IDX_0_VAL_flags 0x30</span>
+<span class="nc">gpiohogs-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_GPIO_HOGS_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_VAL_flags&quot;</span>
+
+
+<span class="c1">; --------------------------------------------------------------------</span>
+<span class="c1">; map-macro: a macro related to map properties</span>
+<span class="c1">;</span>
+<span class="c1">; Macros are generated when there is a property ending with &#39;-map&#39; as shown below.</span>
+<span class="c1">;</span>
+<span class="c1">; connector {</span>
+<span class="c1">;     ...</span>
+<span class="c1">;     interrupt-map = &lt;0 1 &amp;intc0 2 3&gt;;</span>
+<span class="c1">; };</span>
+<span class="c1">;</span>
+<span class="c1">; The existence of map entry;</span>
+<span class="c1">;</span>
+<span class="c1">; #define DT_N_S_connector_P_interrupt_map_MAP_ENTRY_0_EXISTS 1</span>
+<span class="nc">map-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="l">%s&quot;_MAP_ENTRY_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_EXISTS&quot;</span>
+<span class="c1">;</span>
+<span class="c1">; The child address length, value, and existence.</span>
+<span class="c1">;</span>
+<span class="c1">; #define DT_N_S_connector_P_interrupt_map_MAP_ENTRY_0_CHILD_ADDRESS_LEN 1</span>
+<span class="c1">; #define DT_N_S_connector_P_interrupt_map_MAP_ENTRY_0_CHILD_ADDRESS_IDX_0 0</span>
+<span class="c1">; #define DT_N_S_connector_P_interrupt_map_MAP_ENTRY_0_CHILD_ADDRESS_IDX_0_EXISTS 1</span>
+<span class="nc">map-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="l">%s&quot;_MAP_ENTRY_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_CHILD_ADDRESS_LEN&quot;</span>
+<span class="nc">map-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="l">%s&quot;_MAP_ENTRY_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_CHILD_ADDRESS_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span>
+<span class="nc">map-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="l">%s&quot;_MAP_ENTRY_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_CHILD_ADDRESS_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_EXISTS&quot;</span>
+<span class="c1">;</span>
+<span class="c1">; The length of child specifiers length, value, and existence.</span>
+<span class="c1">;</span>
+<span class="c1">; #define DT_N_S_connector_P_interrupt_map_MAP_ENTRY_0_CHILD_SPECIFIER_LEN 1</span>
+<span class="c1">; #define DT_N_S_connector_P_interrupt_map_MAP_ENTRY_0_CHILD_SPECIFIER_IDX_0_EXISTS 1</span>
+<span class="c1">; #define DT_N_S_connector_P_interrupt_map_MAP_ENTRY_0_CHILD_SPECIFIER_IDX_0 0</span>
+<span class="nc">map-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="l">%s&quot;_MAP_ENTRY_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_CHILD_SPECIFIER_LEN&quot;</span>
+<span class="nc">map-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="l">%s&quot;_MAP_ENTRY_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_CHILD_SPECIFIER_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span>
+<span class="nc">map-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="l">%s&quot;_MAP_ENTRY_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_CHILD_SPECIFIER_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_EXISTS&quot;</span>
+<span class="c1">;</span>
+<span class="c1">; The parent node of this map.</span>
+<span class="c1">;</span>
+<span class="c1">; #define DT_N_S_connector_P_interrupt_map_MAP_ENTRY_0_PARENT DT_N_S_gpio_emul</span>
+<span class="nc">map-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="l">%s&quot;_MAP_ENTRY_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_PARENT&quot;</span>
+<span class="c1">;</span>
+<span class="c1">; The length of parent address, value, and existence.</span>
+<span class="c1">;</span>
+<span class="c1">; #define DT_N_S_connector_P_interrupt_map_MAP_ENTRY_0_PARENT_ADDRESS_LEN 1</span>
+<span class="c1">; #define DT_N_S_connector_P_interrupt_map_MAP_ENTRY_0_PARENT_ADDRESS_IDX_0 2</span>
+<span class="c1">; #define DT_N_S_connector_P_interrupt_map_MAP_ENTRY_0_PARENT_ADDRESS_IDX_0_EXISTS 1</span>
+<span class="nc">map-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="l">%s&quot;_MAP_ENTRY_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_PARENT_ADDRESS_LEN&quot;</span>
+<span class="nc">map-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="l">%s&quot;_MAP_ENTRY_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_PARENT_ADDRESS_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span>
+<span class="nc">map-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="l">%s&quot;_MAP_ENTRY_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_PARENT_ADDRESS_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_EXISTS&quot;</span>
+<span class="c1">;</span>
+<span class="c1">; The length of parent specifiers length, value, and existence.</span>
+<span class="c1">;</span>
+<span class="c1">; #define DT_N_S_connector_P_interrupt_map_MAP_ENTRY_0_PARENT_SPECIFIER_LEN 1</span>
+<span class="c1">; #define DT_N_S_connector_P_interrupt_map_MAP_ENTRY_0_PARENT_SPECIFIER_IDX_0_EXISTS 1</span>
+<span class="c1">; #define DT_N_S_connector_P_interrupt_map_MAP_ENTRY_0_PARENT_SPECIFIER_IDX_0 3</span>
+<span class="nc">map-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="l">%s&quot;_MAP_ENTRY_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_PARENT_SPECIFIER_LEN&quot;</span>
+<span class="nc">map-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="l">%s&quot;_MAP_ENTRY_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_PARENT_SPECIFIER_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span>
+<span class="nc">map-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="l">%s&quot;_MAP_ENTRY_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_PARENT_SPECIFIER_IDX_&quot;</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="l">%s&quot;_EXISTS&quot;</span>
+<span class="c1">;</span>
+<span class="c1">; Iteration helpers for map.</span>
+<span class="c1">;</span>
+<span class="nc">map-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="l">%s&quot;_FOREACH_MAP_ENTRY&quot;</span>
+<span class="nc">map-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="l">%s&quot;_FOREACH_MAP_ENTRY_SEP&quot;</span>
+<span class="nc">map-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="l">%s&quot;_FOREACH_MAP_ENTRY_VARGS&quot;</span>
+<span class="nc">map-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="l">%s&quot;_FOREACH_MAP_ENTRY_SEP_VARGS&quot;</span>
+
+
+<span class="c1">; --------------------------------------------------------------------</span>
+<span class="c1">; property-macro: a macro related to a node property</span>
+<span class="c1">;</span>
+<span class="c1">; These combine a node identifier with a &quot;lowercase-and-underscores form&quot;</span>
+<span class="c1">; property name. The value expands to something related to the property&#39;s</span>
+<span class="c1">; value.</span>
+<span class="c1">;</span>
+<span class="c1">; The optional prop-suf suffix is when there&#39;s some specialized</span>
+<span class="c1">; subvalue that deserves its own macro, like the macros for an array</span>
+<span class="c1">; property&#39;s individual elements</span>
+<span class="c1">;</span>
+<span class="c1">; The &quot;plain vanilla&quot; macro for a property&#39;s value, with no prop-suf,</span>
+<span class="c1">; looks like this:</span>
+<span class="c1">;</span>
+<span class="c1">;   DT_N_&lt;node path&gt;_P_&lt;property name&gt;</span>
+<span class="c1">;</span>
+<span class="c1">; Components:</span>
+<span class="c1">;</span>
+<span class="c1">; - path-id: node&#39;s devicetree path converted to a C token</span>
+<span class="c1">; - prop-id: node&#39;s property name converted to a C token</span>
+<span class="c1">; - prop-suf: an optional property-specific suffix</span>
+<span class="nc">property-macro</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="l">%s&quot;DT_N&quot;</span><span class="w"> </span><span class="nc">path-id</span><span class="w"> </span><span class="l">%s&quot;_P_&quot;</span><span class="w"> </span><span class="nc">prop-id</span><span class="w"> </span><span class="p">[</span><span class="nc">prop-suf</span><span class="p">]</span>
+
+<span class="c1">; --------------------------------------------------------------------</span>
+<span class="c1">; path-id: a node&#39;s path-based macro identifier</span>
+<span class="c1">;</span>
+<span class="c1">; This in &quot;lowercase-and-underscores&quot; form. I.e. it is</span>
+<span class="c1">; the node&#39;s devicetree path converted to a C token by changing:</span>
+<span class="c1">;</span>
+<span class="c1">; - each slash (/) to _S_</span>
+<span class="c1">; - all letters to lowercase</span>
+<span class="c1">; - non-alphanumerics characters to underscores</span>
+<span class="c1">;</span>
+<span class="c1">; For example, the leaf node &quot;bar-BAZ&quot; in this devicetree:</span>
+<span class="c1">;</span>
+<span class="c1">;   / {</span>
+<span class="c1">;           foo@123 {</span>
+<span class="c1">;                   bar-BAZ {};</span>
+<span class="c1">;           };</span>
+<span class="c1">;   };</span>
+<span class="c1">;</span>
+<span class="c1">; has path-id &quot;_S_foo_123_S_bar_baz&quot;.</span>
+<span class="nc">path-id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">1*</span><span class="p">(</span><span class="w"> </span><span class="l">%s&quot;_S_&quot;</span><span class="w"> </span><span class="nc">dt-name</span><span class="w"> </span><span class="p">)</span>
+
+<span class="c1">; ----------------------------------------------------------------------</span>
+<span class="c1">; prop-id: a property identifier</span>
+<span class="c1">;</span>
+<span class="c1">; A property name converted to a C token by changing:</span>
+<span class="c1">;</span>
+<span class="c1">; - all letters to lowercase</span>
+<span class="c1">; - non-alphanumeric characters to underscores</span>
+<span class="c1">;</span>
+<span class="c1">; Example node:</span>
+<span class="c1">;</span>
+<span class="c1">;   chosen {</span>
+<span class="c1">;       zephyr,console = &amp;uart1;</span>
+<span class="c1">;       WHY,AM_I_SHOUTING = &quot;unclear&quot;;</span>
+<span class="c1">;   };</span>
+<span class="c1">;</span>
+<span class="c1">; The &#39;zephyr,console&#39; property has prop-id &#39;zephyr_console&#39;.</span>
+<span class="c1">; &#39;WHY,AM_I_SHOUTING&#39; has prop-id &#39;why_am_i_shouting&#39;.</span>
+<span class="nc">prop-id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">dt-name</span>
+
+<span class="c1">; ----------------------------------------------------------------------</span>
+<span class="c1">; prop-suf: a property-specific macro suffix</span>
+<span class="c1">;</span>
+<span class="c1">; Extra macros are generated for properties:</span>
+<span class="c1">;</span>
+<span class="c1">; - that are special to the specification (&quot;reg&quot;, &quot;interrupts&quot;, etc.)</span>
+<span class="c1">; - with array types (uint8-array, phandle-array, etc.)</span>
+<span class="c1">; - with &quot;enum:&quot; in their bindings</span>
+<span class="c1">; - that have zephyr device API specific macros for phandle-arrays</span>
+<span class="c1">; - related to phandle specifier names (&quot;foo-names&quot;)</span>
+<span class="c1">;</span>
+<span class="c1">; Here are some examples:</span>
+<span class="c1">;</span>
+<span class="c1">; - _EXISTS: property, index or name existence flag</span>
+<span class="c1">; - _SIZE: logical property length</span>
+<span class="c1">; - _IDX_&lt;i&gt;: values of individual array elements</span>
+<span class="c1">; - _IDX_&lt;DIGIT&gt;_VAL_&lt;dt-name&gt;: values of individual specifier</span>
+<span class="c1">;   cells within a phandle array</span>
+<span class="c1">; - _ADDR_&lt;i&gt;: for reg properties, the i-th register block address</span>
+<span class="c1">; - _LEN_&lt;i&gt;: for reg properties, the i-th register block length</span>
+<span class="c1">;</span>
+<span class="c1">; The different cases are not exhaustively documented here to avoid</span>
+<span class="c1">; this file going stale. Please see devicetree.h if you need to know</span>
+<span class="c1">; the details.</span>
+<span class="nc">prop-suf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">1*</span><span class="p">(</span><span class="w"> </span><span class="l">&quot;_&quot;</span><span class="w"> </span><span class="nc">gen-name</span><span class="w"> </span><span class="p">[</span><span class="l">&quot;_&quot;</span><span class="w"> </span><span class="nc">dt-name</span><span class="p">]</span><span class="w"> </span><span class="p">)</span>
+
+<span class="c1">; --------------------------------------------------------------------</span>
+<span class="c1">; other-macro: grab bag for everything that isn&#39;t a node-macro.</span>
+
+<span class="c1">; See examples below.</span>
+<span class="nc">other-macro</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="l">%s&quot;DT_N_&quot;</span><span class="w"> </span><span class="nc">alternate-id</span>
+<span class="c1">; Total count of enabled instances of a compatible.</span>
+<span class="nc">other-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_N_INST_&quot;</span><span class="w"> </span><span class="nc">dt-name</span><span class="w"> </span><span class="l">%s&quot;_NUM_OKAY&quot;</span>
+<span class="c1">; These are used internally by DT_FOREACH_NODE and</span>
+<span class="c1">; DT_FOREACH_STATUS_OKAY_NODE respectively.</span>
+<span class="nc">other-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_FOREACH_HELPER&quot;</span>
+<span class="nc">other-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_FOREACH_OKAY_HELPER&quot;</span>
+<span class="c1">; These are used internally by DT_FOREACH_STATUS_OKAY,</span>
+<span class="c1">; which iterates over each enabled node of a compatible.</span>
+<span class="nc">other-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_FOREACH_OKAY_&quot;</span><span class="w"> </span><span class="nc">dt-name</span>
+<span class="nc">other-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_FOREACH_OKAY_VARGS_&quot;</span><span class="w"> </span><span class="nc">dt-name</span>
+<span class="c1">; These are used internally by DT_INST_FOREACH_STATUS_OKAY,</span>
+<span class="c1">; which iterates over each enabled instance of a compatible.</span>
+<span class="nc">other-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_FOREACH_OKAY_INST_&quot;</span><span class="w"> </span><span class="nc">dt-name</span>
+<span class="nc">other-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_FOREACH_OKAY_INST_VARGS_&quot;</span><span class="w"> </span><span class="nc">dt-name</span>
+<span class="c1">; E.g.: #define DT_CHOSEN_zephyr_flash</span>
+<span class="nc">other-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_CHOSEN_&quot;</span><span class="w"> </span><span class="nc">dt-name</span>
+<span class="c1">; Declares that a compatible has at least one node on a bus.</span>
+<span class="c1">; Example:</span>
+<span class="c1">;</span>
+<span class="c1">;   #define DT_COMPAT_vnd_dev_BUS_spi 1</span>
+<span class="nc">other-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_COMPAT_&quot;</span><span class="w"> </span><span class="nc">dt-name</span><span class="w"> </span><span class="l">%s&quot;_BUS_&quot;</span><span class="w"> </span><span class="nc">dt-name</span>
+<span class="c1">; Declares that a compatible has at least one status &quot;okay&quot; node.</span>
+<span class="c1">; Example:</span>
+<span class="c1">;</span>
+<span class="c1">;   #define DT_COMPAT_HAS_OKAY_vnd_dev 1</span>
+<span class="nc">other-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_COMPAT_HAS_OKAY_&quot;</span><span class="w"> </span><span class="nc">dt-name</span>
+<span class="c1">; Currently used to allow mapping a lowercase-and-underscores &quot;label&quot;</span>
+<span class="c1">; property to a fixed-partitions node. See the flash map API docs</span>
+<span class="c1">; for an example.</span>
+<span class="nc">other-macro</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;DT_COMPAT_&quot;</span><span class="w"> </span><span class="nc">dt-name</span><span class="w"> </span><span class="l">%s&quot;_LABEL_&quot;</span><span class="w"> </span><span class="nc">dt-name</span>
+
+<span class="c1">; --------------------------------------------------------------------</span>
+<span class="c1">; alternate-id: another way to specify a node besides a path-id</span>
+<span class="c1">;</span>
+<span class="c1">; Example devicetree:</span>
+<span class="c1">;</span>
+<span class="c1">;   / {</span>
+<span class="c1">;           aliases {</span>
+<span class="c1">;                   dev = &amp;dev_1;</span>
+<span class="c1">;           };</span>
+<span class="c1">;</span>
+<span class="c1">;           soc {</span>
+<span class="c1">;               dev_1: device@123 {</span>
+<span class="c1">;                   compatible = &quot;vnd,device&quot;;</span>
+<span class="c1">;               };</span>
+<span class="c1">;           };</span>
+<span class="c1">;   };</span>
+<span class="c1">;</span>
+<span class="c1">; Node device@123 has these alternate-id values:</span>
+<span class="c1">;</span>
+<span class="c1">; - ALIAS_dev</span>
+<span class="c1">; - NODELABEL_dev_1</span>
+<span class="c1">; - INST_0_vnd_device</span>
+<span class="c1">;</span>
+<span class="c1">; The full alternate-id macros are:</span>
+<span class="c1">;</span>
+<span class="c1">;   #define DT_N_INST_0_vnd_device     DT_N_S_soc_S_device_123</span>
+<span class="c1">;   #define DT_N_ALIAS_dev             DT_N_S_soc_S_device_123</span>
+<span class="c1">;   #define DT_N_NODELABEL_dev_1       DT_N_S_soc_S_device_123</span>
+<span class="c1">;</span>
+<span class="c1">; These mainly exist to allow pasting an alternate-id macro onto a</span>
+<span class="c1">; &quot;_P_&lt;prop-id&gt;&quot; to access node properties given a node&#39;s alias, etc.</span>
+<span class="c1">;</span>
+<span class="c1">; Notice that &quot;inst&quot;-type IDs have a leading instance identifier,</span>
+<span class="c1">; which is generated by the devicetree scripts. The other types of</span>
+<span class="c1">; alternate-id begin immediately with names taken from the devicetree.</span>
+<span class="nc">alternate-id</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="p">(</span><span class="w"> </span><span class="l">%s&quot;ALIAS&quot;</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="l">%s&quot;NODELABEL&quot;</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="nc">dt-name</span>
+<span class="nc">alternate-id</span><span class="w"> </span><span class="o">=/</span><span class="w"> </span><span class="l">%s&quot;INST_&quot;</span><span class="w"> </span><span class="o">1*</span><span class="k">DIGIT</span><span class="w"> </span><span class="l">&quot;_&quot;</span><span class="w"> </span><span class="nc">dt-name</span>
+
+<span class="c1">; --------------------------------------------------------------------</span>
+<span class="c1">; miscellaneous helper definitions</span>
+
+<span class="c1">; A dt-name is one or more:</span>
+<span class="c1">; - lowercase ASCII letters (a-z)</span>
+<span class="c1">; - numbers (0-9)</span>
+<span class="c1">; - underscores (&quot;_&quot;)</span>
+<span class="c1">;</span>
+<span class="c1">; They are the result of converting names or combinations of names</span>
+<span class="c1">; from devicetree to a valid component of a C identifier by</span>
+<span class="c1">; lowercasing letters (in practice, this is a no-op) and converting</span>
+<span class="c1">; non-alphanumeric characters to underscores.</span>
+<span class="c1">;</span>
+<span class="c1">; You&#39;ll see these referred to as &quot;lowercase-and-underscores&quot; forms of</span>
+<span class="c1">; various devicetree identifiers throughout the documentation.</span>
+<span class="nc">dt-name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">1*</span><span class="p">(</span><span class="w"> </span><span class="nc">lower</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="l">&quot;_&quot;</span><span class="w"> </span><span class="p">)</span>
+
+<span class="c1">; gen-name is used as a stand-in for a component of a generated macro</span>
+<span class="c1">; name which does not come from devicetree (dt-name covers that case).</span>
+<span class="c1">;</span>
+<span class="c1">; - uppercase ASCII letters (a-z)</span>
+<span class="c1">; - numbers (0-9)</span>
+<span class="c1">; - underscores (&quot;_&quot;)</span>
+<span class="nc">gen-name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">upper</span><span class="w"> </span><span class="o">1*</span><span class="p">(</span><span class="w"> </span><span class="nc">upper</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">DIGIT</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="l">&quot;_&quot;</span><span class="w"> </span><span class="p">)</span>
+
+<span class="c1">; &quot;lowercase ASCII letter&quot; turns out to be pretty annoying to specify</span>
+<span class="c1">; in RFC-7405 syntax.</span>
+<span class="c1">;</span>
+<span class="c1">; This is just ASCII letters a (0x61) through z (0x7a).</span>
+<span class="nc">lower</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="l">%x61-7A</span>
+
+<span class="c1">; &quot;uppercase ASCII letter&quot; in RFC-7405 syntax</span>
+<span class="nc">upper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="l">%x41-5A</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

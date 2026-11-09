@@ -1,0 +1,617 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ICMsg backend &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/services/ipc/ipc_service/backends/ipc_service_icmsg.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="ICMsg with dynamically allocated buffers backend" href="ipc_service_icbmsg.html" />
+    <link rel="prev" title="IPC service" href="../ipc_service.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">OS Services</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../binary_descriptors/index.html">Binary Descriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../console.html">Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cpu_freq/index.html">CPU Frequency Scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cpu_load/index.html">CPU Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../crc/index.html">CRC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../crypto/index.html">Cryptography</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../debugging/index.html">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../device_mgmt/index.html">Device Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dsp/index.html">Digital Signal Processing (DSP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../formatted_output.html">Formatted Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../input/index.html">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../instrumentation/index.html">Instrumentation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">Interprocessor Communication (IPC)</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../ipc_service.html">IPC service</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../ipc_service.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../ipc_service.html#simple-data-exchange">Simple data exchange</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../ipc_service.html#data-exchange-using-the-no-copy-api">Data exchange using the no-copy API</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../ipc_service.html#backends">Backends</a><ul class="current">
+<li class="toctree-l5 current"><a class="current reference internal" href="#">ICMsg backend</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ipc_service_icbmsg.html">ICMsg with dynamically allocated buffers backend</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../ipc_service.html#api-reference">API Reference</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../jwt/index.html">JSON Web Token (JWT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../llext/index.html">Linkable Loadable Extensions (LLEXT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../logging/index.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tracing/index.html">Tracing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../resource_management/index.html">Resource Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../mem_mgmt/index.html">Memory Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../net_buf/index.html">Network Buffers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modem/index.html">Modem modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notify.html">Asynchronous Notifications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../pm/index.html">Power Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../portability/index.html">OS Abstraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../poweroff.html">Power off</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../profiling/index.html">Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../shell/index.html">Shell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../serialization/index.html">Serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../smf/index.html">State Machine Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../storage/index.html">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sensing/index.html">Sensing Subsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../task_wdt/index.html">Task Watchdog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tfm/index.html">Trusted Firmware-M (TF-M)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../uuid/index.html">UUID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../virtualization/index.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../rtio/index.html">Real Time I/O (RTIO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../zbus/index.html">Zephyr bus (zbus)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">OS Services</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Interprocessor Communication (IPC)</a> &raquo;</li>
+  
+     <li><a href="../ipc_service.html">IPC service</a> &raquo;</li>
+  
+  <li>ICMsg backend</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/services/ipc/ipc_service/backends/ipc_service_icmsg.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27services%2Fipc%2Fipc_service%2Fbackends%2Fipc_service_icmsg%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+IPC&env=-+Page%3A+services%2Fipc%2Fipc_service%2Fbackends%2Fipc_service_icmsg%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="icmsg-backend">
+<span id="ipc-service-backend-icmsg"></span><h1>ICMsg backend<a class="headerlink" href="#icmsg-backend" title="Link to this heading"></a></h1>
+<p>The inter core messaging backend (ICMsg) is a lighter alternative to the
+heavier RPMsg static vrings backend. It offers a minimal feature set in a small
+memory footprint. The ICMsg backend is build on top of <a class="reference internal" href="../../../../kernel/data_structures/spsc_pbuf.html#spsc-pbuf"><span class="std std-ref">Single Producer Single Consumer Packet Buffer</span></a>.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The ICMsg backend uses shared memory and MBOX devices for exchanging data.
+Shared memory is used to store the data, MBOX devices are used to signal that
+the data has been written.</p>
+<p>The backend supports the registration of a single endpoint on a single
+instance. If the application requires more than one communication channel, you
+must define multiple instances, each having its own dedicated endpoint.</p>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<p>The  backend is configured via Kconfig and devicetree.
+When configuring the backend, do the following:</p>
+<ul class="simple">
+<li><p>If at least one of the cores uses data cache on shared memory, set the <code class="docutils literal notranslate"><span class="pre">dcache-alignment</span></code> value.
+This must be the largest value of the invalidation or the write-back size for both sides of the communication.
+You can skip it if none of the communication sides is using data cache on shared memory.</p></li>
+<li><p>Define two memory regions and assign them to <code class="docutils literal notranslate"><span class="pre">tx-region</span></code> and <code class="docutils literal notranslate"><span class="pre">rx-region</span></code>
+of an instance. Ensure that the memory regions used for data exchange are
+unique (not overlapping any other region) and accessible by both domains
+(or CPUs).</p></li>
+<li><p>Define MBOX devices which are used to send the signal that informs the other
+domain (or CPU) that data has been written. Ensure that the other domain
+(or CPU) is able to receive the signal.</p></li>
+</ul>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Make sure that you set correct value of the <code class="docutils literal notranslate"><span class="pre">dcache-alignment</span></code>.
+At first, wrong value may not show any signs, which may give a false impression that everything works.
+Unstable behavior will appear sooner or later.</p>
+</div>
+<p>See the following configuration example for one of the instances:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">reserved-memory</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">   </span><span class="nl">tx</span><span class="p">:</span><span class="w"> </span><span class="nf">memory</span><span class="o">@</span><span class="mi">20070000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x20070000</span><span class="w"> </span><span class="mh">0x0800</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">   </span><span class="p">};</span>
+
+<span class="w">   </span><span class="nl">rx</span><span class="p">:</span><span class="w"> </span><span class="nf">memory</span><span class="o">@</span><span class="mi">20078000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x20078000</span><span class="w"> </span><span class="mh">0x0800</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">   </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="w">   </span><span class="nf">ipc</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nl">ipc0</span><span class="p">:</span><span class="w"> </span><span class="nf">ipc0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">         </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,ipc-icmsg&quot;</span><span class="p">;</span>
+<span class="w">         </span><span class="n">dcache-alignment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">32</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">         </span><span class="n">tx-region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">tx</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">         </span><span class="n">rx-region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">rx</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">         </span><span class="n">mboxes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">mbox</span><span class="w"> </span><span class="mi">0</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">mbox</span><span class="w"> </span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">         </span><span class="n">mbox-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;tx&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;rx&quot;</span><span class="p">;</span>
+<span class="w">         </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">      </span><span class="p">};</span>
+<span class="w">   </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>You must provide a similar configuration for the other side of the
+communication (domain or CPU) but you must swap the MBOX channels and  memory
+regions (<code class="docutils literal notranslate"><span class="pre">tx-region</span></code> and <code class="docutils literal notranslate"><span class="pre">rx-region</span></code>).</p>
+</section>
+<section id="bonding">
+<h2>Bonding<a class="headerlink" href="#bonding" title="Link to this heading"></a></h2>
+<p>When the endpoint is registered, the following happens on each domain (or CPU)
+connected through the IPC instance:</p>
+<ol class="arabic simple">
+<li><p>The domain (or CPU) writes a magic number to its <code class="docutils literal notranslate"><span class="pre">tx-region</span></code> of the shared
+memory.</p></li>
+<li><p>It then sends a signal to the other domain or CPU, informing that the data
+has been written. Sending the signal to the other domain or CPU is repeated
+with timeout.</p></li>
+<li><p>When the signal from the other domain or CPU is received, the magic number
+is read from <code class="docutils literal notranslate"><span class="pre">rx-region</span></code>. If it is correct, the bonding process is finished
+and the backend informs the application by calling
+<a class="reference internal" href="../../../../doxygen/html/structipc__service__cb.html#a76be12bf8a7964977b5d7512dd010110" title=""><code class="xref c c-member docutils literal notranslate"><span class="pre">ipc_service_cb.bound</span></code></a> callback.</p></li>
+</ol>
+</section>
+<section id="samples">
+<h2>Samples<a class="headerlink" href="#samples" title="Link to this heading"></a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="../../../../samples/subsys/ipc/ipc_service/icmsg/README.html#ipc-icmsg" title="Send messages between two cores using the IPC service and icmsg backend.">IPC service: icmsg backend</a></p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="detailed-protocol-specification">
+<h2>Detailed Protocol Specification<a class="headerlink" href="#detailed-protocol-specification" title="Link to this heading"></a></h2>
+<p>The ICMsg uses two shared memory regions and two MBOX channels.
+The region and channel pair are used to transfer messages in one direction.
+The other pair is symmetric and transfers messages in the opposite direction.
+For this reason, the specification below focuses on one such pair.
+The other pair is identical.</p>
+<p>The ICMsg provides just one endpoint per instance.</p>
+<section id="shared-memory-region-organization">
+<h3>Shared Memory Region Organization<a class="headerlink" href="#shared-memory-region-organization" title="Link to this heading"></a></h3>
+<p>If data caching is enabled, the shared memory region provided to ICMsg must be aligned according to the cache requirement.
+If cache is not enabled, the required alignment is 4 bytes.</p>
+<p>The shared memory region is entirely used by a single FIFO.
+It contains read and write indexes followed by the data buffer.
+The detailed structure is contained in the following table:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field name</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Byte order</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">rd_idx</span></code></p></td>
+<td><p>4</p></td>
+<td><p>little‑endian</p></td>
+<td><p>Index of the first incoming byte in the <code class="docutils literal notranslate"><span class="pre">data</span></code> field.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">padding</span></code></p></td>
+<td><p>depends on cache alignment</p></td>
+<td><p>n/a</p></td>
+<td><p>Padding added to align <code class="docutils literal notranslate"><span class="pre">wr_idx</span></code> to the cache alignment.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">wr_idx</span></code></p></td>
+<td><p>4</p></td>
+<td><p>little‑endian</p></td>
+<td><p>Index of the byte after the last incoming byte in the <code class="docutils literal notranslate"><span class="pre">data</span></code> field.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">data</span></code></p></td>
+<td><p>everything to the end of the region</p></td>
+<td><p>n/a</p></td>
+<td><p>Circular buffer containing actual bytes to transfer.</p></td>
+</tr>
+</tbody>
+</table>
+<p>This is usual FIFO with a circular buffer:</p>
+<ul class="simple">
+<li><p>The Indexes (<code class="docutils literal notranslate"><span class="pre">rd_idx</span></code> and <code class="docutils literal notranslate"><span class="pre">wr_idx</span></code>) are wrapped around when they reach the end of the <code class="docutils literal notranslate"><span class="pre">data</span></code> buffer.</p></li>
+<li><p>The FIFO is empty if <code class="docutils literal notranslate"><span class="pre">rd_idx</span> <span class="pre">==</span> <span class="pre">wr_idx</span></code>.</p></li>
+<li><p>The FIFO has one byte less capacity than the <code class="docutils literal notranslate"><span class="pre">data</span></code> buffer length.</p></li>
+</ul>
+</section>
+<section id="packets">
+<h3>Packets<a class="headerlink" href="#packets" title="Link to this heading"></a></h3>
+<p>Packets are sent over the FIFO described in the above section.
+One packet can be wrapped around if it occurs at the end of the FIFO buffer.</p>
+<p>The following is the packet structure:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field name</p></th>
+<th class="head"><p>Size (bytes)</p></th>
+<th class="head"><p>Byte order</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">len</span></code></p></td>
+<td><p>2</p></td>
+<td><p>big‑endian</p></td>
+<td><p>Length of the <code class="docutils literal notranslate"><span class="pre">data</span></code> field.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">reserved</span></code></p></td>
+<td><p>2</p></td>
+<td><p>n/a</p></td>
+<td><p>Reserved for the future use.
+It must be 0 for the current protocol version.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">data</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">len</span></code></p></td>
+<td><p>n/a</p></td>
+<td><p>Packet data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">padding</span></code></p></td>
+<td><p>0‑3</p></td>
+<td><p>n/a</p></td>
+<td><p>Padding is added to align the total packet size to 4 bytes.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The packet send procedure is the following:</p>
+<ol class="arabic simple">
+<li><p>Check if the packet fits into the buffer.</p></li>
+<li><p>Write the packet to <code class="docutils literal notranslate"><span class="pre">data</span></code> FIFO buffer starting at <code class="docutils literal notranslate"><span class="pre">wr_idx</span></code>.
+Wrap it if needed.</p></li>
+<li><p>Write a new value of the <code class="docutils literal notranslate"><span class="pre">wr_idx</span></code>.</p></li>
+<li><p>Notify the receiver over the MBOX channel.</p></li>
+</ol>
+</section>
+<section id="initialization">
+<h3>Initialization<a class="headerlink" href="#initialization" title="Link to this heading"></a></h3>
+<p>The initialization sequence is the following:</p>
+<ol class="arabic simple">
+<li><p>Set the <code class="docutils literal notranslate"><span class="pre">wr_idx</span></code> and <code class="docutils literal notranslate"><span class="pre">rd_idx</span></code> to zero.</p></li>
+<li><p>Push a single packet to FIFO containing magic data: <code class="docutils literal notranslate"><span class="pre">45</span> <span class="pre">6d</span> <span class="pre">31</span> <span class="pre">6c</span> <span class="pre">31</span> <span class="pre">4b</span> <span class="pre">30</span> <span class="pre">72</span> <span class="pre">6e</span> <span class="pre">33</span> <span class="pre">6c</span> <span class="pre">69</span> <span class="pre">34</span></code>.
+The MBOX is not used yet.</p></li>
+<li><p>Initialize the MBOX.</p></li>
+<li><p>Repeat the notification over the MBOX channel using some interval, for example, 1 ms.</p></li>
+<li><p>Wait for an incoming packet containing the magic data.
+It will arrive over the other pair (shared memory region and MBOX).</p></li>
+<li><p>Stop repeating the MBOX notification.</p></li>
+</ol>
+<p>After this, the ICMsg is bound, and it is ready to transfer packets.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

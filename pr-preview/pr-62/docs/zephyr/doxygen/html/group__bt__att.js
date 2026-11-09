@@ -1,0 +1,38 @@
+var group__bt__att =
+[
+    [ "BT_ATT_ERR_ATTRIBUTE_NOT_FOUND", "group__bt__att.html#ga5dfcd07918dc665bf600a25608b0736d", null ],
+    [ "BT_ATT_ERR_ATTRIBUTE_NOT_LONG", "group__bt__att.html#ga240561711499f11b267d2e5ed8fc99f5", null ],
+    [ "BT_ATT_ERR_AUTHENTICATION", "group__bt__att.html#ga269e711af78a7a30a770b3d7db210c8a", null ],
+    [ "BT_ATT_ERR_AUTHORIZATION", "group__bt__att.html#ga30b28071d7057c2c68b10da34ba32faf", null ],
+    [ "BT_ATT_ERR_CCC_IMPROPER_CONF", "group__bt__att.html#ga8f623146d7fda4b71514277cfbcd4b21", null ],
+    [ "BT_ATT_ERR_DB_OUT_OF_SYNC", "group__bt__att.html#ga2b9a58bf48f1b76e743cb7fef3aed3a8", null ],
+    [ "BT_ATT_ERR_ENCRYPTION_KEY_SIZE", "group__bt__att.html#ga2ed58d79dfbd701a97377b171f1b0793", null ],
+    [ "BT_ATT_ERR_INSUFFICIENT_ENCRYPTION", "group__bt__att.html#ga8a5235e39b05fa85b5b4f4bfb449683b", null ],
+    [ "BT_ATT_ERR_INSUFFICIENT_RESOURCES", "group__bt__att.html#gaf4a81bc81cad14bf91463d4376a3a868", null ],
+    [ "BT_ATT_ERR_INVALID_ATTRIBUTE_LEN", "group__bt__att.html#ga21207d5beb27fe50856f001bd18e1efa", null ],
+    [ "BT_ATT_ERR_INVALID_HANDLE", "group__bt__att.html#gab8d9a6870360f0e5dd7290895202879f", null ],
+    [ "BT_ATT_ERR_INVALID_OFFSET", "group__bt__att.html#ga997d113b71af6b4019c26ca3893f3dbb", null ],
+    [ "BT_ATT_ERR_INVALID_PDU", "group__bt__att.html#ga7f1cbe6eb3ed0999bafab729c7b0a6a6", null ],
+    [ "BT_ATT_ERR_NOT_SUPPORTED", "group__bt__att.html#gafcfa214f6f5b600647886f27cebecb49", null ],
+    [ "BT_ATT_ERR_OUT_OF_RANGE", "group__bt__att.html#gad49773d5e7a39f49c5a06bbaa4f8c365", null ],
+    [ "BT_ATT_ERR_PREPARE_QUEUE_FULL", "group__bt__att.html#gaa135b2315173e7852afe4e1624169ce2", null ],
+    [ "BT_ATT_ERR_PROCEDURE_IN_PROGRESS", "group__bt__att.html#gaf9e46c363487c61dbff50790993107f7", null ],
+    [ "BT_ATT_ERR_READ_NOT_PERMITTED", "group__bt__att.html#gac26ed224b7f8fb7717b40fe3a545be7e", null ],
+    [ "BT_ATT_ERR_SUCCESS", "group__bt__att.html#ga0032756d54c08d37c101769be8ef2070", null ],
+    [ "BT_ATT_ERR_UNLIKELY", "group__bt__att.html#ga992baa1f0d763a00f314bdcf59965bdd", null ],
+    [ "BT_ATT_ERR_UNSUPPORTED_GROUP_TYPE", "group__bt__att.html#ga0611fc39d9d09ea4f0e556b4910f09ed", null ],
+    [ "BT_ATT_ERR_VALUE_NOT_ALLOWED", "group__bt__att.html#ga52ffe5ff2eb092bcdc2ebb05684030d7", null ],
+    [ "BT_ATT_ERR_WRITE_NOT_PERMITTED", "group__bt__att.html#ga2378ff92f5afaff1e4392b1dc2e7326c", null ],
+    [ "BT_ATT_ERR_WRITE_REQ_REJECTED", "group__bt__att.html#ga8363770d0832f3df8fb1d0a22bc3551e", null ],
+    [ "BT_ATT_FIRST_ATTRIBUTE_HANDLE", "group__bt__att.html#gad0aa088f621b8965013c3ced27480df7", null ],
+    [ "BT_ATT_LAST_ATTRIBUTE_HANDLE", "group__bt__att.html#ga1b3dc5fedec8d8632d3650405d1ff988", null ],
+    [ "BT_ATT_MAX_ATTRIBUTE_LEN", "group__bt__att.html#ga3c4df4336916e082115d43f9716acb36", null ],
+    [ "bt_att_chan_opt", "group__bt__att.html#gac593a27ecf029f33f50f990b2947562c", [
+      [ "BT_ATT_CHAN_OPT_NONE", "group__bt__att.html#ggac593a27ecf029f33f50f990b2947562ca14e709b93e78dcc511339a99360ba739", null ],
+      [ "BT_ATT_CHAN_OPT_UNENHANCED_ONLY", "group__bt__att.html#ggac593a27ecf029f33f50f990b2947562ca72c7152b997d4726347c2bfda7da94c4", null ],
+      [ "BT_ATT_CHAN_OPT_ENHANCED_ONLY", "group__bt__att.html#ggac593a27ecf029f33f50f990b2947562ca7bfd06bd0c22eb16b82a4cbed6675ed6", null ]
+    ] ],
+    [ "bt_att_err_to_str", "group__bt__att.html#gad2305f28744276d97aefd26bdb79023c", null ],
+    [ "bt_eatt_connect", "group__bt__att.html#ga748194cbbd54a3336d3c788f08e3de99", null ],
+    [ "bt_eatt_count", "group__bt__att.html#ga3cabc05e8f5c0418ff02dd7122b7565e", null ]
+];

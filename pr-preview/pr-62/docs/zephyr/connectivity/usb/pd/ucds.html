@@ -1,0 +1,1029 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>USB-C device stack &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/connectivity/usb/pd/ucds.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Human Interface Devices (HID)" href="../api/hid.html" />
+    <link rel="prev" title="USB/IP protocol support" href="../host/usbip.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Connectivity</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../canbus/index.html">Controller Area Network (CAN) Bus Protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../networking/index.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa and LoRaWAN</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">USB</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../device/usb_device.html">USB device support (deprecated)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../device/api/index.html">USB device support APIs (deprecated)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../device_next/usb_device.html">USB device support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../device_next/vid_pid.html">USB Vendor and Product identifiers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../device_next/cdc_acm.html">USB device CDC ACM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../device_next/api/index.html">USB device support APIs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../host/api/index.html">USB host support APIs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../host/usbip.html">USB/IP protocol support</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">USB-C device stack</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#configuration-options">Configuration options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementing-a-sink-type-c-and-power-delivery-usb-c-device">Implementing a Sink Type-C and Power Delivery USB-C device</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementing-a-source-type-c-and-power-delivery-usb-c-device">Implementing a Source Type-C and Power Delivery USB-C device</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementing-a-dual-role-power-drp-usb-c-device">Implementing a Dual Role Power (DRP) USB-C device</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API reference</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sink-callback-reference">SINK callback reference</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#source-callback-reference">SOURCE callback reference</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api/hid.html">Human Interface Devices (HID)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Connectivity</a> &raquo;</li>
+  
+     <li><a href="../index.html">USB</a> &raquo;</li>
+  
+  <li>USB-C device stack</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/connectivity/usb/pd/ucds.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27connectivity%2Fusb%2Fpd%2Fucds%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+USB%2Carea%3A+USB-C&env=-+Page%3A+connectivity%2Fusb%2Fpd%2Fucds%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="usb-c-device-stack">
+<span id="usbc-api"></span><h1>USB-C device stack<a class="headerlink" href="#usb-c-device-stack" title="Link to this heading"></a></h1>
+<p>The USB-C device stack is a hardware independent interface between a
+Type-C Port Controller (TCPC) and customer applications. It is a port of
+the Google ChromeOS Type-C Port Manager (TCPM) stack.
+It provides the following functionalities:</p>
+<ul class="simple">
+<li><p>Uses the APIs provided by the Type-C Port Controller drivers to interact with
+the Type-C Port Controller.</p></li>
+<li><p>Provides a programming interface that’s used by a customer applications.
+The APIs is described in
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/usb_c/usbc.h">include/zephyr/usb_c/usbc.h</a></p></li>
+</ul>
+<section id="configuration-options">
+<h2>Configuration options<a class="headerlink" href="#configuration-options" title="Link to this heading"></a></h2>
+<p>The USB-C device stack supports implementation of Sink only, Source only,
+and Dual Role Power (DRP) devices.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_USBC_CSM_SINK_ONLY" title="CONFIG_USBC_CSM_SINK_ONLY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USBC_CSM_SINK_ONLY</span></code></a>: Sink USB-C Connection State Machine</p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_USBC_CSM_SOURCE_ONLY" title="CONFIG_USBC_CSM_SOURCE_ONLY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USBC_CSM_SOURCE_ONLY</span></code></a>: Source USBC Connection State Machine</p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_USBC_CSM_DRP" title="CONFIG_USBC_CSM_DRP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USBC_CSM_DRP</span></code></a>: Dual Role Power (DRP) USB-C Connection State Machine</p></li>
+</ul>
+<p><a class="reference internal" href="../../../samples/subsys/usb_c/usbc.html#usbc"><span class="xref zephyr zephyr-code-sample-category">List</span></a> of samples for different purposes.</p>
+</section>
+<section id="implementing-a-sink-type-c-and-power-delivery-usb-c-device">
+<h2>Implementing a Sink Type-C and Power Delivery USB-C device<a class="headerlink" href="#implementing-a-sink-type-c-and-power-delivery-usb-c-device" title="Link to this heading"></a></h2>
+<p>The configuration of a USB-C Device is done in the stack layer and devicetree.</p>
+<p>The following devicetree, structures and callbacks need to be defined:</p>
+<ul class="simple">
+<li><p>Devicetree usb-c-connector node referencing a TCPC</p></li>
+<li><p>Devicetree vbus node referencing a VBUS measurement device</p></li>
+<li><p>User defined structure that encapsulates application specific data</p></li>
+<li><p>Policy callbacks</p></li>
+</ul>
+<p>For example, for the Sample USB-C Sink application:</p>
+<p>Each Physical Type-C port is represented in the devicetree by a usb-c-connector
+compatible node:</p>
+<div class="highlight-dts notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w">		</span><span class="nl">port1</span><span class="p">:</span><span class="w"> </span><span class="nf">usbc-port</span><span class="o">@</span><span class="mi">1</span><span class="cm"> </span><span class="p">{</span>
+<span class="linenos">2</span><span class="w">			</span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;usb-c-connector&quot;</span><span class="p">;</span>
+<span class="linenos">3</span><span class="w">			</span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="linenos">4</span><span class="w">			</span><span class="n">tcpc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">ucpd1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="linenos">5</span><span class="w">			</span><span class="n">vbus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">vbus1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="linenos">6</span><span class="w">			</span><span class="n">power-role</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sink&quot;</span><span class="p">;</span>
+<span class="linenos">7</span><span class="w">			</span><span class="n">sink-pdos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">PDO_FIXED</span><span class="p">(</span><span class="mi">5000</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="linenos">8</span><span class="w">		</span><span class="p">};</span>
+</pre></div>
+</div>
+<p>VBUS is measured by a device that’s referenced in the devicetree by a
+usb-c-vbus-adc compatible node:</p>
+<div class="highlight-dts notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w">	</span><span class="nl">vbus1</span><span class="p">:</span><span class="w"> </span><span class="nf">vbus</span><span class="cm"> </span><span class="p">{</span>
+<span class="linenos">2</span><span class="w">		</span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,usb-c-vbus-adc&quot;</span><span class="p">;</span>
+<span class="linenos">3</span><span class="w">		</span><span class="n">io-channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">adc2</span><span class="w"> </span><span class="mi">8</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="linenos">4</span><span class="w">		</span><span class="n">output-ohms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">49900</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="linenos">5</span><span class="w">		</span><span class="n">full-ohms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="p">(</span><span class="mi">330000</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">49900</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="linenos">6</span><span class="w">	</span><span class="p">};</span>
+</pre></div>
+</div>
+<p>A user defined structure is defined and later registered with the subsystem and can
+be accessed from callback through an API:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cm">/**</span>
+<span class="linenos"> 2</span><span class="cm"> * @brief A structure that encapsulates Port data.</span>
+<span class="linenos"> 3</span><span class="cm"> */</span>
+<span class="linenos"> 4</span><span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">port0_data_t</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 5</span><span class="w">	</span><span class="cm">/** Sink Capabilities */</span>
+<span class="linenos"> 6</span><span class="w">	</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">snk_caps</span><span class="p">[</span><span class="n">DT_PROP_LEN</span><span class="p">(</span><span class="n">USBC_PORT0_NODE</span><span class="p">,</span><span class="w"> </span><span class="n">sink_pdos</span><span class="p">)];</span>
+<span class="linenos"> 7</span><span class="w">	</span><span class="cm">/** Number of Sink Capabilities */</span>
+<span class="linenos"> 8</span><span class="w">	</span><span class="kt">int</span><span class="w"> </span><span class="n">snk_cap_cnt</span><span class="p">;</span>
+<span class="linenos"> 9</span><span class="w">	</span><span class="cm">/** Source Capabilities */</span>
+<span class="linenos">10</span><span class="w">	</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">src_caps</span><span class="p">[</span><span class="n">PDO_MAX_DATA_OBJECTS</span><span class="p">];</span>
+<span class="linenos">11</span><span class="w">	</span><span class="cm">/** Number of Source Capabilities */</span>
+<span class="linenos">12</span><span class="w">	</span><span class="kt">int</span><span class="w"> </span><span class="n">src_cap_cnt</span><span class="p">;</span>
+<span class="linenos">13</span><span class="w">	</span><span class="cm">/* Power Supply Ready flag */</span>
+<span class="linenos">14</span><span class="w">	</span><span class="n">atomic_t</span><span class="w"> </span><span class="n">ps_ready</span><span class="p">;</span>
+<span class="linenos">15</span><span class="p">}</span><span class="w"> </span><span class="n">port0_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{.</span><span class="n">snk_caps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DT_PROP</span><span class="p">(</span><span class="n">USBC_PORT0_NODE</span><span class="p">,</span><span class="w"> </span><span class="n">sink_pdos</span><span class="p">),</span>
+<span class="linenos">16</span><span class="w">		</span><span class="p">.</span><span class="n">snk_cap_cnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DT_PROP_LEN</span><span class="p">(</span><span class="n">USBC_PORT0_NODE</span><span class="p">,</span><span class="w"> </span><span class="n">sink_pdos</span><span class="p">),</span>
+<span class="linenos">17</span><span class="w">		</span><span class="p">.</span><span class="n">src_caps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">},</span>
+<span class="linenos">18</span><span class="w">		</span><span class="p">.</span><span class="n">src_cap_cnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="linenos">19</span><span class="w">		</span><span class="p">.</span><span class="n">ps_ready</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">};</span>
+<span class="linenos">20</span>
+</pre></div>
+</div>
+<p>These callbacks are used by the subsystem to set or get application specific data:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">port0_policy_cb_get_snk_cap</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="o">**</span><span class="n">pdos</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">num_pdos</span><span class="p">)</span>
+<span class="linenos"> 2</span><span class="p">{</span>
+<span class="linenos"> 3</span><span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">port0_data_t</span><span class="w"> </span><span class="o">*</span><span class="n">dpm_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">usbc_get_dpm_data</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="w">	</span><span class="o">*</span><span class="n">pdos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">snk_caps</span><span class="p">;</span>
+<span class="linenos"> 6</span><span class="w">	</span><span class="o">*</span><span class="n">num_pdos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">snk_cap_cnt</span><span class="p">;</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos"> 9</span><span class="p">}</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">port0_policy_cb_set_src_cap</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="o">*</span><span class="n">pdos</span><span class="p">,</span>
+<span class="linenos">12</span><span class="w">					</span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">num_pdos</span><span class="p">)</span>
+<span class="linenos">13</span><span class="p">{</span>
+<span class="linenos">14</span><span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">port0_data_t</span><span class="w"> </span><span class="o">*</span><span class="n">dpm_data</span><span class="p">;</span>
+<span class="linenos">15</span><span class="w">	</span><span class="kt">int</span><span class="w"> </span><span class="n">num</span><span class="p">;</span>
+<span class="linenos">16</span><span class="w">	</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="w">	</span><span class="n">dpm_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">usbc_get_dpm_data</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span><span class="w">	</span><span class="n">num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">num_pdos</span><span class="p">;</span>
+<span class="linenos">21</span><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">num</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">PDO_MAX_DATA_OBJECTS</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">22</span><span class="w">		</span><span class="n">num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PDO_MAX_DATA_OBJECTS</span><span class="p">;</span>
+<span class="linenos">23</span><span class="w">	</span><span class="p">}</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span><span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">num</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">26</span><span class="w">		</span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">src_caps</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="p">(</span><span class="n">pdos</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">);</span>
+<span class="linenos">27</span><span class="w">	</span><span class="p">}</span>
+<span class="linenos">28</span>
+<span class="linenos">29</span><span class="w">	</span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">src_cap_cnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">num</span><span class="p">;</span>
+<span class="linenos">30</span><span class="p">}</span>
+<span class="linenos">31</span>
+<span class="linenos">32</span><span class="k">static</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="nf">port0_policy_cb_get_rdo</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">)</span>
+<span class="linenos">33</span><span class="p">{</span>
+<span class="linenos">34</span><span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">port0_data_t</span><span class="w"> </span><span class="o">*</span><span class="n">dpm_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">usbc_get_dpm_data</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="n">build_rdo</span><span class="p">(</span><span class="n">dpm_data</span><span class="p">);</span>
+<span class="linenos">37</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>This callback is used by the subsystem to query if a certain action can be taken:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kt">bool</span><span class="w"> </span><span class="nf">port0_policy_check</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">usbc_policy_check_t</span><span class="w"> </span><span class="n">policy_check</span><span class="p">)</span>
+<span class="linenos"> 2</span><span class="p">{</span>
+<span class="linenos"> 3</span><span class="w">	</span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">policy_check</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 4</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">CHECK_POWER_ROLE_SWAP</span><span class="p">:</span>
+<span class="linenos"> 5</span><span class="w">		</span><span class="cm">/* Reject power role swaps */</span>
+<span class="linenos"> 6</span><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="linenos"> 7</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">CHECK_DATA_ROLE_SWAP_TO_DFP</span><span class="p">:</span>
+<span class="linenos"> 8</span><span class="w">		</span><span class="cm">/* Reject data role swap to DFP */</span>
+<span class="linenos"> 9</span><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="linenos">10</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">CHECK_DATA_ROLE_SWAP_TO_UFP</span><span class="p">:</span>
+<span class="linenos">11</span><span class="w">		</span><span class="cm">/* Accept data role swap to UFP */</span>
+<span class="linenos">12</span><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="linenos">13</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">CHECK_SNK_AT_DEFAULT_LEVEL</span><span class="p">:</span>
+<span class="linenos">14</span><span class="w">		</span><span class="cm">/* This device is always at the default power level */</span>
+<span class="linenos">15</span><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="linenos">16</span><span class="w">	</span><span class="k">default</span><span class="o">:</span>
+<span class="linenos">17</span><span class="w">		</span><span class="cm">/* Reject all other policy checks */</span>
+<span class="linenos">18</span><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="linenos">19</span><span class="w">	</span><span class="p">}</span>
+<span class="linenos">20</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>This callback is used by the subsystem to notify the application of an event:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">port0_notify</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">usbc_policy_notify_t</span><span class="w"> </span><span class="n">policy_notify</span><span class="p">)</span>
+<span class="linenos"> 2</span><span class="p">{</span>
+<span class="linenos"> 3</span><span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">port0_data_t</span><span class="w"> </span><span class="o">*</span><span class="n">dpm_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">usbc_get_dpm_data</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="w">	</span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">policy_notify</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 6</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">PROTOCOL_ERROR</span><span class="p">:</span>
+<span class="linenos"> 7</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos"> 8</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">MSG_DISCARDED</span><span class="p">:</span>
+<span class="linenos"> 9</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">10</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">MSG_ACCEPT_RECEIVED</span><span class="p">:</span>
+<span class="linenos">11</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">12</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">MSG_REJECTED_RECEIVED</span><span class="p">:</span>
+<span class="linenos">13</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">14</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">MSG_NOT_SUPPORTED_RECEIVED</span><span class="p">:</span>
+<span class="linenos">15</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">16</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">TRANSITION_PS</span><span class="p">:</span>
+<span class="linenos">17</span><span class="w">		</span><span class="n">atomic_set_bit</span><span class="p">(</span><span class="o">&amp;</span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">ps_ready</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="linenos">18</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">19</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">PD_CONNECTED</span><span class="p">:</span>
+<span class="linenos">20</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">21</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">NOT_PD_CONNECTED</span><span class="p">:</span>
+<span class="linenos">22</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">23</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">POWER_CHANGE_0A0</span><span class="p">:</span>
+<span class="linenos">24</span><span class="w">		</span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">&quot;PWR 0A&quot;</span><span class="p">);</span>
+<span class="linenos">25</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">26</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">POWER_CHANGE_DEF</span><span class="p">:</span>
+<span class="linenos">27</span><span class="w">		</span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">&quot;PWR DEF&quot;</span><span class="p">);</span>
+<span class="linenos">28</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">29</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">POWER_CHANGE_1A5</span><span class="p">:</span>
+<span class="linenos">30</span><span class="w">		</span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">&quot;PWR 1A5&quot;</span><span class="p">);</span>
+<span class="linenos">31</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">32</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">POWER_CHANGE_3A0</span><span class="p">:</span>
+<span class="linenos">33</span><span class="w">		</span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">&quot;PWR 3A0&quot;</span><span class="p">);</span>
+<span class="linenos">34</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">35</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">DATA_ROLE_IS_UFP</span><span class="p">:</span>
+<span class="linenos">36</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">37</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">DATA_ROLE_IS_DFP</span><span class="p">:</span>
+<span class="linenos">38</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">39</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">PORT_PARTNER_NOT_RESPONSIVE</span><span class="p">:</span>
+<span class="linenos">40</span><span class="w">		</span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">&quot;Port Partner not PD Capable&quot;</span><span class="p">);</span>
+<span class="linenos">41</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">42</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">SNK_TRANSITION_TO_DEFAULT</span><span class="p">:</span>
+<span class="linenos">43</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">44</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">HARD_RESET_RECEIVED</span><span class="p">:</span>
+<span class="linenos">45</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">46</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">SENDER_RESPONSE_TIMEOUT</span><span class="p">:</span>
+<span class="linenos">47</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">48</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">SOURCE_CAPABILITIES_RECEIVED</span><span class="p">:</span>
+<span class="linenos">49</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">50</span><span class="w">	</span><span class="k">default</span><span class="o">:</span>
+<span class="linenos">51</span><span class="w">	</span><span class="p">}</span>
+<span class="linenos">52</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Registering the callbacks:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="w">	</span><span class="cm">/* Register USB-C Callbacks */</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="w">	</span><span class="cm">/* Register Policy Check callback */</span>
+<span class="linenos"> 4</span><span class="w">	</span><span class="n">usbc_set_policy_cb_check</span><span class="p">(</span><span class="n">usbc_port0</span><span class="p">,</span><span class="w"> </span><span class="n">port0_policy_check</span><span class="p">);</span>
+<span class="linenos"> 5</span><span class="w">	</span><span class="cm">/* Register Policy Notify callback */</span>
+<span class="linenos"> 6</span><span class="w">	</span><span class="n">usbc_set_policy_cb_notify</span><span class="p">(</span><span class="n">usbc_port0</span><span class="p">,</span><span class="w"> </span><span class="n">port0_notify</span><span class="p">);</span>
+<span class="linenos"> 7</span><span class="w">	</span><span class="cm">/* Register Policy Get Sink Capabilities callback */</span>
+<span class="linenos"> 8</span><span class="w">	</span><span class="n">usbc_set_policy_cb_get_snk_cap</span><span class="p">(</span><span class="n">usbc_port0</span><span class="p">,</span><span class="w"> </span><span class="n">port0_policy_cb_get_snk_cap</span><span class="p">);</span>
+<span class="linenos"> 9</span><span class="w">	</span><span class="cm">/* Register Policy Set Source Capabilities callback */</span>
+<span class="linenos">10</span><span class="w">	</span><span class="n">usbc_set_policy_cb_set_src_cap</span><span class="p">(</span><span class="n">usbc_port0</span><span class="p">,</span><span class="w"> </span><span class="n">port0_policy_cb_set_src_cap</span><span class="p">);</span>
+<span class="linenos">11</span><span class="w">	</span><span class="cm">/* Register Policy Get Request Data Object callback */</span>
+<span class="linenos">12</span><span class="w">	</span><span class="n">usbc_set_policy_cb_get_rdo</span><span class="p">(</span><span class="n">usbc_port0</span><span class="p">,</span><span class="w"> </span><span class="n">port0_policy_cb_get_rdo</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Register the user defined structure:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w">	</span><span class="cm">/* Set Application port data object. This object is passed to the policy callbacks */</span>
+<span class="linenos">2</span><span class="w">	</span><span class="n">port0_data</span><span class="p">.</span><span class="n">ps_ready</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ATOMIC_INIT</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="linenos">3</span><span class="w">	</span><span class="n">usbc_set_dpm_data</span><span class="p">(</span><span class="n">usbc_port0</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">port0_data</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Start the USB-C subsystem:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w">	</span><span class="cm">/* Start the USB-C Subsystem */</span>
+<span class="linenos">2</span><span class="w">	</span><span class="n">usbc_start</span><span class="p">(</span><span class="n">usbc_port0</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="implementing-a-source-type-c-and-power-delivery-usb-c-device">
+<h2>Implementing a Source Type-C and Power Delivery USB-C device<a class="headerlink" href="#implementing-a-source-type-c-and-power-delivery-usb-c-device" title="Link to this heading"></a></h2>
+<p>The configuration of a USB-C Device is done in the stack layer and devicetree.</p>
+<p>Define the following devicetree, structures and callbacks:</p>
+<ul class="simple">
+<li><p>Devicetree <code class="docutils literal notranslate"><span class="pre">usb-c-connector</span></code> node referencing a TCPC</p></li>
+<li><p>Devicetree <code class="docutils literal notranslate"><span class="pre">vbus</span></code> node referencing a VBUS measurement device</p></li>
+<li><p>Devicetree <code class="docutils literal notranslate"><span class="pre">pwrctrl</span></code> node for VBUS and VCONN power control</p></li>
+<li><p>User defined structure that encapsulates application specific data</p></li>
+<li><p>Policy callbacks</p></li>
+</ul>
+<p>For example, for the Sample USB-C Source application:</p>
+<p>Each Physical Type-C port is represented in the devicetree by a <code class="docutils literal notranslate"><span class="pre">usb-c-connector</span></code>
+compatible node:</p>
+<div class="highlight-dts notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="w">		</span><span class="nl">port1</span><span class="p">:</span><span class="w"> </span><span class="nf">usbc-port</span><span class="o">@</span><span class="mi">1</span><span class="cm"> </span><span class="p">{</span>
+<span class="linenos"> 2</span><span class="w">			</span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;usb-c-connector&quot;</span><span class="p">;</span>
+<span class="linenos"> 3</span><span class="w">			</span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="linenos"> 4</span><span class="w">			</span><span class="n">tcpc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">ucpd1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="linenos"> 5</span><span class="w">			</span><span class="n">vbus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">vbus1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="linenos"> 6</span><span class="w">			</span><span class="n">power-role</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;source&quot;</span><span class="p">;</span>
+<span class="linenos"> 7</span><span class="w">			</span><span class="n">typec-power-opmode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;3.0A&quot;</span><span class="p">;</span>
+<span class="linenos"> 8</span><span class="w">			</span><span class="n">source-pdos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">PDO_FIXED</span><span class="p">(</span><span class="mi">5000</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="na">PDO_FIXED</span><span class="p">(</span><span class="mi">9000</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="linenos"> 9</span><span class="w">				       </span><span class="na">PDO_FIXED</span><span class="p">(</span><span class="mi">15000</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="linenos">10</span><span class="w">		</span><span class="p">};</span>
+</pre></div>
+</div>
+<p>VBUS is measured by a device that’s referenced in the devicetree by a
+<code class="docutils literal notranslate"><span class="pre">usb-c-vbus-adc</span></code> compatible node:</p>
+<div class="highlight-dts notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w">	</span><span class="nl">vbus1</span><span class="p">:</span><span class="w"> </span><span class="nf">vbus</span><span class="cm"> </span><span class="p">{</span>
+<span class="linenos">2</span><span class="w">		</span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,usb-c-vbus-adc&quot;</span><span class="p">;</span>
+<span class="linenos">3</span><span class="w">		</span><span class="n">io-channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">adc1</span><span class="w"> </span><span class="mi">9</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="linenos">4</span><span class="w">		</span><span class="n">output-ohms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">49900</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="linenos">5</span><span class="w">		</span><span class="n">full-ohms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="p">(</span><span class="mi">330000</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">49900</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="linenos">6</span>
+<span class="linenos">7</span><span class="w">		</span><span class="cm">/* Pin B13 is used to control VBUS Discharge for Port1 */</span>
+<span class="linenos">8</span><span class="w">		</span><span class="n">discharge-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpiob</span><span class="w"> </span><span class="mi">13</span><span class="w"> </span><span class="na">GPIO_ACTIVE_HIGH</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="linenos">9</span><span class="w">	</span><span class="p">};</span>
+</pre></div>
+</div>
+<p>Power control for VBUS and VCONN can be managed by a device referenced in the
+devicetree by a <code class="docutils literal notranslate"><span class="pre">zephyr,usb-c-pwrctrl</span></code> compatible node:</p>
+<div class="highlight-dts notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="w">	</span><span class="nl">pwrctrl1</span><span class="p">:</span><span class="w"> </span><span class="nf">pwrctrl</span><span class="cm"> </span><span class="p">{</span>
+<span class="linenos"> 2</span><span class="w">		</span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,usb-c-pwrctrl&quot;</span><span class="p">;</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="w">		</span><span class="cm">/* Pin D3 is used to enable VBUS Source */</span>
+<span class="linenos"> 5</span><span class="w">		</span><span class="n">source-en-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpiod</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="na">GPIO_ACTIVE_HIGH</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="w">		</span><span class="cm">/* Pin A1 is used for DCDC_EN */</span>
+<span class="linenos"> 8</span><span class="w">		</span><span class="n">dcdc-en-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpioa</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="na">GPIO_ACTIVE_HIGH</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="w">		</span><span class="cm">/* Pin D4 enables VCONN on CC1 */</span>
+<span class="linenos">11</span><span class="w">		</span><span class="n">vconn1-en-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpiod</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span><span class="w">		</span><span class="cm">/* Pin B9 enables VCONN on CC2 */</span>
+<span class="linenos">14</span><span class="w">		</span><span class="n">vconn2-en-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpiob</span><span class="w"> </span><span class="mi">9</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="w">		</span><span class="cm">/* PWM for voltage selection */</span>
+<span class="linenos">17</span><span class="w">		</span><span class="n">pwms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">pwm15</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="na">PWM_USEC</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="na">PWM_POLARITY_INVERTED</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="linenos">18</span><span class="w">	</span><span class="p">};</span>
+</pre></div>
+</div>
+<p>A user defined structure is defined and later registered with the subsystem and can
+be accessed from callback through an API:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cm">/**</span>
+<span class="linenos"> 2</span><span class="cm"> * @brief A structure that encapsulates Port data.</span>
+<span class="linenos"> 3</span><span class="cm"> */</span>
+<span class="linenos"> 4</span><span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">port0_data_t</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 5</span><span class="w">	</span><span class="cm">/** Power controller device */</span>
+<span class="linenos"> 6</span><span class="w">	</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">pwrctrl</span><span class="p">;</span>
+<span class="linenos"> 7</span><span class="w">	</span><span class="cm">/** Source Capabilities */</span>
+<span class="linenos"> 8</span><span class="w">	</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">src_caps</span><span class="p">[</span><span class="n">DT_PROP_LEN</span><span class="p">(</span><span class="n">USBC_PORT0_NODE</span><span class="p">,</span><span class="w"> </span><span class="n">source_pdos</span><span class="p">)];</span>
+<span class="linenos"> 9</span><span class="w">	</span><span class="cm">/** Number of Source Capabilities */</span>
+<span class="linenos">10</span><span class="w">	</span><span class="kt">int</span><span class="w"> </span><span class="n">src_cap_cnt</span><span class="p">;</span>
+<span class="linenos">11</span><span class="w">	</span><span class="cm">/** CC Rp value */</span>
+<span class="linenos">12</span><span class="w">	</span><span class="kt">int</span><span class="w"> </span><span class="n">rp</span><span class="p">;</span>
+<span class="linenos">13</span><span class="w">	</span><span class="cm">/** Sink Request RDO */</span>
+<span class="linenos">14</span><span class="w">	</span><span class="k">union</span><span class="w"> </span><span class="nc">pd_rdo</span><span class="w"> </span><span class="n">sink_request</span><span class="p">;</span>
+<span class="linenos">15</span><span class="w">	</span><span class="cm">/** Requested Object Pos */</span>
+<span class="linenos">16</span><span class="w">	</span><span class="kt">int</span><span class="w"> </span><span class="n">obj_pos</span><span class="p">;</span>
+<span class="linenos">17</span><span class="w">	</span><span class="cm">/** VCONN CC line*/</span>
+<span class="linenos">18</span><span class="w">	</span><span class="k">enum</span><span class="w"> </span><span class="n">tc_cc_polarity</span><span class="w"> </span><span class="n">vconn_pol</span><span class="p">;</span>
+<span class="linenos">19</span><span class="w">	</span><span class="cm">/** True if power supply is ready */</span>
+<span class="linenos">20</span><span class="w">	</span><span class="kt">bool</span><span class="w"> </span><span class="n">ps_ready</span><span class="p">;</span>
+<span class="linenos">21</span><span class="w">	</span><span class="cm">/** True if power supply should transition to a new level */</span>
+<span class="linenos">22</span><span class="w">	</span><span class="kt">bool</span><span class="w"> </span><span class="n">ps_tran_start</span><span class="p">;</span>
+<span class="linenos">23</span><span class="w">	</span><span class="cm">/** Log Sink Requested RDO to console */</span>
+<span class="linenos">24</span><span class="w">	</span><span class="n">atomic_t</span><span class="w"> </span><span class="n">show_sink_request</span><span class="p">;</span>
+<span class="linenos">25</span><span class="p">}</span><span class="w"> </span><span class="n">port0_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">26</span><span class="w">	</span><span class="p">.</span><span class="n">rp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DT_ENUM_IDX</span><span class="p">(</span><span class="n">USBC_PORT0_NODE</span><span class="p">,</span><span class="w"> </span><span class="n">typec_power_opmode</span><span class="p">),</span>
+<span class="linenos">27</span><span class="w">	</span><span class="p">.</span><span class="n">src_caps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DT_PROP</span><span class="p">(</span><span class="n">USBC_PORT0_NODE</span><span class="p">,</span><span class="w"> </span><span class="n">source_pdos</span><span class="p">),</span>
+<span class="linenos">28</span><span class="w">	</span><span class="p">.</span><span class="n">src_cap_cnt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DT_PROP_LEN</span><span class="p">(</span><span class="n">USBC_PORT0_NODE</span><span class="p">,</span><span class="w"> </span><span class="n">source_pdos</span><span class="p">),</span>
+<span class="linenos">29</span><span class="p">};</span>
+<span class="linenos">30</span>
+</pre></div>
+</div>
+<p>These callbacks are used by the subsystem to set or get application specific data:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="cm">/**</span>
+<span class="linenos">  2</span><span class="cm"> * @brief PE calls this function when it needs to set the Rp on CC</span>
+<span class="linenos">  3</span><span class="cm"> */</span>
+<span class="linenos">  4</span><span class="kt">int</span><span class="w"> </span><span class="nf">port0_policy_cb_get_src_rp</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">tc_rp_value</span><span class="w"> </span><span class="o">*</span><span class="n">rp</span><span class="p">)</span>
+<span class="linenos">  5</span><span class="p">{</span>
+<span class="linenos">  6</span><span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">port0_data_t</span><span class="w"> </span><span class="o">*</span><span class="n">dpm_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">usbc_get_dpm_data</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+<span class="linenos">  7</span>
+<span class="linenos">  8</span><span class="w">	</span><span class="o">*</span><span class="n">rp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">rp</span><span class="p">;</span>
+<span class="linenos">  9</span>
+<span class="linenos"> 10</span><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos"> 11</span><span class="p">}</span>
+<span class="linenos"> 12</span>
+<span class="linenos"> 13</span><span class="cm">/**</span>
+<span class="linenos"> 14</span><span class="cm"> * @brief PE calls this function to Enable (5V) or Disable (0V) the</span>
+<span class="linenos"> 15</span><span class="cm"> *	  Power Supply</span>
+<span class="linenos"> 16</span><span class="cm"> */</span>
+<span class="linenos"> 17</span><span class="kt">int</span><span class="w"> </span><span class="nf">port0_policy_cb_src_en</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">en</span><span class="p">)</span>
+<span class="linenos"> 18</span><span class="p">{</span>
+<span class="linenos"> 19</span><span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">port0_data_t</span><span class="w"> </span><span class="o">*</span><span class="n">dpm_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">usbc_get_dpm_data</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+<span class="linenos"> 20</span>
+<span class="linenos"> 21</span><span class="w">	</span><span class="n">source_ctrl_set</span><span class="p">(</span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">pwrctrl</span><span class="p">,</span><span class="w"> </span><span class="n">en</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">SOURCE_5V</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">SOURCE_0V</span><span class="p">);</span>
+<span class="linenos"> 22</span>
+<span class="linenos"> 23</span><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos"> 24</span><span class="p">}</span>
+<span class="linenos"> 25</span>
+<span class="linenos"> 26</span><span class="cm">/**</span>
+<span class="linenos"> 27</span><span class="cm"> * @brief PE calls this function to Enable or Disable VCONN</span>
+<span class="linenos"> 28</span><span class="cm"> */</span>
+<span class="linenos"> 29</span><span class="kt">int</span><span class="w"> </span><span class="nf">port0_policy_cb_vconn_en</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">tcpc_dev</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">usbc_dev</span><span class="p">,</span>
+<span class="linenos"> 30</span><span class="w">			     </span><span class="k">enum</span><span class="w"> </span><span class="n">tc_cc_polarity</span><span class="w"> </span><span class="n">pol</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">en</span><span class="p">)</span>
+<span class="linenos"> 31</span><span class="p">{</span>
+<span class="linenos"> 32</span><span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">port0_data_t</span><span class="w"> </span><span class="o">*</span><span class="n">dpm_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">usbc_get_dpm_data</span><span class="p">(</span><span class="n">usbc_dev</span><span class="p">);</span>
+<span class="linenos"> 33</span>
+<span class="linenos"> 34</span><span class="w">	</span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">vconn_pol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pol</span><span class="p">;</span>
+<span class="linenos"> 35</span>
+<span class="linenos"> 36</span><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">en</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">false</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 37</span><span class="w">		</span><span class="cm">/* Disable VCONN on CC1 and CC2 */</span>
+<span class="linenos"> 38</span><span class="w">		</span><span class="n">vconn_ctrl_set</span><span class="p">(</span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">pwrctrl</span><span class="p">,</span><span class="w"> </span><span class="n">VCONN_OFF</span><span class="p">);</span>
+<span class="linenos"> 39</span><span class="w">	</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pol</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">TC_POLARITY_CC1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 40</span><span class="w">		</span><span class="cm">/* set VCONN on CC1 */</span>
+<span class="linenos"> 41</span><span class="w">		</span><span class="n">vconn_ctrl_set</span><span class="p">(</span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">pwrctrl</span><span class="p">,</span><span class="w"> </span><span class="n">VCONN1_ON</span><span class="p">);</span>
+<span class="linenos"> 42</span><span class="w">	</span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 43</span><span class="w">		</span><span class="cm">/* set VCONN on CC2 */</span>
+<span class="linenos"> 44</span><span class="w">		</span><span class="n">vconn_ctrl_set</span><span class="p">(</span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">pwrctrl</span><span class="p">,</span><span class="w"> </span><span class="n">VCONN2_ON</span><span class="p">);</span>
+<span class="linenos"> 45</span><span class="w">	</span><span class="p">}</span>
+<span class="linenos"> 46</span>
+<span class="linenos"> 47</span><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos"> 48</span><span class="p">}</span>
+<span class="linenos"> 49</span>
+<span class="linenos"> 50</span><span class="cm">/**</span>
+<span class="linenos"> 51</span><span class="cm"> * @brief PE calls this function to get the Source Caps that will be sent</span>
+<span class="linenos"> 52</span><span class="cm"> *	  to the Sink</span>
+<span class="linenos"> 53</span><span class="cm"> */</span>
+<span class="linenos"> 54</span><span class="kt">int</span><span class="w"> </span><span class="nf">port0_policy_cb_get_src_caps</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="o">**</span><span class="n">pdos</span><span class="p">,</span>
+<span class="linenos"> 55</span><span class="w">				 </span><span class="kt">uint32_t</span><span class="w"> </span><span class="o">*</span><span class="n">num_pdos</span><span class="p">)</span>
+<span class="linenos"> 56</span><span class="p">{</span>
+<span class="linenos"> 57</span><span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">port0_data_t</span><span class="w"> </span><span class="o">*</span><span class="n">dpm_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">usbc_get_dpm_data</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+<span class="linenos"> 58</span>
+<span class="linenos"> 59</span><span class="w">	</span><span class="o">*</span><span class="n">pdos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">src_caps</span><span class="p">;</span>
+<span class="linenos"> 60</span><span class="w">	</span><span class="o">*</span><span class="n">num_pdos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">src_cap_cnt</span><span class="p">;</span>
+<span class="linenos"> 61</span>
+<span class="linenos"> 62</span><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos"> 63</span><span class="p">}</span>
+<span class="linenos"> 64</span>
+<span class="linenos"> 65</span><span class="cm">/**</span>
+<span class="linenos"> 66</span><span class="cm"> * @brief PE calls this function to verify that a Sink&#39;s request if valid</span>
+<span class="linenos"> 67</span><span class="cm"> */</span>
+<span class="linenos"> 68</span><span class="k">static</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">usbc_snk_req_reply_t</span><span class="w"> </span><span class="nf">port0_policy_cb_check_sink_request</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span>
+<span class="linenos"> 69</span><span class="w">								    </span><span class="k">const</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">request_msg</span><span class="p">)</span>
+<span class="linenos"> 70</span><span class="p">{</span>
+<span class="linenos"> 71</span><span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">port0_data_t</span><span class="w"> </span><span class="o">*</span><span class="n">dpm_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">usbc_get_dpm_data</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+<span class="linenos"> 72</span><span class="w">	</span><span class="k">union</span><span class="w"> </span><span class="nc">pd_fixed_supply_pdo_source</span><span class="w"> </span><span class="n">pdo</span><span class="p">;</span>
+<span class="linenos"> 73</span><span class="w">	</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">obj_pos</span><span class="p">;</span>
+<span class="linenos"> 74</span><span class="w">	</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">op_current</span><span class="p">;</span>
+<span class="linenos"> 75</span>
+<span class="linenos"> 76</span><span class="w">	</span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">sink_request</span><span class="p">.</span><span class="n">raw_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request_msg</span><span class="p">;</span>
+<span class="linenos"> 77</span><span class="w">	</span><span class="n">obj_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">sink_request</span><span class="p">.</span><span class="n">fixed</span><span class="p">.</span><span class="n">object_pos</span><span class="p">;</span>
+<span class="linenos"> 78</span><span class="w">	</span><span class="n">op_current</span><span class="w"> </span><span class="o">=</span>
+<span class="linenos"> 79</span><span class="w">		</span><span class="n">PD_CONVERT_FIXED_PDO_CURRENT_TO_MA</span><span class="p">(</span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">sink_request</span><span class="p">.</span><span class="n">fixed</span><span class="p">.</span><span class="n">operating_current</span><span class="p">);</span>
+<span class="linenos"> 80</span>
+<span class="linenos"> 81</span><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">obj_pos</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">obj_pos</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">src_cap_cnt</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 82</span><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="n">SNK_REQUEST_REJECT</span><span class="p">;</span>
+<span class="linenos"> 83</span><span class="w">	</span><span class="p">}</span>
+<span class="linenos"> 84</span>
+<span class="linenos"> 85</span><span class="w">	</span><span class="n">pdo</span><span class="p">.</span><span class="n">raw_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">src_caps</span><span class="p">[</span><span class="n">obj_pos</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">];</span>
+<span class="linenos"> 86</span>
+<span class="linenos"> 87</span><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">sink_request</span><span class="p">.</span><span class="n">fixed</span><span class="p">.</span><span class="n">operating_current</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">pdo</span><span class="p">.</span><span class="n">max_current</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 88</span><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="n">SNK_REQUEST_REJECT</span><span class="p">;</span>
+<span class="linenos"> 89</span><span class="w">	</span><span class="p">}</span>
+<span class="linenos"> 90</span>
+<span class="linenos"> 91</span><span class="w">	</span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">obj_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obj_pos</span><span class="p">;</span>
+<span class="linenos"> 92</span>
+<span class="linenos"> 93</span><span class="w">	</span><span class="n">atomic_set_bit</span><span class="p">(</span><span class="o">&amp;</span><span class="n">port0_data</span><span class="p">.</span><span class="n">show_sink_request</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="linenos"> 94</span>
+<span class="linenos"> 95</span><span class="w">	</span><span class="cm">/*</span>
+<span class="linenos"> 96</span><span class="cm">	 * Clear PS ready. This will be set to true after PS is ready after</span>
+<span class="linenos"> 97</span><span class="cm">	 * it transitions to the new level.</span>
+<span class="linenos"> 98</span><span class="cm">	 */</span>
+<span class="linenos"> 99</span><span class="w">	</span><span class="n">port0_data</span><span class="p">.</span><span class="n">ps_ready</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="linenos">100</span>
+<span class="linenos">101</span><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="n">SNK_REQUEST_VALID</span><span class="p">;</span>
+<span class="linenos">102</span><span class="p">}</span>
+<span class="linenos">103</span>
+<span class="linenos">104</span><span class="cm">/**</span>
+<span class="linenos">105</span><span class="cm"> * @brief PE calls this function to check if the Power Supply is at the requested</span>
+<span class="linenos">106</span><span class="cm"> *	  level</span>
+<span class="linenos">107</span><span class="cm"> */</span>
+<span class="linenos">108</span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">port0_policy_cb_is_ps_ready</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">)</span>
+<span class="linenos">109</span><span class="p">{</span>
+<span class="linenos">110</span><span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">port0_data_t</span><span class="w"> </span><span class="o">*</span><span class="n">dpm_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">usbc_get_dpm_data</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+<span class="linenos">111</span>
+<span class="linenos">112</span><span class="w">	</span><span class="cm">/* Return true to inform that the Power Supply is ready */</span>
+<span class="linenos">113</span><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">ps_ready</span><span class="p">;</span>
+<span class="linenos">114</span><span class="p">}</span>
+<span class="linenos">115</span>
+<span class="linenos">116</span><span class="cm">/**</span>
+<span class="linenos">117</span><span class="cm"> * @brief PE calls this function to check if the Present Contract is still</span>
+<span class="linenos">118</span><span class="cm"> *	  valid</span>
+<span class="linenos">119</span><span class="cm"> */</span>
+<span class="linenos">120</span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">port0_policy_cb_present_contract_is_valid</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span>
+<span class="linenos">121</span><span class="w">						      </span><span class="k">const</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">present_contract</span><span class="p">)</span>
+<span class="linenos">122</span><span class="p">{</span>
+<span class="linenos">123</span><span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">port0_data_t</span><span class="w"> </span><span class="o">*</span><span class="n">dpm_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">usbc_get_dpm_data</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+<span class="linenos">124</span><span class="w">	</span><span class="k">union</span><span class="w"> </span><span class="nc">pd_fixed_supply_pdo_source</span><span class="w"> </span><span class="n">pdo</span><span class="p">;</span>
+<span class="linenos">125</span><span class="w">	</span><span class="k">union</span><span class="w"> </span><span class="nc">pd_rdo</span><span class="w"> </span><span class="n">request</span><span class="p">;</span>
+<span class="linenos">126</span><span class="w">	</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">obj_pos</span><span class="p">;</span>
+<span class="linenos">127</span><span class="w">	</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">op_current</span><span class="p">;</span>
+<span class="linenos">128</span>
+<span class="linenos">129</span><span class="w">	</span><span class="n">request</span><span class="p">.</span><span class="n">raw_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">present_contract</span><span class="p">;</span>
+<span class="linenos">130</span><span class="w">	</span><span class="n">obj_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="n">fixed</span><span class="p">.</span><span class="n">object_pos</span><span class="p">;</span>
+<span class="linenos">131</span><span class="w">	</span><span class="n">op_current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PD_CONVERT_FIXED_PDO_CURRENT_TO_MA</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">fixed</span><span class="p">.</span><span class="n">operating_current</span><span class="p">);</span>
+<span class="linenos">132</span>
+<span class="linenos">133</span><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">obj_pos</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">obj_pos</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">src_cap_cnt</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">134</span><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="linenos">135</span><span class="w">	</span><span class="p">}</span>
+<span class="linenos">136</span>
+<span class="linenos">137</span><span class="w">	</span><span class="n">pdo</span><span class="p">.</span><span class="n">raw_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">src_caps</span><span class="p">[</span><span class="n">obj_pos</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">];</span>
+<span class="linenos">138</span>
+<span class="linenos">139</span><span class="w">	</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">fixed</span><span class="p">.</span><span class="n">operating_current</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">pdo</span><span class="p">.</span><span class="n">max_current</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos">140</span><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="linenos">141</span><span class="w">	</span><span class="p">}</span>
+<span class="linenos">142</span>
+<span class="linenos">143</span><span class="w">	</span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="linenos">144</span><span class="p">}</span>
+<span class="linenos">145</span>
+</pre></div>
+</div>
+<p>This callback is used by the subsystem to query if a certain action can be taken:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kt">bool</span><span class="w"> </span><span class="nf">port0_policy_check</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">usbc_policy_check_t</span><span class="w"> </span><span class="n">policy_check</span><span class="p">)</span>
+<span class="linenos"> 2</span><span class="p">{</span>
+<span class="linenos"> 3</span><span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">port0_data_t</span><span class="w"> </span><span class="o">*</span><span class="n">dpm_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">usbc_get_dpm_data</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="w">	</span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">policy_check</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 6</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">CHECK_POWER_ROLE_SWAP</span><span class="p">:</span>
+<span class="linenos"> 7</span><span class="w">		</span><span class="cm">/* Reject power role swaps */</span>
+<span class="linenos"> 8</span><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="linenos"> 9</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">CHECK_DATA_ROLE_SWAP_TO_DFP</span><span class="p">:</span>
+<span class="linenos">10</span><span class="w">		</span><span class="cm">/* Accept data role swap to DFP */</span>
+<span class="linenos">11</span><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="linenos">12</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">CHECK_DATA_ROLE_SWAP_TO_UFP</span><span class="p">:</span>
+<span class="linenos">13</span><span class="w">		</span><span class="cm">/* Reject data role swap to UFP */</span>
+<span class="linenos">14</span><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="linenos">15</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">CHECK_SRC_PS_AT_DEFAULT_LEVEL</span><span class="p">:</span>
+<span class="linenos">16</span><span class="w">		</span><span class="cm">/*</span>
+<span class="linenos">17</span><span class="cm">		 * This check is sent from the PE_SRC_Transition_to_default</span>
+<span class="linenos">18</span><span class="cm">		 * state and requires the following:</span>
+<span class="linenos">19</span><span class="cm">		 *	1: Vconn should be turned ON</span>
+<span class="linenos">20</span><span class="cm">		 *	2: Return TRUE when Power Supply is at default level</span>
+<span class="linenos">21</span><span class="cm">		 */</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span><span class="w">		</span><span class="cm">/* Power on VCONN */</span>
+<span class="linenos">24</span><span class="w">		</span><span class="n">vconn_ctrl_set</span><span class="p">(</span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">pwrctrl</span><span class="p">,</span><span class="w"> </span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">vconn_pol</span><span class="p">);</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span><span class="w">		</span><span class="cm">/* PS should be at default level after receiving a Hard Reset */</span>
+<span class="linenos">27</span><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="linenos">28</span><span class="w">	</span><span class="k">default</span><span class="o">:</span>
+<span class="linenos">29</span><span class="w">		</span><span class="cm">/* Reject all other policy checks */</span>
+<span class="linenos">30</span><span class="w">		</span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="linenos">31</span><span class="w">	</span><span class="p">}</span>
+<span class="linenos">32</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>This callback is used by the subsystem to notify the application of an event:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">port0_notify</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">usbc_policy_notify_t</span><span class="w"> </span><span class="n">policy_notify</span><span class="p">)</span>
+<span class="linenos"> 2</span><span class="p">{</span>
+<span class="linenos"> 3</span><span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">port0_data_t</span><span class="w"> </span><span class="o">*</span><span class="n">dpm_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">usbc_get_dpm_data</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="w">	</span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">policy_notify</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="linenos"> 6</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">PROTOCOL_ERROR</span><span class="p">:</span>
+<span class="linenos"> 7</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos"> 8</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">MSG_DISCARDED</span><span class="p">:</span>
+<span class="linenos"> 9</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">10</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">MSG_ACCEPT_RECEIVED</span><span class="p">:</span>
+<span class="linenos">11</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">12</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">MSG_REJECTED_RECEIVED</span><span class="p">:</span>
+<span class="linenos">13</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">14</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">MSG_NOT_SUPPORTED_RECEIVED</span><span class="p">:</span>
+<span class="linenos">15</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">16</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">TRANSITION_PS</span><span class="p">:</span>
+<span class="linenos">17</span><span class="w">		</span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">ps_tran_start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="linenos">18</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">19</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">PD_CONNECTED</span><span class="p">:</span>
+<span class="linenos">20</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">21</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">NOT_PD_CONNECTED</span><span class="p">:</span>
+<span class="linenos">22</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">23</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">DATA_ROLE_IS_UFP</span><span class="p">:</span>
+<span class="linenos">24</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">25</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">DATA_ROLE_IS_DFP</span><span class="p">:</span>
+<span class="linenos">26</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">27</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">PORT_PARTNER_NOT_RESPONSIVE</span><span class="p">:</span>
+<span class="linenos">28</span><span class="w">		</span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">&quot;Port Partner not PD Capable&quot;</span><span class="p">);</span>
+<span class="linenos">29</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">30</span><span class="w">	</span><span class="k">case</span><span class="w"> </span><span class="no">HARD_RESET_RECEIVED</span><span class="p">:</span>
+<span class="linenos">31</span><span class="w">		</span><span class="cm">/*</span>
+<span class="linenos">32</span><span class="cm">		 * This notification is sent from the PE_SRC_Transition_to_default</span>
+<span class="linenos">33</span><span class="cm">		 * state and requires the following:</span>
+<span class="linenos">34</span><span class="cm">		 *	1: Vconn should be turned OFF</span>
+<span class="linenos">35</span><span class="cm">		 *	2: Reset of the local hardware</span>
+<span class="linenos">36</span><span class="cm">		 */</span>
+<span class="linenos">37</span>
+<span class="linenos">38</span><span class="w">		</span><span class="cm">/* Power off VCONN */</span>
+<span class="linenos">39</span><span class="w">		</span><span class="n">vconn_ctrl_set</span><span class="p">(</span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">pwrctrl</span><span class="p">,</span><span class="w"> </span><span class="n">VCONN_OFF</span><span class="p">);</span>
+<span class="linenos">40</span><span class="w">		</span><span class="cm">/* Transition PS to Default level */</span>
+<span class="linenos">41</span><span class="w">		</span><span class="n">source_ctrl_set</span><span class="p">(</span><span class="n">dpm_data</span><span class="o">-&gt;</span><span class="n">pwrctrl</span><span class="p">,</span><span class="w"> </span><span class="n">SOURCE_5V</span><span class="p">);</span>
+<span class="linenos">42</span><span class="w">		</span><span class="k">break</span><span class="p">;</span>
+<span class="linenos">43</span><span class="w">	</span><span class="k">default</span><span class="o">:</span>
+<span class="linenos">44</span><span class="w">	</span><span class="p">}</span>
+<span class="linenos">45</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Registering the callbacks:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="w">	</span><span class="cm">/* Register USB-C Callbacks */</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="w">	</span><span class="cm">/* Register Policy Check callback */</span>
+<span class="linenos"> 4</span><span class="w">	</span><span class="n">usbc_set_policy_cb_check</span><span class="p">(</span><span class="n">usbc_port0</span><span class="p">,</span><span class="w"> </span><span class="n">port0_policy_check</span><span class="p">);</span>
+<span class="linenos"> 5</span><span class="w">	</span><span class="cm">/* Register Policy Notify callback */</span>
+<span class="linenos"> 6</span><span class="w">	</span><span class="n">usbc_set_policy_cb_notify</span><span class="p">(</span><span class="n">usbc_port0</span><span class="p">,</span><span class="w"> </span><span class="n">port0_notify</span><span class="p">);</span>
+<span class="linenos"> 7</span><span class="w">	</span><span class="cm">/* Register Policy callback to set the Rp on CC lines */</span>
+<span class="linenos"> 8</span><span class="w">	</span><span class="n">usbc_set_policy_cb_get_src_rp</span><span class="p">(</span><span class="n">usbc_port0</span><span class="p">,</span><span class="w"> </span><span class="n">port0_policy_cb_get_src_rp</span><span class="p">);</span>
+<span class="linenos"> 9</span><span class="w">	</span><span class="cm">/* Register Policy callback to enable or disable power supply */</span>
+<span class="linenos">10</span><span class="w">	</span><span class="n">usbc_set_policy_cb_src_en</span><span class="p">(</span><span class="n">usbc_port0</span><span class="p">,</span><span class="w"> </span><span class="n">port0_policy_cb_src_en</span><span class="p">);</span>
+<span class="linenos">11</span><span class="w">	</span><span class="cm">/* Register Policy callback to enable or disable vconn */</span>
+<span class="linenos">12</span><span class="w">	</span><span class="n">usbc_set_vconn_control_cb</span><span class="p">(</span><span class="n">usbc_port0</span><span class="p">,</span><span class="w"> </span><span class="n">port0_policy_cb_vconn_en</span><span class="p">);</span>
+<span class="linenos">13</span><span class="w">	</span><span class="cm">/* Register Policy callback to send the source caps to the sink */</span>
+<span class="linenos">14</span><span class="w">	</span><span class="n">usbc_set_policy_cb_get_src_caps</span><span class="p">(</span><span class="n">usbc_port0</span><span class="p">,</span><span class="w"> </span><span class="n">port0_policy_cb_get_src_caps</span><span class="p">);</span>
+<span class="linenos">15</span><span class="w">	</span><span class="cm">/* Register Policy callback to check if the sink request is valid */</span>
+<span class="linenos">16</span><span class="w">	</span><span class="n">usbc_set_policy_cb_check_sink_request</span><span class="p">(</span><span class="n">usbc_port0</span><span class="p">,</span><span class="w"> </span><span class="n">port0_policy_cb_check_sink_request</span><span class="p">);</span>
+<span class="linenos">17</span><span class="w">	</span><span class="cm">/* Register Policy callback to check if the power supply is ready */</span>
+<span class="linenos">18</span><span class="w">	</span><span class="n">usbc_set_policy_cb_is_ps_ready</span><span class="p">(</span><span class="n">usbc_port0</span><span class="p">,</span><span class="w"> </span><span class="n">port0_policy_cb_is_ps_ready</span><span class="p">);</span>
+<span class="linenos">19</span><span class="w">	</span><span class="cm">/* Register Policy callback to check if Present Contract is still valid */</span>
+<span class="linenos">20</span><span class="w">	</span><span class="n">usbc_set_policy_cb_present_contract_is_valid</span><span class="p">(</span><span class="n">usbc_port0</span><span class="p">,</span>
+<span class="linenos">21</span><span class="w">						     </span><span class="n">port0_policy_cb_present_contract_is_valid</span><span class="p">);</span>
+<span class="linenos">22</span>
+</pre></div>
+</div>
+<p>Register the user defined structure:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w">	</span><span class="cm">/* Set Application port data object. This object is passed to the policy callbacks */</span>
+<span class="linenos">2</span><span class="w">	</span><span class="n">usbc_set_dpm_data</span><span class="p">(</span><span class="n">usbc_port0</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">port0_data</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Start the USB-C subsystem:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w">	</span><span class="cm">/* Start the USB-C Subsystem */</span>
+<span class="linenos">2</span><span class="w">	</span><span class="n">usbc_start</span><span class="p">(</span><span class="n">usbc_port0</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="implementing-a-dual-role-power-drp-usb-c-device">
+<h2>Implementing a Dual Role Power (DRP) USB-C device<a class="headerlink" href="#implementing-a-dual-role-power-drp-usb-c-device" title="Link to this heading"></a></h2>
+<p>DRP devices can operate as both Source and Sink, automatically negotiating the
+appropriate role with the port partner. When unattached, the device toggles
+between Source (Rp) and Sink (Rd) CC line advertisements to detect and connect
+with any partner type. Once an attach is detected, the device enters the
+appropriate attached state (Attached.SRC or Attached.SNK) and starts the
+corresponding Policy Engine state machine (PE_SRC or PE_SNK) to negotiate
+power delivery.</p>
+<p>Configuration is similar to Source and Sink devices, with the following key
+differences:</p>
+<ul class="simple">
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">power-role</span> <span class="pre">=</span> <span class="pre">&quot;dual&quot;</span></code> in the devicetree <code class="docutils literal notranslate"><span class="pre">usb-c-connector</span></code> node</p></li>
+<li><p>Implement callbacks for both Source and Sink operations</p></li>
+</ul>
+<p>The DRP toggle behavior can be configured via Kconfig:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_USBC_DRP_PERIOD_MS" title="CONFIG_USBC_DRP_PERIOD_MS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USBC_DRP_PERIOD_MS</span></code></a>: Toggle period (50-100ms, default 75ms)</p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_USBC_DRP_DUTY_CYCLE" title="CONFIG_USBC_DRP_DUTY_CYCLE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USBC_DRP_DUTY_CYCLE</span></code></a>: Percentage of time as Source (30-70%, default 50%)</p></li>
+</ul>
+<p>See <a class="reference internal" href="../../../samples/subsys/usb_c/drp/README.html#usb-c-drp" title="Implement a USB-C Power Delivery application in the form of a USB-C DRP (Dual Role Power).">Basic USB-C DRP</a> for a complete example.</p>
+</section>
+<section id="api-reference">
+<h2>API reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../doxygen/html/group____usbc__device__api.html" title=""><span class="pre">USB-C</span> <span class="pre">Device</span> <span class="pre">API</span></a></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/subsys/usb_c/drp/README.html#usb-c-drp" title="Implement a USB-C Power Delivery application in the form of a USB-C DRP (Dual Role Power).">Basic USB-C DRP</a></span><span class="code-sample-description">Implement a USB-C Power Delivery application in the form of a USB-C DRP (Dual Role Power).</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/subsys/usb_c/sink/README.html#usb-c-sink" title="Implement a USB-C Power Delivery application in the form of a USB-C Sink.">Basic USB-C Sink</a></span><span class="code-sample-description">Implement a USB-C Power Delivery application in the form of a USB-C Sink.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/subsys/usb_c/source/README.html#usb-c-source" title="Implement a USB-C Power Delivery application in the form of a USB-C Source.">Basic USB-C Source</a></span><span class="code-sample-description">Implement a USB-C Power Delivery application in the form of a USB-C Source.</span></li>
+</ul>
+</div>
+</section>
+<section id="sink-callback-reference">
+<h2>SINK callback reference<a class="headerlink" href="#sink-callback-reference" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../doxygen/html/group__sink__callbacks.html" title=""><span class="pre">Sink_callbacks</span></a></dt>
+</dl>
+
+</section>
+<section id="source-callback-reference">
+<h2>SOURCE callback reference<a class="headerlink" href="#source-callback-reference" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../doxygen/html/group__source__callbacks.html" title=""><span class="pre">Source_callbacks</span></a></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,799 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ICMsg with dynamically allocated buffers backend &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/services/ipc/ipc_service/backends/ipc_service_icbmsg.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="JSON Web Token (JWT)" href="../../../jwt/index.html" />
+    <link rel="prev" title="ICMsg backend" href="ipc_service_icmsg.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">OS Services</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../binary_descriptors/index.html">Binary Descriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../console.html">Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cpu_freq/index.html">CPU Frequency Scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cpu_load/index.html">CPU Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../crc/index.html">CRC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../crypto/index.html">Cryptography</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../debugging/index.html">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../device_mgmt/index.html">Device Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dsp/index.html">Digital Signal Processing (DSP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../formatted_output.html">Formatted Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../input/index.html">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../instrumentation/index.html">Instrumentation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">Interprocessor Communication (IPC)</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../ipc_service.html">IPC service</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../ipc_service.html#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../ipc_service.html#simple-data-exchange">Simple data exchange</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../ipc_service.html#data-exchange-using-the-no-copy-api">Data exchange using the no-copy API</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../ipc_service.html#backends">Backends</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="ipc_service_icmsg.html">ICMsg backend</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">ICMsg with dynamically allocated buffers backend</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../ipc_service.html#api-reference">API Reference</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../jwt/index.html">JSON Web Token (JWT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../llext/index.html">Linkable Loadable Extensions (LLEXT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../logging/index.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tracing/index.html">Tracing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../resource_management/index.html">Resource Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../mem_mgmt/index.html">Memory Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../net_buf/index.html">Network Buffers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modem/index.html">Modem modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../notify.html">Asynchronous Notifications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../pm/index.html">Power Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../portability/index.html">OS Abstraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../poweroff.html">Power off</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../profiling/index.html">Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../shell/index.html">Shell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../serialization/index.html">Serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../smf/index.html">State Machine Framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../storage/index.html">Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sensing/index.html">Sensing Subsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../task_wdt/index.html">Task Watchdog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tfm/index.html">Trusted Firmware-M (TF-M)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../uuid/index.html">UUID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../virtualization/index.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../rtio/index.html">Real Time I/O (RTIO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../zbus/index.html">Zephyr bus (zbus)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">OS Services</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Interprocessor Communication (IPC)</a> &raquo;</li>
+  
+     <li><a href="../ipc_service.html">IPC service</a> &raquo;</li>
+  
+  <li>ICMsg with dynamically allocated buffers backend</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/services/ipc/ipc_service/backends/ipc_service_icbmsg.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27services%2Fipc%2Fipc_service%2Fbackends%2Fipc_service_icbmsg%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+IPC&env=-+Page%3A+services%2Fipc%2Fipc_service%2Fbackends%2Fipc_service_icbmsg%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="icmsg-with-dynamically-allocated-buffers-backend">
+<span id="ipc-service-backend-icbmsg"></span><h1>ICMsg with dynamically allocated buffers backend<a class="headerlink" href="#icmsg-with-dynamically-allocated-buffers-backend" title="Link to this heading"></a></h1>
+<p>This backend is built on top of the <a class="reference internal" href="ipc_service_icmsg.html#ipc-service-backend-icmsg"><span class="std std-ref">ICMsg backend</span></a>.
+Data transferred over this backend travels in dynamically allocated buffers on shared memory.
+The ICMsg just sends references to the buffers.
+It also supports multiple endpoints.</p>
+<p>This architecture allows for overcoming some common problems with other backends (mostly related to multithread access and zero-copy).
+This backend provides an alternative with no significant limitations.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The shared memory is divided into two parts.
+One is reserved for the ICMsg and the other contains equal-sized blocks.
+The number of blocks is configured in the devicetree.</p>
+<p>The data sending process is following:</p>
+<ul class="simple">
+<li><p>The sender allocates one or more blocks.
+If there are not enough sequential blocks, it waits using the timeout provided in the parameter that also includes K_FOREVER and K_NO_WAIT.</p></li>
+<li><p>The allocated blocks are filled with data.
+For the zero-copy case, this is done by the caller, otherwise, it is copied automatically.
+During this time other threads are not blocked in any way as long as there are enough free blocks for them.
+They can allocate, send data and receive data.</p></li>
+<li><p>A message containing the block index is sent over ICMsg to the receiver.
+The size of the ICMsg queue is large enough to hold messages for all blocks, so it will never overflow.</p></li>
+<li><p>The receiver can hold the data as long as desired.
+Again, other threads are not blocked as long as there are enough free blocks for them.</p></li>
+<li><p>When data is no longer needed, the backend sends a release message over ICMsg.</p></li>
+<li><p>When the backend receives this message, it deallocates all blocks.
+It is done internally by the backend and it is invisible to the caller.</p></li>
+</ul>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<p>The backend is configured using Kconfig and devicetree.
+When configuring the backend, do the following:</p>
+<ul class="simple">
+<li><p>If at least one of the cores uses data cache on shared memory, set the <code class="docutils literal notranslate"><span class="pre">dcache-alignment</span></code> value.
+This must be the largest value of the invalidation or the write-back size for both sides of the communication.
+You can skip it if none of the communication sides is using data cache on shared memory.</p></li>
+<li><p>Define two memory regions and assign them to <code class="docutils literal notranslate"><span class="pre">tx-region</span></code> and <code class="docutils literal notranslate"><span class="pre">rx-region</span></code> of an instance.
+Ensure that the memory regions used for data exchange are unique (not overlapping any other region) and accessible by both domains (or CPUs).</p></li>
+<li><p>Define the number of allocable blocks for each region with <code class="docutils literal notranslate"><span class="pre">tx-blocks</span></code> and <code class="docutils literal notranslate"><span class="pre">rx-blocks</span></code>.</p></li>
+<li><p>Define MBOX devices for sending a signal that informs the other domain (or CPU) of the written data.
+Ensure that the other domain (or CPU) can receive the signal.</p></li>
+</ul>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Make sure that you set correct value of the <code class="docutils literal notranslate"><span class="pre">dcache-alignment</span></code>.
+At first, wrong value may not show any signs, which may give a false impression that everything works.
+Unstable behavior will appear sooner or later.</p>
+</div>
+<p>See the following configuration example for one of the instances:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">reserved-memory</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">   </span><span class="nl">tx</span><span class="p">:</span><span class="w"> </span><span class="nf">memory</span><span class="o">@</span><span class="mi">20070000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x20070000</span><span class="w"> </span><span class="mh">0x0800</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">   </span><span class="p">};</span>
+
+<span class="w">   </span><span class="nl">rx</span><span class="p">:</span><span class="w"> </span><span class="nf">memory</span><span class="o">@</span><span class="mi">20078000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x20078000</span><span class="w"> </span><span class="mh">0x0800</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">   </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="nf">ipc</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">   </span><span class="nl">ipc0</span><span class="p">:</span><span class="w"> </span><span class="nf">ipc0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,ipc-icbmsg&quot;</span><span class="p">;</span>
+<span class="w">      </span><span class="n">dcache-alignment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">32</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">      </span><span class="n">tx-region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">tx</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">      </span><span class="n">rx-region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">rx</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">      </span><span class="n">tx-blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">16</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">      </span><span class="n">rx-blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">32</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">      </span><span class="n">mboxes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">mbox</span><span class="w"> </span><span class="mi">0</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">mbox</span><span class="w"> </span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">      </span><span class="n">mbox-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;tx&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;rx&quot;</span><span class="p">;</span>
+<span class="w">      </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">   </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>You must provide a similar configuration for the other side of the communication (domain or CPU).
+Swap the MBOX channels, memory regions (<code class="docutils literal notranslate"><span class="pre">tx-region</span></code> and <code class="docutils literal notranslate"><span class="pre">rx-region</span></code>), and block count (<code class="docutils literal notranslate"><span class="pre">tx-blocks</span></code> and <code class="docutils literal notranslate"><span class="pre">rx-blocks</span></code>).</p>
+</section>
+<section id="samples">
+<h2>Samples<a class="headerlink" href="#samples" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../../samples/subsys/ipc/ipc_service/multi_endpoint/README.html#ipc_multi_endpoint" title="Use the IPC Service with multiple endpoints.">IPC service: Multi-endpoint</a></p></li>
+</ul>
+</section>
+<section id="detailed-protocol-specification">
+<h2>Detailed Protocol Specification<a class="headerlink" href="#detailed-protocol-specification" title="Link to this heading"></a></h2>
+<p>The ICBMsg protocol transfers messages using dynamically allocated blocks of shared memory.
+Internally, it uses ICMsg for control messages.</p>
+<section id="shared-memory-organization">
+<h3>Shared Memory Organization<a class="headerlink" href="#shared-memory-organization" title="Link to this heading"></a></h3>
+<p>The ICBMsg uses two shared memory regions, <code class="docutils literal notranslate"><span class="pre">rx-region</span></code> for message receiving, and <code class="docutils literal notranslate"><span class="pre">tx-region</span></code> for message transmission.
+The regions do not need to be next to each other, placed in any specific order, or be of the same size.
+Those regions are interchanged on each core.</p>
+<p>Each shared memory region is divided into following two parts:</p>
+<ul class="simple">
+<li><p><strong>ICMsg area</strong> - An area reserved by ICMsg instance and used to transfer the control messages.</p></li>
+<li><p><strong>Blocks area</strong> - An area containing allocatable blocks carrying the content of the messages.
+This area is divided into even-sized blocks aligned to cache boundaries.</p></li>
+</ul>
+<p>The location of each area is calculated to fulfill cache boundary requirements and allow optimal region usage.
+It is calculated using the following algorithm:</p>
+<p>Inputs:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">region_begin</span></code>, <code class="docutils literal notranslate"><span class="pre">region_end</span></code> - Boundaries of the region.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">local_blocks</span></code> - Number of blocks in this region.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">remote_blocks</span></code> - Number of blocks in the opposite region.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">alignment</span></code> - Memory cache alignment.</p></li>
+</ul>
+<p>The algorithm:</p>
+<ol class="arabic">
+<li><p>Align region boundaries to cache:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">region_begin_aligned</span> <span class="pre">=</span> <span class="pre">ROUND_UP(region_begin,</span> <span class="pre">alignment)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">region_end_aligned</span> <span class="pre">=</span> <span class="pre">ROUND_DOWN(region_end,</span> <span class="pre">alignment)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">region_size_aligned</span> <span class="pre">=</span> <span class="pre">region_end_aligned</span> <span class="pre">-</span> <span class="pre">region_begin_aligned</span></code></p></li>
+</ul>
+</li>
+<li><p>Calculate the minimum size required for ICMsg area <code class="docutils literal notranslate"><span class="pre">icmsg_min_size</span></code>, which is a sum of:</p>
+<ul class="simple">
+<li><p>ICMsg header size (refer to the ICMsg specification)</p></li>
+<li><p>ICMsg message size for 4 bytes of content (refer to the ICMsg specification) multiplied by <code class="docutils literal notranslate"><span class="pre">local_blocks</span> <span class="pre">+</span> <span class="pre">remote_blocks</span> <span class="pre">+</span> <span class="pre">2</span></code></p></li>
+</ul>
+</li>
+<li><p>Calculate available size for block area. Note that the actual size may be smaller because of block alignment:</p>
+<p><code class="docutils literal notranslate"><span class="pre">blocks_area_available_size</span> <span class="pre">=</span> <span class="pre">region_size_aligned</span> <span class="pre">-</span> <span class="pre">icmsg_min_size</span></code></p>
+</li>
+<li><p>Calculate single block size:</p>
+<p><code class="docutils literal notranslate"><span class="pre">block_size</span> <span class="pre">=</span> <span class="pre">ROUND_DOWN(blocks_area_available_size</span> <span class="pre">/</span> <span class="pre">local_blocks,</span> <span class="pre">alignment)</span></code></p>
+</li>
+<li><p>Calculate actual block area size:</p>
+<p><code class="docutils literal notranslate"><span class="pre">blocks_area_size</span> <span class="pre">=</span> <span class="pre">block_size</span> <span class="pre">*</span> <span class="pre">local_blocks</span></code></p>
+</li>
+<li><p>Calculate block area start address:</p>
+<p><code class="docutils literal notranslate"><span class="pre">blocks_area_begin</span> <span class="pre">=</span> <span class="pre">region_end_aligned</span> <span class="pre">-</span> <span class="pre">blocks_area_size</span></code></p>
+</li>
+</ol>
+<p>The result:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">region_begin_aligned</span></code> - The start of ICMsg area.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">blocks_area_begin</span></code> - End of ICMsg area and the start of block area.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">block_size</span></code> - Single block size.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">region_end_aligned</span></code> - End of blocks area.</p></li>
+</ul>
+<img alt="../../../../_images/icbmsg_memory.svg" class="align-center" src="../../../../_images/icbmsg_memory.svg" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</section>
+<section id="message-transfer">
+<h3>Message Transfer<a class="headerlink" href="#message-transfer" title="Link to this heading"></a></h3>
+<p>The ICBMsg uses following two types of messages:</p>
+<ul class="simple">
+<li><p><strong>Binding message</strong> - Message exchanged during endpoint binding process (described below).</p></li>
+<li><p><strong>Data message</strong> - Message carrying actual data from a user.</p></li>
+</ul>
+<p>They serve different purposes, but their lifetime and flow are the same.
+The following steps describe it:</p>
+<ol class="arabic simple">
+<li><p>The sender wants to send a message that contains <code class="docutils literal notranslate"><span class="pre">K</span></code> bytes.</p></li>
+<li><p>The sender reserves blocks from his <code class="docutils literal notranslate"><span class="pre">tx-region</span></code> blocks area that can hold at least <code class="docutils literal notranslate"><span class="pre">K</span> <span class="pre">+</span> <span class="pre">4</span></code> bytes.
+The additional <code class="docutils literal notranslate"><span class="pre">+</span> <span class="pre">4</span></code> bytes are reserved for the header, which contains the exact size of the message.
+The blocks must be continuous (one after another).
+The sender is responsible for block allocation management.
+It is up to the implementation to decide what to do if no blocks are available.</p></li>
+<li><p>The sender fills the header with a 32-bit integer value, <code class="docutils literal notranslate"><span class="pre">K</span></code> (little-endian).</p></li>
+<li><p>The sender fills the remaining part of the blocks with his data.
+Unused space is ignored.</p></li>
+<li><p>The sender sends an <code class="docutils literal notranslate"><span class="pre">MSG_DATA</span></code> or <code class="docutils literal notranslate"><span class="pre">MSG_BOUND</span></code> control message over ICMsg that contains starting block number (where the header is located).
+Details about the control message are in the next section.</p></li>
+<li><p>The control message travels to the receiver.</p></li>
+<li><p>The receiver reads message size and data from his <code class="docutils literal notranslate"><span class="pre">rx-region</span></code> starting from the block number received in the control message.</p></li>
+<li><p>The receiver processes the message.</p></li>
+<li><p>The receiver sends <code class="docutils literal notranslate"><span class="pre">MSG_RELEASE_DATA</span></code> or <code class="docutils literal notranslate"><span class="pre">MSG_RELEASE_BOUND</span></code> control message over ICMsg containing the starting block number
+(the same as inside received control message).</p></li>
+<li><p>The control message travels back to the sender.</p></li>
+<li><p>The sender releases the blocks starting from the block number provided in the control message.
+The number of blocks to release can be calculated using a size from the header.</p></li>
+</ol>
+<img alt="../../../../_images/icbmsg_message.svg" class="align-center" src="../../../../_images/icbmsg_message.svg" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</section>
+<section id="control-messages">
+<h3>Control Messages<a class="headerlink" href="#control-messages" title="Link to this heading"></a></h3>
+<p>The control messages are transmitted over ICMsg.
+Each control message contains three bytes.
+The first byte tells what kind of message it is.</p>
+<p>The allocated size for ICMsg ensures that the maximum possible number of control messages will fit into its ring buffer,
+so sending over the ICMsg will never fail because of buffer overflow.</p>
+<section id="msg-data">
+<h4>MSG_DATA<a class="headerlink" href="#msg-data" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>byte 0</p></th>
+<th class="head"><p>byte 1</p></th>
+<th class="head"><p>byte 2</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>MSG_DATA</p></td>
+<td><p>endpoint address</p></td>
+<td><p>block number</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x00</p></td>
+<td><p>0x00 ÷ 0xFD</p></td>
+<td><p>0x00 ÷ N-1</p></td>
+</tr>
+</tbody>
+</table>
+<p>The <code class="docutils literal notranslate"><span class="pre">MSG_DATA</span></code> control message indicates that a new data message was sent.
+The data message starts with a header inside <code class="docutils literal notranslate"><span class="pre">block</span> <span class="pre">number</span></code>.
+The data message was sent over the endpoint specified in <code class="docutils literal notranslate"><span class="pre">endpoint</span> <span class="pre">address</span></code>.
+The endpoint binding procedure must be finished before sending this control message.</p>
+</section>
+<section id="msg-release-data">
+<h4>MSG_RELEASE_DATA<a class="headerlink" href="#msg-release-data" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>byte 0</p></th>
+<th class="head"><p>byte 1</p></th>
+<th class="head"><p>byte 2</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>MSG_RELEASE_DATA</p></td>
+<td><p>unused</p></td>
+<td><p>block number</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x01</p></td>
+<td></td>
+<td><p>0x00 ÷ N-1</p></td>
+</tr>
+</tbody>
+</table>
+<p>The <code class="docutils literal notranslate"><span class="pre">MSG_RELEASE_DATA</span></code> control message is sent in response to <code class="docutils literal notranslate"><span class="pre">MSG_DATA</span></code>.
+It informs us that the data message starting with <code class="docutils literal notranslate"><span class="pre">block</span> <span class="pre">number</span></code> was received and is no longer needed.
+When this control message is received, the blocks containing the message must be released.</p>
+</section>
+<section id="msg-bound">
+<h4>MSG_BOUND<a class="headerlink" href="#msg-bound" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>byte 0</p></th>
+<th class="head"><p>byte 1</p></th>
+<th class="head"><p>byte 2</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>MSG_BOUND</p></td>
+<td><p>endpoint address</p></td>
+<td><p>block number</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x02</p></td>
+<td><p>0x00 ÷ 0xFD</p></td>
+<td><p>0x00 ÷ N-1</p></td>
+</tr>
+</tbody>
+</table>
+<p>The <code class="docutils literal notranslate"><span class="pre">MSG_BOUND</span></code> control message is similar to the <code class="docutils literal notranslate"><span class="pre">MSG_DATA</span></code> except the blocks carry binding information.
+See the next section for details on the binding procedure.</p>
+</section>
+<section id="msg-release-bound">
+<h4>MSG_RELEASE_BOUND<a class="headerlink" href="#msg-release-bound" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>byte 0</p></th>
+<th class="head"><p>byte 1</p></th>
+<th class="head"><p>byte 2</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>MSG_RELEASE_BOUND</p></td>
+<td><p>endpoint address</p></td>
+<td><p>block number</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x03</p></td>
+<td><p>0x00 ÷ 0xFD</p></td>
+<td><p>0x00 ÷ N-1</p></td>
+</tr>
+</tbody>
+</table>
+<p>The <code class="docutils literal notranslate"><span class="pre">MSG_RELEASE_BOUND</span></code> control message is sent in response to <code class="docutils literal notranslate"><span class="pre">MSG_BOUND</span></code>.
+It is similar to the <code class="docutils literal notranslate"><span class="pre">MSG_RELEASE_DATA</span></code> except the <code class="docutils literal notranslate"><span class="pre">endpoint</span> <span class="pre">address</span></code> is required.
+See the next section for details on the binding procedure.</p>
+</section>
+</section>
+<section id="initialization">
+<h3>Initialization<a class="headerlink" href="#initialization" title="Link to this heading"></a></h3>
+<p>The ICBMsg initialization calls ICMsg to initialize.
+When it is done, no further initialization is required.
+Blocks can be left uninitialized.</p>
+<p>After ICBMsg initialization, you are ready for the endpoint binding procedure.</p>
+</section>
+<section id="endpoint-binding">
+<h3>Endpoint Binding<a class="headerlink" href="#endpoint-binding" title="Link to this heading"></a></h3>
+<p>So far, the protocol is symmetrical.
+Each side of the connection was the same.
+The binding process is not symmetrical.
+There are following two roles:</p>
+<ul class="simple">
+<li><p><strong>Initiator</strong> - It assigns endpoint addresses and sends binding messages.</p></li>
+<li><p><strong>Follower</strong> - It waits for a binding message.</p></li>
+</ul>
+<p>The roles are determined based on the addresses of the <code class="docutils literal notranslate"><span class="pre">rx-region</span></code> and <code class="docutils literal notranslate"><span class="pre">tx-region</span></code>.</p>
+<ul class="simple">
+<li><p>If <code class="docutils literal notranslate"><span class="pre">address</span> <span class="pre">of</span> <span class="pre">rx-region</span> <span class="pre">&lt;</span> <span class="pre">address</span> <span class="pre">of</span> <span class="pre">tx-region</span></code>, then it is initiator.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">address</span> <span class="pre">of</span> <span class="pre">rx-region</span> <span class="pre">&gt;</span> <span class="pre">address</span> <span class="pre">of</span> <span class="pre">tx-region</span></code>, then it is follower.</p></li>
+</ul>
+<p>The binding process needs an endpoint name and is responsible for following two things:</p>
+<ul class="simple">
+<li><p>To establish a common endpoint address,</p></li>
+<li><p>To make sure that two sides are ready to exchange messages over that endpoint.</p></li>
+</ul>
+<p>After ICMsg is initialized, both sides can start the endpoint binding.
+There are no restrictions on the order in which the sides start the endpoint binding.</p>
+<section id="initiator-binding-procedure">
+<h4>Initiator Binding Procedure<a class="headerlink" href="#initiator-binding-procedure" title="Link to this heading"></a></h4>
+<p>The initiator sends a binding message.
+It contains a single null-terminated string with an endpoint name.
+As usual, it is preceded by a message header containing the message size (including null-terminator).</p>
+<p>Example of the binding message for <code class="docutils literal notranslate"><span class="pre">example</span></code> endpoint name:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Header</p></th>
+<th class="head"><p>Endpoint name</p></th>
+<th class="head"><p>Null-terminator</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>bytes 0-3</p></td>
+<td><p>bytes 4-10</p></td>
+<td><p>byte 11</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x00000008</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">example</span></code></p></td>
+<td><p>0x00</p></td>
+</tr>
+</tbody>
+</table>
+<p>The binding message is sent using the <code class="docutils literal notranslate"><span class="pre">MSG_BOUND</span></code> control message and released with the <code class="docutils literal notranslate"><span class="pre">MSG_RELEASE_BOUND</span></code> control message.</p>
+<p>The endpoint binding procedure from the initiator’s point of view is the following:</p>
+<ol class="arabic simple">
+<li><p>The initiator assigns an endpoint address to this endpoint.</p></li>
+<li><p>The initiator sends a binding message containing the endpoint name and address.</p></li>
+<li><p>The initiator waits for any message from the follower using this endpoint address.
+Usually, it will be <code class="docutils literal notranslate"><span class="pre">MSG_RELEASE_BOUND</span></code>, but <code class="docutils literal notranslate"><span class="pre">MSG_DATA</span></code> is also allowed.</p></li>
+<li><p>The initiator is bound to an endpoint, and it can send data messages using this endpoint.</p></li>
+</ol>
+</section>
+<section id="follower-binding-procedure">
+<h4>Follower Binding Procedure<a class="headerlink" href="#follower-binding-procedure" title="Link to this heading"></a></h4>
+<p>If the follower receives a binding message before it starts the binding procedure on that endpoint, it should store the message for later.
+It should not send the <code class="docutils literal notranslate"><span class="pre">MSG_RELEASE_BOUND</span></code> yet.</p>
+<p>The endpoint binding procedure from the follower’s point of view is the following:</p>
+<ol class="arabic simple">
+<li><p>The follower waits for a binding message containing its endpoint name.
+The message may be a newly received message or a message stored before the binding procedure started.</p></li>
+<li><p>The follower stores the endpoint address assigned to this endpoint by the initiator.</p></li>
+<li><p>The follower sends the <code class="docutils literal notranslate"><span class="pre">MSG_RELEASE_BOUND</span></code> control message.</p></li>
+<li><p>The follower is bound to an endpoint, and it can send data messages using this endpoint.</p></li>
+</ol>
+</section>
+</section>
+<section id="example-sequence-diagrams">
+<h3>Example sequence diagrams<a class="headerlink" href="#example-sequence-diagrams" title="Link to this heading"></a></h3>
+<p>The following diagram shows a few examples of how the messages flow between two ends.
+There is a binding of two endpoints and one fully processed data message exchange.</p>
+<img alt="../../../../_images/icbmsg_flows.svg" class="align-center" src="../../../../_images/icbmsg_flows.svg" />
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</section>
+<section id="protocol-versioning">
+<h3>Protocol Versioning<a class="headerlink" href="#protocol-versioning" title="Link to this heading"></a></h3>
+<p>The protocol allows improvements in future versions.
+The newer implementations should be able to work with older ones in backward compatible mode.
+To allow it, the current protocol version has the following restrictions:</p>
+<ul class="simple">
+<li><p>If the receiver receives a longer control message, it should use only the first three bytes and ignore the remaining.</p></li>
+<li><p>If the receiver receives a control message starting with a byte that does not match any of the messages described here, it should ignore it.</p></li>
+<li><p>If the receiver receives a binding message with additional bytes at the end, it should ignore the additional bytes.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

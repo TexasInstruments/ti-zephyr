@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="group__usbd__dfu" kind="group">
+    <compoundname>usbd_dfu</compoundname>
+    <title>USB DFU device update API</title>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="group__usbd__dfu_1ga24229d3b70d2e61bb1658c35f0be5070" prot="public" static="no">
+        <name>USBD_DFU_DEFINE_IMG</name>
+        <param><defname>id</defname></param>
+        <param><defname>iname</defname></param>
+        <param><defname>ipriv</defname></param>
+        <param><defname>iread</defname></param>
+        <param><defname>iwrite</defname></param>
+        <param><defname>inext</defname></param>
+        <initializer>        static __noinit struct <ref refid="structusb__if__descriptor" kindref="compound">usb_if_descriptor</ref> usbd_dfu_iface_##id;                   \
+                                                                                        \
+        <ref refid="group__usbd__api_1gaf800e2040ac30844cab463c13d1fcdf8" kindref="member">USBD_DESC_STRING_DEFINE</ref>(usbd_dfu_str_##id, iname, USBD_DUT_STRING_INTERFACE);   \
+                                                                                        \
+        static const <ref refid="group__iterable__section__apis_1ga9104f42cbe4a67a931bed7f7cc8f600f" kindref="member">STRUCT_SECTION_ITERABLE</ref>(<ref refid="structusbd__dfu__image" kindref="compound">usbd_dfu_image</ref>, usbd_dfu_image_##id) = {   \
+                .name = iname,                                                          \
+                .if_desc = &amp;usbd_dfu_iface_##id,                                        \
+                .priv = ipriv,                                                          \
+                .sd_nd = &amp;usbd_dfu_str_##id,                                            \
+                .read_cb = iread,                                                       \
+                .write_cb = iwrite,                                                     \
+                .next_cb = inext,                                                       \
+        }</initializer>
+        <briefdescription>
+<para>Define USB DFU image. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Use this macro to create USB DFU image</para>
+<para>The callbacks must be in form:</para>
+<para><programlisting filename=".c"><codeline><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>read(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>priv,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="stdint_8h_1a0a8582351ac627ee8bde2973c825e47f" kindref="member">uint32_t</ref><sp/>block,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="stdint_8h_1a5debae8b2a1ec20a6694c0c443ee399e" kindref="member">uint16_t</ref><sp/>size,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><ref refid="stdint_8h_1a3cb4a16b0e8d6af0af86d4fd6ba5fd9d" kindref="member">uint8_t</ref><sp/>buf[</highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>CONFIG_USBD_DFU_TRANSFER_SIZE])</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>len;</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>len;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>write(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>priv,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="stdint_8h_1a0a8582351ac627ee8bde2973c825e47f" kindref="member">uint32_t</ref><sp/>block,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="stdint_8h_1a5debae8b2a1ec20a6694c0c443ee399e" kindref="member">uint16_t</ref><sp/>size,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/><ref refid="stdint_8h_1a3cb4a16b0e8d6af0af86d4fd6ba5fd9d" kindref="member">uint8_t</ref><sp/>buf[</highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/>CONFIG_USBD_DFU_TRANSFER_SIZE])</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/>0;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+<codeline><highlight class="normal"></highlight></codeline>
+<codeline><highlight class="normal"></highlight><highlight class="keyword">static</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>next(</highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>*</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>priv,</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="usbd__dfu_8h_1a9096f7fb11c9d84692bc677d8218d01e" kindref="member">usb_dfu_state</ref><sp/><ref refid="parser__state_8h_1adc6e5733fc3c22f0a7b2914188c49c90" kindref="member">state</ref>,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">enum</highlight><highlight class="normal"><sp/><ref refid="usbd__dfu_8h_1a9096f7fb11c9d84692bc677d8218d01e" kindref="member">usb_dfu_state</ref><sp/>next)</highlight></codeline>
+<codeline><highlight class="normal">{</highlight></codeline>
+<codeline><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordflow">return</highlight><highlight class="normal"><sp/></highlight><highlight class="keyword">true</highlight><highlight class="normal">;</highlight></codeline>
+<codeline><highlight class="normal">}</highlight></codeline>
+</programlisting></para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>id</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Identifier by which the linker sorts registered images </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>iname</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Image name as used in interface descriptor </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>iread</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Image read callback </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>iwrite</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Image write callback </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>inext</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Notify/confirm next state </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/usb/class/usbd_dfu.h" line="154" column="9" bodyfile="zephyr/usb/class/usbd_dfu.h" bodystart="154" bodyend="167"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>USB DFU device update API. </para>
+    </briefdescription>
+    <detaileddescription>
+<para><simplesect kind="since"><para>4.1 </para>
+</simplesect>
+<simplesect kind="version"><para>0.1.0 </para>
+</simplesect>
+</para>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

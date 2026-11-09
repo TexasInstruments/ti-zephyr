@@ -1,0 +1,635 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Retention System &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/services/storage/retention/index.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Bootloader Information" href="blinfo.html" />
+    <link rel="prev" title="Non-Volatile Storage (NVS)" href="../nvs/nvs.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">OS Services</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../binary_descriptors/index.html">Binary Descriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../console.html">Console</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cpu_freq/index.html">CPU Frequency Scaling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cpu_load/index.html">CPU Load</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../crc/index.html">CRC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../crypto/index.html">Cryptography</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../debugging/index.html">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../device_mgmt/index.html">Device Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../dsp/index.html">Digital Signal Processing (DSP)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../formatted_output.html">Formatted Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../input/index.html">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../instrumentation/index.html">Instrumentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../ipc/index.html">Interprocessor Communication (IPC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jwt/index.html">JSON Web Token (JWT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../llext/index.html">Linkable Loadable Extensions (LLEXT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../logging/index.html">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tracing/index.html">Tracing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../resource_management/index.html">Resource Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../mem_mgmt/index.html">Memory Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../net_buf/index.html">Network Buffers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modem/index.html">Modem modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../notify.html">Asynchronous Notifications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../pm/index.html">Power Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../portability/index.html">OS Abstraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../poweroff.html">Power off</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../profiling/index.html">Profiling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../shell/index.html">Shell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../serialization/index.html">Serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../smf/index.html">State Machine Framework</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Storage</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../disk/access.html">Disk Access</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fcb/fcb.html">Flash Circular Buffer (FCB)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../file_system/index.html">File Systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../flash_map/flash_map.html">Flash map</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../nvmem/index.html">Non-Volatile Memory (NVMEM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../nvs/nvs.html">Non-Volatile Storage (NVS)</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Retention System</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#devicetree-setup">Devicetree setup</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mutex-protection">Mutex protection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#boot-mode">Boot mode</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#retention-system-modules">Retention system modules</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="blinfo.html">Bootloader Information</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API Reference</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#retention-system-api">Retention system API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#boot-mode-interface">Boot mode interface</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../secure_storage/index.html">Secure Storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../settings/index.html">Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stream/stream_flash.html">Stream Flash</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../zms/zms.html">Zephyr Memory Storage (ZMS)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../sensing/index.html">Sensing Subsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../task_wdt/index.html">Task Watchdog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tfm/index.html">Trusted Firmware-M (TF-M)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../uuid/index.html">UUID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../virtualization/index.html">Virtualization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../rtio/index.html">Real Time I/O (RTIO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../zbus/index.html">Zephyr bus (zbus)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">OS Services</a> &raquo;</li>
+  
+     <li><a href="../index.html">Storage</a> &raquo;</li>
+  
+  <li>Retention System</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/services/storage/retention/index.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27services%2Fstorage%2Fretention%2Findex%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Retention%2Carea%3A+Storage&env=-+Page%3A+services%2Fstorage%2Fretention%2Findex%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="retention-system">
+<span id="retention-api"></span><h1>Retention System<a class="headerlink" href="#retention-system" title="Link to this heading"></a></h1>
+<p>The retention system provides an API which allows applications to read and
+write data from and to memory areas or devices that retain the data while the
+device is powered. This allows for sharing information between different
+applications or within a single application without losing state information
+when a device reboots. The stored data should not persist in the event of a
+power failure (or during some low-power modes on some devices) nor should it be
+stored to a non-volatile storage like <a class="reference internal" href="../../../hardware/peripherals/flash.html#flash-api"><span class="std std-ref">Flash</span></a>, <a class="reference internal" href="../../../hardware/peripherals/eeprom/api.html#eeprom-api"><span class="std std-ref">EEPROM API</span></a>, or
+battery-backed RAM.</p>
+<p>The retention system builds on top of the retained data driver, and adds
+additional software-level features to it for ensuring the validity of data.
+Optionally, a magic header can be used to check if the front of
+the retained data memory section contains this specific value, and an optional
+checksum (1, 2, or 4-bytes in size) of the stored data can be appended to the
+end of the data. Additionally, the retention system API allows partitioning of
+the retained data sections into multiple distinct areas. For example, a 64-byte
+retained data area could be split up into 4 bytes for a boot mode, 16 bytes for
+a timestamp, 44 bytes for a last log message. All of these sections can be
+accessed or updated independently. The prefix and checksum can be set
+per-instance using devicetree.</p>
+<section id="devicetree-setup">
+<h2>Devicetree setup<a class="headerlink" href="#devicetree-setup" title="Link to this heading"></a></h2>
+<p>To use the retention system, a retained data driver must be setup for the board
+you are using, there is a zephyr driver which can be used which will use some
+RAM as non-init for this purpose. The retention system is then initialised as a
+child node of this device 1 or more times - note that the memory region will
+need to be decremented to account for this reserved portion of RAM. See the
+following example (examples in this guide are based on the
+<a class="reference internal" href="../../../boards/nordic/nrf52840dk/doc/index.html#nrf52840dk">nRF52840 DK</a> board and memory layout):</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nf">sram</span><span class="o">@</span><span class="mi">2003FC00</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,memory-region&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mmio-sram&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x2003FC00</span><span class="w"> </span><span class="na">DT_SIZE_K</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                </span><span class="n">zephyr</span><span class="p">,</span><span class="n">memory-region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;RetainedMem&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+
+<span class="w">                </span><span class="nf">retainedmem</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,retained-ram&quot;</span><span class="p">;</span>
+<span class="w">                        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">                        </span><span class="kr">#address-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                        </span><span class="kr">#size-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">                        </span><span class="cm">/* This creates a 256-byte partition */</span>
+<span class="w">                        </span><span class="nl">retention0</span><span class="p">:</span><span class="w"> </span><span class="nf">retention</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,retention&quot;</span><span class="p">;</span>
+<span class="w">                                </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+
+<span class="w">                                </span><span class="cm">/* The total size of this area is 256</span>
+<span class="cm">                                 * bytes which includes the prefix and</span>
+<span class="cm">                                 * checksum, this means that the usable</span>
+<span class="cm">                                 * data storage area is 256 - 3 = 253</span>
+<span class="cm">                                 * bytes</span>
+<span class="cm">                                 */</span>
+<span class="w">                                </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x0</span><span class="w"> </span><span class="mh">0x100</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">                                </span><span class="cm">/* This is the prefix which must appear</span>
+<span class="cm">                                 * at the front of the data</span>
+<span class="cm">                                 */</span>
+<span class="w">                                </span><span class="n">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mh">08</span><span class="w"> </span><span class="mh">04</span><span class="p">];</span>
+
+<span class="w">                                </span><span class="cm">/* This uses a 1-byte checksum */</span>
+<span class="w">                                </span><span class="n">checksum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                        </span><span class="p">};</span>
+
+<span class="w">                        </span><span class="cm">/* This creates a 768-byte partition */</span>
+<span class="w">                        </span><span class="nl">retention1</span><span class="p">:</span><span class="w"> </span><span class="nf">retention</span><span class="o">@</span><span class="mi">100</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,retention&quot;</span><span class="p">;</span>
+<span class="w">                                </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+
+<span class="w">                                </span><span class="cm">/* Start position must be after the end</span>
+<span class="cm">                                 * of the previous partition. The total</span>
+<span class="cm">                                 * size of this area is 768 bytes which</span>
+<span class="cm">                                 * includes the prefix and checksum,</span>
+<span class="cm">                                 * this means that the usable data</span>
+<span class="cm">                                 * storage area is 768 - 6 = 762 bytes</span>
+<span class="cm">                                 */</span>
+<span class="w">                                </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x100</span><span class="w"> </span><span class="mh">0x300</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">                                </span><span class="cm">/* This is the prefix which must appear</span>
+<span class="cm">                                 * at the front of the data</span>
+<span class="cm">                                 */</span>
+<span class="w">                                </span><span class="n">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mh">00</span><span class="w"> </span><span class="mh">11</span><span class="w"> </span><span class="mh">55</span><span class="w"> </span><span class="mh">88</span><span class="w"> </span><span class="mh">fa</span><span class="w"> </span><span class="mh">bc</span><span class="p">];</span>
+
+<span class="w">                                </span><span class="cm">/* If omitted, there will be no</span>
+<span class="cm">                                 * checksum</span>
+<span class="cm">                                 */</span>
+<span class="w">                        </span><span class="p">};</span>
+<span class="w">                </span><span class="p">};</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="cm">/* Reduce SRAM0 usage by 1KB to account for non-init area */</span>
+<span class="o">&amp;</span><span class="nf">sram0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x20000000</span><span class="w"> </span><span class="na">DT_SIZE_K</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The retention areas can then be accessed using the data retention API (once
+enabled with <a class="reference internal" href="../../../kconfig.html#CONFIG_RETENTION" title="CONFIG_RETENTION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_RETENTION</span></code></a>, which requires that
+<a class="reference internal" href="../../../kconfig.html#CONFIG_RETAINED_MEM" title="CONFIG_RETAINED_MEM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_RETAINED_MEM</span></code></a> be enabled) by getting the device by
+using:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/device.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/retention/retention.h&gt;</span>
+
+<span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">retention0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEVICE_DT_GET</span><span class="p">(</span><span class="n">DT_NODELABEL</span><span class="p">(</span><span class="n">retention0</span><span class="p">));</span>
+<span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">retention1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEVICE_DT_GET</span><span class="p">(</span><span class="n">DT_NODELABEL</span><span class="p">(</span><span class="n">retention1</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>When the write function is called, the magic header and checksum (if enabled)
+will be set on the area, and it will be marked as valid from that point
+onwards.</p>
+</section>
+<section id="mutex-protection">
+<h2>Mutex protection<a class="headerlink" href="#mutex-protection" title="Link to this heading"></a></h2>
+<p>Mutex protection of retention areas is enabled by default when applications are
+compiled with multithreading support. This means that different threads can
+safely call the retention functions without clashing with other concurrent
+thread function usage, but means that retention functions cannot be used from
+ISRs. It is possible to disable mutex protection globally on all retention
+areas by enabling <a class="reference internal" href="../../../kconfig.html#CONFIG_RETENTION_MUTEX_FORCE_DISABLE" title="CONFIG_RETENTION_MUTEX_FORCE_DISABLE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_RETENTION_MUTEX_FORCE_DISABLE</span></code></a> -
+users are then responsible for ensuring that the function calls do not conflict
+with each other. Note that to use this, retention driver mutex support must
+also be disabled by enabling
+<a class="reference internal" href="../../../kconfig.html#CONFIG_RETAINED_MEM_MUTEX_FORCE_DISABLE" title="CONFIG_RETAINED_MEM_MUTEX_FORCE_DISABLE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_RETAINED_MEM_MUTEX_FORCE_DISABLE</span></code></a>.</p>
+</section>
+<section id="boot-mode">
+<span id="boot-mode-api"></span><h2>Boot mode<a class="headerlink" href="#boot-mode" title="Link to this heading"></a></h2>
+<p>An addition to the retention subsystem is a boot mode interface, this can be
+used to dynamically change the state of an application or run a different
+application with a minimal set of functions when a device is rebooted (an
+example is to have a buttonless way of entering mcuboot’s serial recovery
+feature from the main application).</p>
+<p>To use the boot mode feature, a data retention entry must exist in the device
+tree, which is dedicated for use as the boot mode selection (the user area data
+size only needs to be a single byte), and this area be assigned to the chosen
+node of <code class="docutils literal notranslate"><span class="pre">zephyr,boot-mode</span></code>. See the following example:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nf">sram</span><span class="o">@</span><span class="mi">2003FFFF</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,memory-region&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mmio-sram&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x2003FFFF</span><span class="w"> </span><span class="mh">0x1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                </span><span class="n">zephyr</span><span class="p">,</span><span class="n">memory-region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;RetainedMem&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+
+<span class="w">                </span><span class="nf">retainedmem</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,retained-ram&quot;</span><span class="p">;</span>
+<span class="w">                        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">                        </span><span class="kr">#address-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                        </span><span class="kr">#size-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">                        </span><span class="nl">retention0</span><span class="p">:</span><span class="w"> </span><span class="nf">retention</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,retention&quot;</span><span class="p">;</span>
+<span class="w">                                </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">                                </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x0</span><span class="w"> </span><span class="mh">0x1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                        </span><span class="p">};</span>
+<span class="w">                </span><span class="p">};</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="nf">chosen</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">zephyr</span><span class="p">,</span><span class="n">boot-mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">retention0</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="cm">/* Reduce SRAM0 usage by 1 byte to account for non-init area */</span>
+<span class="o">&amp;</span><span class="nf">sram0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x20000000</span><span class="w"> </span><span class="mh">0x3FFFF</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The boot mode interface can be enabled with
+<a class="reference internal" href="../../../kconfig.html#CONFIG_RETENTION_BOOT_MODE" title="CONFIG_RETENTION_BOOT_MODE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_RETENTION_BOOT_MODE</span></code></a> and then accessed by using the
+boot mode functions. If using mcuboot with serial recovery, it can be built
+with <code class="docutils literal notranslate"><span class="pre">CONFIG_MCUBOOT_SERIAL</span></code> and <code class="docutils literal notranslate"><span class="pre">CONFIG_BOOT_SERIAL_BOOT_MODE</span></code> enabled
+which will allow rebooting directly into the serial recovery mode by using:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/retention/bootmode.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/sys/reboot.h&gt;</span>
+
+<span class="n">bootmode_set</span><span class="p">(</span><span class="n">BOOT_MODE_TYPE_BOOTLOADER</span><span class="p">);</span>
+<span class="n">sys_reboot</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="retention-system-modules">
+<h2>Retention system modules<a class="headerlink" href="#retention-system-modules" title="Link to this heading"></a></h2>
+<p>Modules can expand the functionality of the retention system by using it as a
+transport (e.g. between a bootloader and application).</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="blinfo.html">Bootloader Information</a></li>
+</ul>
+</div>
+</section>
+<section id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<section id="retention-system-api">
+<h3>Retention system API<a class="headerlink" href="#retention-system-api" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../doxygen/html/group__retention__api.html" title=""><span class="pre">Retention</span> <span class="pre">API</span></a></dt>
+</dl>
+
+</section>
+<section id="boot-mode-interface">
+<h3>Boot mode interface<a class="headerlink" href="#boot-mode-interface" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../doxygen/html/group__boot__mode__interface.html" title=""><span class="pre">Boot</span> <span class="pre">mode</span> <span class="pre">interface</span></a></dt>
+</dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

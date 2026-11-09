@@ -1,0 +1,538 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>USB device CDC ACM &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/connectivity/usb/device_next/cdc_acm.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="USB device support APIs" href="api/index.html" />
+    <link rel="prev" title="USB Vendor and Product identifiers" href="vid_pid.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Connectivity</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../canbus/index.html">Controller Area Network (CAN) Bus Protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../networking/index.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa and LoRaWAN</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">USB</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../device/usb_device.html">USB device support (deprecated)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../device/api/index.html">USB device support APIs (deprecated)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="usb_device.html">USB device support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vid_pid.html">USB Vendor and Product identifiers</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">USB device CDC ACM</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cdc-acm-uart-configuration">CDC ACM UART configuration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cdc-acm-uart-as-serial-backend">CDC ACM UART as serial backend</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-cdc-acm-uart-in-the-application">Using CDC ACM UART in the application</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#interrupt-driven-uart-api">Interrupt-driven UART API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#polling-uart-api">Polling UART API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="api/index.html">USB device support APIs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../host/api/index.html">USB host support APIs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../host/usbip.html">USB/IP protocol support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pd/ucds.html">USB-C device stack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/hid.html">Human Interface Devices (HID)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Connectivity</a> &raquo;</li>
+  
+     <li><a href="../index.html">USB</a> &raquo;</li>
+  
+  <li>USB device CDC ACM</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/connectivity/usb/device_next/cdc_acm.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27connectivity%2Fusb%2Fdevice_next%2Fcdc_acm%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+USB&env=-+Page%3A+connectivity%2Fusb%2Fdevice_next%2Fcdc_acm%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="usb-device-cdc-acm">
+<span id="usbd-cdc-acm"></span><h1>USB device CDC ACM<a class="headerlink" href="#usb-device-cdc-acm" title="Link to this heading"></a></h1>
+<p>The CDC ACM function provided by the USB device stack only implements Abstract
+Control Model Serial Emulation. Its sole purpose is to emulate serial lines, as
+its name suggests. Most modern operating systems should provide support
+for it out of the box.</p>
+<p>The CDC ACM function is represented as a serial interface on both the host and
+device sides, while the user or application interface is the <a class="reference internal" href="../../../hardware/peripherals/uart.html#uart-api"><span class="std std-ref">Universal Asynchronous Receiver-Transmitter (UART)</span></a>
+driver API. This allows applications that already use the UART API to use the
+serial interface provided by the CDC ACM function without changing the code
+responsible for data communication. Only additional configuration and USB
+device stack initialization are required.</p>
+<section id="cdc-acm-uart-configuration">
+<h2>CDC ACM UART configuration<a class="headerlink" href="#cdc-acm-uart-configuration" title="Link to this heading"></a></h2>
+<p>Like the real UART controller, the virtual CDC ACM UART is described in the
+device tree. The devicetree compatible property for CDC ACM UART is
+<a class="reference internal" href="../../../build/dts/api/bindings/serial/zephyr%2Ccdc-acm-uart.html#std-dtcompatible-zephyr-cdc-acm-uart"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,cdc-acm-uart</span></code></a>.</p>
+<p>CDC ACM support is automatically selected when USB device support is enabled
+and a compatible node in the devicetree sources is present. If necessary, CDC ACM
+support can be explicitly disabled by <a class="reference internal" href="../../../kconfig.html#CONFIG_USBD_CDC_ACM_CLASS" title="CONFIG_USBD_CDC_ACM_CLASS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USBD_CDC_ACM_CLASS</span></code></a>.
+The number of possible CDC ACM instances depends on the number of supported
+endpoints on the USB device controller. Each CDC ACM instance requires three
+endpoints: two bulk endpoints (one IN, one OUT) and one interrupt IN with a
+MaxPacketSize of 16.
+The CDC ACM node can use the <code class="docutils literal notranslate"><span class="pre">label</span></code> property to distinguish different interfaces
+on the host side. Below is an example of the devicetree overlay file.</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">zephyr_udc0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nl">cdc_acm_uart0</span><span class="p">:</span><span class="w"> </span><span class="nf">cdc_acm_uart0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,cdc-acm-uart&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;CDC_ACM_0&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Before the application uses CDC ACM UART, it may want to wait for the DTR
+signal. Please refer to <a class="reference internal" href="../../../samples/subsys/usb/cdc_acm/README.html#usb-cdc-acm" title="Use USB CDC ACM UART driver to implement a serial port echo.">USB CDC ACM UART sample</a> on how to implement
+this functionality.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To communicate with the host, beside the UART configuration, the application
+must enable USB device stack, for that please refer to
+<a class="reference internal" href="usb_device.html#usb-device-next-howto-configure"><span class="std std-ref">How to configure and enable USB device support</span></a> and read carefully the next chapter. For
+users and applications migrating from the legacy stack, this is the only part
+they need to adapt.</p>
+</div>
+</section>
+<section id="cdc-acm-uart-as-serial-backend">
+<span id="id1"></span><h2>CDC ACM UART as serial backend<a class="headerlink" href="#cdc-acm-uart-as-serial-backend" title="Link to this heading"></a></h2>
+<p>Using the example above and the <code class="docutils literal notranslate"><span class="pre">zephyr,console</span></code> chosen node property, you can
+configure the CDC ACM UART as the console device.</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nf">chosen</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">zephyr</span><span class="p">,</span><span class="n">console</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">cdc_acm_uart0</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="o">&amp;</span><span class="nf">zephyr_udc0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nl">cdc_acm_uart0</span><span class="p">:</span><span class="w"> </span><span class="nf">cdc_acm_uart0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,cdc-acm-uart&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;CDC_ACM_0&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>In the same way that the console in the above example is configured to use the
+CDC ACM UART, <code class="docutils literal notranslate"><span class="pre">zephyr,shell-uart</span></code> chosen node property can be used to
+configure the shell to use the CDC ACM UART as the serial backend. See sample
+<a class="reference internal" href="../../../samples/subsys/shell/shell_module/README.html#shell-module" title="Register shell commands using the Shell API">Custom Shell module</a> and <a class="reference internal" href="../../../build/dts/api/api.html#devicetree-chosen-nodes"><span class="std std-ref">chosen nodes documentation</span></a>.</p>
+<p>Since the use case as a serial backend is very common and no configuration is
+necessary at runtime for the CDC ACM UART, the stack offers a helper that
+performs the steps described in <a class="reference internal" href="usb_device.html#usb-device-next-howto-configure"><span class="std std-ref">How to configure and enable USB device support</span></a>. The
+helper is enabled by the <a class="reference internal" href="../../../kconfig.html#CONFIG_CDC_ACM_SERIAL_INITIALIZE_AT_BOOT" title="CONFIG_CDC_ACM_SERIAL_INITIALIZE_AT_BOOT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CDC_ACM_SERIAL_INITIALIZE_AT_BOOT</span></code></a>
+and initializes the USB device stack with a single CDC ACM instance. Sample
+<a class="reference internal" href="../../../samples/subsys/usb/console/README.html#usb-cdc-acm-console" title="Output &quot;Hello World!&quot; to the console over USB CDC ACM.">Console over USB CDC ACM</a> demonstrates how to use it.</p>
+<p><a class="reference internal" href="../../../kconfig.html#CONFIG_CDC_ACM_SERIAL_INITIALIZE_AT_BOOT" title="CONFIG_CDC_ACM_SERIAL_INITIALIZE_AT_BOOT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CDC_ACM_SERIAL_INITIALIZE_AT_BOOT</span></code></a> should also be used
+by the boards like <a class="reference internal" href="../../../boards/nordic/nrf52840dongle/doc/index.html#nrf52840dongle">nRF52840 Dongle</a>, which do not have a debug
+adapter but a USB device controller, and want to use CDC ACM UART as default
+serial backend for logging and shell.
+As the configuration would be identical for any board, there are common
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/boards/common/usb/cdc_acm_serial.dtsi">devicetree file</a> and
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/boards/common/usb/Kconfig.cdc_acm_serial.defconfig">Kconfig file</a>
+that must be included in the board’s devicetree and Kconfig.defconfig files.</p>
+</section>
+<section id="using-cdc-acm-uart-in-the-application">
+<h2>Using CDC ACM UART in the application<a class="headerlink" href="#using-cdc-acm-uart-in-the-application" title="Link to this heading"></a></h2>
+<p>CDC ACM implements a virtual UART controller and provides Interrupt-driven UART
+API and Polling UART API. The ASYNC API is not supported yet. If the
+application wants to communicate over CDC ACM UART, the preferable way is to
+use Interrupt-driven UART API. It is essential to understand API documentation,
+nevertheless, some notes below.</p>
+<section id="interrupt-driven-uart-api">
+<h3>Interrupt-driven UART API<a class="headerlink" href="#interrupt-driven-uart-api" title="Link to this heading"></a></h3>
+<p>Internally the CDC ACM UART implementation uses two ringbuffers. These take over the
+function of the TX/RX FIFOs (TX/RX buffers) from the <a class="reference internal" href="../../../hardware/peripherals/uart.html#uart-interrupt-api"><span class="std std-ref">Interrupt-driven API</span></a>.</p>
+<p>As described in the <a class="reference internal" href="../../../hardware/peripherals/uart.html#uart-interrupt-api"><span class="std std-ref">Interrupt-driven API</span></a>, the functions
+<a class="reference internal" href="../../../doxygen/html/group__uart__interrupt.html#ga20cf50f53fb9e09e760c6499fd156ff2" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_update()</span></code></a>, <a class="reference internal" href="../../../doxygen/html/group__uart__interrupt.html#gacd8c2978e0f1316dd79bb42baad1c5a7" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_is_pending()</span></code></a>,
+<a class="reference internal" href="../../../doxygen/html/group__uart__interrupt.html#gad04073b1b8e3de13b43ae1194561377b" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_rx_ready()</span></code></a>, <a class="reference internal" href="../../../doxygen/html/group__uart__interrupt.html#ga5e126b5f19549eb7f5b785b98ebe7638" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_tx_ready()</span></code></a>
+<a class="reference internal" href="../../../doxygen/html/group__uart__interrupt.html#gab10942076ac47ecff29e924098049398" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">uart_fifo_read()</span></code></a>, and <a class="reference internal" href="../../../doxygen/html/group__uart__interrupt.html#gafe42e4719eada7e25904bc9ebfe87791" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">uart_fifo_fill()</span></code></a>
+should be called from the interrupt handler, see
+<a class="reference internal" href="../../../doxygen/html/group__uart__interrupt.html#gaf469966a56d1fc9f50108201597ee0a0" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_callback_user_data_set()</span></code></a>. To prevent undefined behavior,
+the implementation of these functions checks in what context they are called
+and fails if it is not an interrupt handler.</p>
+<p>Also, as described in the UART API, <a class="reference internal" href="../../../doxygen/html/group__uart__interrupt.html#gacd8c2978e0f1316dd79bb42baad1c5a7" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_is_pending()</span></code></a>
+<a class="reference internal" href="../../../doxygen/html/group__uart__interrupt.html#gad04073b1b8e3de13b43ae1194561377b" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_rx_ready()</span></code></a>, and <a class="reference internal" href="../../../doxygen/html/group__uart__interrupt.html#ga5e126b5f19549eb7f5b785b98ebe7638" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_tx_ready()</span></code></a>
+can only be called after <a class="reference internal" href="../../../doxygen/html/group__uart__interrupt.html#ga20cf50f53fb9e09e760c6499fd156ff2" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_update()</span></code></a>.</p>
+<p>Simplified, application interrupt handler should look something like:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">interrupt_handler</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">user_data</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">uart_irq_update</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">uart_irq_is_pending</span><span class="p">(</span><span class="n">dev</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">uart_irq_rx_ready</span><span class="p">(</span><span class="n">dev</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="kt">int</span><span class="w"> </span><span class="n">len</span><span class="p">;</span>
+<span class="w">                        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">;</span>
+
+<span class="w">                        </span><span class="cm">/* ... */</span>
+<span class="w">                        </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uart_fifo_read</span><span class="p">(</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+<span class="w">                        </span><span class="cm">/* ... */</span>
+<span class="w">                </span><span class="p">}</span>
+
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">uart_irq_tx_ready</span><span class="p">(</span><span class="n">dev</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="kt">int</span><span class="w"> </span><span class="n">len</span><span class="p">;</span>
+<span class="w">                        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">;</span>
+
+<span class="w">                        </span><span class="cm">/* ... */</span>
+<span class="w">                        </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uart_fifo_fill</span><span class="p">(</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+<span class="w">                  </span><span class="cm">/* ... */</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>All these functions are not directly dependent on the status of the USB device.
+Filling the TX FIFO does not mean that data is being sent to the host. And
+successfully reading the RX FIFO does not mean that the device is still
+connected to the host. If there is space in the TX FIFO, and the TX interrupt
+is enabled, <a class="reference internal" href="../../../doxygen/html/group__uart__interrupt.html#ga5e126b5f19549eb7f5b785b98ebe7638" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_tx_ready()</span></code></a> will succeed. If there is data in the
+RX FIFO, and the RX interrupt is enabled, <a class="reference internal" href="../../../doxygen/html/group__uart__interrupt.html#gad04073b1b8e3de13b43ae1194561377b" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_rx_ready()</span></code></a> will
+succeed. Function <a class="reference internal" href="../../../doxygen/html/group__uart__interrupt.html#ga917935a13bf6a5d1e32ef34339e96455" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_tx_complete()</span></code></a> is not implemented yet.</p>
+</section>
+<section id="polling-uart-api">
+<h3>Polling UART API<a class="headerlink" href="#polling-uart-api" title="Link to this heading"></a></h3>
+<p>The CDC ACM poll out implementation follows <a class="reference internal" href="../../../hardware/peripherals/uart.html#uart-polling-api"><span class="std std-ref">Polling API</span></a> and
+blocks when the TX FIFO is full only if the hw-flow-control property is enabled
+and called from a non-ISR context.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

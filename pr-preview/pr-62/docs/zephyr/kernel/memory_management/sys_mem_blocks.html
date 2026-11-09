@@ -1,0 +1,579 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Memory Blocks Allocator &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/kernel/memory_management/sys_mem_blocks.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Demand Paging" href="demand_paging.html" />
+    <link rel="prev" title="Memory Slabs" href="slabs.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Kernel</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../services/index.html">Kernel Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drivers/index.html">Device Driver Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usermode/index.html">User Mode</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Memory Management</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="heap.html">Memory Heaps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_multi_heap.html">Shared Multi Heap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slabs.html">Memory Slabs</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Memory Blocks Allocator</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#concepts">Concepts</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#internal-operation">Internal Operation</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Memory Blocks Allocator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multi-memory-blocks-allocator-group">Multi Memory Blocks Allocator Group</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usage">Usage</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#defining-a-memory-blocks-allocator">Defining a Memory Blocks Allocator</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#allocating-memory-blocks">Allocating Memory Blocks</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#releasing-a-memory-block">Releasing a Memory Block</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#using-multi-memory-blocks-allocator-group">Using Multi Memory Blocks Allocator Group</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="demand_paging.html">Demand Paging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="virtual_memory.html">Virtual Memory</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../data_structures/index.html">Data Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timing_functions/index.html">Executing Time Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../object_cores/index.html">Object Cores</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timeutil.html">Time Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../util/index.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iterable_sections/index.html">Iterable Sections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../code-relocation.html">Code And Data Relocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanup.html">Scope-based Cleanup Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Kernel</a> &raquo;</li>
+  
+     <li><a href="index.html">Memory Management</a> &raquo;</li>
+  
+  <li>Memory Blocks Allocator</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/kernel/memory_management/sys_mem_blocks.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27kernel%2Fmemory_management%2Fsys_mem_blocks%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Kernel&env=-+Page%3A+kernel%2Fmemory_management%2Fsys_mem_blocks%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="memory-blocks-allocator">
+<span id="sys-mem-blocks"></span><h1>Memory Blocks Allocator<a class="headerlink" href="#memory-blocks-allocator" title="Link to this heading"></a></h1>
+<p>The Memory Blocks Allocator allows memory blocks to be dynamically
+allocated from a designated memory region, where:</p>
+<ul class="simple">
+<li><p>All memory blocks have a single fixed size.</p></li>
+<li><p>Multiple blocks can be allocated or freed at the same time.</p></li>
+<li><p>A group of blocks allocated together may not be contiguous.
+This is useful for operations such as scatter-gather DMA transfers.</p></li>
+<li><p>Bookkeeping of allocated blocks is done outside of the associated
+buffer (unlike memory slab). This allows the buffer to reside in
+memory regions where these can be powered down to conserve energy.</p></li>
+</ul>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#concepts" id="id2">Concepts</a></p>
+<ul>
+<li><p><a class="reference internal" href="#internal-operation" id="id3">Internal Operation</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#id1" id="id4">Memory Blocks Allocator</a></p></li>
+<li><p><a class="reference internal" href="#multi-memory-blocks-allocator-group" id="id5">Multi Memory Blocks Allocator Group</a></p></li>
+<li><p><a class="reference internal" href="#usage" id="id6">Usage</a></p>
+<ul>
+<li><p><a class="reference internal" href="#defining-a-memory-blocks-allocator" id="id7">Defining a Memory Blocks Allocator</a></p></li>
+<li><p><a class="reference internal" href="#allocating-memory-blocks" id="id8">Allocating Memory Blocks</a></p></li>
+<li><p><a class="reference internal" href="#releasing-a-memory-block" id="id9">Releasing a Memory Block</a></p></li>
+<li><p><a class="reference internal" href="#using-multi-memory-blocks-allocator-group" id="id10">Using Multi Memory Blocks Allocator Group</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#api-reference" id="id11">API Reference</a></p></li>
+</ul>
+</nav>
+<section id="concepts">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Concepts</a><a class="headerlink" href="#concepts" title="Link to this heading"></a></h2>
+<p>Any number of Memory Blocks Allocator can be defined (limited only by
+available RAM). Each allocator is referenced by its memory address.</p>
+<p>A memory blocks allocator has the following key properties:</p>
+<ul class="simple">
+<li><p>The <strong>block size</strong> of each block, measured in bytes.
+It must be at least 4N bytes long, where N is greater than 0.</p></li>
+<li><p>The <strong>number of blocks</strong> available for allocation.
+It must be greater than zero.</p></li>
+<li><p>A <strong>buffer</strong> that provides the memory for the memory slab’s blocks.
+It must be at least “block size” times “number of blocks” bytes long.</p></li>
+<li><p>A <strong>blocks bitmap</strong> to keep track of which block has been allocated.</p></li>
+</ul>
+<p>The buffer must be aligned to an N-byte boundary, where N is a power of 2
+larger than 2 (i.e. 4, 8, 16, …). To ensure that all memory blocks in
+the buffer are similarly aligned to this boundary, the block size must
+also be a multiple of N.</p>
+<p>Due to the use of internal bookkeeping structures and their creation,
+each memory blocks allocator must be declared and defined at compile time.</p>
+<section id="internal-operation">
+<h3><a class="toc-backref" href="#id3" role="doc-backlink">Internal Operation</a><a class="headerlink" href="#internal-operation" title="Link to this heading"></a></h3>
+<p>Each buffer associated with an allocator is an array of fixed-size blocks,
+with no wasted space between the blocks.</p>
+<p>The memory blocks allocator keeps track of unallocated blocks using
+a bitmap.</p>
+</section>
+</section>
+<section id="id1">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Memory Blocks Allocator</a><a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p>Internally, the memory blocks allocator uses a bitmap to keep track of
+which blocks have been allocated. Each allocator, utilizing
+the <code class="docutils literal notranslate"><span class="pre">sys_bitarray</span></code> interface, gets memory blocks one by one from
+the backing buffer up to the requested number of blocks.
+All the metadata about an allocator is stored outside of the backing
+buffer. This allows the memory region of the backing buffer to be
+powered down to conserve energy, as the allocator code never touches
+the content of the buffer.</p>
+</section>
+<section id="multi-memory-blocks-allocator-group">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Multi Memory Blocks Allocator Group</a><a class="headerlink" href="#multi-memory-blocks-allocator-group" title="Link to this heading"></a></h2>
+<p>The Multi Memory Blocks Allocator Group utility functions provide
+a convenient to manage a group of allocators. A custom allocator
+choosing function is used to choose which allocator to use among
+this group.</p>
+<p>An allocator group should be initialized at runtime via
+<a class="reference internal" href="../../doxygen/html/group__mem__blocks__apis.html#gad39867e3cd1e1e69e6fb3746c05abed0" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_multi_mem_blocks_init()</span></code></a>. Each allocator can then be
+added via <a class="reference internal" href="../../doxygen/html/group__mem__blocks__apis.html#ga03967e8b917a1592638586c9cfbba4bb" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_multi_mem_blocks_add_allocator()</span></code></a>.</p>
+<p>To allocate memory blocks from group,
+<a class="reference internal" href="../../doxygen/html/group__mem__blocks__apis.html#gafa96b1567b57c4466c9640fd1f5408b2" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_multi_mem_blocks_alloc()</span></code></a> is called with an opaque
+“configuration” parameter. This parameter is passed directly to
+the allocator choosing function so that an appropriate allocator
+can be chosen. After an allocator is chosen, memory blocks are
+allocated via <a class="reference internal" href="../../doxygen/html/group__mem__blocks__apis.html#ga3e53a5c65bb0e88fbf20e66b016c1dff" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_mem_blocks_alloc()</span></code></a>.</p>
+<p>Allocated memory blocks can be freed via
+<a class="reference internal" href="../../doxygen/html/group__mem__blocks__apis.html#ga8dedc28ed45e9e6350b584b1082b4d4f" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_multi_mem_blocks_free()</span></code></a>. The caller does not need to
+pass a configuration parameter. The allocator code matches
+the passed in memory addresses to find the correct allocator
+and then memory blocks are freed via <a class="reference internal" href="../../doxygen/html/group__mem__blocks__apis.html#gadd799f4f2423277ed5daf08a0d150b9c" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_mem_blocks_free()</span></code></a>.</p>
+</section>
+<section id="usage">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Usage</a><a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<section id="defining-a-memory-blocks-allocator">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">Defining a Memory Blocks Allocator</a><a class="headerlink" href="#defining-a-memory-blocks-allocator" title="Link to this heading"></a></h3>
+<p>A memory blocks allocator is defined using a variable of type
+<a class="reference internal" href="../../doxygen/html/group__mem__blocks__apis.html#ga5748df756d2f9aa10fddf2f39bf8a074" title=""><code class="xref c c-type docutils literal notranslate"><span class="pre">sys_mem_blocks_t</span></code></a>. It needs to be defined and initialized
+at compile time by calling <a class="reference internal" href="../../doxygen/html/group__mem__blocks__apis.html#gab49fdcd86522d318051ca6a6ddf41c7c" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">SYS_MEM_BLOCKS_DEFINE</span></code></a>.</p>
+<p>The following code defines and initializes a memory blocks allocator
+which has 4 blocks that are 64 bytes long, each of which is aligned
+to a 4-byte boundary:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">SYS_MEM_BLOCKS_DEFINE</span><span class="p">(</span><span class="n">allocator</span><span class="p">,</span><span class="w"> </span><span class="mi">64</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Similarly, you can define a memory blocks allocator in private scope:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">SYS_MEM_BLOCKS_DEFINE_STATIC</span><span class="p">(</span><span class="n">static_allocator</span><span class="p">,</span><span class="w"> </span><span class="mi">64</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>A pre-defined buffer can also be provided to the allocator where
+the buffer can be placed separately. Note that the alignment of
+the buffer needs to be done at its definition.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">uint8_t</span><span class="w"> </span><span class="nf">__aligned</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="n">backing_buffer</span><span class="p">[</span><span class="mi">64</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">4</span><span class="p">];</span>
+<span class="n">SYS_MEM_BLOCKS_DEFINE_WITH_EXT_BUF</span><span class="p">(</span><span class="n">allocator</span><span class="p">,</span><span class="w"> </span><span class="mi">64</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="n">backing_buffer</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="allocating-memory-blocks">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">Allocating Memory Blocks</a><a class="headerlink" href="#allocating-memory-blocks" title="Link to this heading"></a></h3>
+<p>Memory blocks can be allocated by calling <a class="reference internal" href="../../doxygen/html/group__mem__blocks__apis.html#ga3e53a5c65bb0e88fbf20e66b016c1dff" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_mem_blocks_alloc()</span></code></a>.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="kt">uintptr_t</span><span class="w"> </span><span class="n">blocks</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sys_mem_blocks_alloc</span><span class="p">(</span><span class="n">allocator</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">blocks</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">ret</span> <span class="pre">==</span> <span class="pre">0</span></code>, the array <code class="docutils literal notranslate"><span class="pre">blocks</span></code> will contain an array of memory
+addresses pointing to the allocated blocks.</p>
+</section>
+<section id="releasing-a-memory-block">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">Releasing a Memory Block</a><a class="headerlink" href="#releasing-a-memory-block" title="Link to this heading"></a></h3>
+<p>Memory blocks are released by calling <a class="reference internal" href="../../doxygen/html/group__mem__blocks__apis.html#gadd799f4f2423277ed5daf08a0d150b9c" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_mem_blocks_free()</span></code></a>.</p>
+<p>The following code builds on the example above which allocates 2 memory blocks,
+then releases them once they are no longer needed.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="kt">uintptr_t</span><span class="w"> </span><span class="n">blocks</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sys_mem_blocks_alloc</span><span class="p">(</span><span class="n">allocator</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">blocks</span><span class="p">);</span>
+<span class="p">...</span><span class="w"> </span><span class="cm">/* perform some operations on the allocated memory blocks */</span>
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sys_mem_blocks_free</span><span class="p">(</span><span class="n">allocator</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">blocks</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="using-multi-memory-blocks-allocator-group">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">Using Multi Memory Blocks Allocator Group</a><a class="headerlink" href="#using-multi-memory-blocks-allocator-group" title="Link to this heading"></a></h3>
+<p>The following code demonstrates how to initialize an allocator group:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">sys_mem_blocks_t</span><span class="w"> </span><span class="o">*</span><span class="nf">choice_fn</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">sys_multi_mem_blocks</span><span class="w"> </span><span class="o">*</span><span class="n">group</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">cfg</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+
+<span class="n">SYS_MEM_BLOCKS_DEFINE</span><span class="p">(</span><span class="n">allocator0</span><span class="p">,</span><span class="w"> </span><span class="mi">64</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<span class="n">SYS_MEM_BLOCKS_DEFINE</span><span class="p">(</span><span class="n">allocator1</span><span class="p">,</span><span class="w"> </span><span class="mi">64</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+
+<span class="k">static</span><span class="w"> </span><span class="n">sys_multi_mem_blocks_t</span><span class="w"> </span><span class="n">alloc_group</span><span class="p">;</span>
+
+<span class="n">sys_multi_mem_blocks_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">alloc_group</span><span class="p">,</span><span class="w"> </span><span class="n">choice_fn</span><span class="p">);</span>
+<span class="n">sys_multi_mem_blocks_add_allocator</span><span class="p">(</span><span class="o">&amp;</span><span class="n">alloc_group</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">allocator0</span><span class="p">);</span>
+<span class="n">sys_multi_mem_blocks_add_allocator</span><span class="p">(</span><span class="o">&amp;</span><span class="n">alloc_group</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">allocator1</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>To allocate and free memory blocks from the group:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="kt">uintptr_t</span><span class="w"> </span><span class="n">blocks</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="kt">size_t</span><span class="w"> </span><span class="n">blk_size</span><span class="p">;</span>
+
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sys_multi_mem_blocks_alloc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">alloc_group</span><span class="p">,</span><span class="w"> </span><span class="n">UINT_TO_POINTER</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+<span class="w">                                 </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">blocks</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">blk_size</span><span class="p">);</span>
+
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sys_multi_mem_blocks_free</span><span class="p">(</span><span class="o">&amp;</span><span class="n">alloc_group</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">blocks</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">API Reference</a><a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__mem__blocks__apis.html" title=""><span class="pre">Memory</span> <span class="pre">Blocks</span> <span class="pre">APIs</span></a></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

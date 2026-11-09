@@ -1,0 +1,26 @@
+var structbt__hci__rp__le__read__local__supported__capabilities__v2 =
+[
+    [ "cs_sync_phys_supported", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#acb720ede01b7041c9d5b6d6ade065048", null ],
+    [ "max_antenna_paths_supported", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#a3307caaaf76bfc5cb1c88937ce788efd", null ],
+    [ "max_consecutive_procedures_supported", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#a998504553ee046759214d0d220d8a3d3", null ],
+    [ "modes_supported", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#a7131d361abdc12c29a886e338075ae8a", null ],
+    [ "nadm_random_capability", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#ae3f61c13562d8dec1812fc3c91c23539", null ],
+    [ "nadm_sounding_capability", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#a36f4762d9053476e84088fe8807024a3", null ],
+    [ "num_antennas_supported", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#af21e203e96302114a411d9995cd63fa6", null ],
+    [ "num_config_supported", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#a7d3faf86b443db272303d3b4ad45df2d", null ],
+    [ "roles_supported", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#a7e061a636d3d0432ca9eb65e69a44710", null ],
+    [ "rtt_aa_only_n", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#a29667f70ea84458e304fe731d443e25a", null ],
+    [ "rtt_capability", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#afc6a9b21d8926b589cf25941e75ecb31", null ],
+    [ "rtt_random_payload_n", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#a7cc90e1e81657d0b755df281ba6806fc", null ],
+    [ "rtt_sounding_n", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#a145d8fe34f80df9367105d1cfa7b59c1", null ],
+    [ "status", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#a4fbd5c95fd7f2f9131cd16ff04e64adf", null ],
+    [ "subfeatures_supported", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#a28b801d5310e4fd7e8285ba6361191df", null ],
+    [ "t_fcs_times_supported", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#a1d2e82062c0c41dce9e7428e4982223a", null ],
+    [ "t_ip1_times_supported", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#a8704313f30e256e87460961f03e0719a", null ],
+    [ "t_ip2_ipt_times_supported", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#ac000a669ee53e1ca4ad99fd350fe72e6", null ],
+    [ "t_ip2_times_supported", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#a1f97298da17187ea1ed96ec923f54523", null ],
+    [ "t_pm_times_supported", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#a6a88f321faeea9e61bd38c696468d90f", null ],
+    [ "t_sw_ipt_time_supported", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#a2c51d311adcacada33b9dec7b4395865", null ],
+    [ "t_sw_time_supported", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#a61458332899b95c752b6343eda90013e", null ],
+    [ "tx_snr_capability", "structbt__hci__rp__le__read__local__supported__capabilities__v2.html#a2fc5417dbbd91b4099fb4a27f01c18fd", null ]
+];

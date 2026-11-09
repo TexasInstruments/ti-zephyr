@@ -1,0 +1,854 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Integration with pytest test framework &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/develop/test/pytest.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Generating coverage reports" href="coverage.html" />
+    <link rel="prev" title="Twister blackbox tests" href="twister/twister_blackbox.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developing with Zephyr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/index.html">Getting Started Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beyond-GSG.html">Beyond the Getting Started Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env_vars.html">Environment Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../application/index.html">Application Development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debug/index.html">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/index.html">API Status and Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../languages/index.html">Language Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optimizations/index.html">Optimizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flash_debug/index.html">Flashing and Hardware Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html">Modules (External projects)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../west/index.html">West (Zephyr’s meta-tool)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Testing</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ztest.html">Test Framework</a></li>
+<li class="toctree-l3"><a class="reference internal" href="benchmark.html">Benchmarking Framework</a></li>
+<li class="toctree-l3"><a class="reference internal" href="twister.html">Test Runner (Twister)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="twister_statuses.html">Twister Status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="twister/twister_blackbox.html">Twister blackbox tests</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Integration with pytest test framework</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#integration-with-twister">Integration with twister</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#how-to-create-a-pytest-test">How to create a pytest test</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#passing-extra-arguments">Passing extra arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#fixtures">Fixtures</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#dut">dut</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#shell">shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#mcumgr">mcumgr</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#unlaunched-dut">unlaunched_dut</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#classes">Classes</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#deviceadapter">DeviceAdapter</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#shell-class">Shell</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#examples-of-pytest-tests-in-the-zephyr-project">Examples of pytest tests in the Zephyr project</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#faq">FAQ</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#how-to-flash-run-application-only-once-per-pytest-session">How to flash/run application only once per pytest session?</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#how-to-run-only-one-particular-test-from-a-python-file">How to run only one particular test from a python file?</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#how-to-get-information-about-used-device-type-in-test">How to get information about used device type in test?</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#how-to-rerun-locally-pytest-tests-without-rebuilding-application-by-twister">How to rerun locally pytest tests without rebuilding application by Twister?</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#is-this-possible-to-run-pytest-tests-in-parallel">Is this possible to run pytest tests in parallel?</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#limitations">Limitations</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="coverage.html">Generating coverage reports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bsim.html">BabbleSim</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../sca/index.html">Static Code Analysis (SCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains/index.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/index.html">Tools and IDEs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Developing with Zephyr</a> &raquo;</li>
+  
+     <li><a href="index.html">Testing</a> &raquo;</li>
+  
+  <li>Integration with pytest test framework</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/develop/test/pytest.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27develop%2Ftest%2Fpytest%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Testsuite%2Carea%3A+Twister&env=-+Page%3A+develop%2Ftest%2Fpytest%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="integration-with-pytest-test-framework">
+<span id="integration-with-pytest"></span><h1>Integration with pytest test framework<a class="headerlink" href="#integration-with-pytest-test-framework" title="Link to this heading"></a></h1>
+<p><em>Please mind that integration of twister with pytest is still work in progress. Not every platform
+type is supported in pytest (yet). If you find any issue with the integration or have an idea for
+an improvement, please, let us know about it and open a GitHub issue/enhancement.</em></p>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
+<p>Pytest is a python framework that <em>“makes it easy to write small, readable tests, and can scale to
+support complex functional testing for applications and libraries”</em> (<a class="reference external" href="https://docs.pytest.org/en/7.3.x/">https://docs.pytest.org/en/7.3.x/</a>).
+Python is known for its free libraries and ease of using it for scripting. In addition, pytest
+utilizes the concept of plugins and fixtures, increasing its expendability and reusability.
+A pytest plugin <code class="docutils literal notranslate"><span class="pre">pytest-twister-harness</span></code> was introduced to provide an integration between pytest
+and twister, allowing Zephyr’s community to utilize pytest functionality with keeping twister as
+the main framework.</p>
+</section>
+<section id="integration-with-twister">
+<h2>Integration with twister<a class="headerlink" href="#integration-with-twister" title="Link to this heading"></a></h2>
+<p>By default, there is nothing to be done to enable pytest support in twister. The plugin is
+developed as a part of Zephyr’s tree. To enable install-less operation, twister first extends
+<code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> with path to this plugin, and then during pytest call, it appends the command with
+<code class="docutils literal notranslate"><span class="pre">-p</span> <span class="pre">twister_harness.plugin</span></code> argument. If one prefers to use the installed version of the plugin,
+they must add <code class="docutils literal notranslate"><span class="pre">--allow-installed-plugin</span></code> flag to twister’s call.</p>
+<p>Pytest-based test suites are discovered the same way as other twister tests, i.e., by a presence
+of test/sample.yaml. Inside, a keyword <code class="docutils literal notranslate"><span class="pre">harness</span></code> tells twister how to handle a given test.
+In the case of <code class="docutils literal notranslate"><span class="pre">harness:</span> <span class="pre">pytest</span></code>, most of twister workflow (test suites discovery,
+parallelization, building and reporting) remains the same as for other harnesses. The change
+happens during the execution step. The below picture presents a simplified overview of the
+integration.</p>
+<figure class="align-center align-default">
+<img alt="../../_images/twister_and_pytest.svg" src="../../_images/twister_and_pytest.svg" />
+</figure>
+<p>If <code class="docutils literal notranslate"><span class="pre">harness:</span> <span class="pre">pytest</span></code> is used, twister delegates the test execution to pytest, by calling it as
+a subprocess. Required parameters (such as build directory, device to be used, etc.) are passed
+through a YAML configuration file. When pytest is done, twister looks for a pytest report (results.xml) and
+sets the test result accordingly.</p>
+</section>
+<section id="how-to-create-a-pytest-test">
+<h2>How to create a pytest test<a class="headerlink" href="#how-to-create-a-pytest-test" title="Link to this heading"></a></h2>
+<p>An example folder containing a pytest test, application source code and Twister configuration .yaml
+file can look like the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>test_foo/
+├─── pytest/
+│    └─── test_foo.py
+├─── src/
+│    └─── main.c
+├─── CMakeList.txt
+├─── prj.conf
+└─── testcase.yaml
+</pre></div>
+</div>
+<p>An example of a pytest test is given at
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/samples/subsys/testsuite/pytest/shell/pytest/test_shell.py">samples/subsys/testsuite/pytest/shell/pytest/test_shell.py</a>. Using the configuration
+provided in the <code class="docutils literal notranslate"><span class="pre">testcase.yaml</span></code> file, Twister builds the application from <code class="docutils literal notranslate"><span class="pre">src</span></code> and then, if the
+.yaml file contains a <code class="docutils literal notranslate"><span class="pre">harness:</span> <span class="pre">pytest</span></code> entry, it calls pytest in a separate subprocess. A sample
+configuration file may look like this:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tests</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">some.foo.test</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">harness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest</span>
+<span class="w">      </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+</pre></div>
+</div>
+<p>By default, pytest tries to look for tests in a <code class="docutils literal notranslate"><span class="pre">pytest</span></code> directory located next to a directory
+with binary sources. A keyword <code class="docutils literal notranslate"><span class="pre">pytest_root</span></code> placed under <code class="docutils literal notranslate"><span class="pre">harness_config</span></code> section in .yaml file
+can be used to point to other files, directories or subtests (more info <a class="reference internal" href="twister.html#pytest-root"><span class="std std-ref">here</span></a>).</p>
+<p>Pytest scans the given locations looking for tests, following its default
+<a class="reference external" href="https://docs.pytest.org/en/7.1.x/explanation/goodpractices.html#conventions-for-python-test-discovery">discovery rules</a>.</p>
+<section id="passing-extra-arguments">
+<h3>Passing extra arguments<a class="headerlink" href="#passing-extra-arguments" title="Link to this heading"></a></h3>
+<p>There are two ways for passing extra arguments to the called pytest subprocess:</p>
+<ol class="arabic">
+<li><p>From .yaml file, using <code class="docutils literal notranslate"><span class="pre">pytest_args</span></code> placed under <code class="docutils literal notranslate"><span class="pre">harness_config</span></code> section - more info
+<a class="reference internal" href="twister.html#pytest-args"><span class="std std-ref">here</span></a>.</p></li>
+<li><p>Through Twister command line interface as <code class="docutils literal notranslate"><span class="pre">--pytest-args</span></code> argument. This can be particularly
+useful when one wants to select a specific testcase from a test suite. For instance, one can use
+a command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/twister<span class="w"> </span>--platform<span class="w"> </span>native_sim<span class="w"> </span>-T<span class="w"> </span>samples/subsys/testsuite/pytest/shell<span class="w"> </span><span class="se">\</span>
+-s<span class="w"> </span>samples/subsys/testsuite/pytest/shell/sample.pytest.shell<span class="w"> </span><span class="se">\</span>
+--pytest-args<span class="o">=</span><span class="s1">&#39;-k test_shell_print_version&#39;</span>
+</pre></div>
+</div>
+<p>The command line arguments will extend those from the .yaml file. If the same argument is
+present in both places, the one from the command line will take precedence.</p>
+</li>
+</ol>
+</section>
+</section>
+<section id="fixtures">
+<h2>Fixtures<a class="headerlink" href="#fixtures" title="Link to this heading"></a></h2>
+<section id="dut">
+<h3>dut<a class="headerlink" href="#dut" title="Link to this heading"></a></h3>
+<p>Give access to a <a class="reference internal" href="#deviceadapter">DeviceAdapter</a> type object, that represents Device Under Test. This fixture is
+the core of pytest harness plugin. It is required to launch DUT (initialize logging, flash device,
+connect serial etc). This fixture yields a device prepared according to the requested type
+(<code class="docutils literal notranslate"><span class="pre">native</span></code>, <code class="docutils literal notranslate"><span class="pre">qemu</span></code>, <code class="docutils literal notranslate"><span class="pre">hardware</span></code>, etc.). All types of devices share the same API. This allows for
+writing tests which are device-type-agnostic. Scope of this fixture is determined by the
+<code class="docutils literal notranslate"><span class="pre">pytest_dut_scope</span></code> keyword placed under <code class="docutils literal notranslate"><span class="pre">harness_config</span></code> section (more info
+<a class="reference internal" href="twister.html#pytest-dut-scope"><span class="std std-ref">here</span></a>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">twister_harness</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeviceAdapter</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_sample</span><span class="p">(</span><span class="n">dut</span><span class="p">:</span> <span class="n">DeviceAdapter</span><span class="p">):</span>
+   <span class="n">dut</span><span class="o">.</span><span class="n">readlines_until</span><span class="p">(</span><span class="n">regex</span><span class="o">=</span><span class="s1">&#39;Hello world&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="shell">
+<h3>shell<a class="headerlink" href="#shell" title="Link to this heading"></a></h3>
+<p>Provide a <a class="reference internal" href="#shell-class">Shell</a> class object with methods used to interact with shell application.
+It calls <code class="docutils literal notranslate"><span class="pre">wait_for_promt</span></code> method, to not start scenario until DUT is ready. The shell fixture
+calls <code class="docutils literal notranslate"><span class="pre">dut</span></code> fixture, hence has access to all its methods. The <code class="docutils literal notranslate"><span class="pre">shell</span></code> fixture adds methods
+optimized for interactions with a shell. It can be used instead of <code class="docutils literal notranslate"><span class="pre">dut</span></code> for tests. Scope of this
+fixture is determined by the <code class="docutils literal notranslate"><span class="pre">pytest_dut_scope</span></code> keyword placed under <code class="docutils literal notranslate"><span class="pre">harness_config</span></code> section
+(more info <a class="reference internal" href="twister.html#pytest-dut-scope"><span class="std std-ref">here</span></a>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">twister_harness</span><span class="w"> </span><span class="kn">import</span> <span class="n">Shell</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_shell</span><span class="p">(</span><span class="n">shell</span><span class="p">:</span> <span class="n">Shell</span><span class="p">):</span>
+   <span class="n">shell</span><span class="o">.</span><span class="n">exec_command</span><span class="p">(</span><span class="s1">&#39;help&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="mcumgr">
+<h3>mcumgr<a class="headerlink" href="#mcumgr" title="Link to this heading"></a></h3>
+<p>Sample fixture to wrap <code class="docutils literal notranslate"><span class="pre">mcumgr</span></code> command-line tool used to manage remote devices. More information
+about MCUmgr can be found here <a class="reference internal" href="../../services/device_mgmt/mcumgr.html#mcu-mgr"><span class="std std-ref">MCUmgr</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This fixture requires the <code class="docutils literal notranslate"><span class="pre">mcumgr</span></code> available in the system PATH</p>
+</div>
+<p>Only selected functionality of MCUmgr is wrapped by this fixture. For example, here is a test with
+a fixture <code class="docutils literal notranslate"><span class="pre">mcumgr</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">twister_harness</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeviceAdapter</span><span class="p">,</span> <span class="n">Shell</span><span class="p">,</span> <span class="n">McuMgr</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_upgrade</span><span class="p">(</span><span class="n">dut</span><span class="p">:</span> <span class="n">DeviceAdapter</span><span class="p">,</span> <span class="n">shell</span><span class="p">:</span> <span class="n">Shell</span><span class="p">,</span> <span class="n">mcumgr</span><span class="p">:</span> <span class="n">McuMgr</span><span class="p">):</span>
+   <span class="c1"># free the serial port for mcumgr</span>
+   <span class="n">dut</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+   <span class="c1"># upload the signed image</span>
+   <span class="n">mcumgr</span><span class="o">.</span><span class="n">image_upload</span><span class="p">(</span><span class="s1">&#39;path/to/zephyr.signed.bin&#39;</span><span class="p">)</span>
+   <span class="c1"># obtain the hash of uploaded image from the device</span>
+   <span class="n">second_hash</span> <span class="o">=</span> <span class="n">mcumgr</span><span class="o">.</span><span class="n">get_hash_to_test</span><span class="p">()</span>
+   <span class="c1"># test a new upgrade image</span>
+   <span class="n">mcumgr</span><span class="o">.</span><span class="n">image_test</span><span class="p">(</span><span class="n">second_hash</span><span class="p">)</span>
+   <span class="c1"># reset the device remotely</span>
+   <span class="n">mcumgr</span><span class="o">.</span><span class="n">reset_device</span><span class="p">()</span>
+   <span class="c1"># continue test scenario, check version etc.</span>
+</pre></div>
+</div>
+</section>
+<section id="unlaunched-dut">
+<h3>unlaunched_dut<a class="headerlink" href="#unlaunched-dut" title="Link to this heading"></a></h3>
+<p>Similar to the <code class="docutils literal notranslate"><span class="pre">dut</span></code> fixture, but it does not initialize the device. It can be used when a finer
+control over the build process is needed. It becomes responsibility of the test to initialize the
+device.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">twister_harness</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeviceAdapter</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_sample</span><span class="p">(</span><span class="n">unlaunched_dut</span><span class="p">:</span> <span class="n">DeviceAdapter</span><span class="p">):</span>
+   <span class="n">unlaunched_dut</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
+   <span class="n">unlaunched_dut</span><span class="o">.</span><span class="n">readlines_until</span><span class="p">(</span><span class="n">regex</span><span class="o">=</span><span class="s1">&#39;Hello world&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<section id="deviceadapter">
+<h3>DeviceAdapter<a class="headerlink" href="#deviceadapter" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="twister_harness.DeviceAdapter">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">twister_harness.</span></span><span class="sig-name descname"><span class="pre">DeviceAdapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DeviceConfig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#twister_harness.DeviceAdapter" title="Link to this definition"></a></dt>
+<dd><p>This class defines a common interface for all device types (hardware,
+simulator, QEMU) used in tests to gathering device output and send data to
+it.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="twister_harness.DeviceAdapter.launch">
+<span class="sig-name descname"><span class="pre">launch</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#twister_harness.DeviceAdapter.launch" title="Link to this definition"></a></dt>
+<dd><p>Launch the test application on the target device.</p>
+<p>This method performs the complete device initialization sequence:</p>
+<ul class="simple">
+<li><p>Close any previously running application (cleanup)</p></li>
+<li><p>Generate the execution command if not already set</p></li>
+<li><p>Add any extra test arguments to the command</p></li>
+<li><p>Start reader threads to capture device output</p></li>
+<li><p>Launch the application (flash for hardware, execute for simulators)</p></li>
+</ul>
+<p>The launch process varies by device type:</p>
+<ul class="simple">
+<li><p>Hardware devices: Flash the application and establish serial communication.
+May connect before or after flashing depending on device configuration.</p></li>
+<li><p>QEMU/simulators: Start subprocess and establish FIFO/pipe communication</p></li>
+<li><p>Native simulators: Execute binary and connect via process pipes</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="twister_harness.DeviceAdapter.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#twister_harness.DeviceAdapter.close" title="Link to this definition"></a></dt>
+<dd><p>Disconnect, close device and close reader threads.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="twister_harness.DeviceAdapter.readline">
+<span class="sig-name descname"><span class="pre">readline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#twister_harness.DeviceAdapter.readline" title="Link to this definition"></a></dt>
+<dd><p>Read a single line from device output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>connection_index</strong> – Connection port to read from (0=main UART, 1=second core, etc.)</p></li>
+<li><p><strong>kwargs</strong> – Additional keyword arguments (timeout, print_output)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Single line of text without trailing newlines</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="twister_harness.DeviceAdapter.readlines">
+<span class="sig-name descname"><span class="pre">readlines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#twister_harness.DeviceAdapter.readlines" title="Link to this definition"></a></dt>
+<dd><p>Read all available output lines produced by device from internal buffer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="twister_harness.DeviceAdapter.readlines_until">
+<span class="sig-name descname"><span class="pre">readlines_until</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#twister_harness.DeviceAdapter.readlines_until" title="Link to this definition"></a></dt>
+<dd><p>Read lines from device output until a specific condition is met.</p>
+<p>This method provides flexible ways to collect device output: wait for a specific
+pattern, collect a fixed number of lines, or get all currently available lines.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>connection_index</strong> – Index of the connection/port to read from (default: 0).
+For hardware devices: 0 = main UART, 1 = second core UART, etc.
+For QEMU and native: always use 0 (only one connection available)</p></li>
+<li><p><strong>kwargs</strong> – <p>Keyword arguments passed to underlying connection including:</p>
+<ul>
+<li><p>regex - Regular expression pattern to search for</p></li>
+<li><p>num_of_lines - Exact number of lines to read</p></li>
+<li><p>timeout - Maximum time in seconds to wait (uses base_timeout if not provided)</p></li>
+<li><p>print_output - Whether to log each line as it’s read (default: True)</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of output lines without trailing newlines</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>AssertionError</strong> – If timeout expires before condition is met</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="twister_harness.DeviceAdapter.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connection_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#twister_harness.DeviceAdapter.write" title="Link to this definition"></a></dt>
+<dd><p>Write data bytes to the target device.</p>
+<p>Sends raw bytes to the device through the appropriate communication channel.
+The underlying transport mechanism varies by device type: Hardware devices
+write to serial/UART port, QEMU devices write to FIFO queue, and Native
+simulators write to process stdin pipes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Raw bytes to send to the device</p></li>
+<li><p><strong>connection_index</strong> – Index of the connection/port to write to (default: 0)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="shell-class">
+<span id="id2"></span><h3>Shell<a class="headerlink" href="#shell-class" title="Link to this heading"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="twister_harness.Shell">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">twister_harness.</span></span><span class="sig-name descname"><span class="pre">Shell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#twister_harness.DeviceAdapter" title="twister_harness.device.device_adapter.DeviceAdapter"><span class="pre">DeviceAdapter</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'uart:~$'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#twister_harness.Shell" title="Link to this definition"></a></dt>
+<dd><p>Helper class that provides methods used to interact with shell application.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="twister_harness.Shell.exec_command">
+<span class="sig-name descname"><span class="pre">exec_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#twister_harness.Shell.exec_command" title="Link to this definition"></a></dt>
+<dd><p>Send shell command to a device and return response. Passed command
+is extended by double enter sings - first one to execute this command
+on a device, second one to receive next prompt what is a signal that
+execution was finished. Method returns printout of the executed command.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="twister_harness.Shell.wait_for_prompt">
+<span class="sig-name descname"><span class="pre">wait_for_prompt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#twister_harness.Shell.wait_for_prompt" title="Link to this definition"></a></dt>
+<dd><p>Send every 0.5 second “enter” command to the device until shell prompt
+statement will occur (return True) or timeout will be exceeded (return
+False).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="twister_harness.Shell.get_filtered_output">
+<span class="sig-name descname"><span class="pre">get_filtered_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command_lines</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#twister_harness.Shell.get_filtered_output" title="Link to this definition"></a></dt>
+<dd><p>Filter out prompts and log messages</p>
+<p>Take the output of exec_command, which can contain log messages and command prompts,
+and filter them to obtain only the command output.</p>
+<dl>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># equivalent to `lines = shell.exec_command(&quot;kernel version&quot;)`</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lines</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s1">&#39;uart:~$&#39;</span><span class="p">,</span>                    <span class="c1"># filter prompts</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s1">&#39;Zephyr version 3.6.0&#39;</span><span class="p">,</span>       <span class="c1"># keep this line</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s1">&#39;uart:~$ &lt;dbg&gt; debug message&#39;</span> <span class="c1"># filter log messages</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filtered_output</span> <span class="o">=</span> <span class="n">shell</span><span class="o">.</span><span class="n">get_filtered_output</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filtered_output</span>
+<span class="go">[&#39;Zephyr version 3.6.0&#39;]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command_lines</strong> – List of strings i.e. the output of <cite>exec_command</cite>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of strings containing, excluding prompts and log messages.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="examples-of-pytest-tests-in-the-zephyr-project">
+<h2>Examples of pytest tests in the Zephyr project<a class="headerlink" href="#examples-of-pytest-tests-in-the-zephyr-project" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../samples/subsys/testsuite/pytest/shell/README.html#pytest_shell" title="Execute pytest tests against the Zephyr shell.">Pytest shell application testing</a></p></li>
+<li><p>MCUmgr tests - <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/tests/boot/with_mcumgr">tests/boot/with_mcumgr</a></p></li>
+<li><p>LwM2M tests - <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/tests/net/lib/lwm2m/interop">tests/net/lib/lwm2m/interop</a></p></li>
+<li><p>GDB stub tests - <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/tests/subsys/debug/gdbstub">tests/subsys/debug/gdbstub</a></p></li>
+</ul>
+</section>
+<section id="faq">
+<h2>FAQ<a class="headerlink" href="#faq" title="Link to this heading"></a></h2>
+<section id="how-to-flash-run-application-only-once-per-pytest-session">
+<h3>How to flash/run application only once per pytest session?<a class="headerlink" href="#how-to-flash-run-application-only-once-per-pytest-session" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">dut</span></code> is a fixture responsible for flashing/running application. By default, its scope is set
+as <code class="docutils literal notranslate"><span class="pre">function</span></code>. This can be changed by adding to .yaml file <code class="docutils literal notranslate"><span class="pre">pytest_dut_scope</span></code> keyword placed
+under <code class="docutils literal notranslate"><span class="pre">harness_config</span></code> section:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">harness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest</span>
+<span class="nt">harness_config</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">pytest_dut_scope</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">session</span>
+</pre></div>
+</div>
+<p>More info can be found <a class="reference internal" href="twister.html#pytest-dut-scope"><span class="std std-ref">here</span></a>.</p>
+</div></blockquote>
+</section>
+<section id="how-to-run-only-one-particular-test-from-a-python-file">
+<h3>How to run only one particular test from a python file?<a class="headerlink" href="#how-to-run-only-one-particular-test-from-a-python-file" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>This can be achieved in several ways. In .yaml file it can be added using a <code class="docutils literal notranslate"><span class="pre">pytest_root</span></code> entry
+placed under <code class="docutils literal notranslate"><span class="pre">harness_config</span></code> with list of tests which should be run:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">harness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest</span>
+<span class="nt">harness_config</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">pytest_root</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;pytest/test_shell.py::test_shell_print_help&quot;</span>
+</pre></div>
+</div>
+<p>Particular tests can be also chosen by pytest <code class="docutils literal notranslate"><span class="pre">-k</span></code> option (more info about pytest keyword
+filter can be found
+<a class="reference external" href="https://docs.pytest.org/en/latest/example/markers.html#using-k-expr-to-select-tests-based-on-their-name">here</a>
+). It can be applied by adding <code class="docutils literal notranslate"><span class="pre">-k</span></code> filter in <code class="docutils literal notranslate"><span class="pre">pytest_args</span></code> in .yaml file:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">harness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest</span>
+<span class="nt">harness_config</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">pytest_args</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;-k</span><span class="nv"> </span><span class="s">test_shell_print_help&quot;</span>
+</pre></div>
+</div>
+<p>or by adding it to Twister command overriding parameters from the .yaml file:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/twister<span class="w"> </span>...<span class="w"> </span>--pytest-args<span class="o">=</span><span class="s1">&#39;-k test_shell_print_help&#39;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="how-to-get-information-about-used-device-type-in-test">
+<h3>How to get information about used device type in test?<a class="headerlink" href="#how-to-get-information-about-used-device-type-in-test" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>This can be taken from <code class="docutils literal notranslate"><span class="pre">dut</span></code> fixture (which represents <a class="reference internal" href="#deviceadapter">DeviceAdapter</a> object):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">device_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">dut</span><span class="o">.</span><span class="n">device_config</span><span class="o">.</span><span class="n">type</span>
+<span class="k">if</span> <span class="n">device_type</span> <span class="o">==</span> <span class="s1">&#39;hardware&#39;</span><span class="p">:</span>
+   <span class="o">...</span>
+<span class="k">elif</span> <span class="n">device_type</span> <span class="o">==</span> <span class="s1">&#39;native&#39;</span><span class="p">:</span>
+   <span class="o">...</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="how-to-rerun-locally-pytest-tests-without-rebuilding-application-by-twister">
+<h3>How to rerun locally pytest tests without rebuilding application by Twister?<a class="headerlink" href="#how-to-rerun-locally-pytest-tests-without-rebuilding-application-by-twister" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>This can be achieved by running Twister once again with <code class="docutils literal notranslate"><span class="pre">--test-only</span></code> argument added to Twister
+command. Another way is running Twister with highest verbosity level (<code class="docutils literal notranslate"><span class="pre">-vv</span></code>) and then
+copy-pasting from logs command dedicated for spawning pytest (log started by <code class="docutils literal notranslate"><span class="pre">Running</span> <span class="pre">pytest</span>
+<span class="pre">command:</span> <span class="pre">...</span></code>).</p>
+<p>First, run scenario with Twister:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>west<span class="w"> </span>twister<span class="w"> </span>-vv<span class="w"> </span>-ll<span class="w"> </span>debug<span class="w"> </span>-T<span class="w"> </span>samples/subsys/testsuite/pytest/shell<span class="w"> </span><span class="se">\</span>
+-s<span class="w"> </span>sample.pytest.shell<span class="w"> </span>--device-testing<span class="w"> </span>-p<span class="w"> </span>nrf54l15dk/nrf54l15/cpuapp<span class="w"> </span>--device-serial<span class="w"> </span><span class="se">\</span>
+/dev/ttyACM1<span class="w"> </span>--west-flash<span class="o">=</span>--erase
+</pre></div>
+</div>
+<p>Twister automatically generates a configuration file <code class="docutils literal notranslate"><span class="pre">twister_pytest_config.yaml</span></code> in the build
+directory containing all test parameters including device configuration etc.</p>
+<p>Then export the required PYTHONPATH environment variable if not already set:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nb">export</span><span class="w"> </span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="nv">$ZEPHYR_BASE</span>/scripts/pylib/pytest-twister-harness/src
+</pre></div>
+</div>
+<p>Finally, run pytest command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pytest<span class="w"> </span>-s<span class="w"> </span>-v<span class="w"> </span>-p<span class="w"> </span>twister_harness.plugin<span class="w"> </span><span class="se">\</span>
+--twister-config<span class="o">=</span>twister-out/.../sample.pytest.shell/twister_pytest_config.yaml<span class="w"> </span><span class="se">\</span>
+samples/subsys/testsuite/pytest/shell/pytest
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="is-this-possible-to-run-pytest-tests-in-parallel">
+<h3>Is this possible to run pytest tests in parallel?<a class="headerlink" href="#is-this-possible-to-run-pytest-tests-in-parallel" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>Basically <code class="docutils literal notranslate"><span class="pre">pytest-harness-plugin</span></code> wasn’t written with intention of running pytest tests in
+parallel. Especially those one dedicated for hardware. There was assumption that parallelization
+of tests is made by Twister, and it is responsible for managing available sources (jobs and
+hardwares). If anyone is interested in doing this for some reasons (for example via
+<a class="reference external" href="https://pytest-xdist.readthedocs.io/en/stable/">pytest-xdist plugin</a>) they do so at their own
+risk.</p>
+</div></blockquote>
+</section>
+</section>
+<section id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Not every platform type is supported in the plugin (yet).</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

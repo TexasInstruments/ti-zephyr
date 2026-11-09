@@ -1,0 +1,1205 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Migration guide to Zephyr v4.2.0 &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/releases/migration-guide-4.2.html" />
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../index.html">Docs / Latest</a> &raquo;</li>
+  
+  <li>Migration guide to Zephyr v4.2.0</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/releases/migration-guide-4.2.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27releases%2Fmigration-guide-4.2%27&labels=bug%2Carea%3A+Documentation%2CRelease&env=-+Page%3A+releases%2Fmigration-guide-4.2%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="migration-guide-to-zephyr-v4-2-0">
+<span id="migration-4-2"></span><h1>Migration guide to Zephyr v4.2.0<a class="headerlink" href="#migration-guide-to-zephyr-v4-2-0" title="Link to this heading"></a></h1>
+<p>This document describes the changes required when migrating your application from Zephyr v4.1.0 to
+Zephyr v4.2.0.</p>
+<p>Any other changes (not directly related to migrating applications) can be found in
+the <a class="reference internal" href="release-notes-4.2.html#zephyr-4-2"><span class="std std-ref">release notes</span></a>.</p>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#build-system" id="id1">Build System</a></p></li>
+<li><p><a class="reference internal" href="#kernel" id="id2">Kernel</a></p></li>
+<li><p><a class="reference internal" href="#boards" id="id3">Boards</a></p></li>
+<li><p><a class="reference internal" href="#device-drivers-and-devicetree" id="id4">Device Drivers and Devicetree</a></p>
+<ul>
+<li><p><a class="reference internal" href="#audio" id="id5">Audio</a></p></li>
+<li><p><a class="reference internal" href="#counter" id="id6">Counter</a></p></li>
+<li><p><a class="reference internal" href="#dai" id="id7">DAI</a></p></li>
+<li><p><a class="reference internal" href="#dma" id="id8">DMA</a></p></li>
+<li><p><a class="reference internal" href="#devicetree" id="id9">Devicetree</a></p></li>
+<li><p><a class="reference internal" href="#display" id="id10">Display</a></p></li>
+<li><p><a class="reference internal" href="#eeprom" id="id11">EEPROM</a></p></li>
+<li><p><a class="reference internal" href="#enhanced-serial-peripheral-interface-espi" id="id12">Enhanced Serial Peripheral Interface (eSPI)</a></p></li>
+<li><p><a class="reference internal" href="#entropy" id="id13">Entropy</a></p></li>
+<li><p><a class="reference internal" href="#ethernet" id="id14">Ethernet</a></p></li>
+<li><p><a class="reference internal" href="#flash" id="id15">Flash</a></p></li>
+<li><p><a class="reference internal" href="#gpio" id="id16">GPIO</a></p></li>
+<li><p><a class="reference internal" href="#i2s" id="id17">I2S</a></p></li>
+<li><p><a class="reference internal" href="#led" id="id18">LED</a></p></li>
+<li><p><a class="reference internal" href="#mfd" id="id19">MFD</a></p></li>
+<li><p><a class="reference internal" href="#misc" id="id20">Misc</a></p></li>
+<li><p><a class="reference internal" href="#modem" id="id21">Modem</a></p></li>
+<li><p><a class="reference internal" href="#regulator" id="id22">Regulator</a></p></li>
+<li><p><a class="reference internal" href="#spi" id="id23">SPI</a></p></li>
+<li><p><a class="reference internal" href="#sensors" id="id24">Sensors</a></p></li>
+<li><p><a class="reference internal" href="#serial" id="id25">Serial</a></p></li>
+<li><p><a class="reference internal" href="#stepper" id="id26">Stepper</a></p></li>
+<li><p><a class="reference internal" href="#timer" id="id27">Timer</a></p></li>
+<li><p><a class="reference internal" href="#video" id="id28">Video</a></p></li>
+<li><p><a class="reference internal" href="#watchdog" id="id29">Watchdog</a></p></li>
+<li><p><a class="reference internal" href="#qspi-ospi-xspi" id="id30">qSPI/oSPI/xSPI</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#bluetooth" id="id31">Bluetooth</a></p>
+<ul>
+<li><p><a class="reference internal" href="#bluetooth-audio" id="id32">Bluetooth Audio</a></p></li>
+<li><p><a class="reference internal" href="#bluetooth-classic" id="id33">Bluetooth Classic</a></p></li>
+<li><p><a class="reference internal" href="#bluetooth-hci" id="id34">Bluetooth HCI</a></p></li>
+<li><p><a class="reference internal" href="#bluetooth-host" id="id35">Bluetooth Host</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#networking" id="id36">Networking</a></p>
+<ul>
+<li><p><a class="reference internal" href="#lwm2m" id="id37">LwM2M</a></p></li>
+<li><p><a class="reference internal" href="#openthread" id="id38">OpenThread</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#other-subsystems" id="id39">Other subsystems</a></p>
+<ul>
+<li><p><a class="reference internal" href="#modbus" id="id40">Modbus</a></p></li>
+<li><p><a class="reference internal" href="#state-machine-framework" id="id41">State Machine Framework</a></p></li>
+<li><p><a class="reference internal" href="#hawkbit" id="id42">hawkBit</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#modules" id="id43">Modules</a></p>
+<ul>
+<li><p><a class="reference internal" href="#cmsis" id="id44">CMSIS</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#architectures" id="id45">Architectures</a></p></li>
+</ul>
+</nav>
+<section id="build-system">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Build System</a><a class="headerlink" href="#build-system" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>HWMv1 support has been removed, any out-of-tree boards or SoCs in HWMv1 format must be migrated
+to <a class="reference internal" href="../hardware/porting/board_porting.html#hw-model-v2"><span class="std std-ref">HWMv2</span></a> to work with Zephyr v4.2 onwards.</p></li>
+</ul>
+</section>
+<section id="kernel">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Kernel</a><a class="headerlink" href="#kernel" title="Link to this heading"></a></h2>
+</section>
+<section id="boards">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Boards</a><a class="headerlink" href="#boards" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>All boards based on Nordic ICs that used the <code class="docutils literal notranslate"><span class="pre">nrfjprog</span></code> Nordic command-line
+tool for flashing by default have been modified to instead default to the new
+nRF Util (<code class="docutils literal notranslate"><span class="pre">nrfutil</span></code>) tool. This means that you may need to <a class="reference external" href="https://www.nordicsemi.com/Products/Development-tools/nrf-util">install nRF Util</a> or, if you
+prefer to continue using <code class="docutils literal notranslate"><span class="pre">nrfjprog</span></code>, you can do so by invoking west while
+specifying the runner: <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span> <span class="pre">-r</span> <span class="pre">nrfjprog</span></code>. The full documentation for
+nRF Util can be found
+<a class="reference external" href="https://docs.nordicsemi.com/bundle/nrfutil/page/README.html">here</a>.</p></li>
+<li><p>All boards based on a Nordic IC of the nRF54L series now default to not
+erasing any part of the internal storage when flashing. If you’d like to
+revert to the previous default of erasing the pages that will be written to by
+the firmware to be flashed you can set the new <code class="docutils literal notranslate"><span class="pre">--erase-mode</span></code> command-line
+switch when invoking <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code> to <code class="docutils literal notranslate"><span class="pre">ranges</span></code>.
+Note that RRAM on nRF54L devices is not physically paged, and paging is
+only artificially provided, with a page size of 4096 bytes, for an easier
+transition of nRF52 software to nRF54L devices.</p></li>
+<li><p>The config option <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NATIVE_POSIX_SLOWDOWN_TO_REAL_TIME</span></code> has been deprecated
+in favor of <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NATIVE_SIM_SLOWDOWN_TO_REAL_TIME</span></code>.</p></li>
+<li><p>The DT binding <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,native-posix-cpu</span></code> has been deprecated in favor of
+<a class="reference internal" href="../build/dts/api/bindings/cpu/zephyr%2Cnative-sim-cpu.html#std-dtcompatible-zephyr-native-sim-cpu"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,native-sim-cpu</span></code></a>.</p></li>
+<li><p>Zephyr now supports version 1.11.6 of the <a class="reference internal" href="../boards/others/neorv32/doc/index.html#neorv32">NEORV32</a>. NEORV32 processor (SoC)
+implementations need to be updated to this version to be compatible with Zephyr v4.2.0.</p></li>
+<li><p>The <a class="reference internal" href="../boards/others/neorv32/doc/index.html#neorv32">NEORV32</a> now targets NEORV32 processor (SoC) templates via board variants. The
+old <code class="docutils literal notranslate"><span class="pre">neorv32</span></code> board target is now named <code class="docutils literal notranslate"><span class="pre">neorv32/neorv32/up5kdemo</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">arduino_uno_r4_minima</span></code>, <code class="docutils literal notranslate"><span class="pre">arduino_uno_r4_wifi</span></code>, and <code class="docutils literal notranslate"><span class="pre">mikroe_clicker_ra4m1</span></code> have migrated to
+new FSP-based configurations.
+While there are no major functional changes, the device tree structure has been significantly revised.
+The following device tree bindings are now removed:
+<code class="docutils literal notranslate"><span class="pre">renesas,ra-gpio</span></code>, <code class="docutils literal notranslate"><span class="pre">renesas,ra-uart-sci</span></code>, <code class="docutils literal notranslate"><span class="pre">renesas,ra-pinctrl</span></code>,
+<code class="docutils literal notranslate"><span class="pre">renesas,ra-clock-generation-circuit</span></code>, and <code class="docutils literal notranslate"><span class="pre">renesas,ra-interrupt-controller-unit</span></code>.
+Instead, use the following replacements:
+- <a class="reference internal" href="../build/dts/api/bindings/gpio/renesas%2Cra-gpio-ioport.html#std-dtcompatible-renesas-ra-gpio-ioport"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">renesas,ra-gpio-ioport</span></code></a>
+- <a class="reference internal" href="../build/dts/api/bindings/serial/renesas%2Cra-sci-uart.html#std-dtcompatible-renesas-ra-sci-uart"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">renesas,ra-sci-uart</span></code></a>
+- <a class="reference internal" href="../build/dts/api/bindings/pinctrl/renesas%2Cra-pinctrl-pfs.html#std-dtcompatible-renesas-ra-pinctrl-pfs"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">renesas,ra-pinctrl-pfs</span></code></a>
+- <a class="reference internal" href="../build/dts/api/bindings/clock/renesas%2Cra-cgc-pclk-block.html#std-dtcompatible-renesas-ra-cgc-pclk-block"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">renesas,ra-cgc-pclk-block</span></code></a></p></li>
+<li><p>Nucleo WBA52CG board (<code class="docutils literal notranslate"><span class="pre">nucleo_wba52cg</span></code>) is not supported anymore since it is NRND
+(Not Recommended for New Design) and it is not supported anymore in the STM32CubeWBA from
+version 1.1.0 (July 2023). The migration to <a class="reference internal" href="../boards/st/nucleo_wba55cg/doc/nucleo_wba55cg.html#nucleo_wba55cg">Nucleo WBA55CG</a> (<code class="docutils literal notranslate"><span class="pre">nucleo_wba55cg</span></code>)
+is recommended and it could be done without any change.</p></li>
+<li><p>Espressif boards <code class="docutils literal notranslate"><span class="pre">esp32_devkitc_wroom</span></code> and <code class="docutils literal notranslate"><span class="pre">esp32_devkitc_wrover</span></code> shared almost identical features.
+The differences are covered by the Kconfig options so both boards were merged into <code class="docutils literal notranslate"><span class="pre">esp32_devkitc</span></code>.</p></li>
+<li><p>STM32 boards should now add OpenOCD programming support by including <code class="docutils literal notranslate"><span class="pre">openocd-stm32.board.cmake</span></code>
+instead of <code class="docutils literal notranslate"><span class="pre">openocd.board.cmake</span></code>. The <code class="docutils literal notranslate"><span class="pre">openocd-stm32.board.cmake</span></code> file extends the default
+OpenOCD runner with manufacturer-specific configuration like STM32 mass erase commands.</p></li>
+<li><p>STM32N6570-DK boards’s default variant (<code class="docutils literal notranslate"><span class="pre">stm32n6570_dk/stm32n657xx</span></code>) is now supposed to be a
+chainloaded application and should be built using <code class="docutils literal notranslate"><span class="pre">--sysbuild</span></code>. The old default,
+which built applications to run as First Stage BootLoader, is now available as a dedicated
+variant (<code class="docutils literal notranslate"><span class="pre">stm32n6570_dk/stm32n657xx/fsbl</span></code>) that must be selected explicitly.
+See board documentation for more information about these variants.</p></li>
+<li><p>STM32 boards that embed TF-M BL2 boot stage (<code class="docutils literal notranslate"><span class="pre">b_u585i_iot02a//ns</span></code>, <code class="docutils literal notranslate"><span class="pre">nucleo_l552ze_q//ns</span></code>
+and <code class="docutils literal notranslate"><span class="pre">stm32l562e_dk//ns</span></code>) do not embed HW crypto accelerator drivers in BL2 as they previously
+did, now relying on Mbed TLS software implementation. This is related to the upgrade to TF-M
+v2.2. HW crypto accelerators are still supported in TF-M, but only in the runtime secure firmware.</p></li>
+</ul>
+</section>
+<section id="device-drivers-and-devicetree">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Device Drivers and Devicetree</a><a class="headerlink" href="#device-drivers-and-devicetree" title="Link to this heading"></a></h2>
+<section id="audio">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">Audio</a><a class="headerlink" href="#audio" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The binding file for <a class="reference internal" href="../build/dts/api/bindings/audio/cirrus%2Ccs43l22.html#std-dtcompatible-cirrus-cs43l22"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">cirrus,cs43l22</span></code></a> has been renamed to have a name
+matching the compatible string.</p></li>
+</ul>
+</section>
+<section id="counter">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">Counter</a><a class="headerlink" href="#counter" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">counter_native_posix</span></code> has been renamed <code class="docutils literal notranslate"><span class="pre">counter_native_sim</span></code>, and with it its
+kconfig options and DT binding. <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,native-posix-counter</span></code>  has been deprecated
+in favor of <a class="reference internal" href="../build/dts/api/bindings/counter/zephyr%2Cnative-sim-counter.html#std-dtcompatible-zephyr-native-sim-counter"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,native-sim-counter</span></code></a>.
+And <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_COUNTER_NATIVE_POSIX</span></code> and its related options with
+<a class="reference internal" href="../kconfig.html#CONFIG_COUNTER_NATIVE_SIM" title="CONFIG_COUNTER_NATIVE_SIM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_COUNTER_NATIVE_SIM</span></code></a> (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/86616">GitHub #86616</a>).</p></li>
+</ul>
+</section>
+<section id="dai">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">DAI</a><a class="headerlink" href="#dai" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Renamed the devicetree property <code class="docutils literal notranslate"><span class="pre">dai_id</span></code> to <code class="docutils literal notranslate"><span class="pre">dai-id</span></code>.</p></li>
+<li><p>Renamed the devicetree property <code class="docutils literal notranslate"><span class="pre">afe_name</span></code> to <code class="docutils literal notranslate"><span class="pre">afe-name</span></code>.</p></li>
+<li><p>Renamed the devicetree property <code class="docutils literal notranslate"><span class="pre">agent_disable</span></code> to <code class="docutils literal notranslate"><span class="pre">agent-disable</span></code>.</p></li>
+<li><p>Renamed the devicetree property <code class="docutils literal notranslate"><span class="pre">ch_num</span></code> to <code class="docutils literal notranslate"><span class="pre">ch-num</span></code>.</p></li>
+<li><p>Renamed the devicetree property <code class="docutils literal notranslate"><span class="pre">mono_invert</span></code> to <code class="docutils literal notranslate"><span class="pre">mono-invert</span></code>.</p></li>
+<li><p>Renamed the devicetree property <code class="docutils literal notranslate"><span class="pre">quad_ch</span></code> to <code class="docutils literal notranslate"><span class="pre">quad-ch</span></code>.</p></li>
+<li><p>Renamed the devicetree property <code class="docutils literal notranslate"><span class="pre">int_odd</span></code> to <code class="docutils literal notranslate"><span class="pre">int-odd</span></code>.</p></li>
+</ul>
+</section>
+<section id="dma">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">DMA</a><a class="headerlink" href="#dma" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Renamed the devicetree property <code class="docutils literal notranslate"><span class="pre">nxp,a_on</span></code> to <code class="docutils literal notranslate"><span class="pre">nxp,a-on</span></code>.</p></li>
+<li><p>Renamed the devicetree property <code class="docutils literal notranslate"><span class="pre">dma_channels</span></code> to <code class="docutils literal notranslate"><span class="pre">dma-channels</span></code>.</p></li>
+<li><p>The binding files for Xilinx DMA controllers have been renamed to use the proper vendor prefix
+(<code class="docutils literal notranslate"><span class="pre">xlnx</span></code> instead of <code class="docutils literal notranslate"><span class="pre">xilinx</span></code>) and to match their compatible string.</p></li>
+</ul>
+</section>
+<section id="devicetree">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">Devicetree</a><a class="headerlink" href="#devicetree" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Many of the vendor-specific and arch-specific files that were in dts/common have been moved
+to more specific locations. Therefore, any dts files which <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;common/some_file.dtsi&gt;</span></code>
+a file from in the zephyr tree will need to be changed to just <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;some_file.dtsi&gt;</span></code>.</p></li>
+<li><p>Silicon Labs SoC-level dts files for Series 2 have been reorganized in subdirectories per device
+superfamily. Therefore, any dts files for boards that use Series 2 SoCs will need to change their
+include from <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;silabs/some_soc.dtsi&gt;</span></code> to <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;silabs/xg2[1-9]/some_soc.dtsi&gt;</span></code>.</p></li>
+<li><p>The <a class="reference internal" href="../doxygen/html/group__devicetree-generic-prop.html#ga72e66a2b7a159d8b6210ef9be015c955" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_ENUM_HAS_VALUE</span></code></a> and <a class="reference internal" href="../doxygen/html/group__devicetree-inst.html#ga80b0321efd592a63e39400e5327bb601" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_INST_ENUM_HAS_VALUE</span></code></a> macros are now
+checking all values, when used on an array, not just the first one.</p></li>
+<li><p>Property names in devicetree and bindings use hyphens(<code class="docutils literal notranslate"><span class="pre">-</span></code>) as separators, and replacing
+all previously used underscores(<code class="docutils literal notranslate"><span class="pre">_</span></code>). For local code, you can migrate property names in
+bindings to use hyphens by running the <code class="docutils literal notranslate"><span class="pre">scripts/utils/migrate_bindings_style.py</span></code> script.</p></li>
+</ul>
+</section>
+<section id="display">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">Display</a><a class="headerlink" href="#display" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>On STM32 devices, the LTDC driver (<a class="reference internal" href="../build/dts/api/bindings/display/st%2Cstm32-ltdc.html#std-dtcompatible-st-stm32-ltdc"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">st,stm32-ltdc</span></code></a>) RGB565 format
+<code class="docutils literal notranslate"><span class="pre">PIXEL_FORMAT_RGB565</span></code> has been replaced by <code class="docutils literal notranslate"><span class="pre">PIXEL_FORMAT_BGR565</span></code> to match
+the format expected by Zephyr. This change ensures proper behavior of both
+display and video capture samples.</p></li>
+</ul>
+</section>
+<section id="eeprom">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">EEPROM</a><a class="headerlink" href="#eeprom" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">ti,tmp116-eeprom</span></code> has been renamed to <a class="reference internal" href="../build/dts/api/bindings/mtd/ti%2Ctmp11x-eeprom.html#std-dtcompatible-ti-tmp11x-eeprom"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">ti,tmp11x-eeprom</span></code></a> because it
+supports both tmp117 and tmp119.</p></li>
+</ul>
+</section>
+<section id="enhanced-serial-peripheral-interface-espi">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">Enhanced Serial Peripheral Interface (eSPI)</a><a class="headerlink" href="#enhanced-serial-peripheral-interface-espi" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Renamed the devicetree property <code class="docutils literal notranslate"><span class="pre">io_girq</span></code> to <code class="docutils literal notranslate"><span class="pre">io-girq</span></code>.</p></li>
+<li><p>Renamed the devicetree property <code class="docutils literal notranslate"><span class="pre">vw_girqs</span></code> to <code class="docutils literal notranslate"><span class="pre">vw-girqs</span></code>.</p></li>
+<li><p>Renamed the devicetree property <code class="docutils literal notranslate"><span class="pre">pc_girq</span></code> to <code class="docutils literal notranslate"><span class="pre">pc-girq</span></code>.</p></li>
+<li><p>Renamed the devicetree property <code class="docutils literal notranslate"><span class="pre">poll_timeout</span></code> to <code class="docutils literal notranslate"><span class="pre">poll-timeout</span></code>.</p></li>
+<li><p>Renamed the devicetree property <code class="docutils literal notranslate"><span class="pre">poll_interval</span></code> to <code class="docutils literal notranslate"><span class="pre">poll-interval</span></code>.</p></li>
+<li><p>Renamed the devicetree property <code class="docutils literal notranslate"><span class="pre">consec_rd_timeout</span></code> to <code class="docutils literal notranslate"><span class="pre">consec-rd-timeout</span></code>.</p></li>
+<li><p>Renamed the devicetree property <code class="docutils literal notranslate"><span class="pre">sus_chk_delay</span></code> to <code class="docutils literal notranslate"><span class="pre">sus-chk-delay</span></code>.</p></li>
+<li><p>Renamed the devicetree property <code class="docutils literal notranslate"><span class="pre">sus_rsm_interval</span></code> to <code class="docutils literal notranslate"><span class="pre">sus-rsm-interval</span></code>.</p></li>
+</ul>
+</section>
+<section id="entropy">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">Entropy</a><a class="headerlink" href="#entropy" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fake_entropy_native_posix</span></code> has been renamed <code class="docutils literal notranslate"><span class="pre">fake_entropy_native_sim</span></code>, and with it its
+kconfig options and DT binding. <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,native-posix-rng</span></code>  has been deprecated
+in favor of <a class="reference internal" href="../build/dts/api/bindings/rng/zephyr%2Cnative-sim-rng.html#std-dtcompatible-zephyr-native-sim-rng"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,native-sim-rng</span></code></a>.
+And <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FAKE_ENTROPY_NATIVE_POSIX</span></code> and its related options with
+<a class="reference internal" href="../kconfig.html#CONFIG_FAKE_ENTROPY_NATIVE_SIM" title="CONFIG_FAKE_ENTROPY_NATIVE_SIM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FAKE_ENTROPY_NATIVE_SIM</span></code></a> (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/86615">GitHub #86615</a>).</p></li>
+</ul>
+</section>
+<section id="ethernet">
+<h3><a class="toc-backref" href="#id14" role="doc-backlink">Ethernet</a><a class="headerlink" href="#ethernet" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Removed Kconfig option <code class="docutils literal notranslate"><span class="pre">ETH_STM32_HAL_MII</span></code> (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/86074">GitHub #86074</a>).
+PHY interface type is now selected via the <code class="docutils literal notranslate"><span class="pre">phy-connection-type</span></code> property in the device tree.</p></li>
+<li><p>The <a class="reference internal" href="../build/dts/api/bindings/ethernet/st%2Cstm32-ethernet.html#std-dtcompatible-st-stm32-ethernet"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">st,stm32-ethernet</span></code></a> driver now requires the <code class="docutils literal notranslate"><span class="pre">phy-handle</span></code> phandle to be
+set to the according PHY node in the device tree (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/87593">GitHub #87593</a>).</p></li>
+<li><p>The Kconfig options <code class="docutils literal notranslate"><span class="pre">ETH_STM32_HAL_PHY_ADDRESS</span></code>, <code class="docutils literal notranslate"><span class="pre">ETH_STM32_CARRIER_CHECK</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ETH_STM32_CARRIER_CHECK_RX_IDLE_TIMEOUT_MS</span></code>, <code class="docutils literal notranslate"><span class="pre">ETH_STM32_AUTO_NEGOTIATION_ENABLE</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ETH_STM32_SPEED_10M</span></code>, <code class="docutils literal notranslate"><span class="pre">ETH_STM32_MODE_HALFDUPLEX</span></code> have been removed, as they are no longer
+needed, and the driver now uses the ethernet phy api to communicate with the phy driver, which
+is responsible for configuring the phy settings (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/87593">GitHub #87593</a>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ethernet_native_posix</span></code> has been renamed <code class="docutils literal notranslate"><span class="pre">ethernet_native_tap</span></code>, and with it its
+kconfig options: <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ETH_NATIVE_POSIX</span></code> and its related options have been
+deprecated in favor of <a class="reference internal" href="../kconfig.html#CONFIG_ETH_NATIVE_TAP" title="CONFIG_ETH_NATIVE_TAP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ETH_NATIVE_TAP</span></code></a> (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/86578">GitHub #86578</a>).</p></li>
+<li><p>NuMaker Ethernet driver <code class="docutils literal notranslate"><span class="pre">eth_numaker.c</span></code> now supports <code class="docutils literal notranslate"><span class="pre">gen_random_mac</span></code>,
+and the EMAC data flash feature has been removed (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/87953">GitHub #87953</a>).</p></li>
+<li><p>The enum <code class="docutils literal notranslate"><span class="pre">ETHERNET_DSA_MASTER_PORT</span></code> and <code class="docutils literal notranslate"><span class="pre">ETHERNET_DSA_SLAVE_PORT</span></code> in
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/net/ethernet.h">include/zephyr/net/ethernet.h</a> have been renamed
+to <code class="docutils literal notranslate"><span class="pre">ETHERNET_DSA_CONDUIT_PORT</span></code> and <code class="docutils literal notranslate"><span class="pre">ETHERNET_DSA_USER_PORT</span></code>.</p></li>
+<li><p>Enums for the Ethernet speed have been renamed to be more independent of the used medium.
+<code class="docutils literal notranslate"><span class="pre">LINK_HALF_10BASE_T</span></code>, <code class="docutils literal notranslate"><span class="pre">LINK_FULL_10BASE_T</span></code>, <code class="docutils literal notranslate"><span class="pre">LINK_HALF_100BASE_T</span></code>, <code class="docutils literal notranslate"><span class="pre">LINK_FULL_100BASE_T</span></code>,
+<code class="docutils literal notranslate"><span class="pre">LINK_HALF_1000BASE_T</span></code>, <code class="docutils literal notranslate"><span class="pre">LINK_FULL_1000BASE_T</span></code>, <code class="docutils literal notranslate"><span class="pre">LINK_FULL_2500BASE_T</span></code> and
+<code class="docutils literal notranslate"><span class="pre">LINK_FULL_5000BASE_T</span></code> have been renamed to <a class="reference internal" href="../doxygen/html/group__ethernet__phy.html#gga9b97fff9fcd6823c9b564b3e86b8da68a31f84ef851304d6f09029e413414212c" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">LINK_HALF_10BASE</span></code></a>,
+<a class="reference internal" href="../doxygen/html/group__ethernet__phy.html#gga9b97fff9fcd6823c9b564b3e86b8da68a73121ca47757e8a5dacd2f24c972624c" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">LINK_FULL_10BASE</span></code></a>, <a class="reference internal" href="../doxygen/html/group__ethernet__phy.html#gga9b97fff9fcd6823c9b564b3e86b8da68a882f179b6de90a7bd0233da7ecc1024d" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">LINK_HALF_100BASE</span></code></a>,
+<a class="reference internal" href="../doxygen/html/group__ethernet__phy.html#gga9b97fff9fcd6823c9b564b3e86b8da68af0adee55a0a82b9362e342579710a956" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">LINK_FULL_100BASE</span></code></a>, <a class="reference internal" href="../doxygen/html/group__ethernet__phy.html#gga9b97fff9fcd6823c9b564b3e86b8da68ae5b04b07c08a31c182416a95560160ec" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">LINK_HALF_1000BASE</span></code></a>,
+<a class="reference internal" href="../doxygen/html/group__ethernet__phy.html#gga9b97fff9fcd6823c9b564b3e86b8da68aa3c6b736fb44fa247999b7327c901b04" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">LINK_FULL_1000BASE</span></code></a>, <a class="reference internal" href="../doxygen/html/group__ethernet__phy.html#gga9b97fff9fcd6823c9b564b3e86b8da68a4371662a242b197c3520948bc8673e4e" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">LINK_FULL_2500BASE</span></code></a> and
+<a class="reference internal" href="../doxygen/html/group__ethernet__phy.html#gga9b97fff9fcd6823c9b564b3e86b8da68aef11379cb040a86aa1608cc7086aa5c6" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">LINK_FULL_5000BASE</span></code></a>.
+<code class="docutils literal notranslate"><span class="pre">ETHERNET_LINK_10BASE_T</span></code>, <code class="docutils literal notranslate"><span class="pre">ETHERNET_LINK_100BASE_T</span></code>, <code class="docutils literal notranslate"><span class="pre">ETHERNET_LINK_1000BASE_T</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ETHERNET_LINK_2500BASE_T</span></code> and <code class="docutils literal notranslate"><span class="pre">ETHERNET_LINK_5000BASE_T</span></code> have been renamed to
+<a class="reference internal" href="../doxygen/html/group__ethernet.html#gga9162ff11d626813fc840df0b67820ac5a4508489dc8a67ef908757a9e2338babb" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">ETHERNET_LINK_10BASE</span></code></a>, <a class="reference internal" href="../doxygen/html/group__ethernet.html#gga9162ff11d626813fc840df0b67820ac5a2c59d7d5a1d5eff15976806d237960c1" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">ETHERNET_LINK_100BASE</span></code></a>,
+<a class="reference internal" href="../doxygen/html/group__ethernet.html#gga9162ff11d626813fc840df0b67820ac5a55e8d0ee975acc9eabf5096d1b926f6b" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">ETHERNET_LINK_1000BASE</span></code></a>, <a class="reference internal" href="../doxygen/html/group__ethernet.html#gga9162ff11d626813fc840df0b67820ac5afe48cf59ca4d1db42e768ca272159d55" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">ETHERNET_LINK_2500BASE</span></code></a> and
+<a class="reference internal" href="../doxygen/html/group__ethernet.html#gga9162ff11d626813fc840df0b67820ac5a9ab79aee30b73747fceff86fd3b967f9" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">ETHERNET_LINK_5000BASE</span></code></a> respectively (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/87194">GitHub #87194</a>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ETHERNET_CONFIG_TYPE_LINK</span></code>, <code class="docutils literal notranslate"><span class="pre">ETHERNET_CONFIG_TYPE_DUPLEX</span></code>, <code class="docutils literal notranslate"><span class="pre">ETHERNET_CONFIG_TYPE_AUTO_NEG</span></code>
+and the related <code class="docutils literal notranslate"><span class="pre">NET_REQUEST_ETHERNET_SET_LINK</span></code>, <code class="docutils literal notranslate"><span class="pre">NET_REQUEST_ETHERNET_SET_DUPLEX</span></code>,
+<code class="docutils literal notranslate"><span class="pre">NET_REQUEST_ETHERNET_SET_AUTO_NEGOTIATION</span></code> have been removed. <a class="reference internal" href="../doxygen/html/group__ethernet__phy.html#gafce454d5da52532e4588324752c5cec3" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">phy_configure_link()</span></code></a>
+together with <a class="reference internal" href="../doxygen/html/group__ethernet.html#ga7225d06fbaa12d4668fa165d9e8f0845" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">net_eth_get_phy()</span></code></a> should be used instead to configure the link
+(<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/90652">GitHub #90652</a>).</p></li>
+<li><p><a class="reference internal" href="../doxygen/html/group__ethernet__phy.html#gafce454d5da52532e4588324752c5cec3" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">phy_configure_link()</span></code></a> got a <code class="docutils literal notranslate"><span class="pre">flags</span></code> parameter. Set it to <code class="docutils literal notranslate"><span class="pre">0</span></code> to preserve the old
+behavior (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/91354">GitHub #91354</a>).</p></li>
+</ul>
+</section>
+<section id="flash">
+<h3><a class="toc-backref" href="#id15" role="doc-backlink">Flash</a><a class="headerlink" href="#flash" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Renamed the file from <code class="docutils literal notranslate"><span class="pre">flash_hp_ra.h</span></code> to <code class="docutils literal notranslate"><span class="pre">soc_flash_renesas_ra_hp.h</span></code>.</p></li>
+<li><p>Renamed the file from <code class="docutils literal notranslate"><span class="pre">flash_hp_ra.c</span></code> to <code class="docutils literal notranslate"><span class="pre">soc_flash_renesas_ra_hp.c</span></code>.</p></li>
+<li><p>Renamed the file from <code class="docutils literal notranslate"><span class="pre">flash_hp_ra_ex_op.c</span></code> to <code class="docutils literal notranslate"><span class="pre">soc_flash_renesas_ra_hp_ex_op.c</span></code>.</p></li>
+<li><p>The Flash HP Renesas RA dual bank mode Kconfig symbol <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DUAL_BANK_MODE</span></code>
+has been removed.</p></li>
+<li><p>The Flash HP Renesas RA Kconfig symbol <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_RA_FLASH_HP</span></code>
+has been renamed to <a class="reference internal" href="../kconfig.html#CONFIG_SOC_FLASH_RENESAS_RA_HP" title="CONFIG_SOC_FLASH_RENESAS_RA_HP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SOC_FLASH_RENESAS_RA_HP</span></code></a>.</p></li>
+<li><p>The Flash HP Renesas RA write protect Kconfig symbol <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FLASH_RA_WRITE_PROTECT</span></code>
+has been renamed to <a class="reference internal" href="../kconfig.html#CONFIG_FLASH_RENESAS_RA_HP_WRITE_PROTECT" title="CONFIG_FLASH_RENESAS_RA_HP_WRITE_PROTECT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FLASH_RENESAS_RA_HP_WRITE_PROTECT</span></code></a>.</p></li>
+<li><p>Separate the file <code class="docutils literal notranslate"><span class="pre">renesas,ra-nv-flash.yaml</span></code> into 2 files <code class="docutils literal notranslate"><span class="pre">renesas,ra-nv-code-flash.yaml</span></code>
+and <code class="docutils literal notranslate"><span class="pre">renesas,ra-nv-data-flash.yaml</span></code>.</p></li>
+<li><p>Separate the <code class="docutils literal notranslate"><span class="pre">compatible</span></code> from <code class="docutils literal notranslate"><span class="pre">renesas,ra-nv-flash</span></code> to <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">renesas,ra-nv-code-flash.yaml</span></code>
+and <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">renesas,ra-nv-data-flash.yaml</span></code>.</p></li>
+</ul>
+</section>
+<section id="gpio">
+<h3><a class="toc-backref" href="#id16" role="doc-backlink">GPIO</a><a class="headerlink" href="#gpio" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>To support the RP2350B, which has many pins, the Raspberry Pi-GPIO configuration has
+been changed. The previous role of <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">raspberrypi,rpi-gpio</span></code> has been migrated to
+<code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">raspberrypi,rpi-gpio-port</span></code>, and <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">raspberrypi,rpi-gpio</span></code> is
+now left as a placeholder and mapper.
+The labels have also been changed along, so no changes are necessary for regular use.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">arduino-nano-header-r3</span></code> is renamed to <a class="reference internal" href="../build/dts/api/bindings/gpio/arduino-nano-header.html#std-dtcompatible-arduino-nano-header"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">arduino-nano-header</span></code></a>.
+Because the R3 comes from the Arduino UNO R3, which has changed the connector from
+the former version, and is unrelated to the Arduino Nano.</p></li>
+<li><p>Moved file <code class="docutils literal notranslate"><span class="pre">include/zephyr/dt-bindings/gpio/nordic-npm1300-gpio.h</span></code> to
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/dt-bindings/gpio/nordic-npm13xx-gpio.h">include/zephyr/dt-bindings/gpio/nordic-npm13xx-gpio.h</a> and renamed all instances of
+<code class="docutils literal notranslate"><span class="pre">NPM1300</span></code> to <code class="docutils literal notranslate"><span class="pre">NPM13XX</span></code> in the defines</p></li>
+<li><p>Renamed <code class="docutils literal notranslate"><span class="pre">CONFIG_GPIO_NPM1300</span></code> to <a class="reference internal" href="../kconfig.html#CONFIG_GPIO_NPM13XX" title="CONFIG_GPIO_NPM13XX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_GPIO_NPM13XX</span></code></a>,
+<code class="docutils literal notranslate"><span class="pre">CONFIG_GPIO_NPM1300_INIT_PRIORITY</span></code> to <a class="reference internal" href="../kconfig.html#CONFIG_GPIO_NPM13XX_INIT_PRIORITY" title="CONFIG_GPIO_NPM13XX_INIT_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_GPIO_NPM13XX_INIT_PRIORITY</span></code></a></p></li>
+</ul>
+</section>
+<section id="i2s">
+<h3><a class="toc-backref" href="#id17" role="doc-backlink">I2S</a><a class="headerlink" href="#i2s" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The <a class="reference internal" href="../build/dts/api/bindings/i2s/nxp%2Cmcux-i2s.html#std-dtcompatible-nxp-mcux-i2s"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">nxp,mcux-i2s</span></code></a> driver added property <code class="docutils literal notranslate"><span class="pre">mclk-output</span></code>. Set this property to</p></li>
+<li><p>configure the MCLK signal as an output.  Older driver versions used the macro</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">I2S_OPT_BIT_CLK_SLAVE</span></code> to configure the MCLK signal direction. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/88554">GitHub #88554</a>)</p></li>
+</ul>
+</section>
+<section id="led">
+<h3><a class="toc-backref" href="#id18" role="doc-backlink">LED</a><a class="headerlink" href="#led" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Renamed <code class="docutils literal notranslate"><span class="pre">CONFIG_LED_NPM1300</span></code> to <a class="reference internal" href="../kconfig.html#CONFIG_LED_NPM13XX" title="CONFIG_LED_NPM13XX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LED_NPM13XX</span></code></a></p></li>
+</ul>
+</section>
+<section id="mfd">
+<h3><a class="toc-backref" href="#id19" role="doc-backlink">MFD</a><a class="headerlink" href="#mfd" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Moved file <code class="docutils literal notranslate"><span class="pre">include/zephyr/drivers/mfd/npm1300.h</span></code> to <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/drivers/mfd/npm13xx.h">include/zephyr/drivers/mfd/npm13xx.h</a>
+and renamed all instances of <code class="docutils literal notranslate"><span class="pre">npm1300</span></code>/<code class="docutils literal notranslate"><span class="pre">NPM1300</span></code> to <code class="docutils literal notranslate"><span class="pre">npm13xx</span></code>/<code class="docutils literal notranslate"><span class="pre">NPM13XX</span></code> in the enums and
+function names</p></li>
+<li><p>Renamed <code class="docutils literal notranslate"><span class="pre">CONFIG_MFD_NPM1300</span></code> to <a class="reference internal" href="../kconfig.html#CONFIG_MFD_NPM13XX" title="CONFIG_MFD_NPM13XX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MFD_NPM13XX</span></code></a>,
+<code class="docutils literal notranslate"><span class="pre">CONFIG_MFD_NPM1300_INIT_PRIORITY</span></code> to <a class="reference internal" href="../kconfig.html#CONFIG_MFD_NPM13XX_INIT_PRIORITY" title="CONFIG_MFD_NPM13XX_INIT_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MFD_NPM13XX_INIT_PRIORITY</span></code></a></p></li>
+</ul>
+</section>
+<section id="misc">
+<h3><a class="toc-backref" href="#id20" role="doc-backlink">Misc</a><a class="headerlink" href="#misc" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Moved file <code class="docutils literal notranslate"><span class="pre">drivers/memc/memc_nxp_flexram.h</span></code> to
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/drivers/misc/flexram/nxp_flexram.h">include/zephyr/drivers/misc/flexram/nxp_flexram.h</a> so that the
+file can be included using <code class="docutils literal notranslate"><span class="pre">&lt;zephyr/drivers/misc/flexram/nxp_flexram.h&gt;</span></code>.
+Modification to CMakeList.txt to use include this driver is no longer
+required.</p></li>
+<li><p>All memc_flexram_* namespaced things including kconfigs and C API
+have been changed to just flexram_*.</p></li>
+<li><p>Select <code class="docutils literal notranslate"><span class="pre">CONFIG_ETHOS_U</span></code> instead <code class="docutils literal notranslate"><span class="pre">CONFIG_ARM_ETHOS_U</span></code> to enable Ethos-U NPU driver.</p></li>
+<li><p>Rename all configs that have prefix <code class="docutils literal notranslate"><span class="pre">CONFIG_ARM_ETHOS_U_</span></code> to <code class="docutils literal notranslate"><span class="pre">CONFIG_ETHOS_U_</span></code>.</p></li>
+</ul>
+</section>
+<section id="modem">
+<h3><a class="toc-backref" href="#id21" role="doc-backlink">Modem</a><a class="headerlink" href="#modem" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Removed Kconfig option <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MODEM_CELLULAR_CMUX_MAX_FRAME_SIZE</span></code> in favor of
+<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MODEM_CMUX_WORK_BUFFER_SIZE</span></code> and <a class="reference internal" href="../kconfig.html#CONFIG_MODEM_CMUX_MTU" title="CONFIG_MODEM_CMUX_MTU"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MODEM_CMUX_MTU</span></code></a>.</p></li>
+</ul>
+</section>
+<section id="regulator">
+<h3><a class="toc-backref" href="#id22" role="doc-backlink">Regulator</a><a class="headerlink" href="#regulator" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Moved file <code class="docutils literal notranslate"><span class="pre">include/zephyr/dt-bindings/regulator/npm1300.h</span></code> to
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/dt-bindings/regulator/npm13xx.h">include/zephyr/dt-bindings/regulator/npm13xx.h</a> and renamed all instances of
+<code class="docutils literal notranslate"><span class="pre">NPM1300</span></code> to <code class="docutils literal notranslate"><span class="pre">NPM13XX</span></code> in the defines</p></li>
+<li><p>Renamed <code class="docutils literal notranslate"><span class="pre">CONFIG_REGULATOR_NPM1300</span></code> to <a class="reference internal" href="../kconfig.html#CONFIG_REGULATOR_NPM13XX" title="CONFIG_REGULATOR_NPM13XX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_REGULATOR_NPM13XX</span></code></a>,
+<code class="docutils literal notranslate"><span class="pre">CONFIG_REGULATOR_NPM1300_COMMON_INIT_PRIORITY</span></code> to <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">REGULATOR_NPM13XX_COMMON_INIT_PRIORITY</span></code>,
+<code class="docutils literal notranslate"><span class="pre">CONFIG_REGULATOR_NPM1300_INIT_PRIORITY</span></code> to <a class="reference internal" href="../kconfig.html#CONFIG_REGULATOR_NPM13XX_INIT_PRIORITY" title="CONFIG_REGULATOR_NPM13XX_INIT_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_REGULATOR_NPM13XX_INIT_PRIORITY</span></code></a></p></li>
+<li><p><a class="reference internal" href="../build/dts/api/bindings/regulator/nordic%2Cnpm1300-regulator.html#std-dtcompatible-nordic-npm1300-regulator"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">nordic,npm1300-regulator</span></code></a> BUCK and LDO node GPIO properties are now specified as an
+integer array without a GPIO controller, removing the requirement for a
+<a class="reference internal" href="../build/dts/api/bindings/gpio/nordic%2Cnpm1300-gpio.html#std-dtcompatible-nordic-npm1300-gpio"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">nordic,npm1300-gpio</span></code></a> node to be present and enabled for GPIO control of the output
+rails. For example, <code class="docutils literal notranslate"><span class="pre">enable-gpios</span> <span class="pre">=</span> <span class="pre">&lt;&amp;pmic_gpios</span> <span class="pre">3</span> <span class="pre">GPIO_ACTIVE_LOW&gt;;</span></code> is now specified as
+<code class="docutils literal notranslate"><span class="pre">enable-gpio-config</span> <span class="pre">=</span> <span class="pre">&lt;3</span> <span class="pre">GPIO_ACTIVE_LOW&gt;;</span></code>.</p></li>
+</ul>
+</section>
+<section id="spi">
+<h3><a class="toc-backref" href="#id23" role="doc-backlink">SPI</a><a class="headerlink" href="#spi" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Renamed <code class="docutils literal notranslate"><span class="pre">CONFIG_SPI_MCUX_LPSPI</span></code> to <a class="reference internal" href="../kconfig.html#CONFIG_SPI_NXP_LPSPI" title="CONFIG_SPI_NXP_LPSPI"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SPI_NXP_LPSPI</span></code></a>,
+and similar for any child configs for that driver, including
+<a class="reference internal" href="../kconfig.html#CONFIG_SPI_NXP_LPSPI_DMA" title="CONFIG_SPI_NXP_LPSPI_DMA"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SPI_NXP_LPSPI_DMA</span></code></a> and <a class="reference internal" href="../kconfig.html#CONFIG_SPI_NXP_LPSPI_CPU" title="CONFIG_SPI_NXP_LPSPI_CPU"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SPI_NXP_LPSPI_CPU</span></code></a>.</p></li>
+<li><p>Renamed the device tree property <code class="docutils literal notranslate"><span class="pre">port_sel</span></code> to <code class="docutils literal notranslate"><span class="pre">port-sel</span></code>.</p></li>
+<li><p>Renamed the device tree property <code class="docutils literal notranslate"><span class="pre">chip_select</span></code> to <code class="docutils literal notranslate"><span class="pre">chip-select</span></code>.</p></li>
+<li><p>The binding file for <a class="reference internal" href="../build/dts/api/bindings/spi/andestech%2Catcspi200.html#std-dtcompatible-andestech-atcspi200"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">andestech,atcspi200</span></code></a> has been renamed to have a name
+matching the compatible string.</p></li>
+</ul>
+</section>
+<section id="sensors">
+<h3><a class="toc-backref" href="#id24" role="doc-backlink">Sensors</a><a class="headerlink" href="#sensors" title="Link to this heading"></a></h3>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">ltr</span></code> vendor prefix has been renamed to <code class="docutils literal notranslate"><span class="pre">liteon</span></code>, and with it the
+<code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">ltr,f216a</span></code> name has been replaced by <a class="reference internal" href="../build/dts/api/bindings/sensor/liteon%2Cltrf216a.html#std-dtcompatible-liteon-ltrf216a"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">liteon,ltrf216a</span></code></a>.
+The choice <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">DT_HAS_LTR_F216A_ENABLED</span></code> has been replaced with
+<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">DT_HAS_LITEON_LTRF216A_ENABLED</span></code> (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/85453">GitHub #85453</a>)</p></li>
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">ti,tmp116</span></code> has been renamed to <a class="reference internal" href="../build/dts/api/bindings/sensor/ti%2Ctmp11x.html#std-dtcompatible-ti-tmp11x"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">ti,tmp11x</span></code></a> because it supports
+tmp116, tmp117 and tmp119.</p></li>
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">meas,ms5837</span></code> has been replaced by <a class="reference internal" href="../build/dts/api/bindings/sensor/meas%2Cms5837-30ba.html#std-dtcompatible-meas-ms5837-30ba"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">meas,ms5837-30ba</span></code></a>
+and <a class="reference internal" href="../build/dts/api/bindings/sensor/meas%2Cms5837-02ba.html#std-dtcompatible-meas-ms5837-02ba"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">meas,ms5837-02ba</span></code></a>. In order to use one of the two variants, the
+status property needs to be used as well.</p></li>
+<li><p>The <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">we,wsen-itds</span></code> driver has been renamed to
+<a class="reference internal" href="../build/dts/api/compatibles/we%2Cwsen-itds-2533020201601.html#std-dtcompatible-we-wsen-itds-2533020201601"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">we,wsen-itds-2533020201601</span></code></a>.
+The Device Tree can be configured as follows:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">i2c0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nf">itds:itds-2533020201601</span><span class="o">@</span><span class="mi">19</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;we,wsen-itds-2533020201601&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x19</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">odr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;400&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">op-mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;high-perf&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">power-mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;normal&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">events-interrupt-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio1</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="na">GPIO_ACTIVE_HIGH</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">drdy-interrupt-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">&amp;</span><span class="na">gpio1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="na">GPIO_ACTIVE_HIGH</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">  </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
+<li><p>The binding file for <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">raspberrypi,pico-temp.yaml</span></code> has been renamed to have a name
+matching the compatible string.</p></li>
+<li><p>Moved file <code class="docutils literal notranslate"><span class="pre">include/zephyr/drivers/sensor/npm1300_charger.h</span></code> to
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/drivers/sensor/npm13xx_charger.h">include/zephyr/drivers/sensor/npm13xx_charger.h</a> and renamed all instances of
+<code class="docutils literal notranslate"><span class="pre">NPM1300</span></code> to <code class="docutils literal notranslate"><span class="pre">NPM13XX</span></code> in the enums</p></li>
+<li><p>Renamed <code class="docutils literal notranslate"><span class="pre">CONFIG_NPM1300_CHARGER</span></code> to <a class="reference internal" href="../kconfig.html#CONFIG_NPM13XX_CHARGER" title="CONFIG_NPM13XX_CHARGER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NPM13XX_CHARGER</span></code></a></p></li>
+</ul>
+</section>
+<section id="serial">
+<h3><a class="toc-backref" href="#id25" role="doc-backlink">Serial</a><a class="headerlink" href="#serial" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">uart_native_posix</span></code> has been renamed <code class="docutils literal notranslate"><span class="pre">uart_native_pty</span></code>, and with it its
+kconfig options and DT binding. <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,native-posix-uart</span></code>  has been deprecated
+in favor of <a class="reference internal" href="../build/dts/api/bindings/serial/zephyr%2Cnative-pty-uart.html#std-dtcompatible-zephyr-native-pty-uart"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,native-pty-uart</span></code></a>.
+<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_UART_NATIVE_POSIX</span></code> and its related options with
+<a class="reference internal" href="../kconfig.html#CONFIG_UART_NATIVE_PTY" title="CONFIG_UART_NATIVE_PTY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_UART_NATIVE_PTY</span></code></a>.
+The choice <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NATIVE_UART_0</span></code> has been replaced with
+<a class="reference internal" href="../kconfig.html#CONFIG_UART_NATIVE_PTY_0" title="CONFIG_UART_NATIVE_PTY_0"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_UART_NATIVE_PTY_0</span></code></a>, but now, it is also possible to select if a UART is
+connected to the process stdin/out instead of a PTY at runtime with the command line option
+<code class="docutils literal notranslate"><span class="pre">--&lt;uart_name&gt;_stdinout</span></code>.
+<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NATIVE_UART_AUTOATTACH_DEFAULT_CMD</span></code> has been replaced with
+<a class="reference internal" href="../kconfig.html#CONFIG_UART_NATIVE_PTY_AUTOATTACH_DEFAULT_CMD" title="CONFIG_UART_NATIVE_PTY_AUTOATTACH_DEFAULT_CMD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_UART_NATIVE_PTY_AUTOATTACH_DEFAULT_CMD</span></code></a>.
+<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_UART_NATIVE_WAIT_PTS_READY_ENABLE</span></code> has been deprecated. The functionality
+it enabled is now always enabled as there is no drawbacks from it.
+<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_UART_NATIVE_POSIX_PORT_1_ENABLE</span></code> has been deprecated. This option does
+nothing now. Instead users should instantiate as many <a class="reference internal" href="../build/dts/api/bindings/serial/zephyr%2Cnative-pty-uart.html#std-dtcompatible-zephyr-native-pty-uart"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,native-pty-uart</span></code></a> nodes
+as native PTY UART instances they want. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/86739">GitHub #86739</a>)</p></li>
+</ul>
+</section>
+<section id="stepper">
+<h3><a class="toc-backref" href="#id26" role="doc-backlink">Stepper</a><a class="headerlink" href="#stepper" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Refactored the <code class="docutils literal notranslate"><span class="pre">stepper_enable(const</span> <span class="pre">struct</span> <span class="pre">device</span> <span class="pre">*</span> <span class="pre">dev,</span> <span class="pre">bool</span> <span class="pre">enable)</span></code> function to
+<a class="reference internal" href="../doxygen/html/group__stepper__hw__driver.html#ga3395b5f8b401d8175067edfb25c2e0e8" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">stepper_enable()</span></code></a> &amp; <a class="reference internal" href="../doxygen/html/group__stepper__hw__driver.html#gab892a6b8d8fb34db0e682dd8f7de4218" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">stepper_disable()</span></code></a>.</p></li>
+</ul>
+</section>
+<section id="timer">
+<h3><a class="toc-backref" href="#id27" role="doc-backlink">Timer</a><a class="headerlink" href="#timer" title="Link to this heading"></a></h3>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">native_posix_timer</span></code> has been renamed <code class="docutils literal notranslate"><span class="pre">native_sim_timer</span></code>, and so its kconfig option
+<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NATIVE_POSIX_TIMER</span></code> has been deprecated in favor of
+<a class="reference internal" href="../kconfig.html#CONFIG_NATIVE_SIM_TIMER" title="CONFIG_NATIVE_SIM_TIMER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NATIVE_SIM_TIMER</span></code></a>, (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/86612">GitHub #86612</a>).</p></li>
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">andestech,machine-timer</span></code>, <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">neorv32-machine-timer</span></code>,
+<code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">telink,machine-timer</span></code>, <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">lowrisc,machine-timer</span></code>,
+<code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">niosv-machine-timer</span></code>, and <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">scr,machine-timer</span></code> have
+been unified under <a class="reference internal" href="../build/dts/api/bindings/timer/riscv%2Cmachine-timer.html#std-dtcompatible-riscv-machine-timer"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">riscv,machine-timer</span></code></a>.</p>
+<p>The addresses of both <code class="docutils literal notranslate"><span class="pre">MTIME</span></code> and <code class="docutils literal notranslate"><span class="pre">MTIMECMP</span></code> registers must now be explicitly
+specified using the <code class="docutils literal notranslate"><span class="pre">reg</span></code> and <code class="docutils literal notranslate"><span class="pre">reg-names</span></code> properties. The <code class="docutils literal notranslate"><span class="pre">reg-names</span></code> property
+is now <strong>required</strong>, and must list names corresponding one-to-one with each entry
+in <code class="docutils literal notranslate"><span class="pre">reg</span></code>. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/84175">GitHub #84175</a> and <a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/89847">GitHub #89847</a>)</p>
+<p>Example:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nl">mtimer</span><span class="p">:</span><span class="w"> </span><span class="nf">timer</span><span class="o">@</span><span class="mi">d1000000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;riscv,machine-timer&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">interrupts-extended</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">cpu0_intc</span><span class="w"> </span><span class="mi">7</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0xd1000000</span><span class="w"> </span><span class="mh">0x8</span>
+<span class="w">           </span><span class="mh">0xd1000008</span><span class="w"> </span><span class="mh">0x8</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">reg</span><span class="o">-</span><span class="n">names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;mtime&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;mtimecmp&quot;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
+<li><p>It is now possible to use a <code class="docutils literal notranslate"><span class="pre">timebase-frequency</span></code> property in the cpus DTS group to provide
+the value for <a class="reference internal" href="../kconfig.html#CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC" title="CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC</span></code></a> instead of
+using a value: <a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/91296">GitHub #91296</a></p></li>
+</ul>
+</section>
+<section id="video">
+<h3><a class="toc-backref" href="#id28" role="doc-backlink">Video</a><a class="headerlink" href="#video" title="Link to this heading"></a></h3>
+<ul>
+<li><p>8 bit RAW Bayer formats BGGR8 / GBRG8 / GRBG8 / RGGB8 have been renamed by adding
+a S prefix in front:</p>
+<p><code class="docutils literal notranslate"><span class="pre">VIDEO_PIX_FMT_BGGR8</span></code> becomes <a class="reference internal" href="../doxygen/html/group__video__pixel__formats.html#gabc0205ce5c6426051fdec88d92f123e3" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">VIDEO_PIX_FMT_SBGGR8</span></code></a>
+<code class="docutils literal notranslate"><span class="pre">VIDEO_PIX_FMT_GBRG8</span></code> becomes <a class="reference internal" href="../doxygen/html/group__video__pixel__formats.html#gaa9edb9c562fc3c86b61e071970fae60d" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">VIDEO_PIX_FMT_SGBRG8</span></code></a>
+<code class="docutils literal notranslate"><span class="pre">VIDEO_PIX_FMT_GRBG8</span></code> becomes <a class="reference internal" href="../doxygen/html/group__video__pixel__formats.html#ga19d8dc905695229097dffe659f2a806e" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">VIDEO_PIX_FMT_SGRBG8</span></code></a>
+<code class="docutils literal notranslate"><span class="pre">VIDEO_PIX_FMT_RGGB8</span></code> becomes <a class="reference internal" href="../doxygen/html/group__video__pixel__formats.html#gabf0dde810e75d37823891ed03811482c" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">VIDEO_PIX_FMT_SRGGB8</span></code></a></p>
+</li>
+<li><p>On STM32 devices, the DCMI driver (<a class="reference internal" href="../build/dts/api/bindings/video/st%2Cstm32-dcmi.html#std-dtcompatible-st-stm32-dcmi"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">st,stm32-dcmi</span></code></a>) now relies on endpoint based
+video-interfaces.yaml bindings for sensor interface properties (such as bus width and
+synchronization signals).
+Also the <code class="docutils literal notranslate"><span class="pre">capture-rate</span></code> property has been replaced by the usage of the frame interval API
+<a class="reference internal" href="../doxygen/html/group__video__interface.html#gac7a047582183dcdc4fed58ef9b9b4a84" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">video_set_frmival()</span></code></a>.
+See (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/89627">GitHub #89627</a>).</p></li>
+<li><p><code class="xref c c-enum docutils literal notranslate"><span class="pre">video_endpoint_id</span></code> has been dropped. It is no longer a parameter in any video API.</p></li>
+<li><p><a class="reference internal" href="../doxygen/html/group__video__interface.html#gad386b2994b56844ebe713f156b9dfe4e" title=""><code class="xref c c-enum docutils literal notranslate"><span class="pre">video_buf_type</span></code></a> has been added. It is a required parameter in the following video APIs:
+<code class="xref c c-func docutils literal notranslate"><span class="pre">set_stream()</span></code>, <a class="reference internal" href="../doxygen/html/group__video__interface.html#ga835bb485fcf906cc5b27529a0fe218d3" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">video_stream_start()</span></code></a>, <a class="reference internal" href="../doxygen/html/group__video__interface.html#gaa8965272b3f2a7f6692b56ff569f190f" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">video_stream_stop()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">video_format.pitch</span></code> has been updated to be set explicitly by the driver, a task formerly
+required by the application. This update enables the application to correctly allocate a buffer
+size on a per driver basis. Existing applications will not be broken by this change but can be
+simplified as performed in the sample in the commit <code class="docutils literal notranslate"><span class="pre">33dcbe37cfd3593e8c6e9cfd218dd31fdd533598</span></code>.</p></li>
+<li><p>Samples and projects using the <a class="reference internal" href="../boards/native/native_sim/doc/index.html#native_sim"><span class="xref zephyr zephyr-board">native simulator</span></a> now require
+specifying the <code class="docutils literal notranslate"><span class="pre">--snippet</span></code> <a class="reference internal" href="../snippets/video-sw-generator/README.html#snippet-video-sw-generator"><span class="std std-ref">video-sw-generator</span></a> to build
+correctly.</p></li>
+<li><p><a class="reference internal" href="../doxygen/html/group__video__interface.html#ga8813a656a66adc6bfb10fb7f27194898" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">video_query_ctrl()</span></code></a> now takes a single argument with the <a class="reference internal" href="../doxygen/html/structvideo__ctrl__query.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">video_ctrl_query</span></code></a>,
+which now contains a <code class="docutils literal notranslate"><span class="pre">video_ctrl_query.dev</span></code> field to specify and read back which device is
+being queried (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/91265">GitHub #91265</a>).</p></li>
+</ul>
+</section>
+<section id="watchdog">
+<h3><a class="toc-backref" href="#id29" role="doc-backlink">Watchdog</a><a class="headerlink" href="#watchdog" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Renamed <code class="docutils literal notranslate"><span class="pre">CONFIG_WDT_NPM1300</span></code> to <a class="reference internal" href="../kconfig.html#CONFIG_WDT_NPM13XX" title="CONFIG_WDT_NPM13XX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_WDT_NPM13XX</span></code></a>,
+<code class="docutils literal notranslate"><span class="pre">CONFIG_WDT_NPM1300_INIT_PRIORITY</span></code> to <a class="reference internal" href="../kconfig.html#CONFIG_WDT_NPM13XX_INIT_PRIORITY" title="CONFIG_WDT_NPM13XX_INIT_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_WDT_NPM13XX_INIT_PRIORITY</span></code></a></p></li>
+</ul>
+</section>
+<section id="qspi-ospi-xspi">
+<h3><a class="toc-backref" href="#id30" role="doc-backlink">qSPI/oSPI/xSPI</a><a class="headerlink" href="#qspi-ospi-xspi" title="Link to this heading"></a></h3>
+<ul>
+<li><p>On STM32 devices, external memories device tree descriptions for size and address are now split
+in two separate properties to comply with specification recommendations.</p>
+<p>For instance, following external flash description <code class="docutils literal notranslate"><span class="pre">reg</span> <span class="pre">=</span> <span class="pre">&lt;0x70000000</span> <span class="pre">DT_SIZE_M(64)&gt;;</span> <span class="pre">/*</span> <span class="pre">512</span> <span class="pre">Mbits</span> <span class="pre">/</span></code>
+is changed to <code class="docutils literal notranslate"><span class="pre">reg</span> <span class="pre">=</span> <span class="pre">&lt;0&gt;;</span></code> <code class="docutils literal notranslate"><span class="pre">size</span> <span class="pre">=</span> <span class="pre">&lt;DT_SIZE_M(512)&gt;;</span> <span class="pre">/</span> <span class="pre">512</span> <span class="pre">Mbits</span> <span class="pre">*/</span></code>.</p>
+<p>Note that the property gives the actual size of the memory device in bits.
+Previous mapping address information is now described in xspi, ospi or qspi nodes at SoC dtsi level.</p>
+</li>
+</ul>
+</section>
+</section>
+<section id="bluetooth">
+<h2><a class="toc-backref" href="#id31" role="doc-backlink">Bluetooth</a><a class="headerlink" href="#bluetooth" title="Link to this heading"></a></h2>
+<section id="bluetooth-audio">
+<h3><a class="toc-backref" href="#id32" role="doc-backlink">Bluetooth Audio</a><a class="headerlink" href="#bluetooth-audio" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CONFIG_BT_CSIP_SET_MEMBER_NOTIFIABLE</span></code> has been renamed to
+<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_CSIP_SET_MEMBER_SIRK_NOTIFIABLE`</span></code>. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/86763`">GitHub #86763`</a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bt_csip_set_member_get_sirk</span></code> has been removed. Use <a class="reference internal" href="../doxygen/html/group__bt__csip.html#gad80917089bc7e629cc3cb9d7fbf6cf45" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_csip_set_member_get_info()</span></code></a> to get
+the SIRK (and other information). (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/86996">GitHub #86996</a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BT_AUDIO_CONTEXT_TYPE_PROHIBITED</span></code> has been renamed to
+<a class="reference internal" href="../doxygen/html/group__bt__assigned__numbers__audio.html#ggafb379ffa88388cc1397960155bbb2ab3a890d2723c8b23127ab4a1cb8b6b1118d" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">BT_AUDIO_CONTEXT_TYPE_NONE</span></code></a>. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/89506">GitHub #89506</a>)</p></li>
+</ul>
+</section>
+<section id="bluetooth-classic">
+<h3><a class="toc-backref" href="#id33" role="doc-backlink">Bluetooth Classic</a><a class="headerlink" href="#bluetooth-classic" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The parameters of HFP AG callback <code class="docutils literal notranslate"><span class="pre">sco_disconnected</span></code> of the struct <a class="reference internal" href="../doxygen/html/structbt__hfp__ag__cb.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">bt_hfp_ag_cb</span></code></a>
+have been changed to SCO connection object <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">bt_conn</span> <span class="pre">*sco_conn</span></code> and the disconnection
+reason of the SCO connection <code class="docutils literal notranslate"><span class="pre">uint8_t</span> <span class="pre">reason</span></code>.</p></li>
+</ul>
+</section>
+<section id="bluetooth-hci">
+<h3><a class="toc-backref" href="#id34" role="doc-backlink">Bluetooth HCI</a><a class="headerlink" href="#bluetooth-hci" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The buffer types passing through the HCI driver interface are now indicated as H:4 encoded prefix
+bytes as part of the buffer payload itself. The bt_buf_set_type() and bt_buf_get_type() functions
+have been deprecated, but are still usable, with the exception that they can only be
+called once per buffer.</p></li>
+<li><p>The <code class="xref c c-func docutils literal notranslate"><span class="pre">bt_hci_cmd_create()</span></code> function has been deprecated and the new <a class="reference internal" href="../doxygen/html/hci_8h.html#a974e6e9262601e73537cbdcba7a7c93c" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_hci_cmd_alloc()</span></code></a>
+function should be used instead. The new function takes no parameters because the command
+sending functions have been updated to do the command header encoding.</p></li>
+</ul>
+</section>
+<section id="bluetooth-host">
+<h3><a class="toc-backref" href="#id35" role="doc-backlink">Bluetooth Host</a><a class="headerlink" href="#bluetooth-host" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The symbols <code class="docutils literal notranslate"><span class="pre">BT_LE_CS_TONE_ANTENNA_CONFIGURATION_INDEX_&lt;NUMBER&gt;</span></code> in
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/bluetooth/conn.h">include/zephyr/bluetooth/conn.h</a> have been renamed
+to <code class="docutils literal notranslate"><span class="pre">BT_LE_CS_TONE_ANTENNA_CONFIGURATION_A&lt;NUMBER&gt;_B&lt;NUMBER&gt;</span></code>.</p></li>
+<li><p>The ISO data paths are not longer setup automatically, and shall explicitly be setup and removed
+by the application by calling <a class="reference internal" href="../doxygen/html/group__bt__iso.html#gaa74c762451cfb5d04ffcd8d396a75447" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_iso_setup_data_path()</span></code></a> and
+<a class="reference internal" href="../doxygen/html/group__bt__iso.html#ga53be464e005392676830feeddd8cdc22" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_iso_remove_data_path()</span></code></a> respectively. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/75549">GitHub #75549</a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BT_ISO_CHAN_TYPE_CONNECTED</span></code> has been split into <code class="docutils literal notranslate"><span class="pre">BT_ISO_CHAN_TYPE_CENTRAL</span></code> and
+<code class="docutils literal notranslate"><span class="pre">BT_ISO_CHAN_TYPE_PERIPHERAL</span></code> to better describe the type of the ISO channel, as behavior for
+each role may be different. Any existing uses/checks for <code class="docutils literal notranslate"><span class="pre">BT_ISO_CHAN_TYPE_CONNECTED</span></code>
+can be replaced with an <code class="docutils literal notranslate"><span class="pre">||</span></code> of the two. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/75549">GitHub #75549</a>)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">_bt_gatt_ccc</span></code> in <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/bluetooth/gatt.h">include/zephyr/bluetooth/gatt.h</a> has been renamed to
+struct <a class="reference internal" href="../doxygen/html/structbt__gatt__ccc__managed__user__data.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">bt_gatt_ccc_managed_user_data</span></code></a>. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/88652">GitHub #88652</a>)</p></li>
+<li><p>The macro <code class="docutils literal notranslate"><span class="pre">BT_GATT_CCC_INITIALIZER</span></code> in <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/bluetooth/gatt.h">include/zephyr/bluetooth/gatt.h</a>
+has been renamed to <a class="reference internal" href="../doxygen/html/group__bt__gatt__server.html#gae3a23386bfe38e0127b74e0f4b5e5667" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">BT_GATT_CCC_MANAGED_USER_DATA_INIT</span></code></a>. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/88652">GitHub #88652</a>)</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">CONFIG_BT_ISO_TX_FRAG_COUNT</span></code> Kconfig option was removed as it was completely unused.
+Any uses of it can simply be removed. (<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/89836">GitHub #89836</a>)</p></li>
+</ul>
+</section>
+</section>
+<section id="networking">
+<h2><a class="toc-backref" href="#id36" role="doc-backlink">Networking</a><a class="headerlink" href="#networking" title="Link to this heading"></a></h2>
+<ul>
+<li><p>The struct <code class="docutils literal notranslate"><span class="pre">net_linkaddr_storage</span></code> has been renamed to struct
+<a class="reference internal" href="../doxygen/html/structnet__linkaddr.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">net_linkaddr</span></code></a> and the old struct <code class="docutils literal notranslate"><span class="pre">net_linkaddr</span></code> has been removed.
+The struct <a class="reference internal" href="../doxygen/html/structnet__linkaddr.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">net_linkaddr</span></code></a> now contains space to store the link
+address instead of having pointer that point to the link address. This avoids
+possible dangling pointers when cloning struct <a class="reference internal" href="../doxygen/html/structnet__pkt.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">net_pkt</span></code></a>. This will
+increase the size of struct <a class="reference internal" href="../doxygen/html/structnet__pkt.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">net_pkt</span></code></a> by 4 octets for IEEE 802.15.4,
+but there is no size increase for other network technologies like Ethernet.
+Note that any code that is using struct <a class="reference internal" href="../doxygen/html/structnet__linkaddr.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">net_linkaddr</span></code></a> directly, and
+which has checks like <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(lladdr-&gt;addr</span> <span class="pre">==</span> <span class="pre">NULL)</span></code>, will no longer work as expected
+(because the addr is not a pointer) and must be changed to <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(lladdr-&gt;len</span> <span class="pre">==</span> <span class="pre">0)</span></code>
+if the code wants to check that the link address is not set.</p></li>
+<li><p>TLS credential type <code class="docutils literal notranslate"><span class="pre">TLS_CREDENTIAL_SERVER_CERTIFICATE</span></code> was renamed to
+more generic <a class="reference internal" href="../doxygen/html/group__tls__credentials.html#gga3a754894d0162634b59d60e319f37cd5acd8b96102765f7f2a83582eab80df3d8" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">TLS_CREDENTIAL_PUBLIC_CERTIFICATE</span></code></a> to better
+reflect the purpose of this credential type.</p></li>
+<li><p>The MQTT public API function <a class="reference internal" href="../doxygen/html/group__mqtt__socket.html#ga0bc7d91da88c2fbc25108d89ce4318c4" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">mqtt_disconnect()</span></code></a> has changed. The function
+now accepts additional <code class="docutils literal notranslate"><span class="pre">param</span></code> parameter to support MQTT 5.0 case. The parameter
+is optional and not used with older MQTT versions - MQTT 3.1.1 users should pass
+NULL as an argument.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">AF_PACKET/SOCK_RAW/IPPROTO_RAW</span></code> socket combination is no longer supported,
+as <code class="docutils literal notranslate"><span class="pre">AF_PACKET</span></code> sockets should only accept IEEE 802.3 protocol numbers. As an
+alternative, <code class="docutils literal notranslate"><span class="pre">AF_PACKET/SOCK_DGRAM/ETH_P_ALL</span></code> or <code class="docutils literal notranslate"><span class="pre">AF_INET(6)/SOCK_RAW/IPPROTO_IP</span></code>
+sockets can be used, depending on the actual use case.</p></li>
+<li><p>The HTTP server now respects the configured <code class="docutils literal notranslate"><span class="pre">_concurrent</span></code> and  <code class="docutils literal notranslate"><span class="pre">_backlog</span></code> values. Check that
+you provide applicable values to <a class="reference internal" href="../doxygen/html/group__http__service.html#ga8fdbc5b9c3342c7b8fd258e2184cf0ae" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">HTTP_SERVICE_DEFINE_EMPTY</span></code></a>,
+<a class="reference internal" href="../doxygen/html/group__http__service.html#gac8cf3b383a4482c511165eaad3c1d05f" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">HTTPS_SERVICE_DEFINE_EMPTY</span></code></a>, <a class="reference internal" href="../doxygen/html/group__http__service.html#ga24ace8d5ad9ffb68e9a746c7b483b720" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">HTTP_SERVICE_DEFINE</span></code></a> and
+<a class="reference internal" href="../doxygen/html/group__http__service.html#ga8b6eabec04ca31871581c382c7246765" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">HTTPS_SERVICE_DEFINE</span></code></a>.</p></li>
+<li><p><a class="reference internal" href="../kconfig.html#CONFIG_NET_ZPERF" title="CONFIG_NET_ZPERF"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_ZPERF</span></code></a> no longer includes server support by default. To use
+the server commands, enable <a class="reference internal" href="../kconfig.html#CONFIG_NET_ZPERF_SERVER" title="CONFIG_NET_ZPERF_SERVER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_ZPERF_SERVER</span></code></a>. If server support
+is not needed, <a class="reference internal" href="../kconfig.html#CONFIG_ZVFS_POLL_MAX" title="CONFIG_ZVFS_POLL_MAX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZVFS_POLL_MAX</span></code></a> can possibly be reduced.</p></li>
+<li><p>The L2 Wi-Fi shell now supports interface option for most commands, to accommodate this
+change some of the existing options have been renamed. The following table
+summarizes the changes:</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Command(s)</p></td>
+<td><p>Old option</p></td>
+<td><p>New option</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">wifi</span> <span class="pre">connect</span></code>
+<code class="docutils literal notranslate"><span class="pre">wifi</span> <span class="pre">ap</span> <span class="pre">enable</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">-i</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">-g</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">wifi</span> <span class="pre">twt</span> <span class="pre">setup</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">-i</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">-p</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">wifi</span> <span class="pre">ap</span> <span class="pre">config</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">-i</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">-t</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">wifi</span> <span class="pre">mode</span></code>
+<code class="docutils literal notranslate"><span class="pre">wifi</span> <span class="pre">channel</span></code>
+<code class="docutils literal notranslate"><span class="pre">wifi</span> <span class="pre">packet_filter</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">--if-index</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">--iface</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p>The <a class="reference internal" href="../doxygen/html/group__http__client.html#ga6141c94f7da92b71713079063f3426be" title=""><code class="xref c c-type docutils literal notranslate"><span class="pre">http_response_cb_t</span></code></a> HTTP client response callback signature has
+changed. The callback function now returns <code class="docutils literal notranslate"><span class="pre">int</span></code> instead of <code class="docutils literal notranslate"><span class="pre">void</span></code>. This
+allows the application to abort the HTTP connection. Existing applications
+need to update their response callback implementations. To retain current
+behavior, simply return 0 from the callback.</p></li>
+<li><p>The API signature of <code class="docutils literal notranslate"><span class="pre">net_mgmt</span></code> event handler <a class="reference internal" href="../doxygen/html/group__net__mgmt.html#ga2e83a5a769ac52c846f255e23aea84d2" title=""><code class="xref c c-type docutils literal notranslate"><span class="pre">net_mgmt_event_handler_t</span></code></a> and
+request handler <a class="reference internal" href="../doxygen/html/group__net__mgmt.html#ga78b9302193bd0c5cc35d81d298a5eb6b" title=""><code class="xref c c-type docutils literal notranslate"><span class="pre">net_mgmt_request_handler_t</span></code></a> has changed. The management event
+type is changed from <code class="docutils literal notranslate"><span class="pre">uint32_t</span></code> to <code class="docutils literal notranslate"><span class="pre">uint64_t</span></code>. The change allows event number values
+to be bit masks instead of enum values. The layer code still stays as a enum value.
+The <code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_MGMT_LAYER_CODE</span></code> and <code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_MGMT_GET_COMMAND</span></code> can be used to get
+the layer code and management event command from the actual event value in the request or
+event handlers if needed.</p></li>
+<li><p>The socket options for <code class="docutils literal notranslate"><span class="pre">net_mgmt</span></code> type sockets cannot directly be network management
+event types as those are now <code class="docutils literal notranslate"><span class="pre">uint64_t</span></code> and the socket option expects a normal 32 bit
+integer value. Because of this, a new <code class="docutils literal notranslate"><span class="pre">SO_NET_MGMT_ETHERNET_SET_QAV_PARAM</span></code>
+and <code class="docutils literal notranslate"><span class="pre">SO_NET_MGMT_ETHERNET_GET_QAV_PARAM</span></code> socket options are created that will replace
+the previously used <code class="docutils literal notranslate"><span class="pre">NET_REQUEST_ETHERNET_SET_QAV_PARAM</span></code> and
+<code class="docutils literal notranslate"><span class="pre">NET_REQUEST_ETHERNET_GET_QAV_PARAM</span></code> options.</p></li>
+<li><p>The DNS server resolver configuration functions <a class="reference internal" href="../doxygen/html/group__dns__resolve.html#ga1d3bb0319531bfe0ae95f48bdc51c56f" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">dns_resolve_reconfigure()</span></code></a> and
+<a class="reference internal" href="../doxygen/html/group__dns__resolve.html#ga3d22eed1d6d017e5bd7a2344775d33b7" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">dns_resolve_reconfigure_with_interfaces()</span></code></a> now require that the user supplies
+the source of the DNS server information. For example when DNS server information is
+received via DHCPv4, then <a class="reference internal" href="../doxygen/html/group__dns__resolve.html#ggaeda02f82b12e9b7b4dea9fd66be123a7a7eba9f4f6d3bb94c480417e85583463b" title=""><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">DNS_SOURCE_DHCPV4</span></code></a> needs to be specified.</p></li>
+</ul>
+<section id="lwm2m">
+<h3><a class="toc-backref" href="#id37" role="doc-backlink">LwM2M</a><a class="headerlink" href="#lwm2m" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Accelerometer object: optional resources Y value, Z value, min range value,
+max range value can now be used optionally as per the accelerometer object’s
+specification. Users of these resources will now need to provide a read
+buffer.</p></li>
+</ul>
+</section>
+<section id="openthread">
+<h3><a class="toc-backref" href="#id38" role="doc-backlink">OpenThread</a><a class="headerlink" href="#openthread" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The OpenThread stack integration in Zephyr has undergone a major refactor.
+The implementation has been moved from the Zephyr networking layer (<code class="docutils literal notranslate"><span class="pre">subsys/net/l2/openthread/</span></code>)
+to a dedicated module (<code class="docutils literal notranslate"><span class="pre">modules/openthread/</span></code>).</p></li>
+<li><p>OpenThread is now a standalone module in Zephyr.
+It can be used independently of Zephyr’s networking stack (L2 and IEEE802.15.4 shim layers).
+This enables new use cases, such as applications that use OpenThread directly with their
+own IEEE802.15.4 driver, or that do not need the full Zephyr networking stack.</p></li>
+<li><p>Most functions in the <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/include/zephyr/net/openthread.h">include/zephyr/net/openthread.h</a> file have been deprecated.
+These deprecated APIs are still available for backward compatibility, but new applications should
+use the new APIs provided by the OpenThread module. The following list summarizes the changes:</p>
+<ul>
+<li><p>Mutex handling:</p>
+<ul>
+<li><p>Previously:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">openthread_api_mutex_lock</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">openthread_api_mutex_try_lock</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">openthread_api_mutex_unlock</span></code></p></li>
+</ul>
+</li>
+<li><p>Now use:</p>
+<ul>
+<li><p><a class="reference internal" href="../doxygen/html/modules_2openthread_2include_2openthread_8h.html#ae3945bc3549118dc5420f9859588282d" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_mutex_lock()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../doxygen/html/modules_2openthread_2include_2openthread_8h.html#ab5669622dfd83d3a5175fa47325dade3" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_mutex_try_lock()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../doxygen/html/modules_2openthread_2include_2openthread_8h.html#a420c3321272141f63ea86166b84ec845" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_mutex_unlock()</span></code></a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>OpenThread starting:</p>
+<ul>
+<li><p>Previously: <code class="docutils literal notranslate"><span class="pre">openthread_start</span></code></p></li>
+<li><p>Now use: <a class="reference internal" href="../doxygen/html/modules_2openthread_2include_2openthread_8h.html#a558165d2e49e9335649c94ac0be53392" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_run()</span></code></a></p></li>
+</ul>
+</li>
+<li><p>Callback registration:</p>
+<ul>
+<li><p>Previously:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">openthread_state_changed_cb_register</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">openthread_state_changed_cb_unregister</span></code></p></li>
+</ul>
+</li>
+<li><p>Now use:</p>
+<ul>
+<li><p><a class="reference internal" href="../doxygen/html/modules_2openthread_2include_2openthread_8h.html#a4178b72288585869e2c941acdc21db57" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_state_changed_callback_register()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../doxygen/html/modules_2openthread_2include_2openthread_8h.html#ae4ad25613f8eada1a0a29426a2f4a518" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_state_changed_callback_unregister()</span></code></a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Callback structure:</p>
+<ul>
+<li><p>Previously: <code class="docutils literal notranslate"><span class="pre">openthread_state_changed_cb</span></code></p></li>
+<li><p>Now use: <a class="reference internal" href="../doxygen/html/structopenthread__state__changed__callback.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">openthread_state_changed_callback</span></code></a></p></li>
+</ul>
+</li>
+<li><p>The following <code class="xref c c-struct docutils literal notranslate"><span class="pre">openthread_context</span></code> struct fields are deprecated and shall not be used
+in new code anymore:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">instance</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">api_lock</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">work_q</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">api_work</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">state_change_cbs</span></code></p></li>
+</ul>
+</li>
+<li><p>The new functions that were not present before:</p>
+<ul>
+<li><p><a class="reference internal" href="../doxygen/html/modules_2openthread_2include_2openthread_8h.html#a4d213cad99e6eeb747bd0057248251e5" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_init()</span></code></a> to initialize the OpenThread stack.</p></li>
+<li><p><a class="reference internal" href="../doxygen/html/modules_2openthread_2include_2openthread_8h.html#af52cc96d5d4be673f16eb4856de6cc58" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_stop()</span></code></a> to stop and disable the OpenThread stack.</p></li>
+<li><p><a class="reference internal" href="../doxygen/html/modules_2openthread_2include_2openthread_8h.html#a14ea88a5f4e4a9e014f2381cd853e8de" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_set_receive_cb()</span></code></a> to set the receive callback for the OpenThread stack.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>The OpenThread-related Kconfig options from <code class="docutils literal notranslate"><span class="pre">subsys/net/l2/openthread/Kconfig</span></code>
+have been moved to <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/modules/openthread/Kconfig">modules/openthread/Kconfig</a>. All Kconfig options remain the same.
+You can still use them in the same way as before, but to modify them, use the new path in the
+menuconfig or guiconfig.</p></li>
+<li><p>If the <a class="reference internal" href="../kconfig.html#CONFIG_NET_L2_OPENTHREAD" title="CONFIG_NET_L2_OPENTHREAD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_L2_OPENTHREAD</span></code></a> Kconfig option is enabled, Zephyr’s L2 layer
+will use the new OpenThread module API as its backend. The L2 layer no longer implements
+OpenThread itself, but delegates the implementation to the module.</p></li>
+<li><p>For existing applications using OpenThread through Zephyr’s networking stack:</p>
+<ul>
+<li><p>Your application should continue to work, as the old APIs are still available for compatibility.
+However, you are encouraged to migrate to the new APIs for future-proofing and use the new
+modular structure.</p></li>
+<li><p>Update any references to OpenThread Kconfig options to use the new path
+(<code class="docutils literal notranslate"><span class="pre">modules/openthread/Kconfig</span></code>) in your configuration tools.</p></li>
+</ul>
+</li>
+<li><p>For applications using <code class="xref c c-struct docutils literal notranslate"><span class="pre">openthread_context</span></code> or other deprecated APIs:</p>
+<ul>
+<li><p>Begin migrating to the new APIs. The deprecated APIs will be removed in a future release.</p></li>
+<li><p>Avoid direct use of <code class="xref c c-struct docutils literal notranslate"><span class="pre">openthread_context</span></code> and related fields; use the new
+initialization and callback registration functions instead.</p></li>
+</ul>
+</li>
+<li><p>For new applications or those using OpenThread without Zephyr L2:</p>
+<ul>
+<li><p>Use the new initialization (<a class="reference internal" href="../doxygen/html/modules_2openthread_2include_2openthread_8h.html#a4d213cad99e6eeb747bd0057248251e5" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_init()</span></code></a>), run (<a class="reference internal" href="../doxygen/html/modules_2openthread_2include_2openthread_8h.html#a558165d2e49e9335649c94ac0be53392" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_run()</span></code></a>),
+and callback registration APIs (<code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_state_change_callback_register()</span></code>).</p></li>
+<li><p>You can now use OpenThread directly, without enabling Zephyr’s L2 or IEEE802.15.4 layers, if
+your use case allows.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="other-subsystems">
+<h2><a class="toc-backref" href="#id39" role="doc-backlink">Other subsystems</a><a class="headerlink" href="#other-subsystems" title="Link to this heading"></a></h2>
+<section id="modbus">
+<h3><a class="toc-backref" href="#id40" role="doc-backlink">Modbus</a><a class="headerlink" href="#modbus" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">client_stop_bits</span></code> field in <a class="reference internal" href="../doxygen/html/structmodbus__serial__param.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">modbus_serial_param</span></code></a> has been renamed into <code class="docutils literal notranslate"><span class="pre">stop_bits</span></code>.
+The setting is valid in both client and server modes.</p></li>
+<li><p>Custom stop-bit settings are disabled by default and should be enabled
+by <a class="reference internal" href="../kconfig.html#CONFIG_MODBUS_NONCOMPLIANT_SERIAL_MODE" title="CONFIG_MODBUS_NONCOMPLIANT_SERIAL_MODE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MODBUS_NONCOMPLIANT_SERIAL_MODE</span></code></a>.</p></li>
+</ul>
+</section>
+<section id="state-machine-framework">
+<h3><a class="toc-backref" href="#id41" role="doc-backlink">State Machine Framework</a><a class="headerlink" href="#state-machine-framework" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">smf_set_handled()</span></code> has been removed.</p></li>
+<li><p>State run actions now return an <a class="reference internal" href="../doxygen/html/group__smf.html#ga01e4e2d2f35a9ec790d5e3c5b9b91b55" title=""><code class="xref c c-enum docutils literal notranslate"><span class="pre">smf_state_result</span></code></a> value instead of void. and the return
+code determines if the event is propagated to parent run actions or has been handled. A run action
+that handles the event completely should return <code class="xref c c-enum docutils literal notranslate"><span class="pre">SMF_EVENT_HANDLED</span></code>, and run actions that
+propagate handling to parent states should return <code class="xref c c-enum docutils literal notranslate"><span class="pre">SMF_EVENT_PROPAGATE</span></code>.</p></li>
+<li><p>Flat state machines ignore the return value; returning <code class="xref c c-enum docutils literal notranslate"><span class="pre">SMF_EVENT_HANDLED</span></code>
+would be the most technically accurate response.</p></li>
+</ul>
+</section>
+<section id="hawkbit">
+<h3><a class="toc-backref" href="#id42" role="doc-backlink">hawkBit</a><a class="headerlink" href="#hawkbit" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>When <a class="reference internal" href="../kconfig.html#CONFIG_HAWKBIT_CUSTOM_DEVICE_ID" title="CONFIG_HAWKBIT_CUSTOM_DEVICE_ID"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HAWKBIT_CUSTOM_DEVICE_ID</span></code></a> is enabled, device_id will no longer
+be prepended with <a class="reference internal" href="../kconfig.html#CONFIG_BOARD" title="CONFIG_BOARD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BOARD</span></code></a>. It is the user’s responsibility to write a
+callback that prepends the board name if needed.</p></li>
+</ul>
+</section>
+</section>
+<section id="modules">
+<h2><a class="toc-backref" href="#id43" role="doc-backlink">Modules</a><a class="headerlink" href="#modules" title="Link to this heading"></a></h2>
+<section id="cmsis">
+<h3><a class="toc-backref" href="#id44" role="doc-backlink">CMSIS</a><a class="headerlink" href="#cmsis" title="Link to this heading"></a></h3>
+<ul>
+<li><p>Cortex-M boards/socs now require the <code class="docutils literal notranslate"><span class="pre">CMSIS_6</span></code> module to build properly (instead of <code class="docutils literal notranslate"><span class="pre">cmsis</span></code>
+which was CMSIS 5.9.0).
+If trying to build a Cortex-M board, do a <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">update</span></code> to make sure that <code class="docutils literal notranslate"><span class="pre">CMSIS_6</span></code> module is
+available before running <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> or other commands.</p>
+<p>Boards or SOCs or modules using the older <code class="docutils literal notranslate"><span class="pre">cmsis</span></code> module either with a local copy or via the
+<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZEPHYR_CMSIS_MODULE_DIR</span></code> are requested to move to the <code class="docutils literal notranslate"><span class="pre">CMSIS_6</span></code> module
+which can be accessed via the <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZEPHYR_CMSIS_6_MODULE_DIR</span></code> configuration.</p>
+<p>Note: Zephyr will continue using the older <code class="docutils literal notranslate"><span class="pre">cmsis</span></code> module for Cortex-A and Cortex-R targets.</p>
+</li>
+</ul>
+</section>
+</section>
+<section id="architectures">
+<h2><a class="toc-backref" href="#id45" role="doc-backlink">Architectures</a><a class="headerlink" href="#architectures" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Moved <a class="reference internal" href="../kconfig.html#CONFIG_SRAM_VECTOR_TABLE" title="CONFIG_SRAM_VECTOR_TABLE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SRAM_VECTOR_TABLE</span></code></a> from <code class="docutils literal notranslate"><span class="pre">zephyr/Kconfig.zephyr</span></code> to
+<code class="docutils literal notranslate"><span class="pre">zephyr/arch/Kconfig</span></code> and added dependency to <a class="reference internal" href="../kconfig.html#CONFIG_XIP" title="CONFIG_XIP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_XIP</span></code></a>,
+<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARCH_HAS_VECTOR_TABLE_RELOCATION</span></code> and
+<a class="reference internal" href="../kconfig.html#CONFIG_ROMSTART_RELOCATION_ROM" title="CONFIG_ROMSTART_RELOCATION_ROM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ROMSTART_RELOCATION_ROM</span></code></a> to support relocation
+of vector table in RAM.</p></li>
+<li><p>Renamed <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DEBUG_INFO</span></code> to <a class="reference internal" href="../kconfig.html#CONFIG_X86_DEBUG_INFO" title="CONFIG_X86_DEBUG_INFO"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_X86_DEBUG_INFO</span></code></a> to
+better reflect its purpose. This option is now only available for x86 architecture.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

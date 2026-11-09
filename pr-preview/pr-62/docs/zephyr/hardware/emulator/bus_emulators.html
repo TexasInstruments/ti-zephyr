@@ -1,0 +1,556 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>External Bus and Bus Connected Peripherals Emulators &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/hardware/emulator/bus_emulators.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Peripherals" href="../peripherals/index.html" />
+    <link rel="prev" title="Zephyr’s device emulators/simulators" href="index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Hardware Support</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../arch/index.html">Architecture-related Guides</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../barriers/index.html">Barriers API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cache/index.html">Caching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html">Zephyr’s device emulators/simulators</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">External Bus and Bus Connected Peripherals Emulators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#concept">Concept</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-a-device-driver-emulator">Creating a Device Driver Emulator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#available-emulators">Available Emulators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#i2c-emulation-features">I2C Emulation features</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#samples">Samples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-reference">API Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../peripherals/index.html">Peripherals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pinctrl/index.html">Pin Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../porting/index.html">Porting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">Virtualization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Hardware Support</a> &raquo;</li>
+  
+  <li>External Bus and Bus Connected Peripherals Emulators</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/hardware/emulator/bus_emulators.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27hardware%2Femulator%2Fbus_emulators%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+HW+Emulation&env=-+Page%3A+hardware%2Femulator%2Fbus_emulators%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="external-bus-and-bus-connected-peripherals-emulators">
+<span id="bus-emul"></span><h1>External Bus and Bus Connected Peripherals Emulators<a class="headerlink" href="#external-bus-and-bus-connected-peripherals-emulators" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>Zephyr supports a simple emulator framework to support testing of external peripheral drivers
+without requiring real hardware.</p>
+<p>Emulators are used to emulate external hardware devices, to support testing of
+various subsystems. For example, it is possible to write an emulator
+for an I2C compass such that it appears on the I2C bus and can be used
+just like a real hardware device.</p>
+<p>Emulators often implement special features for testing. For example a
+compass may support returning bogus data if the I2C bus speed is too
+high, or may return invalid measurements if calibration has not yet
+been completed. This allows for testing that high-level code can
+handle these situations correctly. Test coverage can therefore
+approach 100% if all failure conditions are emulated.</p>
+</section>
+<section id="concept">
+<h2>Concept<a class="headerlink" href="#concept" title="Link to this heading"></a></h2>
+<p>The diagram below shows application code / high-level tests at the top.
+This is the ultimate application we want to run.</p>
+<figure class="align-center">
+<img alt="Emulator architecture showing tests, emulators and drivers" src="../../_images/arch.svg" />
+</figure>
+<p>Below that are peripheral drivers, such as the AT24 EEPROM driver. We can test
+peripheral drivers using an emulation driver connected via a emulated I2C
+controller/emulator which passes I2C traffic from the AT24 driver to the AT24
+simulator.</p>
+<p>Separately we can test the STM32 and NXP I2C drivers on real hardware using API
+tests. These require some sort of device attached to the bus, but with this, we
+can validate much of the driver functionality.</p>
+<p>Putting the two together, we can test the application and peripheral code
+entirely on native_sim. Since we know that the I2C driver on the real hardware
+works, we should expect the application and peripheral drivers to work on the
+real hardware also.</p>
+<p>Using the above framework we can test an entire application (e.g. Embedded
+Controller) on native_sim using emulators for all non-chip drivers.</p>
+<p>With this approach we can:</p>
+<ul class="simple">
+<li><p>Write individual tests for each driver (green), covering all failure modes,
+error conditions, etc.</p></li>
+<li><p>Ensure 100% test coverage for drivers (green)</p></li>
+<li><p>Write tests for combinations of drivers, such as GPIOs provided by an I2C GPIO
+expander driver talking over an I2C bus, with the GPIOs controlling a charger.
+All of this can work in the emulated environment or on real hardware.</p></li>
+<li><p>Write a complex application that ties together all of these pieces and runs on
+native_sim. We can develop on a host, use source-level debugging, etc.</p></li>
+<li><p>Transfer the application to any board which provides the required features
+(e.g. I2C, enough GPIOs), by adding Kconfig and devicetree fragments.</p></li>
+</ul>
+</section>
+<section id="creating-a-device-driver-emulator">
+<h2>Creating a Device Driver Emulator<a class="headerlink" href="#creating-a-device-driver-emulator" title="Link to this heading"></a></h2>
+<p>The emulator subsystem is modeled on the <a class="reference internal" href="../../kernel/drivers/index.html#device-model-api"><span class="std std-ref">Device Driver Model</span></a>.  You create
+an emulator instance using one of the <a class="reference internal" href="../../doxygen/html/group__io__emulators.html#gad6292e3cd7f17a3600be396777f304c8" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">EMUL_DT_DEFINE()</span></code></a> or
+<a class="reference internal" href="../../doxygen/html/group__io__emulators.html#gafe7f4912bcffed1366ce07d024a4f977" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">EMUL_DT_INST_DEFINE()</span></code></a> APIs.</p>
+<p>Emulators for peripheral devices reuse the same devicetree node as the real
+device driver. This means that your emulator defines <code class="docutils literal notranslate"><span class="pre">DT_DRV_COMPAT</span></code> using the
+same <code class="docutils literal notranslate"><span class="pre">compat</span></code> value from the real driver.</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cm">/* From drivers/sensor/bm160/bm160.c */</span>
+<span class="cp">#define DT_DRV_COMPAT bosch_bmi160</span>
+
+<span class="cm">/* From drivers/sensor/bmi160/emul_bmi160.c */</span>
+<span class="cp">#define DT_DRV_COMPAT bosch_bmi160</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">EMUL_DT_DEFINE()</span></code> function accepts two API types:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bus_api</span></code> - This points to the API for the upstream bus that the emulator
+connects to. The <code class="docutils literal notranslate"><span class="pre">bus_api</span></code> parameter is required.  The supported
+emulated bus types include I2C, SPI, eSPI, and MSPI.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_backend_api</span></code> - This points to the device-class specific backend API for
+the emulator. The <code class="docutils literal notranslate"><span class="pre">_backend_api</span></code> parameter is optional.</p></li>
+</ol>
+</div></blockquote>
+<p>The diagram below demonstrates the logical organization of the <code class="docutils literal notranslate"><span class="pre">bus_api</span></code> and
+<code class="docutils literal notranslate"><span class="pre">_backend_api</span></code> using the BC1.2 charging detector driver as the model
+device-class.</p>
+<figure class="align-center">
+<img alt="Device class example, demonstrating BC1.2 charging detectors." src="../../_images/device_class_emulator.svg" />
+</figure>
+<p>The real code is shown in green, while the emulator code is shown in yellow.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">bus_api</span></code> connects the BC1.2 emulators to the <code class="docutils literal notranslate"><span class="pre">native_sim</span></code> I2C
+controller. The real BC1.2 drivers are unchanged and operate exactly as if there
+was a physical I2C controller present in the system. The <code class="docutils literal notranslate"><span class="pre">native_sim</span></code> I2C
+controller uses the <code class="docutils literal notranslate"><span class="pre">bus_api</span></code> to initiate register reads and writes to the
+emulator.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">_backend_api</span></code> provides a mechanism for tests to manipulate the emulator
+out of band.  Each device class defines it’s own API functions.  The backend API
+functions focus on high-level behavior and do not provide hooks for specific
+emulators.</p>
+<p>In the case of the BC1.2 charging detector the backend API provides functions
+to simulate connecting and disconnecting a charger to the emulated BC1.2 device.
+Each emulator is responsible for updating the correct vendor specific registers
+and potentially signalling an interrupt.</p>
+<p>Example test flow:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Test registers BC1.2 detection callback using the Zephyr BC1.2 driver API.</p></li>
+<li><p>Test connects a charger using the BC1.2 emulator backend.</p></li>
+<li><p>Test verifies B1.2 detection callback invoked with correct charger type.</p></li>
+<li><p>Test disconnects a charger using the BC1.2 emulator backend.</p></li>
+</ol>
+</div></blockquote>
+<p>With this architecture, the same test can be used will all supported drivers in
+the same driver class.</p>
+</section>
+<section id="available-emulators">
+<h2>Available Emulators<a class="headerlink" href="#available-emulators" title="Link to this heading"></a></h2>
+<p>Zephyr includes the following emulators:</p>
+<ul class="simple">
+<li><p>I2C emulator driver, allowing drivers to be connected to an emulator so that
+tests can be performed without access to the real hardware</p></li>
+<li><p>SPI emulator driver, which does the same for SPI</p></li>
+<li><p>eSPI emulator driver, which does the same for eSPI. The emulator is being
+developed to support more functionalities.</p></li>
+<li><p>MSPI emulator driver, allowing drivers to be connected to an emulator so that
+tests can be performed without access to the real hardware.</p></li>
+</ul>
+<section id="i2c-emulation-features">
+<h3>I2C Emulation features<a class="headerlink" href="#i2c-emulation-features" title="Link to this heading"></a></h3>
+<p>In the binding of the I2C emulated bus, there’s a custom property for address
+based forwarding. Given the following devicetree node:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nl">i2c0</span><span class="p">:</span><span class="w"> </span><span class="nf">i2c</span><span class="o">@</span><span class="mi">100</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">  </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,i2c-emul-controller&quot;</span><span class="p">;</span>
+<span class="w">  </span><span class="n">clock-frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">I2C_BITRATE_STANDARD</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">  </span><span class="kr">#address-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">  </span><span class="kr">#size-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">  </span><span class="o">#</span><span class="n">forward-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">  </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x100</span><span class="w"> </span><span class="mi">4</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">  </span><span class="n">forwards</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">i2c1</span><span class="w"> </span><span class="mh">0x20</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The final property, <code class="docutils literal notranslate"><span class="pre">forwards</span></code> indicates that any read/write requests sent to
+address <code class="docutils literal notranslate"><span class="pre">0x20</span></code> should be sent to <code class="docutils literal notranslate"><span class="pre">i2c1</span></code> with the same address. This allows
+us to test both the controller and the target end of the communication on the
+same image.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">#forward-cells</span></code> attribute should always be 1. Each entry in the
+<code class="docutils literal notranslate"><span class="pre">forwards</span></code> attribute consists of the phandle followed by the address. In
+the example above, <code class="docutils literal notranslate"><span class="pre">&lt;&amp;i2c1</span> <span class="pre">0x20&gt;</span></code> will forward all read/write operations
+made to <code class="docutils literal notranslate"><span class="pre">i2c0</span></code> at port <code class="docutils literal notranslate"><span class="pre">0x20</span></code> to <code class="docutils literal notranslate"><span class="pre">i2c1</span></code> on the same port. Since no
+additional cells are used by the emulated controller, the number of cells
+should remain 1.</p>
+</div>
+</section>
+</section>
+<section id="samples">
+<h2>Samples<a class="headerlink" href="#samples" title="Link to this heading"></a></h2>
+<p>Here are some examples present in Zephyr:</p>
+<ol class="arabic">
+<li><p>Bosch BMI160 sensor driver connected via both I2C and SPI to an emulator:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>native_sim<span class="w"> </span>tests/drivers/sensor/bmi160
+</pre></div>
+</div>
+</li>
+<li><p>The same test can be built with a second EEPROM which is an Atmel AT24 EEPROM driver
+connected via I2C an emulator:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>native_sim<span class="w"> </span>tests/drivers/eeprom/api<span class="w"> </span>--<span class="w"> </span>-DDTC_OVERLAY_FILE<span class="o">=</span>at2x_emul.overlay<span class="w"> </span>-DEXTRA_CONF_FILE<span class="o">=</span>at2x_emul.conf
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__io__emulators.html" title=""><span class="pre">Emulator</span> <span class="pre">interfaces</span></a></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+var group__xtensa__mpu__apis =
+[
+    [ "xtensa_mpu_entry", "structxtensa__mpu__entry.html", [
+      [ "access_rights", "structxtensa__mpu__entry.html#ab4a226d6c492a1fea3e2e4806ea6f041", null ],
+      [ "as", "structxtensa__mpu__entry.html#a359f3d970a15c764d5b5cc3ac00b87c0", null ],
+      [ "at", "structxtensa__mpu__entry.html#a5c41f0a0db9f71e774989dfdc5f05475", null ],
+      [ "enable", "structxtensa__mpu__entry.html#af18d88c18df4dfb17ceb78c560bd2e61", null ],
+      [ "lock", "structxtensa__mpu__entry.html#a9dbb164dd9e942b0d2e91621724d81ae", null ],
+      [ "mbz", "structxtensa__mpu__entry.html#a09cb878dd936700c64c8d2df10b58ed4", null ],
+      [ "mbz1", "structxtensa__mpu__entry.html#a0461da13881e2cde2a8607783073eeec", null ],
+      [ "mbz2", "structxtensa__mpu__entry.html#af4bb525147d4ba54bf46c626b3c0a888", null ],
+      [ "memory_type", "structxtensa__mpu__entry.html#a1b9764368a50f0674ede7bc3450485c7", null ],
+      [ "p", "structxtensa__mpu__entry.html#a9fa96af81c4af48faa1084cdde720ca9", null ],
+      [ "p", "structxtensa__mpu__entry.html#a32bfc370b92a904abe8fe522afb9a813", null ],
+      [ "raw", "structxtensa__mpu__entry.html#a77dc5a2d8512fca38c9c305b722556f5", null ],
+      [ "segment", "structxtensa__mpu__entry.html#a26879b4bb6ec5c2040a864a1286b177f", null ],
+      [ "start_addr", "structxtensa__mpu__entry.html#ada352b7ede662f57bb162e5df1f819bd", null ]
+    ] ],
+    [ "xtensa_mpu_map", "structxtensa__mpu__map.html", [
+      [ "entries", "structxtensa__mpu__map.html#ad122955b669b9834620dab88062435e1", null ]
+    ] ],
+    [ "xtensa_mpu_range", "structxtensa__mpu__range.html", [
+      [ "access_rights", "structxtensa__mpu__range.html#a21f446bdde0d194d3d4012342e49d151", null ],
+      [ "end", "structxtensa__mpu__range.html#a52444106e5fb335079ca1ed5428b1711", null ],
+      [ "memory_type", "structxtensa__mpu__range.html#a98cbc6ec1cb0b3440e8d58e12020cd1e", null ],
+      [ "start", "structxtensa__mpu__range.html#a3b24cd5cc1e5674193e7c1c20db2e66c", null ]
+    ] ],
+    [ "K_MEM_PARTITION_IS_EXECUTABLE", "group__xtensa__mpu__apis.html#gac8344e8346f95abf209a1bce32ab554f", null ],
+    [ "K_MEM_PARTITION_IS_WRITABLE", "group__xtensa__mpu__apis.html#ga3e98c2a69d6a44b0c0a7f1f71b7053e8", null ],
+    [ "K_MEM_PARTITION_P_NA_U_NA", "group__xtensa__mpu__apis.html#ga73bc6803ccf24aad395089a4395bd22f", null ],
+    [ "K_MEM_PARTITION_P_RO_U_NA", "group__xtensa__mpu__apis.html#ga706eaa9c515f1cc859d97ef8455b2f2f", null ],
+    [ "K_MEM_PARTITION_P_RO_U_RO", "group__xtensa__mpu__apis.html#ga708338371e91b5a3f2d44f9ae48849db", null ],
+    [ "K_MEM_PARTITION_P_RW_U_NA", "group__xtensa__mpu__apis.html#ga3c52d13e42a66beb72d088ac56388951", null ],
+    [ "K_MEM_PARTITION_P_RW_U_RW", "group__xtensa__mpu__apis.html#ga9b7cc3c51f518517031d76807470aa10", null ],
+    [ "K_MEM_PARTITION_P_RX_U_RX", "group__xtensa__mpu__apis.html#ga78f9b21aa8b5c894db28328f5a1e2641", null ],
+    [ "XTENSA_MPU_ACCESS_P_NA_U_NA", "group__xtensa__mpu__apis.html#gaf961b245ca7818f754c7162319efa197", null ],
+    [ "XTENSA_MPU_ACCESS_P_NA_U_X", "group__xtensa__mpu__apis.html#ga6d73b17148096bf132eda0083d1ea924", null ],
+    [ "XTENSA_MPU_ACCESS_P_RO_U_NA", "group__xtensa__mpu__apis.html#ga164fd2142e9804ef65dda8930f6fc849", null ],
+    [ "XTENSA_MPU_ACCESS_P_RO_U_RO", "group__xtensa__mpu__apis.html#ga840b2bd13d49212c3334d7137523f16c", null ],
+    [ "XTENSA_MPU_ACCESS_P_RW_U_NA", "group__xtensa__mpu__apis.html#ga04d4edd823a1ace779c3f1f036c2f2e2", null ],
+    [ "XTENSA_MPU_ACCESS_P_RW_U_RO", "group__xtensa__mpu__apis.html#ga42641dfd4809bd38ef6ace8d757f9e24", null ],
+    [ "XTENSA_MPU_ACCESS_P_RW_U_RW", "group__xtensa__mpu__apis.html#ga4cce80414ae35dc45260c6a5e5dc4582", null ],
+    [ "XTENSA_MPU_ACCESS_P_RW_U_RWX", "group__xtensa__mpu__apis.html#ga7fa9272228eb0ffc7455cfc671a23459", null ],
+    [ "XTENSA_MPU_ACCESS_P_RWX_U_NA", "group__xtensa__mpu__apis.html#gaf00699a52e155c8b22aabf979e020109", null ],
+    [ "XTENSA_MPU_ACCESS_P_RWX_U_RWX", "group__xtensa__mpu__apis.html#ga41a662ee819f702fc9030ee7f40dbbe6", null ],
+    [ "XTENSA_MPU_ACCESS_P_RWX_U_RX", "group__xtensa__mpu__apis.html#ga1abe9e7d4f8929518b8287619ea5754d", null ],
+    [ "XTENSA_MPU_ACCESS_P_RX_U_NA", "group__xtensa__mpu__apis.html#ga8de59e1ff974516355606efde2e00fb9", null ],
+    [ "XTENSA_MPU_ACCESS_P_RX_U_RX", "group__xtensa__mpu__apis.html#gae47e13ff73f39d819b97f311a7f53dcd", null ],
+    [ "XTENSA_MPU_ACCESS_P_WO_U_WO", "group__xtensa__mpu__apis.html#ga2c10985c0c74a2690e9f093d5815d9d9", null ],
+    [ "XTENSA_MPU_ACCESS_P_X_U_NA", "group__xtensa__mpu__apis.html#gaf323d5434ff922f485fe80a86c2c1b44", null ],
+    [ "XTENSA_MPU_NUM_ENTRIES", "group__xtensa__mpu__apis.html#gae63365117939d9460202c55cf006cb7a", null ],
+    [ "k_mem_partition_attr_t", "group__xtensa__mpu__apis.html#ga58f790e348e5e1c4a3962a134cfb505f", null ],
+    [ "xtensa_mem_partition_is_executable", "group__xtensa__mpu__apis.html#gab1af4356d315b9db663cd11d65a66a91", null ],
+    [ "xtensa_mem_partition_is_writable", "group__xtensa__mpu__apis.html#ga41efdfe8839c52b3f2c1aec03c17e59a", null ],
+    [ "xtensa_mpu_init", "group__xtensa__mpu__apis.html#ga20524255a2b4713eddb70b8a54357771", null ],
+    [ "xtensa_soc_mpu_ranges", "group__xtensa__mpu__apis.html#gade19640c9ba5da25451b9200b4e9178b", null ],
+    [ "xtensa_soc_mpu_ranges_num", "group__xtensa__mpu__apis.html#ga4b838edd5ce1332432083bd20ca7abc1", null ]
+];

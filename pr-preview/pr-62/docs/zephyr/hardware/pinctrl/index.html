@@ -1,0 +1,904 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pin Control &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/hardware/pinctrl/index.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Porting" href="../porting/index.html" />
+    <link rel="prev" title="Wakeup Controller (WUC)" href="../peripherals/wuc.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Hardware Support</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../arch/index.html">Architecture-related Guides</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../barriers/index.html">Barriers API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cache/index.html">Caching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/index.html">Zephyr’s device emulators/simulators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/bus_emulators.html">External Bus and Bus Connected Peripherals Emulators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../peripherals/index.html">Peripherals</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Pin Control</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction">Introduction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pin-control-vs-gpio">Pin control vs. GPIO</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#state-model">State model</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#standard-states">Standard states</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#custom-states">Custom states</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#skipping-states">Skipping states</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dynamic-pin-control">Dynamic pin control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#devicetree-representation">Devicetree representation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#states">States</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pin-configuration">Pin configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation-guidelines">Implementation guidelines</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pin-control-drivers">Pin control drivers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#device-drivers">Device drivers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pin-control-api">Pin Control API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Dynamic pin control</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#other-reference-material">Other reference material</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../porting/index.html">Porting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">Virtualization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Hardware Support</a> &raquo;</li>
+  
+  <li>Pin Control</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/hardware/pinctrl/index.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27hardware%2Fpinctrl%2Findex%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Pinctrl&env=-+Page%3A+hardware%2Fpinctrl%2Findex%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="pin-control">
+<span id="pinctrl-guide"></span><h1>Pin Control<a class="headerlink" href="#pin-control" title="Link to this heading"></a></h1>
+<p>This is a high-level guide to pin control. See <a class="reference internal" href="#pinctrl-api"><span class="std std-ref">Pin Control API</span></a> for API
+reference material.</p>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
+<p>The hardware blocks that control pin multiplexing and pin configuration
+parameters such as pin direction, pull-up/down resistors, etc. are named <strong>pin
+controllers</strong>. The pin controller’s main users are SoC hardware peripherals,
+since the controller enables exposing peripheral signals, like for example,
+map <code class="docutils literal notranslate"><span class="pre">I2C0</span></code> <code class="docutils literal notranslate"><span class="pre">SDA</span></code> signal to pin <code class="docutils literal notranslate"><span class="pre">PX0</span></code>. Not only that, but it usually allows
+configuring certain pin settings that are necessary for the correct functioning
+of a peripheral, for example, the slew-rate depending on the operating
+frequency. The available configuration options are vendor/SoC dependent and can
+range from simple pull-up/down options to more advanced settings such as
+debouncing, low-power modes, etc.</p>
+<p>The way pin control is implemented in hardware is vendor/SoC specific. It is
+common to find a <em>centralized</em> approach, that is, all pin configuration
+parameters are controlled by a single hardware block (typically named pinmux),
+including signal mapping. The figure below illustrates this
+approach. <code class="docutils literal notranslate"><span class="pre">PX0</span></code> can be mapped to <code class="docutils literal notranslate"><span class="pre">UART0_TX</span></code>, <code class="docutils literal notranslate"><span class="pre">I2C0_SCK</span></code> or <code class="docutils literal notranslate"><span class="pre">SPI0_MOSI</span></code>
+depending on the <code class="docutils literal notranslate"><span class="pre">AF</span></code> control bits. Other configuration parameters such as
+pull-up/down are controlled in the same block via <code class="docutils literal notranslate"><span class="pre">CONFIG</span></code> bits. This model is
+used by several SoC families, such as many from NXP and STM32.</p>
+<figure class="align-default" id="id2">
+<img alt="../../_images/hw-cent-control.svg" src="../../_images/hw-cent-control.svg" />
+<figcaption>
+<p><span class="caption-text">Example of pin control centralized into a single per-pin block</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Other vendors/SoCs use a <em>distributed</em> approach. In such case, the pin mapping
+and configuration are controlled by multiple hardware blocks.
+The figure below illustrates a distributed approach where pin
+mapping is controlled by peripherals, such as in Nordic nRF SoCs.</p>
+<figure class="align-default" id="id3">
+<img alt="../../_images/hw-dist-control.svg" src="../../_images/hw-dist-control.svg" />
+<figcaption>
+<p><span class="caption-text">Example pin control distributed between peripheral registers and per-pin block</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>From a user perspective, there is no difference in pin controller usage
+regardless of the hardware implementation: a user will always apply a state.
+The only difference lies in the driver implementation. In general, implementing
+a pin controller driver for a hardware that uses a distributed approach requires
+more effort, since the driver needs to gather knowledge of peripheral dependent
+registers.</p>
+<section id="pin-control-vs-gpio">
+<h3>Pin control vs. GPIO<a class="headerlink" href="#pin-control-vs-gpio" title="Link to this heading"></a></h3>
+<p>Some functionality covered by a pin controller driver overlaps with GPIO
+drivers. For example, pull-up/down resistors can usually be enabled by both the
+pin control driver and the GPIO driver. In Zephyr context, the pin control
+driver purpose is to perform peripheral signal multiplexing and configuration of
+other pin parameters required for the correct operation of that peripheral.
+Therefore, the main users of the pin control driver are SoC peripherals. In
+contrast, GPIO drivers are for general purpose control of a pin, that is, when
+its logic level is read or controlled manually.</p>
+</section>
+</section>
+<section id="state-model">
+<h2>State model<a class="headerlink" href="#state-model" title="Link to this heading"></a></h2>
+<p>For a device driver to operate correctly, a certain pin configuration needs to
+be applied. Some device drivers require a static configuration, usually set up
+at initialization time. Others need to change the configuration at runtime
+depending on the operating conditions, for example, to enable a low-power mode
+when suspending the device. Such requirements are modeled using <strong>states</strong>, a
+concept that has been adapted from the one in the Linux kernel. Each device
+driver owns a set of states. Each state has a unique name and contains a full
+pin configuration set (see the figure below). This effectively
+means that states are independent of each other, so they do not need to be
+applied in any specific order. Another advantage of the state model is that it
+isolates device drivers from pin configuration.</p>
+<table class="docutils align-center" id="id4">
+<caption><span class="caption-text">Example pin configuration encoded using the states model</span><a class="headerlink" href="#id4" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head" colspan="4"><p><code class="docutils literal notranslate"><span class="pre">UART0</span></code> peripheral</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td colspan="2"><p><code class="docutils literal notranslate"><span class="pre">default</span></code> state</p></td>
+<td colspan="2"><p><code class="docutils literal notranslate"><span class="pre">sleep</span></code> state</p></td>
+</tr>
+<tr class="row-odd"><td><p>TX</p></td>
+<td><ul class="simple">
+<li><p>Pin: PA0</p></li>
+<li><p>Pull: NONE</p></li>
+<li><p>Low Power: NO</p></li>
+</ul>
+</td>
+<td><p>TX</p></td>
+<td><ul class="simple">
+<li><p>Pin: PA0</p></li>
+<li><p>Pull: NONE</p></li>
+<li><p>Low Power: YES</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>RX</p></td>
+<td><ul class="simple">
+<li><p>Pin: PA1</p></li>
+<li><p>Pull: UP</p></li>
+<li><p>Low Power: NO</p></li>
+</ul>
+</td>
+<td><p>RX</p></td>
+<td><ul class="simple">
+<li><p>Pin: PA1</p></li>
+<li><p>Pull: NONE</p></li>
+<li><p>Low Power: YES</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<section id="standard-states">
+<h3>Standard states<a class="headerlink" href="#standard-states" title="Link to this heading"></a></h3>
+<p>The name assigned to pin control states or the number of them is up to the
+device driver requirements. In many cases a single state applied at
+initialization time will be sufficient, but in some other cases more will be
+required. In order to make things consistent, a naming convention has been
+established for the most common use cases. The figure below
+details the standardized states and its purpose.</p>
+<table class="docutils align-center" id="id5">
+<caption><span class="caption-text">Standardized state names</span><a class="headerlink" href="#id5" title="Link to this table"></a></caption>
+<tbody>
+<tr class="row-odd"><td><p>State</p></td>
+<td><p>Identifier</p></td>
+<td><p>Purpose</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">default</span></code></p></td>
+<td><p><a class="reference internal" href="../../doxygen/html/group__pinctrl__interface.html#ga9bc564353cb9b1a7238c9fe8796023e6" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">PINCTRL_STATE_DEFAULT</span></code></a></p></td>
+<td><p>State of the pins when
+the device is in
+operational state</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sleep</span></code></p></td>
+<td><p><a class="reference internal" href="../../doxygen/html/group__pinctrl__interface.html#ga2ea5ac271930e0e2e9f77952b2dbea1b" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">PINCTRL_STATE_SLEEP</span></code></a></p></td>
+<td><p>State of the pins when
+the device is in low
+power or sleep modes</p></td>
+</tr>
+</tbody>
+</table>
+<p>Note that other standard states could be introduced in the future.</p>
+</section>
+<section id="custom-states">
+<h3>Custom states<a class="headerlink" href="#custom-states" title="Link to this heading"></a></h3>
+<p>Some device drivers may require using custom states beyond the standard ones. To
+achieve that, the device driver needs to have in its scope definitions for the
+custom state identifiers named as <code class="docutils literal notranslate"><span class="pre">PINCTRL_STATE_{STATE_NAME}</span></code>, where
+<code class="docutils literal notranslate"><span class="pre">{STATE_NAME}</span></code> is the capitalized state name. For example, if <code class="docutils literal notranslate"><span class="pre">mystate</span></code> has
+to be supported, a definition named <code class="docutils literal notranslate"><span class="pre">PINCTRL_STATE_MYSTATE</span></code> needs to be
+in the driver’s scope.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is important that custom state identifiers start from
+<a class="reference internal" href="../../doxygen/html/group__pinctrl__interface.html#ga25989d7b48b2d7aa4f8ca6a30d9c9077" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">PINCTRL_STATE_PRIV_START</span></code></a></p>
+</div>
+<p>If custom states need to be accessed from outside the driver, for example to
+perform dynamic pin control, custom identifiers should be placed in a header
+that is publicly accessible.</p>
+</section>
+<section id="skipping-states">
+<h3>Skipping states<a class="headerlink" href="#skipping-states" title="Link to this heading"></a></h3>
+<p>In most situations, the states defined in Devicetree will be the ones used in
+the compiled firmware. However, there are some cases where certain states will
+be conditionally used depending on a compilation flag. A typical case is the
+<code class="docutils literal notranslate"><span class="pre">sleep</span></code> state. This state is only used in practice if
+<a class="reference internal" href="../../kconfig.html#CONFIG_PM" title="CONFIG_PM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PM</span></code></a> or <a class="reference internal" href="../../kconfig.html#CONFIG_PM_DEVICE" title="CONFIG_PM_DEVICE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PM_DEVICE</span></code></a> is enabled.
+If a firmware variant without these power management configurations is needed,
+one should in theory remove the <code class="docutils literal notranslate"><span class="pre">sleep</span></code> state from Devicetree to not waste ROM
+space storing such unused state.</p>
+<p>States can be skipped by the <code class="docutils literal notranslate"><span class="pre">pinctrl</span></code> Devicetree macros if a definition named
+<code class="docutils literal notranslate"><span class="pre">PINCTRL_SKIP_{STATE_NAME}</span></code> expanding to <code class="docutils literal notranslate"><span class="pre">1</span></code> is present when pin control
+configuration is defined. In case of the <code class="docutils literal notranslate"><span class="pre">sleep</span></code> state, the <code class="docutils literal notranslate"><span class="pre">pinctrl</span></code> API
+already provides such definition conditional to the availability of device power
+management:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#if !defined(CONFIG_PM) &amp;&amp; !defined(CONFIG_PM_DEVICE)</span>
+<span class="cm">/** Out of power management configurations, ignore &quot;sleep&quot; state. */</span>
+<span class="cp">#define PINCTRL_SKIP_SLEEP 1</span>
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="dynamic-pin-control">
+<h2>Dynamic pin control<a class="headerlink" href="#dynamic-pin-control" title="Link to this heading"></a></h2>
+<p>Dynamic pin control refers to the capability of changing pin configuration
+at runtime. This feature can be useful in situations where the same firmware
+needs to run onto slightly different boards, each having a peripheral routed at
+a different set of pins. This feature can be enabled by setting
+<a class="reference internal" href="../../kconfig.html#CONFIG_PINCTRL_DYNAMIC" title="CONFIG_PINCTRL_DYNAMIC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PINCTRL_DYNAMIC</span></code></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Dynamic pin control should only be used on devices that have not been
+initialized. Changing pin configurations while a device is operating may
+lead to unexpected behavior. Since Zephyr does not support device
+de-initialization yet, this functionality should only be used during early
+boot stages.</p>
+</div>
+<p>One of the effects of enabling dynamic pin control is that
+<a class="reference internal" href="../../doxygen/html/structpinctrl__dev__config.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">pinctrl_dev_config</span></code></a> will be stored in RAM instead of ROM (not states
+or pin configurations, though). The user can then use
+<a class="reference internal" href="../../doxygen/html/group__pinctrl__interface__dynamic.html#ga647115208cbed7534a98c56d93a517b8" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pinctrl_update_states()</span></code></a> to update the states stored in
+<a class="reference internal" href="../../doxygen/html/structpinctrl__dev__config.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">pinctrl_dev_config</span></code></a> with a new set. This effectively means that the
+device driver will apply the pin configurations stored in the updated states
+when it applies a state.</p>
+</section>
+<section id="devicetree-representation">
+<h2>Devicetree representation<a class="headerlink" href="#devicetree-representation" title="Link to this heading"></a></h2>
+<p>Because Devicetree is meant to describe hardware, it is the natural choice when
+it comes to storing pin control configuration. In the following sections you
+will find an overview on how states and pin configurations are represented in
+Devicetree.</p>
+<section id="states">
+<h3>States<a class="headerlink" href="#states" title="Link to this heading"></a></h3>
+<p>Given a device, each of its pin control state is represented in Devicetree by
+<code class="docutils literal notranslate"><span class="pre">pinctrl-N</span></code> properties, being <code class="docutils literal notranslate"><span class="pre">N</span></code> the state index starting from zero. The
+<code class="docutils literal notranslate"><span class="pre">pinctrl-names</span></code> property is then used to assign a unique identifier for each
+state property by index, for example, <code class="docutils literal notranslate"><span class="pre">pinctrl-names</span></code> list entry 0 is the name
+for <code class="docutils literal notranslate"><span class="pre">pinctrl-0</span></code>.</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nl">periph0</span><span class="p">:</span><span class="w"> </span><span class="nf">periph</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">    </span><span class="cm">/* state 0 (&quot;default&quot;) */</span>
+<span class="w">    </span><span class="n">pinctrl-0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="p">...</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">    </span><span class="cm">/* state N (&quot;mystate&quot;) */</span>
+<span class="w">    </span><span class="n">pinctrl-N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="p">...</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="cm">/* names for state 0 up to state N */</span>
+<span class="w">    </span><span class="n">pinctrl-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;default&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">...,</span><span class="w"> </span><span class="s">&quot;mystate&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="pin-configuration">
+<h3>Pin configuration<a class="headerlink" href="#pin-configuration" title="Link to this heading"></a></h3>
+<p>There are multiple ways to represent the pin configurations in Devicetree.
+However, all end up encoding the same information: the pin multiplexing and the
+pin configuration parameters. For example, <code class="docutils literal notranslate"><span class="pre">UART_RX</span></code> is mapped to <code class="docutils literal notranslate"><span class="pre">PX0</span></code> and
+pull-up is enabled. The representation choice largely depends on each
+vendor/SoC, so the Devicetree binding files for the pin control drivers are the
+best place to look for details.</p>
+<p>A popular and versatile option is shown in the example below. One of the
+advantages of this choice is the grouping capability based on shared pin
+configuration. This allows to reduce the verbosity of the pin control
+definitions. Another advantage is that the pin configuration parameters for a
+particular state are enclosed in a single Devicetree node.</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cm">/* board.dts */</span>
+<span class="cp">#include</span><span class="cm"> </span><span class="cpf">&quot;board-pinctrl.dtsi&quot;</span>
+
+<span class="o">&amp;</span><span class="nf">periph0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">pinctrl-0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">periph0_default</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">pinctrl-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;default&quot;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* vnd-soc-pkgxx.h</span>
+<span class="cm"> * File with valid mappings for a specific package (may be autogenerated).</span>
+<span class="cm"> * This file is optional, but recommended.</span>
+<span class="cm"> */</span>
+<span class="p">...</span>
+<span class="cp">#define PERIPH0_SIGA_PX0 VNDSOC_PIN(X, 0, MUX0)</span>
+<span class="cp">#define PERIPH0_SIGB_PY7 VNDSOC_PIN(Y, 7, MUX4)</span>
+<span class="cp">#define PERIPH0_SIGC_PZ1 VNDSOC_PIN(Z, 1, MUX2)</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cm">/* board-pinctrl.dtsi */</span>
+<span class="cp">#include</span><span class="cm"> </span><span class="cpf">&lt;vnd-soc-pkgxx.h&gt;</span>
+
+<span class="o">&amp;</span><span class="nf">pinctrl</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* Node with pin configuration for default state */</span>
+<span class="w">    </span><span class="nl">periph0_default</span><span class="p">:</span><span class="w"> </span><span class="nf">periph0_default</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nf">group1</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">            </span><span class="cm">/* Mappings: PERIPH0_SIGA -&gt; PX0, PERIPH0_SIGC -&gt; PZ1 */</span>
+<span class="w">            </span><span class="n">pinmux</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">PERIPH0_SIGA_PX0</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="na">PERIPH0_SIGC_PZ1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">            </span><span class="cm">/* Pins PX0 and PZ1 have pull-up enabled */</span>
+<span class="w">            </span><span class="n">bias-pull-up</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">        </span><span class="nf">groupN</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">            </span><span class="cm">/* Mappings: PERIPH0_SIGB -&gt; PY7 */</span>
+<span class="w">            </span><span class="n">pinmux</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">PERIPH0_SIGB_PY7</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Another popular model is based on having a node for each pin configuration and
+state. While this model may lead to shorter board pin control files, it also
+requires to have one node for each pin mapping and state, since in general,
+nodes can not be reused for multiple states. This method is discouraged if
+autogeneration is not an option.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Because all Devicetree information is parsed into a C header, it is important
+to make sure its size is kept to a minimum. For this reason it is important
+to prefix pre-generated nodes with <code class="docutils literal notranslate"><span class="pre">/omit-if-no-ref/</span></code>. This prefix makes
+sure that the node is discarded when not used.</p>
+</div>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cm">/* board.dts */</span>
+<span class="cp">#include</span><span class="cm"> </span><span class="cpf">&quot;board-pinctrl.dtsi&quot;</span>
+
+<span class="o">&amp;</span><span class="nf">periph0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">pinctrl-0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">periph0_siga_px0_default</span><span class="w"> </span><span class="o">&amp;</span><span class="na">periph0_sigb_py7_default</span>
+<span class="w">                 </span><span class="o">&amp;</span><span class="na">periph0_sigc_pz1_default</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">pinctrl-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;default&quot;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cm">/* vnd-soc-pkgxx.dtsi</span>
+<span class="cm"> * File with valid nodes for a specific package (may be autogenerated).</span>
+<span class="cm"> * This file is optional, but recommended.</span>
+<span class="cm"> */</span>
+
+<span class="o">&amp;</span><span class="nf">pinctrl</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* Mapping for PERIPH0_SIGA -&gt; PX0, to be used for default state */</span>
+<span class="w">    </span><span class="cp">/omit-if-no-ref/</span><span class="cm"> </span><span class="cp">periph0_siga_px0_default: periph0_siga_px0_default </span><span class="p">{</span>
+<span class="w">        </span><span class="n">pinmux</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">VNDSOC_PIN</span><span class="p">(</span><span class="na">X</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="na">MUX0</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="cm">/* Mapping for PERIPH0_SIGB -&gt; PY7, to be used for default state */</span>
+<span class="w">    </span><span class="cp">/omit-if-no-ref/</span><span class="cm"> </span><span class="cp">periph0_sigb_py7_default: periph0_sigb_py7_default </span><span class="p">{</span>
+<span class="w">        </span><span class="n">pinmux</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">VNDSOC_PIN</span><span class="p">(</span><span class="na">Y</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="na">MUX4</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="cm">/* Mapping for PERIPH0_SIGC -&gt; PZ1, to be used for default state */</span>
+<span class="w">    </span><span class="cp">/omit-if-no-ref/</span><span class="cm"> </span><span class="cp">periph0_sigc_pz1_default: periph0_sigc_pz1_default </span><span class="p">{</span>
+<span class="w">        </span><span class="n">pinmux</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">VNDSOC_PIN</span><span class="p">(</span><span class="na">Z</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="na">MUX2</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cm">/* board-pinctrl.dts */</span>
+<span class="cp">#include</span><span class="cm"> </span><span class="cpf">&lt;vnd-soc-pkgxx.dtsi&gt;</span>
+
+<span class="cm">/* Enable pull-up for PX0 (default state) */</span>
+<span class="o">&amp;</span><span class="nf">periph0_siga_px0_default</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">bias-pull-up</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="cm">/* Enable pull-up for PZ1 (default state) */</span>
+<span class="o">&amp;</span><span class="nf">periph0_sigc_pz1_default</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">bias-pull-up</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is discouraged to add pin configuration defaults in pre-defined nodes.
+In general, pin configurations depend on the board design or on the
+peripheral working conditions, so the decision should be made by the board.
+For example, enabling a pull-up by default may not always be desired because
+the board already has one or because its value depends on the operating bus
+speed. Another downside of defaults is that user may not be aware of them,
+for example:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cm">/* not evident that &quot;periph0_siga_px0_default&quot; also implies &quot;bias-pull-up&quot; */</span>
+<span class="cp">/omit-if-no-ref/</span><span class="cm"> </span><span class="cp">periph0_siga_px0_default: periph0_siga_px0_default </span><span class="p">{</span>
+<span class="w">    </span><span class="n">pinmux</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">VNDSOC_PIN</span><span class="p">(</span><span class="na">X</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="na">MUX0</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">bias-pull-up</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="implementation-guidelines">
+<h2>Implementation guidelines<a class="headerlink" href="#implementation-guidelines" title="Link to this heading"></a></h2>
+<section id="pin-control-drivers">
+<h3>Pin control drivers<a class="headerlink" href="#pin-control-drivers" title="Link to this heading"></a></h3>
+<p>Pin control drivers need to implement a single function:
+<a class="reference internal" href="../../doxygen/html/group__pinctrl__interface.html#ga3397507e30eb10e814b793615f80455b" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pinctrl_configure_pins()</span></code></a>. This function receives an array of pin
+configurations that need to be applied. Furthermore, if
+<a class="reference internal" href="../../kconfig.html#CONFIG_PINCTRL_STORE_REG" title="CONFIG_PINCTRL_STORE_REG"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PINCTRL_STORE_REG</span></code></a> is set, it also receives the associated
+device register address for the given pins. This information may be required by
+some drivers to perform device specific actions.</p>
+<p>The pin configuration is stored in an opaque type that is vendor/SoC dependent:
+<code class="docutils literal notranslate"><span class="pre">pinctrl_soc_pin_t</span></code>. This type needs to be defined in a header named
+<code class="docutils literal notranslate"><span class="pre">pinctrl_soc.h</span></code> file that is in the Zephyr’s include path. It can range from
+a simple integer value to a struct with multiple fields. <code class="docutils literal notranslate"><span class="pre">pinctrl_soc.h</span></code> also
+needs to define a macro named <code class="docutils literal notranslate"><span class="pre">Z_PINCTRL_STATE_PINS_INIT</span></code> that accepts two
+arguments: a node identifier and a property name (<code class="docutils literal notranslate"><span class="pre">pinctrl-N</span></code>). With this
+information the macro needs to define an initializer for all pin configurations
+contained within the <code class="docutils literal notranslate"><span class="pre">pinctrl-N</span></code> property of the given node.</p>
+<p>Regarding Devicetree pin configuration representation, vendors can decide which
+option is better for their devices. However, the following guidelines should be
+followed:</p>
+<ul class="simple">
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">pinctrl-N</span></code> (N=0, 1, …) and <code class="docutils literal notranslate"><span class="pre">pinctrl-names</span></code> properties to define pin
+control states. These properties are defined in
+<code class="file docutils literal notranslate"><span class="pre">dts/bindings/pinctrl/pinctrl-device.yaml</span></code>.</p></li>
+<li><p>Use standard pin configuration properties as defined in
+<code class="file docutils literal notranslate"><span class="pre">dts/bindings/pinctrl/pincfg-node.yaml</span></code>.</p></li>
+</ul>
+<p>Representations not following these guidelines may be accepted if they are
+already used by the same vendor in other operating systems, e.g. Linux.</p>
+</section>
+<section id="device-drivers">
+<h3>Device drivers<a class="headerlink" href="#device-drivers" title="Link to this heading"></a></h3>
+<p>In this section you will find some tips on how a device driver should use the
+<code class="docutils literal notranslate"><span class="pre">pinctrl</span></code> API to successfully configure the pins it needs.</p>
+<p>The device compatible needs to be modified in the corresponding binding so that
+the <code class="docutils literal notranslate"><span class="pre">pinctrl-device.yaml</span></code> is included. For example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">base.yaml</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">pinctrl-device.yaml</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<p>This file is needed to add <code class="docutils literal notranslate"><span class="pre">pinctrl-N</span></code> and <code class="docutils literal notranslate"><span class="pre">pinctrl-names</span></code> properties to the
+device.</p>
+<p>From a device driver perspective there are two steps that need to be performed
+to be able to use the <code class="docutils literal notranslate"><span class="pre">pinctrl</span></code> API. First, the pin control configuration
+needs to be defined. This includes all states and pins.
+<a class="reference internal" href="../../doxygen/html/group__pinctrl__interface.html#gace422fcd4b28e6e6e6fdbbc64b99468f" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">PINCTRL_DT_DEFINE</span></code></a> or <a class="reference internal" href="../../doxygen/html/group__pinctrl__interface.html#ga8e984a57fd3c7a04cc921131ce79ac28" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">PINCTRL_DT_INST_DEFINE</span></code></a> macros
+should be used for this purpose. Second, a reference to
+the device instance <a class="reference internal" href="../../doxygen/html/structpinctrl__dev__config.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">pinctrl_dev_config</span></code></a> needs to be stored, since it
+is required to later use the API. This can be achieved using the
+<a class="reference internal" href="../../doxygen/html/group__pinctrl__interface.html#ga502c3b6faec140188dd5d614f4777918" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">PINCTRL_DT_DEV_CONFIG_GET</span></code></a> and
+<a class="reference internal" href="../../doxygen/html/group__pinctrl__interface.html#ga32748ffc5be4710707c7f1d9380cf93c" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">PINCTRL_DT_INST_DEV_CONFIG_GET</span></code></a> macros.</p>
+<p>It is worth to note that the only relationship between a device and its
+associated pin control configuration is based on variable naming conventions.
+The way an instance of <a class="reference internal" href="../../doxygen/html/structpinctrl__dev__config.html" title=""><code class="xref c c-struct docutils literal notranslate"><span class="pre">pinctrl_dev_config</span></code></a> is named for a
+corresponding device instance allows to later obtain a reference to it given the
+device’s Devicetree node identifier. This allows to minimize ROM usage, since
+only devices requiring pin control will own a reference to a pin control
+configuration.</p>
+<p>Once the driver has defined the pin control configuration and kept a reference
+to it, it is ready to use the API. The most common way to apply a state is by
+using <a class="reference internal" href="../../doxygen/html/group__pinctrl__interface.html#ga16a9391222345d00dbc5c39c45f429f9" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pinctrl_apply_state()</span></code></a>. It is also possible to use the lower level
+function <a class="reference internal" href="../../doxygen/html/group__pinctrl__interface.html#ga3549075e60ccdb743b269d590600d41b" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pinctrl_apply_state_direct()</span></code></a> to skip state lookup if it is
+cached in advance (e.g. at init time). Since state lookup time is expected to be
+fast, it is recommended to use <a class="reference internal" href="../../doxygen/html/group__pinctrl__interface.html#ga16a9391222345d00dbc5c39c45f429f9" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">pinctrl_apply_state()</span></code></a>.</p>
+<p>The example below contains a complete example of a device driver that uses the
+<code class="docutils literal notranslate"><span class="pre">pinctrl</span></code> API.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* A driver for the &quot;mydev&quot; compatible device */</span>
+<span class="cp">#define DT_DRV_COMPAT mydev</span>
+
+<span class="p">...</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/drivers/pinctrl.h&gt;</span>
+<span class="p">...</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">mydev_config</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">    </span><span class="cm">/* Reference to mydev pinctrl configuration */</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">pinctrl_dev_config</span><span class="w"> </span><span class="o">*</span><span class="n">pcfg</span><span class="p">;</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">};</span>
+
+<span class="p">...</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">mydev_init</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">mydev_config</span><span class="w"> </span><span class="o">*</span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">config</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">    </span><span class="cm">/* Select &quot;default&quot; state at initialization time */</span>
+<span class="w">    </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pinctrl_apply_state</span><span class="p">(</span><span class="n">config</span><span class="o">-&gt;</span><span class="n">pcfg</span><span class="p">,</span><span class="w"> </span><span class="n">PINCTRL_STATE_DEFAULT</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+
+<span class="cp">#define MYDEV_DEFINE(i)                                                    \</span>
+<span class="cp">    </span><span class="cm">/* Define all pinctrl configuration for instance &quot;i&quot; */</span><span class="cp">                \</span>
+<span class="cp">    PINCTRL_DT_INST_DEFINE(i);                                             \</span>
+<span class="cp">    ...                                                                    \</span>
+<span class="cp">    static const struct mydev_config mydev_config_##i = {                  \</span>
+<span class="cp">        ...                                                                \</span>
+<span class="cp">        </span><span class="cm">/* Keep a ref. to the pinctrl configuration for instance &quot;i&quot; */</span><span class="cp">    \</span>
+<span class="cp">        .pcfg = PINCTRL_DT_INST_DEV_CONFIG_GET(i),                         \</span>
+<span class="cp">        ...                                                                \</span>
+<span class="cp">    };                                                                     \</span>
+<span class="cp">    ...                                                                    \</span>
+<span class="cp">                                                                           \</span>
+<span class="cp">    DEVICE_DT_INST_DEFINE(i, mydev_init, NULL, &amp;mydev_data##i,             \</span>
+<span class="cp">                          &amp;mydev_config##i, ...);</span>
+
+<span class="n">DT_INST_FOREACH_STATUS_OKAY</span><span class="p">(</span><span class="n">MYDEV_DEFINE</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="pin-control-api">
+<span id="pinctrl-api"></span><h2>Pin Control API<a class="headerlink" href="#pin-control-api" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__pinctrl__interface.html" title=""><span class="pre">Pin</span> <span class="pre">Control</span></a></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/boards/st/mco/README.html#stm32_mco" title="Output an internal clock for external use by the application.">Master Clock Output (MCO)</a></span><span class="code-sample-description">Output an internal clock for external use by the application.</span></li>
+</ul>
+</div>
+<section id="id1">
+<h3>Dynamic pin control<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__pinctrl__interface__dynamic.html" title=""><span class="pre">Dynamic</span> <span class="pre">Pin</span> <span class="pre">Control</span></a></dt>
+</dl>
+
+</section>
+</section>
+<section id="other-reference-material">
+<h2>Other reference material<a class="headerlink" href="#other-reference-material" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://elinux.org/images/a/a7/ELC-2021_Introduction_to_pin_muxing_and_GPIO_control_under_Linux.pdf">Introduction to pin muxing and GPIO control under Linux</a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

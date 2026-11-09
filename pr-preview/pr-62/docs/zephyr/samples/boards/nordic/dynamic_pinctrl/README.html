@@ -1,0 +1,514 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="Dynamically change pin configuration at boot time." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dynamic Pin Control &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/samples/boards/nordic/dynamic_pinctrl/README.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="IEEE 802.15.4 over RPMsg" href="../ieee802154/802154_rpmsg/README.html" />
+    <link rel="prev" title="Coresight STM benchmark" href="../coresight_stm/README.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">Samples and Demos</a><ul class="current">
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../application_development/application_development.html">Application Development</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../arch/index.html">Architecture-dependent Samples</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../basic/basic.html">Basic</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../bluetooth/bluetooth.html">Bluetooth</a></li>
+<li class="toctree-l2 current"><a class="category-link reference internal" href="../../boards.html">Boards</a><ul class="current">
+<li class="toctree-l3"><a class="category-link reference internal" href="../../96boards/index.html">96Boards</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../bbc/index.html">BBC</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../enjoydigital/index.html">EnjoyDigital</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../espressif/index.html">Espressif ESP32 boards</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../google/index.html">Google</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../intel/index.html">Intel</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../microchip/index.html">Microchip</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../nxp/index.html">NXP</a></li>
+<li class="toctree-l3 current"><a class="category-link reference internal" href="../index.html">Nordic Semiconductor</a><ul class="current">
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../battery/README.html" title="Measure the voltage of the device power supply.">Battery Voltage Measurement</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../coresight_stm/README.html" title="">Coresight STM benchmark</a></li>
+<li class="toctree-l4 current"><a class="code-sample-link current reference internal" href="#" title="Dynamically change pin configuration at boot time.">Dynamic Pin Control</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../ieee802154/802154_rpmsg/README.html" title="Expose nRF IEEE 802.15.4 radio driver to another device or CPU using RPMsg transport.">IEEE 802.15.4 over RPMsg</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../nrf_led_matrix/README.html" title="Use the nRF LED matrix display driver to drive an LED matrix.">LED matrix</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../mesh/onoff_level_lighting_vnd_app/README.html" title="Setup a Bluetooth Mesh node with various models (generic OnOff, generic Level, ...).">Mesh Models</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../mesh/onoff-app/README.html" title="Control LEDs on a mesh network using the Bluetooth Mesh OnOff model.">Mesh OnOff Model</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../nrf_ironside/update/README.html" title="Update the Nordic IronSide SE firmware.">Nordic IronSide SE firmware update</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../clock_control/README.html" title="Request minimum clock requirements at runtime.">nRF clock control</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../clock_skew/README.html" title="Measure the skew between the high-frequency and low-frequency clocks.">nRF5x Clock Skew</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../nrfx/README.html" title="Use nrfx library to interact with nRF peripherals.">nrfx</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../nrfx_prs/README.html" title="Use nRF peripherals that share the same ID and base address.">nrfx peripheral resource sharing</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../spis_wakeup/README.html" title="Reduce current consumption by handling the wake line while using an SPIS.">SPIS wake up</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../nrf53_sync_rtc/README.html" title="Synchronize system and network core RTC clocks.">Synchronized RTC</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../system_off/README.html" title="Use deep sleep on Nordic platforms.">System Off</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../phytec/index.html">PHYTEC</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../quicklogic/index.html">QuickLogic</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../raspberrypi/index.html">Raspberry Pi</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../renesas/index.html">Renesas</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../st/index.html">STMicroelectronics</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../ti/index.html">Texas Instruments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cpp/cpp.html">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures/data_structures.html">Data Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../drivers/drivers.html">Drivers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../hello_world/README.html">Hello World</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../kernel/index.html">Kernel and Scheduler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/index.html">External modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../net/net.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../philosophers/README.html">Dining Philosophers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../posix/posix.html">POSIX API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../psa/index.html">PSA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../regulator/index.html">Regulator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sensor/sensor.html">Sensors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../shields/shields.html">Shields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../subsys/subsys.html">Subsystems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../synchronization/README.html">Basic Synchronization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sysbuild/sysbuild.html">Sysbuild</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tfm_integration/tfm_integration.html">TF-M Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../userspace/index.html">Userspace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sample_definition_and_criteria.html">Sample Definition and Criteria</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">Samples and Demos</a> &raquo;</li>
+  
+     <li><a href="../../boards.html">Boards</a> &raquo;</li>
+  
+     <li><a href="../index.html">Nordic Semiconductor</a> &raquo;</li>
+  
+  <li>Dynamic Pin Control</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main//samples/boards/nordic/dynamic_pinctrl/README.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27samples%2Fboards%2Fnordic%2Fdynamic_pinctrl%2FREADME%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Samples%2Cplatform%3A+nRF&env=-+Page%3A+samples%2Fboards%2Fnordic%2Fdynamic_pinctrl%2FREADME%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="nrf_dynamic_pinctrl">
+<h1>Dynamic Pin Control<a class="headerlink" href="#nrf_dynamic_pinctrl" title="Link to this heading"></a></h1>
+<p>
+                <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main//samples/boards/nordic/dynamic_pinctrl/README.rst/.." class="btn btn-info fa fa-github"
+                    target="_blank" style="text-align: center;">
+                    Browse source code on GitHub
+                </a>
+                </p>
+<p>The Dynamic Pin Control (nRF) sample demonstrates how to change <code class="docutils literal notranslate"><span class="pre">uart0</span></code> at
+early boot stages, depending on the input level on a pin connected to a
+push-button.</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>Slightly different board revisions that implement just small changes (like
+improving the PCB layout or changing components to new equivalents) do not
+necessarily require changes to the firmware. As such, one firmware image can be
+able to boot onto multiple board revisions.</p>
+<p>However, if a certain peripheral is routed to different sets of pins between
+revisions, the firmware needs to select the appropriate routing when the
+system is initialized.</p>
+<p>The Dynamic Pin Control (nRF) sample allows you to select the appropriate routing.</p>
+<p>If the push button is not pressed, the system does nothing and continues with
+the default configuration. If the button is pressed, the alternative
+configuration is applied.</p>
+<p>Alternative configurations can only be applied if the device driver using the
+associated pins has not been initialized yet. Therefore, pay attention to the
+initialization priorities set in the <code class="file docutils literal notranslate"><span class="pre">prj.conf</span></code> file.</p>
+<section id="nrf52840-dk">
+<h3>nRF52840 DK<a class="headerlink" href="#nrf52840-dk" title="Link to this heading"></a></h3>
+<p>The diagram below shows the pins assigned to the default and alternative
+configurations.</p>
+<figure class="align-default" id="id1">
+<img alt="../../../../_images/nrf52840dk-dynamic-pinctrl.webp" src="../../../../_images/nrf52840dk-dynamic-pinctrl.webp" />
+<figcaption>
+<p><span class="caption-text">Configuration for nRF52840 DK</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>If you power on the board, the <code class="docutils literal notranslate"><span class="pre">uart0</span></code> peripheral is routed to the default
+set of pins. The default set of pins is also exposed through the left USB
+connector as a virtual COM port.</p>
+<p>If you power on the board while holding Button 1, the <code class="docutils literal notranslate"><span class="pre">uart0</span></code> peripheral is
+routed to the alternative set of pins.</p>
+</section>
+</section>
+<section id="building-and-running">
+<h2>Building and Running<a class="headerlink" href="#building-and-running" title="Link to this heading"></a></h2>
+<p>You can build this application for the nRF52840 DK as follows:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>nrf52840dk/nrf52840<span class="w"> </span>samples/boards/nordic/dynamic_pinctrl
+</pre></div>
+</div>
+<p>The sample can also support other nRF based boards if you provide a Devicetree
+overlay file with an alternative configuration for <code class="docutils literal notranslate"><span class="pre">uart0</span></code>. Select <code class="docutils literal notranslate"><span class="pre">uart0</span></code>
+for <code class="docutils literal notranslate"><span class="pre">zephyr,console</span></code> to make the sample work as expected.</p>
+<section id="sample-output">
+<h3>Sample Output<a class="headerlink" href="#sample-output" title="Link to this heading"></a></h3>
+<p>Follow these steps to test the two configurations :</p>
+<ol class="arabic">
+<li><p>Connect a USB-to-UART adapter to both sets of pins. If the board routes the
+default configuration to a virtual COM port (as in the nRF52840 DK), you can
+directly use that port.</p></li>
+<li><p>Open two serial terminals, one connected to the default set of pins and the
+other connected to the alternative set of pins.</p>
+<figure class="align-default" id="id2">
+<img alt="../../../../_images/terminals-empty.png" src="../../../../_images/terminals-empty.png" />
+<figcaption>
+<p><span class="caption-text">Two serial terminals (left: default, right: alternative).</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</li>
+<li><p>Turn on the board. You should see a <code class="docutils literal notranslate"><span class="pre">Hello</span> <span class="pre">World!</span></code> message printed on
+the first terminal.</p>
+<figure class="align-default" id="id3">
+<img alt="../../../../_images/terminals-default.png" src="../../../../_images/terminals-default.png" />
+<figcaption>
+<p><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">Hello</span> <span class="pre">World!</span></code> printed on the default set of pins.</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</li>
+<li><p>Press and hold the configuration-selection push-button (button 1 on the
+nRF52840 DK) and press the board reset button. You now should see a
+<code class="docutils literal notranslate"><span class="pre">Hello</span> <span class="pre">World!</span></code> message on the second terminal.</p>
+<figure class="align-default" id="id4">
+<img alt="../../../../_images/terminals-alt.png" src="../../../../_images/terminals-alt.png" />
+<figcaption>
+<p><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">Hello</span> <span class="pre">World!</span></code> printed on the alternative set of pins.</span><a class="headerlink" href="#id4" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</li>
+</ol>
+</section>
+</section>
+</section>
+<script type="application/ld+json">
+                {"@context": "http://schema.org", "@type": "SoftwareSourceCode", "name": "Dynamic Pin Control", "description": "Dynamically change pin configuration at boot time.", "codeSampleType": "full", "codeRepository": "https://github.com/zephyrproject-rtos/zephyr/blob/main//samples/boards/nordic/dynamic_pinctrl/README.rst"}
+                </script>
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

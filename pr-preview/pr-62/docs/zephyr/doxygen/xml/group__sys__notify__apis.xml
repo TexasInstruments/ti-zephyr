@@ -1,0 +1,329 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="group__sys__notify__apis" kind="group">
+    <compoundname>sys_notify_apis</compoundname>
+    <title>Asynchronous Notification APIs</title>
+    <innerclass refid="structsys__notify" prot="public">sys_notify</innerclass>
+    <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="group__sys__notify__apis_1ga2a9ffe35a5ad44fb7c5b00bb5c5c0499" prot="public" static="no">
+        <type>void(*</type>
+        <definition>typedef void(* sys_notify_generic_callback) ()</definition>
+        <argsstring>)()</argsstring>
+        <name>sys_notify_generic_callback</name>
+        <briefdescription>
+<para>Generic signature used to notify of result completion by callback. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Functions with this role may be invoked from any context including pre-kernel, ISR, or cooperative or pre-emptible threads. Compatible functions must be isr-ok and not sleep.</para>
+<para>Parameters that should generally be passed to such functions include:</para>
+<para><itemizedlist>
+<listitem><para>a pointer to a specific client request structure, i.e. the one that contains the <ref refid="structsys__notify" kindref="compound">sys_notify</ref> structure.</para>
+</listitem><listitem><para>the result of the operation, either as passed to <ref refid="group__sys__notify__apis_1ga424b1c94c1010bdc4170cf06c7f2ec72" kindref="member">sys_notify_finalize()</ref> or extracted afterwards using <ref refid="group__sys__notify__apis_1ga823397b1917e10593d606daf3ec06a65" kindref="member">sys_notify_fetch_result()</ref>. Expected values are service-specific, but the value shall be non-negative if the operation succeeded, and negative if the operation failed. </para>
+</listitem></itemizedlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/notify.h" line="98" column="9" bodyfile="zephyr/sys/notify.h" bodystart="98" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="group__sys__notify__apis_1ga19a2ca050ef4fcd4fac70e73c3fd3514" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="stdint_8h_1a0a8582351ac627ee8bde2973c825e47f" kindref="member">uint32_t</ref></type>
+        <definition>static uint32_t sys_notify_get_method</definition>
+        <argsstring>(const struct sys_notify *notify)</argsstring>
+        <name>sys_notify_get_method</name>
+        <param>
+          <type>const struct <ref refid="structsys__notify" kindref="compound">sys_notify</ref> *</type>
+          <declname>notify</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/notify.h" line="178" column="24" bodyfile="zephyr/sys/notify.h" bodystart="178" bodyend="183"/>
+      </memberdef>
+      <memberdef kind="function" id="group__sys__notify__apis_1ga71a9ccb690151020a6abea2ec9ffc667" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int sys_notify_validate</definition>
+        <argsstring>(struct sys_notify *notify)</argsstring>
+        <name>sys_notify_validate</name>
+        <param>
+          <type>struct <ref refid="structsys__notify" kindref="compound">sys_notify</ref> *</type>
+          <declname>notify</declname>
+        </param>
+        <briefdescription>
+<para>Validate and initialize the notify structure. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This should be invoked at the start of any service-specific configuration validation. It ensures that the basic asynchronous notification configuration is consistent, and clears the result.</para>
+<para>Note that this function does not validate extension bits (zeroed by async notify API init functions like <ref refid="group__sys__notify__apis_1gaa9f31f78c03f48a3c649bbac15cc3a6c" kindref="member">sys_notify_init_callback()</ref>). It may fail to recognize that an uninitialized structure has been passed because only method bits of flags are tested against method settings. To reduce the chance of accepting an uninitialized operation service validation of structures that contain an <ref refid="structsys__notify" kindref="compound">sys_notify</ref> instance should confirm that the extension bits are set or cleared as expected.</para>
+<para><parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>0</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>on successful validation and reinitialization </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EINVAL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if the configuration is not valid. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/notify.h" line="204" column="5" declfile="zephyr/sys/notify.h" declline="204" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__sys__notify__apis_1ga424b1c94c1010bdc4170cf06c7f2ec72" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="group__sys__notify__apis_1ga2a9ffe35a5ad44fb7c5b00bb5c5c0499" kindref="member">sys_notify_generic_callback</ref></type>
+        <definition>sys_notify_generic_callback sys_notify_finalize</definition>
+        <argsstring>(struct sys_notify *notify, int res)</argsstring>
+        <name>sys_notify_finalize</name>
+        <param>
+          <type>struct <ref refid="structsys__notify" kindref="compound">sys_notify</ref> *</type>
+          <declname>notify</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>res</declname>
+        </param>
+        <briefdescription>
+<para>Record and signal the operation completion. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>notify</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>pointer to the notification state structure.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>res</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the result of the operation. Expected values are service-specific, but the value shall be non-negative if the operation succeeded, and negative if the operation failed.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>If the notification is to be done by callback this returns the generic version of the function to be invoked. The caller must immediately invoke that function with whatever arguments are expected by the callback. If notification is by spin-wait or signal, the notification has been completed by the point this function returns, and a null pointer is returned. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/notify.h" line="222" column="29" declfile="zephyr/sys/notify.h" declline="222" declcolumn="29"/>
+      </memberdef>
+      <memberdef kind="function" id="group__sys__notify__apis_1ga823397b1917e10593d606daf3ec06a65" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int sys_notify_fetch_result</definition>
+        <argsstring>(const struct sys_notify *notify, int *result)</argsstring>
+        <name>sys_notify_fetch_result</name>
+        <param>
+          <type>const struct <ref refid="structsys__notify" kindref="compound">sys_notify</ref> *</type>
+          <declname>notify</declname>
+        </param>
+        <param>
+          <type>int *</type>
+          <declname>result</declname>
+        </param>
+        <briefdescription>
+<para>Check for and read the result of an asynchronous operation. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>notify</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>pointer to the object used to specify asynchronous function behavior and store completion information.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>result</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>pointer to storage for the result of the operation. The result is stored only if the operation has completed.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>0</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if the operation has completed. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EAGAIN</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if the operation has not completed. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/notify.h" line="237" column="19" bodyfile="zephyr/sys/notify.h" bodystart="237" bodyend="250"/>
+      </memberdef>
+      <memberdef kind="function" id="group__sys__notify__apis_1gad1a5c3e58ff962ab3cac743dde8c6c1e" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void sys_notify_init_spinwait</definition>
+        <argsstring>(struct sys_notify *notify)</argsstring>
+        <name>sys_notify_init_spinwait</name>
+        <param>
+          <type>struct <ref refid="structsys__notify" kindref="compound">sys_notify</ref> *</type>
+          <declname>notify</declname>
+        </param>
+        <briefdescription>
+<para>Initialize a notify object for spin-wait notification. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Clients that use this initialization receive no asynchronous notification, and instead must periodically check for completion using <ref refid="group__sys__notify__apis_1ga823397b1917e10593d606daf3ec06a65" kindref="member">sys_notify_fetch_result()</ref>.</para>
+<para>On completion of the operation the client object must be reinitialized before it can be re-used.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>notify</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>pointer to the notification configuration object. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/notify.h" line="264" column="20" bodyfile="zephyr/sys/notify.h" bodystart="264" bodyend="271"/>
+      </memberdef>
+      <memberdef kind="function" id="group__sys__notify__apis_1ga30f9eff4b20b7d637a3a1df5f4cb38f8" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void sys_notify_init_signal</definition>
+        <argsstring>(struct sys_notify *notify, struct k_poll_signal *sigp)</argsstring>
+        <name>sys_notify_init_signal</name>
+        <param>
+          <type>struct <ref refid="structsys__notify" kindref="compound">sys_notify</ref> *</type>
+          <declname>notify</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structk__poll__signal" kindref="compound">k_poll_signal</ref> *</type>
+          <declname>sigp</declname>
+        </param>
+        <briefdescription>
+<para>Initialize a notify object for (k_poll) signal notification. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Clients that use this initialization will be notified of the completion of operations through the provided signal.</para>
+<para>On completion of the operation the client object must be reinitialized before it can be re-used.</para>
+<para><simplesect kind="note"><para>This capability is available only when <computeroutput>CONFIG_POLL</computeroutput> is selected.</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>notify</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>pointer to the notification configuration object.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sigp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>pointer to the signal to use for notification. The value must not be null. The signal must be reset before the client object is passed to the on-off service API. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/notify.h" line="292" column="20" bodyfile="zephyr/sys/notify.h" bodystart="292" bodyend="304"/>
+      </memberdef>
+      <memberdef kind="function" id="group__sys__notify__apis_1gaa9f31f78c03f48a3c649bbac15cc3a6c" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>static void sys_notify_init_callback</definition>
+        <argsstring>(struct sys_notify *notify, sys_notify_generic_callback handler)</argsstring>
+        <name>sys_notify_init_callback</name>
+        <param>
+          <type>struct <ref refid="structsys__notify" kindref="compound">sys_notify</ref> *</type>
+          <declname>notify</declname>
+        </param>
+        <param>
+          <type><ref refid="group__sys__notify__apis_1ga2a9ffe35a5ad44fb7c5b00bb5c5c0499" kindref="member">sys_notify_generic_callback</ref></type>
+          <declname>handler</declname>
+        </param>
+        <briefdescription>
+<para>Initialize a notify object for callback notification. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Clients that use this initialization will be notified of the completion of operations through the provided callback. Note that callbacks may be invoked from various contexts depending on the specific service; see <ref refid="group__sys__notify__apis_1ga2a9ffe35a5ad44fb7c5b00bb5c5c0499" kindref="member">sys_notify_generic_callback</ref>.</para>
+<para>On completion of the operation the client object must be reinitialized before it can be re-used.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>notify</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>pointer to the notification configuration object.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>handler</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a function pointer to use for notification. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/notify.h" line="321" column="20" bodyfile="zephyr/sys/notify.h" bodystart="321" bodyend="333"/>
+      </memberdef>
+      <memberdef kind="function" id="group__sys__notify__apis_1ga9772f8b356685acd707bd905860a2ca7" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="stdbool_8h_1abb452686968e48b67397da5f97445f5b" kindref="member">bool</ref></type>
+        <definition>static bool sys_notify_uses_callback</definition>
+        <argsstring>(const struct sys_notify *notify)</argsstring>
+        <name>sys_notify_uses_callback</name>
+        <param>
+          <type>const struct <ref refid="structsys__notify" kindref="compound">sys_notify</ref> *</type>
+          <declname>notify</declname>
+        </param>
+        <briefdescription>
+<para>Detect whether a particular notification uses a callback. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The generic handler does not capture the signature expected by the callback, and the translation to a service-specific callback must be provided by the service. This check allows abstracted services to reject callback notification requests when the service doesn&apos;t provide a translation function.</para>
+<para><simplesect kind="return"><para>true if and only if a callback is to be used for notification. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/notify.h" line="346" column="20" bodyfile="zephyr/sys/notify.h" bodystart="346" bodyend="351"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

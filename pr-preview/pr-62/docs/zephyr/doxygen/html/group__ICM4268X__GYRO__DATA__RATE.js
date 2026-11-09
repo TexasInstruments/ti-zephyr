@@ -1,0 +1,15 @@
+var group__ICM4268X__GYRO__DATA__RATE =
+[
+    [ "ICM4268X_DT_GYRO_ODR_100", "group__ICM4268X__GYRO__DATA__RATE.html#gaf79aa174e89c3c22128bd298cfab3805", null ],
+    [ "ICM4268X_DT_GYRO_ODR_1000", "group__ICM4268X__GYRO__DATA__RATE.html#ga5d5738a58c499b1bb8853471ec3d357e", null ],
+    [ "ICM4268X_DT_GYRO_ODR_12_5", "group__ICM4268X__GYRO__DATA__RATE.html#ga319a7710d327b82b39cee2a9d2348702", null ],
+    [ "ICM4268X_DT_GYRO_ODR_16000", "group__ICM4268X__GYRO__DATA__RATE.html#ga8a1915f4ec22be71d0460b5e4b104f18", null ],
+    [ "ICM4268X_DT_GYRO_ODR_200", "group__ICM4268X__GYRO__DATA__RATE.html#ga37ed7fc033b31067f5331734e98ac906", null ],
+    [ "ICM4268X_DT_GYRO_ODR_2000", "group__ICM4268X__GYRO__DATA__RATE.html#ga81483ad0a4a847460af6e3b34cde489e", null ],
+    [ "ICM4268X_DT_GYRO_ODR_25", "group__ICM4268X__GYRO__DATA__RATE.html#ga3788cbbf8b8e7ccded755ab52a5abe53", null ],
+    [ "ICM4268X_DT_GYRO_ODR_32000", "group__ICM4268X__GYRO__DATA__RATE.html#ga8cef750fe17171662da932b0123027ff", null ],
+    [ "ICM4268X_DT_GYRO_ODR_4000", "group__ICM4268X__GYRO__DATA__RATE.html#ga21d6c35ee4059840fe1a1f6e5b53f50a", null ],
+    [ "ICM4268X_DT_GYRO_ODR_50", "group__ICM4268X__GYRO__DATA__RATE.html#ga7d1438b46e72745204b0b37c57e57cf5", null ],
+    [ "ICM4268X_DT_GYRO_ODR_500", "group__ICM4268X__GYRO__DATA__RATE.html#ga638d6c4de6d0eea72a31a14bdf18df01", null ],
+    [ "ICM4268X_DT_GYRO_ODR_8000", "group__ICM4268X__GYRO__DATA__RATE.html#gaaea9abea12bd6fbfb5336d9cb523dd82", null ]
+];

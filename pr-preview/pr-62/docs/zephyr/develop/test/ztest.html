@@ -1,0 +1,1083 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Test Framework &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/develop/test/ztest.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Benchmarking Framework" href="benchmark.html" />
+    <link rel="prev" title="Testing" href="index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developing with Zephyr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/index.html">Getting Started Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beyond-GSG.html">Beyond the Getting Started Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env_vars.html">Environment Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../application/index.html">Application Development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debug/index.html">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/index.html">API Status and Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../languages/index.html">Language Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optimizations/index.html">Optimizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flash_debug/index.html">Flashing and Hardware Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html">Modules (External projects)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../west/index.html">West (Zephyr’s meta-tool)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Testing</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Test Framework</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#creating-a-test-suite">Creating a test suite</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#adding-tests-to-a-suite">Adding tests to a suite</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#test-fixtures">Test fixtures</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#advanced-features">Advanced features</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#test-result-expectations">Test result expectations</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#test-rules">Test rules</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#a-custom-test-main">A custom <code class="docutils literal notranslate"><span class="pre">test_main</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#quick-start-integration-testing">Quick start - Integration testing</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#listing-tests">Listing Tests</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#skipping-tests">Skipping Tests</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#quick-start-unit-testing">Quick start - Unit testing</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#cmakelists-txt">CMakeLists.txt</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#testcases-yaml">testcases.yaml</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#prj-conf">prj.conf</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#best-practices-for-declaring-the-test-suite">Best practices for declaring the test suite</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stress-test-framework">Stress test framework</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#configuration">Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API reference</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#running-tests">Running tests</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#assertions">Assertions</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#expectations">Expectations</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#assumptions">Assumptions</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ztress">Ztress</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#mocking-via-fff">Mocking via FFF</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#customizing-test-output">Customizing Test Output</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#shuffling-test-sequence">Shuffling Test Sequence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#repeating-tests">Repeating Tests</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-selection">Test Selection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fff-extensions">FFF Extensions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="benchmark.html">Benchmarking Framework</a></li>
+<li class="toctree-l3"><a class="reference internal" href="twister.html">Test Runner (Twister)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="twister_statuses.html">Twister Status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="twister/twister_blackbox.html">Twister blackbox tests</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytest.html">Integration with pytest test framework</a></li>
+<li class="toctree-l3"><a class="reference internal" href="coverage.html">Generating coverage reports</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bsim.html">BabbleSim</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../sca/index.html">Static Code Analysis (SCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains/index.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/index.html">Tools and IDEs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Developing with Zephyr</a> &raquo;</li>
+  
+     <li><a href="index.html">Testing</a> &raquo;</li>
+  
+  <li>Test Framework</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/develop/test/ztest.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27develop%2Ftest%2Fztest%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Testsuite&env=-+Page%3A+develop%2Ftest%2Fztest%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="test-framework">
+<span id="id1"></span><h1>Test Framework<a class="headerlink" href="#test-framework" title="Link to this heading"></a></h1>
+<p>The Zephyr Test Framework (Ztest) provides a simple testing framework intended
+to be used during development.  It provides basic assertion macros and a generic
+test structure.</p>
+<p>The framework can be used in two ways, either as a generic framework for
+integration testing, or for unit testing specific modules.</p>
+<section id="creating-a-test-suite">
+<h2>Creating a test suite<a class="headerlink" href="#creating-a-test-suite" title="Link to this heading"></a></h2>
+<p>Using Ztest to create a test suite is as easy as calling the <a class="reference internal" href="../../doxygen/html/group__ztest__test.html#gaef8892743e2d47c983efcb61beeedeb3" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_SUITE</span></code></a>. The macro
+accepts the following arguments:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">suite_name</span></code> - The name of the suite. This name must be unique within a single binary.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__ztest__test.html#gad5323aa82773dac33cf0930e9524420c" title=""><code class="xref c c-type docutils literal notranslate"><span class="pre">ztest_suite_predicate_t</span></code></a> - An optional predicate function to allow choosing when the
+test will run. The predicate will get a pointer to the global state passed in through
+<a class="reference internal" href="../../doxygen/html/group__ztest__test.html#gac6b1f8b820cd682094b7aaeebdaa106e" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ztest_run_all()</span></code></a> and should return a boolean to decide if the suite should run.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__ztest__test.html#ga0063907dd70b9eb817ea472162693ee4" title=""><code class="xref c c-type docutils literal notranslate"><span class="pre">ztest_suite_setup_t</span></code></a> - An optional setup function which returns a test fixture. This
+will be called and run once per test suite run.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__ztest__test.html#gac8a204832c267fed047e7707b65be74d" title=""><code class="xref c c-type docutils literal notranslate"><span class="pre">ztest_suite_before_t</span></code></a> - An optional before function which will run before every single
+test in this suite.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__ztest__test.html#ga0f9eeb8ddae455c1e7cc7a388a7b013c" title=""><code class="xref c c-type docutils literal notranslate"><span class="pre">ztest_suite_after_t</span></code></a> - An optional after function which will run after every single
+test in this suite.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__ztest__test.html#ga7769b894fdac5283ac949ce8fceea0dd" title=""><code class="xref c c-type docutils literal notranslate"><span class="pre">ztest_suite_teardown_t</span></code></a> - An optional teardown function which will run at the end of
+all the tests in the suite.</p></li>
+</ul>
+<p>Below is an example of a test suite using a predicate:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/ztest.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;test_state.h&quot;</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">predicate</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">global_state</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="k">return</span><span class="w"> </span><span class="p">((</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">test_state</span><span class="o">*</span><span class="p">)</span><span class="n">global_state</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">ZTEST_SUITE</span><span class="p">(</span><span class="n">alternating_suite</span><span class="p">,</span><span class="w"> </span><span class="n">predicate</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="adding-tests-to-a-suite">
+<h2>Adding tests to a suite<a class="headerlink" href="#adding-tests-to-a-suite" title="Link to this heading"></a></h2>
+<p>There are 5 macros used to add a test to a suite, they are:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../doxygen/html/group__ztest__test.html#gac25858f76ea667d07de422a3b489cb15" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST</span></code></a> <code class="docutils literal notranslate"><span class="pre">(suite_name,</span> <span class="pre">test_name)</span></code> - Which can be used to add a test by <code class="docutils literal notranslate"><span class="pre">test_name</span></code> to a
+given suite by <code class="docutils literal notranslate"><span class="pre">suite_name</span></code>.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__ztest__test.html#gab80e25231b291b2c2b32e6049a52d34c" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_P</span></code></a> <code class="docutils literal notranslate"><span class="pre">(suite_name,</span> <span class="pre">test_name)</span></code> - Add a parameterized test to a given suite by specifying
+the <code class="docutils literal notranslate"><span class="pre">suite_name</span></code> and <code class="docutils literal notranslate"><span class="pre">test_name</span></code>. You can then access the passed parameter within
+the body of the test using the <code class="docutils literal notranslate"><span class="pre">data</span></code> pointer.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__ztest__test.html#ga7121acc7ee00646cacefa773ff9631c8" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_USER</span></code></a> <code class="docutils literal notranslate"><span class="pre">(suite_name,</span> <span class="pre">test_name)</span></code> - Which behaves the same as <a class="reference internal" href="../../doxygen/html/group__ztest__test.html#gac25858f76ea667d07de422a3b489cb15" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST</span></code></a>, only
+that when <a class="reference internal" href="../../kconfig.html#CONFIG_USERSPACE" title="CONFIG_USERSPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code></a> is enabled, then the test will be run in a userspace
+thread.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__ztest__test.html#gacd3ab522e0e5c8a270e86b0cb6bd81b2" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_F</span></code></a> <code class="docutils literal notranslate"><span class="pre">(suite_name,</span> <span class="pre">test_name)</span></code> - Which behaves the same as <a class="reference internal" href="../../doxygen/html/group__ztest__test.html#gac25858f76ea667d07de422a3b489cb15" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST</span></code></a>, only
+that the test function will already include a variable named <code class="docutils literal notranslate"><span class="pre">fixture</span></code> with the type
+<code class="docutils literal notranslate"><span class="pre">&lt;suite_name&gt;_fixture</span></code>.</p></li>
+<li><p><a class="reference internal" href="../../doxygen/html/group__ztest__test.html#ga12ccce144e577cac6ba763982ad14def" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_USER_F</span></code></a> <code class="docutils literal notranslate"><span class="pre">(suite_name,</span> <span class="pre">test_name)</span></code> - Which combines the fixture feature of
+<a class="reference internal" href="../../doxygen/html/group__ztest__test.html#gacd3ab522e0e5c8a270e86b0cb6bd81b2" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_F</span></code></a> with the userspace threading for the test.</p></li>
+</ul>
+<section id="test-fixtures">
+<h3>Test fixtures<a class="headerlink" href="#test-fixtures" title="Link to this heading"></a></h3>
+<p>Test fixtures can be used to help simplify repeated test setup operations. In many cases, tests in
+the same suite will require some initial setup followed by some form of reset between each test.
+This is achieved via fixtures in the following way:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/ztest.h&gt;</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">my_suite_fixture</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="kt">size_t</span><span class="w"> </span><span class="n">max_size</span><span class="p">;</span>
+<span class="w">     </span><span class="kt">size_t</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="w">     </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">buff</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="p">};</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="nf">my_suite_setup</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="cm">/* Allocate the fixture with 256 byte buffer */</span>
+<span class="w">   </span><span class="k">struct</span><span class="w"> </span><span class="nc">my_suite_fixture</span><span class="w"> </span><span class="o">*</span><span class="n">fixture</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">my_suite_fixture</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">255</span><span class="p">);</span>
+
+<span class="w">     </span><span class="n">zassume_not_null</span><span class="p">(</span><span class="n">fixture</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="w">     </span><span class="n">fixture</span><span class="o">-&gt;</span><span class="n">max_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">256</span><span class="p">;</span>
+
+<span class="w">     </span><span class="k">return</span><span class="w"> </span><span class="n">fixture</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">my_suite_before</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="k">struct</span><span class="w"> </span><span class="nc">my_suite_fixture</span><span class="w"> </span><span class="o">*</span><span class="n">fixture</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">my_suite_fixture</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">f</span><span class="p">;</span>
+<span class="w">     </span><span class="n">memset</span><span class="p">(</span><span class="n">fixture</span><span class="o">-&gt;</span><span class="n">buff</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">fixture</span><span class="o">-&gt;</span><span class="n">max_size</span><span class="p">);</span>
+<span class="w">     </span><span class="n">fixture</span><span class="o">-&gt;</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">my_suite_teardown</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">   </span><span class="n">free</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">ZTEST_SUITE</span><span class="p">(</span><span class="n">my_suite</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="n">my_suite_setup</span><span class="p">,</span><span class="w"> </span><span class="n">my_suite_before</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="n">my_suite_teardown</span><span class="p">);</span>
+
+<span class="n">ZTEST_F</span><span class="p">(</span><span class="n">my_suite</span><span class="p">,</span><span class="w"> </span><span class="n">test_feature_x</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="n">zassert_equal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">fixture</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">);</span>
+<span class="w">     </span><span class="n">zassert_equal</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span><span class="w"> </span><span class="n">fixture</span><span class="o">-&gt;</span><span class="n">max_size</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Using memory allocated by a test fixture in a userspace thread, such as during execution of
+<a class="reference internal" href="../../doxygen/html/group__ztest__test.html#ga7121acc7ee00646cacefa773ff9631c8" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_USER</span></code></a> or <a class="reference internal" href="../../doxygen/html/group__ztest__test.html#ga12ccce144e577cac6ba763982ad14def" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_USER_F</span></code></a>, requires that memory to be declared userspace
+accessible. This is because the fixture memory is owned and initialized by kernel space. The Ztest
+framework provides the <a class="reference internal" href="../../doxygen/html/group__ztest__test.html#ga2c7d0aa85e7f320d582395c5ded90133" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_DMEM</span></code></a> and <a class="reference internal" href="../../doxygen/html/group__ztest__test.html#gac3de5965061b1164a8033712c9094e23" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_BMEM</span></code></a> macros for use of such
+user/kernel space shared memory.</p>
+</section>
+</section>
+<section id="advanced-features">
+<h2>Advanced features<a class="headerlink" href="#advanced-features" title="Link to this heading"></a></h2>
+<section id="test-result-expectations">
+<h3>Test result expectations<a class="headerlink" href="#test-result-expectations" title="Link to this heading"></a></h3>
+<p>Some tests were made to be broken. In cases where the test is expected to fail or skip due to the
+nature of the code, it’s possible to annotate the test as such. For example:</p>
+<blockquote>
+<div><div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/ztest.h&gt;</span>
+
+<span class="n">ZTEST_SUITE</span><span class="p">(</span><span class="n">my_suite</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+
+<span class="n">ZTEST_EXPECT_FAIL</span><span class="p">(</span><span class="n">my_suite</span><span class="p">,</span><span class="w"> </span><span class="n">test_fail</span><span class="p">);</span>
+<span class="n">ZTEST</span><span class="p">(</span><span class="n">my_suite</span><span class="p">,</span><span class="w"> </span><span class="n">test_fail</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="cm">/** This will fail the test */</span>
+<span class="w">  </span><span class="n">zassert_true</span><span class="p">(</span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">ZTEST_EXPECT_SKIP</span><span class="p">(</span><span class="n">my_suite</span><span class="p">,</span><span class="w"> </span><span class="n">test_skip</span><span class="p">);</span>
+<span class="n">ZTEST</span><span class="p">(</span><span class="n">my_suite</span><span class="p">,</span><span class="w"> </span><span class="n">test_skip</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="cm">/** This will skip the test */</span>
+<span class="w">  </span><span class="n">zassume_true</span><span class="p">(</span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>In this example, the above tests should be marked as failed and skipped respectively. Instead,
+Ztest will mark both as passed due to the expectation.</p>
+</section>
+<section id="test-rules">
+<h3>Test rules<a class="headerlink" href="#test-rules" title="Link to this heading"></a></h3>
+<p>Test rules are a way to run the same logic for every test and every suite. There are a lot of cases
+where you might want to reset some state for every test in the binary (regardless of which suite is
+currently running). As an example, this could be to reset mocks, reset emulators, flush the UART,
+etc.:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/fff.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/ztest.h&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;test_mocks.h&quot;</span>
+
+<span class="n">DEFINE_FFF_GLOBALS</span><span class="p">;</span>
+
+<span class="n">DEFINE_FAKE_VOID_FUN</span><span class="p">(</span><span class="n">my_weak_func</span><span class="p">);</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">fff_reset_rule_before</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">ztest_unit_test</span><span class="w"> </span><span class="o">*</span><span class="n">test</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">fixture</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="n">ARG_UNUSED</span><span class="p">(</span><span class="n">test</span><span class="p">);</span>
+<span class="w">     </span><span class="n">ARG_UNUSED</span><span class="p">(</span><span class="n">fixture</span><span class="p">);</span>
+
+<span class="w">     </span><span class="n">RESET_FAKE</span><span class="p">(</span><span class="n">my_weak_func</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">ZTEST_RULE</span><span class="p">(</span><span class="n">fff_reset_rule</span><span class="p">,</span><span class="w"> </span><span class="n">fff_reset_rule_before</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="a-custom-test-main">
+<h3>A custom <code class="docutils literal notranslate"><span class="pre">test_main</span></code><a class="headerlink" href="#a-custom-test-main" title="Link to this heading"></a></h3>
+<p>While the Ztest framework provides a default <a class="reference internal" href="../../doxygen/html/ztest_8h.html#a8a4533f287d99bb2d7c24c0e29c9a449" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">test_main()</span></code></a> function, it’s possible that some
+applications will want to provide custom behavior. This is particularly true if there’s some global
+state that the tests depend on and that state either cannot be replicated or is difficult to
+replicate without starting the process over. For example, one such state could be a power sequence.
+Assuming there’s a board with several steps in the power-on sequence a test suite can be written
+using the <code class="docutils literal notranslate"><span class="pre">predicate</span></code> to control when it would run. In that case, the <a class="reference internal" href="../../doxygen/html/ztest_8h.html#a8a4533f287d99bb2d7c24c0e29c9a449" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">test_main()</span></code></a>
+function can be written as follows:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/ztest.h&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;my_test.h&quot;</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">test_main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="k">struct</span><span class="w"> </span><span class="nc">power_sequence_state</span><span class="w"> </span><span class="n">state</span><span class="p">;</span>
+
+<span class="w">     </span><span class="cm">/* Only suites that use a predicate checking for phase == PWR_PHASE_0 will run. */</span>
+<span class="w">     </span><span class="n">state</span><span class="p">.</span><span class="n">phase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PWR_PHASE_0</span><span class="p">;</span>
+<span class="w">     </span><span class="n">ztest_run_all</span><span class="p">(</span><span class="o">&amp;</span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+
+<span class="w">     </span><span class="cm">/* Only suites that use a predicate checking for phase == PWR_PHASE_1 will run. */</span>
+<span class="w">     </span><span class="n">state</span><span class="p">.</span><span class="n">phase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PWR_PHASE_1</span><span class="p">;</span>
+<span class="w">     </span><span class="n">ztest_run_all</span><span class="p">(</span><span class="o">&amp;</span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+
+<span class="w">     </span><span class="cm">/* Only suites that use a predicate checking for phase == PWR_PHASE_2 will run. */</span>
+<span class="w">     </span><span class="n">state</span><span class="p">.</span><span class="n">phase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PWR_PHASE_2</span><span class="p">;</span>
+<span class="w">     </span><span class="n">ztest_run_all</span><span class="p">(</span><span class="o">&amp;</span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+
+<span class="w">     </span><span class="cm">/* Check that all the suites in this binary ran at least once. */</span>
+<span class="w">     </span><span class="n">ztest_verify_all_test_suites_ran</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="quick-start-integration-testing">
+<h2>Quick start - Integration testing<a class="headerlink" href="#quick-start-integration-testing" title="Link to this heading"></a></h2>
+<p>A simple working base is located at <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/samples/subsys/testsuite/integration">samples/subsys/testsuite/integration</a>.
+To make a test application for the <strong>bar</strong> component of <strong>foo</strong>, you should copy the
+sample folder to <code class="docutils literal notranslate"><span class="pre">tests/foo/bar</span></code> and edit files there adjusting for your test
+application’s purposes.</p>
+<p>To build and execute all applicable test scenarios defined in your test application
+use the <a class="reference internal" href="twister.html#twister-script"><span class="std std-ref">Twister</span></a> tool, for example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/twister -T tests/foo/bar/</span>
+</pre></div>
+</div>
+<p>To select just one of the test scenarios, run Twister with <code class="docutils literal notranslate"><span class="pre">--scenario</span></code> command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/twister --scenario tests/foo/bar/your.test.scenario.name</span>
+</pre></div>
+</div>
+<p>In the command line above <code class="docutils literal notranslate"><span class="pre">tests/foo/bar</span></code> is the path to your test application and
+<code class="docutils literal notranslate"><span class="pre">your.test.scenario.name</span></code> references a test scenario defined in <code class="file docutils literal notranslate"><span class="pre">testcase.yaml</span></code>
+file, which is like <code class="docutils literal notranslate"><span class="pre">sample.testing.ztest</span></code> in the boilerplate test suite sample.</p>
+<p>See <a class="reference internal" href="twister.html#twister-test-project-diagram"><span class="std std-ref">Twister test project diagram</span></a> for more details
+on how Twister deals with Ztest application.</p>
+<p>The sample contains the following files:</p>
+<p>CMakeLists.txt</p>
+<div class="highlight-CMake notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c"># SPDX-License-Identifier: Apache-2.0</span>
+<span class="linenos">2</span>
+<span class="linenos">3</span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.20.0</span><span class="p">)</span>
+<span class="linenos">4</span><span class="nb">find_package</span><span class="p">(</span><span class="s">Zephyr</span><span class="w"> </span><span class="s">REQUIRED</span><span class="w"> </span><span class="s">HINTS</span><span class="w"> </span><span class="o">$ENV{</span><span class="nv">ZEPHYR_BASE</span><span class="o">}</span><span class="p">)</span>
+<span class="linenos">5</span><span class="nb">project</span><span class="p">(</span><span class="s">integration</span><span class="p">)</span>
+<span class="linenos">6</span>
+<span class="linenos">7</span><span class="nb">FILE</span><span class="p">(</span><span class="s">GLOB</span><span class="w"> </span><span class="s">app_sources</span><span class="w"> </span><span class="s">src/*.c</span><span class="p">)</span>
+<span class="linenos">8</span><span class="nb">target_sources</span><span class="p">(</span><span class="s">app</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="o">${</span><span class="nv">app_sources</span><span class="o">}</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>testcase.yaml</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nt">tests</span><span class="p">:</span>
+<span class="linenos">2</span><span class="w">  </span><span class="c1"># section.subsection</span>
+<span class="linenos">3</span><span class="w">  </span><span class="nt">sample.testing.ztest</span><span class="p">:</span>
+<span class="linenos">4</span><span class="w">    </span><span class="nt">build_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="linenos">5</span><span class="w">    </span><span class="nt">platform_allow</span><span class="p">:</span>
+<span class="linenos">6</span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native_sim</span>
+<span class="linenos">7</span><span class="w">    </span><span class="nt">integration_platforms</span><span class="p">:</span>
+<span class="linenos">8</span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native_sim</span>
+<span class="linenos">9</span><span class="w">    </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test_framework</span>
+</pre></div>
+</div>
+<p>prj.conf</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span>CONFIG_ZTEST=y
+</pre></div>
+</div>
+<p>src/main.c</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cm">/*</span>
+<span class="linenos"> 2</span><span class="cm"> * Copyright (c) 2016 Intel Corporation</span>
+<span class="linenos"> 3</span><span class="cm"> *</span>
+<span class="linenos"> 4</span><span class="cm"> * SPDX-License-Identifier: Apache-2.0</span>
+<span class="linenos"> 5</span><span class="cm"> */</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/ztest.h&gt;</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="n">ZTEST_SUITE</span><span class="p">(</span><span class="n">framework_tests</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span><span class="cm">/**</span>
+<span class="linenos">13</span><span class="cm"> * @brief Test Asserts</span>
+<span class="linenos">14</span><span class="cm"> *</span>
+<span class="linenos">15</span><span class="cm"> * This test verifies various assert macros provided by ztest.</span>
+<span class="linenos">16</span><span class="cm"> *</span>
+<span class="linenos">17</span><span class="cm"> */</span>
+<span class="linenos">18</span><span class="n">ZTEST</span><span class="p">(</span><span class="n">framework_tests</span><span class="p">,</span><span class="w"> </span><span class="n">test_assert</span><span class="p">)</span>
+<span class="linenos">19</span><span class="p">{</span>
+<span class="linenos">20</span><span class="w">	</span><span class="n">zassert_true</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;1 was false&quot;</span><span class="p">);</span>
+<span class="linenos">21</span><span class="w">	</span><span class="n">zassert_false</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;0 was true&quot;</span><span class="p">);</span>
+<span class="linenos">22</span><span class="w">	</span><span class="n">zassert_is_null</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;NULL was not NULL&quot;</span><span class="p">);</span>
+<span class="linenos">23</span><span class="w">	</span><span class="n">zassert_not_null</span><span class="p">(</span><span class="s">&quot;foo&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\&quot;</span><span class="s">foo</span><span class="se">\&quot;</span><span class="s"> was NULL&quot;</span><span class="p">);</span>
+<span class="linenos">24</span><span class="w">	</span><span class="n">zassert_equal</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;1 was not equal to 1&quot;</span><span class="p">);</span>
+<span class="linenos">25</span><span class="w">	</span><span class="n">zassert_equal_ptr</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;NULL was not equal to NULL&quot;</span><span class="p">);</span>
+<span class="linenos">26</span><span class="p">}</span>
+</pre></div>
+</div>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#listing-tests" id="id3">Listing Tests</a></p></li>
+<li><p><a class="reference internal" href="#skipping-tests" id="id4">Skipping Tests</a></p></li>
+</ul>
+</nav>
+<p>A test application may consist of multiple test suites that
+either can be testing functionality or APIs. Functions implementing a test case
+should follow the guidelines below:</p>
+<ul class="simple">
+<li><p>Test cases function names should be prefixed with <strong>test_</strong></p></li>
+<li><p>Test cases should be documented using doxygen</p></li>
+<li><p>Test case function names should be unique within the section or component being
+tested</p></li>
+</ul>
+<p>For example:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm"> * @brief Test Asserts</span>
+<span class="cm"> *</span>
+<span class="cm"> * This test case verifies the zassert_true macro.</span>
+<span class="cm"> */</span>
+<span class="n">ZTEST</span><span class="p">(</span><span class="n">my_suite</span><span class="p">,</span><span class="w"> </span><span class="n">test_assert</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="n">zassert_true</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;1 was false&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="listing-tests">
+<h3><a class="toc-backref" href="#contents" role="doc-backlink">Listing Tests</a><a class="headerlink" href="#listing-tests" title="Link to this heading"></a></h3>
+<p>Tests (test applications) in the Zephyr tree consist of many test scenarios that run as
+part of a project and test similar functionality, for example an API or a
+feature. The <code class="docutils literal notranslate"><span class="pre">twister</span></code> script can parse the test scenarios, suites and cases in all
+test applications or a subset of them, and can generate reports on a granular
+level, i.e. if test cases have passed or failed or if they were blocked or skipped.</p>
+<p>Twister parses the source files looking for test case names, so you
+can list all kernel test cases, for example, by running:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/twister --list-tests -T tests/kernel</span>
+</pre></div>
+</div>
+</section>
+<section id="skipping-tests">
+<h3><a class="toc-backref" href="#contents" role="doc-backlink">Skipping Tests</a><a class="headerlink" href="#skipping-tests" title="Link to this heading"></a></h3>
+<p>Special- or architecture-specific tests cannot run on all
+platforms and architectures, however we still want to count those and
+report them as being skipped.  Because the test inventory and
+the list of tests is extracted from the code, adding
+conditionals inside the test suite is sub-optimal.  Tests that need
+to be skipped for a certain platform or feature need to explicitly
+report a skip using <a class="reference internal" href="../../doxygen/html/group__ztest__test.html#gada3b1fcfa71db1bf7787c03ff45256d5" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ztest_test_skip()</span></code></a> or <code class="xref c c-macro docutils literal notranslate"><span class="pre">Z_TEST_SKIP_IFDEF</span></code>. If the test runs,
+it needs to report either a pass or fail.  For example:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#ifdef CONFIG_TEST1</span>
+<span class="n">ZTEST</span><span class="p">(</span><span class="n">common</span><span class="p">,</span><span class="w"> </span><span class="n">test_test1</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="n">zassert_true</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;true&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="cp">#else</span>
+<span class="n">ZTEST</span><span class="p">(</span><span class="n">common</span><span class="p">,</span><span class="w"> </span><span class="n">test_test1</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="n">ztest_test_skip</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="cp">#endif</span>
+
+<span class="n">ZTEST</span><span class="p">(</span><span class="n">common</span><span class="p">,</span><span class="w"> </span><span class="n">test_test2</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="n">Z_TEST_SKIP_IFDEF</span><span class="p">(</span><span class="n">CONFIG_BUGxxxxx</span><span class="p">);</span>
+<span class="w">     </span><span class="n">zassert_equal</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">ZTEST_SUITE</span><span class="p">(</span><span class="n">common</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="quick-start-unit-testing">
+<span id="ztest-unit-testing"></span><h2>Quick start - Unit testing<a class="headerlink" href="#quick-start-unit-testing" title="Link to this heading"></a></h2>
+<p>Ztest can be used for unit testing. This means that rather than including the
+entire Zephyr OS for testing a single function, you can focus the testing
+efforts into the specific module in question. This will speed up testing since
+only the module will have to be compiled in, and the tested functions will be
+called directly.</p>
+<p>To setup unit tests you have to add a CMakeLists.txt, a testcases.yml and a
+prj.conf to the directory containing the unit test source files. The resulting
+binary from this directory is built using -DBOARD=unit_testing. When twister
+is invoked the script zephyr/scripts/pylib/twister/twisterlib/testplan.py
+filters out all testcases.yml in which type: unit is not set. Only unit tests
+are executed with a firmware build with BOARD=unit_testing.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Unit tests are run as <strong>native</strong> applications on the host and are therefore
+subject to similar <a class="reference internal" href="../../boards/native/doc/arch_soc.html#posix-arch-limitations"><span class="std std-ref">limitations</span></a> as documented
+for the <a class="reference internal" href="../../boards/native/doc/arch_soc.html#posix-arch"><span class="std std-ref">POSIX architecture</span></a>. Running unit tests is
+therefore only supported for Linux. To run unit tests on Windows or macOS
+it is necessary to use containers or Virtual Machines running a Linux guest.
+Follow the same instructions as for the
+<a class="reference internal" href="../../boards/native/doc/arch_soc.html#posix-arch-deps"><span class="std std-ref">POSIX Arch dependencies</span></a>.</p>
+</div>
+<section id="cmakelists-txt">
+<h3>CMakeLists.txt<a class="headerlink" href="#cmakelists-txt" title="Link to this heading"></a></h3>
+<p>In order to declare the unit tests present in a source folder, you need to add
+the relevant source files to the <code class="docutils literal notranslate"><span class="pre">testbinary</span></code> target from the CMake
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/cmake/modules/unittest.cmake">unittest</a> component. See a minimal
+example below:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.20.0</span><span class="p">)</span>
+
+<span class="nb">project</span><span class="p">(</span><span class="s">app</span><span class="p">)</span>
+<span class="nb">find_package</span><span class="p">(</span><span class="s">Zephyr</span><span class="w"> </span><span class="s">COMPONENTS</span><span class="w"> </span><span class="s">unittest</span><span class="w"> </span><span class="s">REQUIRED</span><span class="w"> </span><span class="s">HINTS</span><span class="w"> </span><span class="o">$ENV{</span><span class="nv">ZEPHYR_BASE</span><span class="o">}</span><span class="p">)</span>
+<span class="nb">target_sources</span><span class="p">(</span><span class="s">testbinary</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">main.c</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Since you won’t be including basic kernel data structures that most code
+depends on, you have to provide function stubs in the test. Ztest provides
+some helpers for mocking functions, as demonstrated below.</p>
+<p>In a unit test, mock objects can simulate the behavior of complex real objects
+and are used to decide whether a test failed or passed by verifying whether an
+interaction with an object occurred, and if required, to assert the order of
+that interaction.</p>
+</section>
+<section id="testcases-yaml">
+<h3>testcases.yaml<a class="headerlink" href="#testcases-yaml" title="Link to this heading"></a></h3>
+<p>You have to set the value for the key “type” to “unit” in the testcase.yaml</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tests</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">testscenario.testsuite</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your_tag</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unit</span>
+</pre></div>
+</div>
+</section>
+<section id="prj-conf">
+<h3>prj.conf<a class="headerlink" href="#prj-conf" title="Link to this heading"></a></h3>
+<p>For unit tests this contains usually only</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span>CONFIG_ZTEST=y
+</pre></div>
+</div>
+<p>If your unit tests require additional libraries (e.g. math-lib) you will have to
+add them either via the CMakeLists.txt or in the testcase.yaml:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tests</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">testscenario.testsuite</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your_tag</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unit</span>
+<span class="w">      </span><span class="nt">extra_args</span><span class="p">:</span>
+<span class="w">         </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EXTRA_LDFLAGS=&quot;-lm&quot;</span>
+</pre></div>
+</div>
+<p>Examples of unit tests can be found in the <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/tests/unit/">tests/unit/</a> folder.</p>
+</section>
+</section>
+<section id="best-practices-for-declaring-the-test-suite">
+<h2>Best practices for declaring the test suite<a class="headerlink" href="#best-practices-for-declaring-the-test-suite" title="Link to this heading"></a></h2>
+<p><em>twister</em> and other validation tools need to obtain the list of
+test cases that a Zephyr <em>ztest</em> test image will expose.</p>
+<div class="admonition-rationale admonition">
+<p class="admonition-title">Rationale</p>
+<p>This all is for the purpose of traceability. It’s not enough to
+have only a semaphore test application.  We also need to show that we
+have testpoints for all APIs and functionality, and we trace back
+to documentation of the API, and functional requirements.</p>
+<p>The idea is that test reports show results for every test case
+as passed, failed, blocked, or skipped.  Reporting on only the
+high-level test application, particularly when tests do too
+many things, is too vague.</p>
+</div>
+<p>Other questions:</p>
+<ul>
+<li><p>Why not pre-scan with CPP and then parse? or post scan the ELF file?</p>
+<p>If C pre-processing or building fails because of any issue, then we
+won’t be able to tell the subcases.</p>
+</li>
+<li><p>Why not declare them in the YAML test configuration?</p>
+<p>A separate test case description file would be harder to maintain
+than just keeping the information in the test source files
+themselves – only one file to update when changes are made
+eliminates duplication.</p>
+</li>
+</ul>
+</section>
+<section id="stress-test-framework">
+<h2>Stress test framework<a class="headerlink" href="#stress-test-framework" title="Link to this heading"></a></h2>
+<p>Zephyr stress test framework (Ztress) provides an environment for executing user
+functions in multiple priority contexts. It can be used to validate that code is
+resilient to preemptions. The framework tracks the number of executions and preemptions
+for each context. Execution can have various completion conditions like timeout,
+number of executions or number of preemptions.</p>
+<p>The framework is setting up the environment by creating the requested number of threads
+(each on different priority), optionally starting a timer. For each context, a user
+function (different for each context) is called and then the context sleeps for
+a randomized amount of system ticks. The framework is tracking CPU load and adjusts sleeping
+periods to achieve higher CPU load. In order to increase the probability of preemptions,
+the system clock frequency should be relatively high. The default 100 Hz on QEMU x86
+is much too low and it is recommended to increase it to 100 kHz.</p>
+<p>The stress test environment is setup and executed using <a class="reference internal" href="../../doxygen/html/group__ztest__ztress.html#ga6acc3a50e0eff7360873006482f5c8e9" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTRESS_EXECUTE</span></code></a> which
+accepts a variable number of arguments. Each argument is a context that is
+specified by <a class="reference internal" href="../../doxygen/html/group__ztest__ztress.html#gabab05b8db44a7024ce23cb34bf999e42" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTRESS_TIMER</span></code></a> or <a class="reference internal" href="../../doxygen/html/group__ztest__ztress.html#gaed561641541e8ced6866f2f1227f21c0" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTRESS_THREAD</span></code></a> macros. Contexts
+are specified in priority descending order. Each context specifies completion
+conditions by providing the minimum number of executions and preemptions. When all
+conditions are met and the execution has completed, an execution report is printed
+and the macro returns. Note that while the test is executing, a progress report is
+periodically printed.</p>
+<p>Execution can be prematurely completed by specifying a test timeout (<a class="reference internal" href="../../doxygen/html/group__ztest__ztress.html#ga5b3069bb2aa35ddc64c46c18d2e30091" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ztress_set_timeout()</span></code></a>)
+or an explicit abort (<a class="reference internal" href="../../doxygen/html/group__ztest__ztress.html#ga57f171e230fba462b3dea6b2d3cf71f6" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">ztress_abort()</span></code></a>).</p>
+<p>User function parameters contains an execution counter and a flag indicating if it is
+the last execution.</p>
+<p>The example below presents how to setup and run 3 contexts (one of which is k_timer
+interrupt handler context). Completion criteria is set to at least 10000 executions
+of each context and 1000 preemptions of the lowest priority context. Additionally,
+the timeout is configured to complete after 10 seconds if those conditions are not met.
+The last argument of each context is the initial sleep time which will be adjusted throughout
+the test to achieve the highest CPU load.</p>
+<blockquote>
+<div><div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="n">ztress_set_timeout</span><span class="p">(</span><span class="n">K_MSEC</span><span class="p">(</span><span class="mi">10000</span><span class="p">));</span>
+<span class="n">ZTRESS_EXECUTE</span><span class="p">(</span><span class="n">ZTRESS_TIMER</span><span class="p">(</span><span class="n">foo_0</span><span class="p">,</span><span class="w"> </span><span class="n">user_data_0</span><span class="p">,</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span><span class="w"> </span><span class="n">Z_TIMEOUT_TICKS</span><span class="p">(</span><span class="mi">20</span><span class="p">)),</span>
+<span class="w">               </span><span class="n">ZTRESS_THREAD</span><span class="p">(</span><span class="n">foo_1</span><span class="p">,</span><span class="w"> </span><span class="n">user_data_1</span><span class="p">,</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">Z_TIMEOUT_TICKS</span><span class="p">(</span><span class="mi">20</span><span class="p">)),</span>
+<span class="w">               </span><span class="n">ZTRESS_THREAD</span><span class="p">(</span><span class="n">foo_2</span><span class="p">,</span><span class="w"> </span><span class="n">user_data_2</span><span class="p">,</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w"> </span><span class="n">Z_TIMEOUT_TICKS</span><span class="p">(</span><span class="mi">20</span><span class="p">)));</span>
+</pre></div>
+</div>
+</div></blockquote>
+<section id="configuration">
+<h3>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h3>
+<p>Static configuration of Ztress contains:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZTRESS_MAX_THREADS" title="CONFIG_ZTRESS_MAX_THREADS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTRESS_MAX_THREADS</span></code></a> - number of supported threads.</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZTRESS_STACK_SIZE" title="CONFIG_ZTRESS_STACK_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTRESS_STACK_SIZE</span></code></a> - Stack size of created threads.</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZTRESS_REPORT_PROGRESS_MS" title="CONFIG_ZTRESS_REPORT_PROGRESS_MS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTRESS_REPORT_PROGRESS_MS</span></code></a> - Test progress report interval.</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<section id="api-reference">
+<h2>API reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<section id="running-tests">
+<h3>Running tests<a class="headerlink" href="#running-tests" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__ztest__test.html" title=""><span class="pre">Ztest</span> <span class="pre">testing</span> <span class="pre">macros</span></a></dt>
+</dl>
+
+</section>
+<section id="assertions">
+<h3>Assertions<a class="headerlink" href="#assertions" title="Link to this heading"></a></h3>
+<p>These macros will instantly fail the test if the related assertion fails.
+When an assertion fails, it will print the current file, line and function,
+alongside a reason for the failure and an optional message. If the config
+<a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_ASSERT_VERBOSE" title="CONFIG_ZTEST_ASSERT_VERBOSE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_ASSERT_VERBOSE</span></code></a> is 0, the assertions will only print the
+file and line numbers, reducing the binary size of the test.</p>
+<p>Example output for a failed macro from
+<code class="docutils literal notranslate"><span class="pre">zassert_equal(buf-&gt;ref,</span> <span class="pre">2,</span> <span class="pre">&quot;Invalid</span> <span class="pre">refcount&quot;)</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Assertion failed at main.c:62: test_get_single_buffer: Invalid refcount (buf-&gt;ref not equal to 2)
+Aborted at unit test function
+</pre></div>
+</div>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__ztest__assert.html" title=""><span class="pre">Ztest</span> <span class="pre">assertion</span> <span class="pre">macros</span></a></dt>
+</dl>
+
+</section>
+<section id="expectations">
+<h3>Expectations<a class="headerlink" href="#expectations" title="Link to this heading"></a></h3>
+<p>These macros will continue test execution if the related expectation fails and subsequently fail the
+test at the end of its execution.  When an expectation fails, it will print the current file, line,
+and function, alongside a reason for the failure and an optional message but continue executing the
+test. If the config <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_ASSERT_VERBOSE" title="CONFIG_ZTEST_ASSERT_VERBOSE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_ASSERT_VERBOSE</span></code></a> is 0, the expectations will only print the
+file and line numbers, reducing the binary size of the test.</p>
+<p>For example, if the following expectations fail:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="n">zexpect_equal</span><span class="p">(</span><span class="n">buf</span><span class="o">-&gt;</span><span class="n">ref</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Invalid refcount&quot;</span><span class="p">);</span>
+<span class="n">zexpect_equal</span><span class="p">(</span><span class="n">buf</span><span class="o">-&gt;</span><span class="n">ref</span><span class="p">,</span><span class="w"> </span><span class="mi">1337</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Invalid refcount&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The output will look something like:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>START - test_get_single_buffer
+    Expectation failed at main.c:62: test_get_single_buffer: Invalid refcount (buf-&gt;ref not equal to 2)
+    Expectation failed at main.c:63: test_get_single_buffer: Invalid refcount (buf-&gt;ref not equal to 1337)
+ FAIL - test_get_single_buffer in 0.0 seconds
+</pre></div>
+</div>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__ztest__expect.html" title=""><span class="pre">Ztest</span> <span class="pre">expectation</span> <span class="pre">macros</span></a></dt>
+</dl>
+
+</section>
+<section id="assumptions">
+<h3>Assumptions<a class="headerlink" href="#assumptions" title="Link to this heading"></a></h3>
+<p>These macros will instantly skip the test or suite if the related assumption fails.
+When an assumption fails, it will print the current file, line, and function,
+alongside a reason for the failure and an optional message. If the config
+<a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_ASSERT_VERBOSE" title="CONFIG_ZTEST_ASSERT_VERBOSE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_ASSERT_VERBOSE</span></code></a> is 0, the assumptions will only print the
+file and line numbers, reducing the binary size of the test.</p>
+<p>Example output for a failed macro from
+<code class="docutils literal notranslate"><span class="pre">zassume_equal(buf-&gt;ref,</span> <span class="pre">2,</span> <span class="pre">&quot;Invalid</span> <span class="pre">refcount&quot;)</span></code>:</p>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__ztest__assume.html" title=""><span class="pre">Ztest</span> <span class="pre">assumption</span> <span class="pre">macros</span></a></dt>
+</dl>
+
+</section>
+<section id="ztress">
+<h3>Ztress<a class="headerlink" href="#ztress" title="Link to this heading"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__ztest__ztress.html" title=""><span class="pre">Ztest</span> <span class="pre">ztress</span> <span class="pre">macros</span></a></dt>
+</dl>
+
+</section>
+<section id="mocking-via-fff">
+<span id="mocking-fff"></span><h3>Mocking via FFF<a class="headerlink" href="#mocking-via-fff" title="Link to this heading"></a></h3>
+<p>Zephyr has integrated with FFF for mocking. See <a class="reference external" href="https://github.com/meekrosoft/fff">FFF</a> for documentation. To use it,
+include the relevant header:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/fff.h&gt;</span>
+</pre></div>
+</div>
+<p>Zephyr provides several FFF-based fake drivers which can be used as either stubs or mocks. Fake
+driver instances are configured via <a class="reference internal" href="../../build/dts/index.html#devicetree"><span class="std std-ref">Devicetree</span></a> and <a class="reference internal" href="../../build/kconfig/index.html#kconfig"><span class="std std-ref">Configuration System (Kconfig)</span></a>. See the following
+devicetree bindings for more information:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="../../build/dts/api/bindings/can/zephyr%2Cfake-can.html#std-dtcompatible-zephyr-fake-can"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,fake-can</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../build/dts/api/bindings/mtd/zephyr%2Cfake-eeprom.html#std-dtcompatible-zephyr-fake-eeprom"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,fake-eeprom</span></code></a></p></li>
+</ul>
+</div></blockquote>
+<p>Zephyr also has defined extensions to FFF for simplified declarations of fake functions.
+See <a class="reference internal" href="#fff-extensions"><span class="std std-ref">FFF Extensions</span></a>.</p>
+</section>
+</section>
+<section id="customizing-test-output">
+<h2>Customizing Test Output<a class="headerlink" href="#customizing-test-output" title="Link to this heading"></a></h2>
+<p>Customization is enabled by setting <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_TC_UTIL_USER_OVERRIDE" title="CONFIG_ZTEST_TC_UTIL_USER_OVERRIDE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_TC_UTIL_USER_OVERRIDE</span></code></a> to “y”
+and adding a file <code class="file docutils literal notranslate"><span class="pre">tc_util_user_override.h</span></code> with your overrides.</p>
+<p>Add the line <code class="docutils literal notranslate"><span class="pre">zephyr_include_directories(my_folder)</span></code> to
+your project’s <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> to let Zephyr find your header file during builds.</p>
+<p>See the file <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/subsys/testsuite/include/zephyr/tc_util.h">subsys/testsuite/include/zephyr/tc_util.h</a> to see
+which macros and/or defines can be overridden.
+These will be surrounded by blocks such as:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#ifndef SOMETHING</span>
+<span class="cp">#define SOMETHING &lt;default implementation&gt;</span>
+<span class="cp">#endif </span><span class="cm">/* SOMETHING */</span>
+</pre></div>
+</div>
+</section>
+<section id="shuffling-test-sequence">
+<span id="ztest-shuffle"></span><h2>Shuffling Test Sequence<a class="headerlink" href="#shuffling-test-sequence" title="Link to this heading"></a></h2>
+<p>By default the tests are sorted and ran in alphanumerical order.  Test cases may
+be dependent on this sequence. Enable <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_SHUFFLE" title="CONFIG_ZTEST_SHUFFLE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_SHUFFLE</span></code></a> to
+randomize the order. The output from the test will display the seed for failed
+tests.  For native simulator builds you can provide the seed as an argument to
+twister with <code class="docutils literal notranslate"><span class="pre">--seed</span></code>.</p>
+</section>
+<section id="repeating-tests">
+<h2>Repeating Tests<a class="headerlink" href="#repeating-tests" title="Link to this heading"></a></h2>
+<p>By default the tests are executed once. The test cases and test suites
+may be executed multiple times. Enable <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_REPEAT" title="CONFIG_ZTEST_REPEAT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_REPEAT</span></code></a> to
+execute the tests multiple times. By default the multiplication factors are 3, which
+means every test suite is executed 3 times and every test case is executed 3 times. This can
+be changed by the <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_SUITE_REPEAT_COUNT" title="CONFIG_ZTEST_SUITE_REPEAT_COUNT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_SUITE_REPEAT_COUNT</span></code></a> and
+<a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_TEST_REPEAT_COUNT" title="CONFIG_ZTEST_TEST_REPEAT_COUNT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_TEST_REPEAT_COUNT</span></code></a> Kconfig options.</p>
+</section>
+<section id="test-selection">
+<h2>Test Selection<a class="headerlink" href="#test-selection" title="Link to this heading"></a></h2>
+<p>For tests built for native simulator, use command line arguments to list
+or select tests to run. The test argument expects a comma separated list
+of <code class="docutils literal notranslate"><span class="pre">suite::test</span></code> .  You can substitute the test name with an <code class="docutils literal notranslate"><span class="pre">*</span></code> to run all
+tests within a suite.</p>
+<p>For example</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>zephyr.exe<span class="w"> </span>-list
+$<span class="w"> </span>zephyr.exe<span class="w"> </span>-test<span class="o">=</span><span class="s2">&quot;fixture_tests::test_fixture_pointer,framework_tests::test_assert_mem_equal&quot;</span>
+$<span class="w"> </span>zephyr.exe<span class="w"> </span>-test<span class="o">=</span><span class="s2">&quot;framework_tests::*&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="fff-extensions">
+<span id="id2"></span><h2>FFF Extensions<a class="headerlink" href="#fff-extensions" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__fff__extensions.html" title=""><span class="pre">FFF</span> <span class="pre">extensions</span></a></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,552 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code And Data Relocation &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/kernel/code-relocation.html" />
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Scope-based Cleanup Helpers" href="cleanup.html" />
+    <link rel="prev" title="Iterable Sections" href="iterable_sections/index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Kernel</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="services/index.html">Kernel Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drivers/index.html">Device Driver Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usermode/index.html">User Mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory_management/index.html">Memory Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_structures/index.html">Data Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timing_functions/index.html">Executing Time Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_cores/index.html">Object Cores</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeutil.html">Time Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util/index.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iterable_sections/index.html">Iterable Sections</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Code And Data Relocation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#details">Details</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#additional-configurations">Additional Configurations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#section-filtering">Section Filtering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nokeep-flag">NOKEEP flag</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nocopy-flag">NOCOPY flag</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#relocating-libraries">Relocating libraries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tips">Tips</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#samples-tests">Samples/ Tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cleanup.html">Scope-based Cleanup Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="index.html">Kernel</a> &raquo;</li>
+  
+  <li>Code And Data Relocation</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/kernel/code-relocation.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27kernel%2Fcode-relocation%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Kernel&env=-+Page%3A+kernel%2Fcode-relocation%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="code-and-data-relocation">
+<span id="code-data-relocation"></span><h1>Code And Data Relocation<a class="headerlink" href="#code-and-data-relocation" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>This feature will allow relocating .text, .rodata, .data, and .bss sections from
+required files and place them in the required memory region. The memory region
+and file are given to the <a class="reference internal" href="../build/cmake/index.html#gen-relocate-app-py"><span class="std std-ref">scripts/build/gen_relocate_app.py</span></a> script in the form
+of a string. This script is always invoked from inside cmake.</p>
+<p>This script provides a robust way to re-order the memory contents without
+actually having to modify the code.  In simple terms this script will do the job
+of <code class="docutils literal notranslate"><span class="pre">__attribute__((section(&quot;name&quot;)))</span></code> for a bunch of files together.</p>
+<p>A regular expression filter can be used to select only the required sections to be relocated.</p>
+</section>
+<section id="details">
+<h2>Details<a class="headerlink" href="#details" title="Link to this heading"></a></h2>
+<p>The memory region and file are given to the <a class="reference internal" href="../build/cmake/index.html#gen-relocate-app-py"><span class="std std-ref">scripts/build/gen_relocate_app.py</span></a> script
+through a file where each line specifies a list of files to be placed in the
+given region.</p>
+<p>An example of such a file is:</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>SRAM2:/home/xyz/zephyr/samples/hello_world/src/main.c,
+SRAM1:/home/xyz/zephyr/samples/hello_world/src/main2.c,
+</pre></div>
+</div>
+</div></blockquote>
+<p>This script is invoked with the following parameters:
+<code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">gen_relocate_app.py</span> <span class="pre">-i</span> <span class="pre">input_file</span> <span class="pre">-o</span> <span class="pre">generated_linker</span> <span class="pre">-c</span> <span class="pre">generated_code</span></code></p>
+<p>Kconfig <a class="reference internal" href="../kconfig.html#CONFIG_CODE_DATA_RELOCATION" title="CONFIG_CODE_DATA_RELOCATION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CODE_DATA_RELOCATION</span></code></a> option,  when enabled in
+<code class="docutils literal notranslate"><span class="pre">prj.conf</span></code>, will invoke the script and do the required relocation.</p>
+<p>This script also trigger the generation of <code class="docutils literal notranslate"><span class="pre">linker_relocate.ld</span></code> and
+<code class="docutils literal notranslate"><span class="pre">code_relocation.c</span></code> files.  The <code class="docutils literal notranslate"><span class="pre">linker_relocate.ld</span></code> file creates
+appropriate sections and links the required functions or variables from all the
+selected files.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The text section is split into 2 parts in the main linker script. The first
+section will have some info regarding vector tables and other debug related
+info.  The second section will have the complete text section.  This is
+needed to force the required functions and data variables to the correct
+locations.  This is due to the behavior of the linker. The linker will only
+link once and hence this text section had to be split to make room for the
+generated linker script.</p>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">code_relocation.c</span></code> file has code that is needed for
+initializing data sections, and a copy of the text sections (if XIP).
+Also this contains code needed for bss zeroing and
+for  data copy operations from ROM to required memory type.</p>
+<p><strong>The procedure to invoke this feature is:</strong></p>
+<ul>
+<li><p>Enable <a class="reference internal" href="../kconfig.html#CONFIG_CODE_DATA_RELOCATION" title="CONFIG_CODE_DATA_RELOCATION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CODE_DATA_RELOCATION</span></code></a> in the <code class="docutils literal notranslate"><span class="pre">prj.conf</span></code> file</p></li>
+<li><p>Inside the <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> file in the project, mention
+all the files that need relocation.</p>
+<p><code class="docutils literal notranslate"><span class="pre">zephyr_code_relocate(FILES</span> <span class="pre">src/*.c</span> <span class="pre">LOCATION</span> <span class="pre">SRAM2)</span></code></p>
+<p>Where the first argument is the file/files and the second
+argument is the memory where it must be placed.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>function <code class="docutils literal notranslate"><span class="pre">zephyr_code_relocate()</span></code> can be called  as many times as required.</p>
+</div>
+</li>
+</ul>
+<section id="additional-configurations">
+<h3>Additional Configurations<a class="headerlink" href="#additional-configurations" title="Link to this heading"></a></h3>
+<p>This section shows additional configuration options that can be set in
+<code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>.</p>
+<ul>
+<li><p>If the memory is <code class="docutils literal notranslate"><span class="pre">SRAM1</span></code>, <code class="docutils literal notranslate"><span class="pre">SRAM2</span></code>, <code class="docutils literal notranslate"><span class="pre">CCD</span></code>, or <code class="docutils literal notranslate"><span class="pre">AON</span></code>, then place the
+full object in the sections. For example:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">zephyr_code_relocate</span><span class="p">(</span><span class="s">FILES</span><span class="w"> </span><span class="s">src/file1.c</span><span class="w"> </span><span class="s">LOCATION</span><span class="w"> </span><span class="s">SRAM2</span><span class="p">)</span>
+<span class="nb">zephyr_code_relocate</span><span class="p">(</span><span class="s">FILES</span><span class="w"> </span><span class="s">src/file2.c</span><span class="w"> </span><span class="s">LOCATION</span><span class="w"> </span><span class="s">SRAM</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>If the memory type is appended with <code class="docutils literal notranslate"><span class="pre">_DATA</span></code>, <code class="docutils literal notranslate"><span class="pre">_TEXT</span></code>, <code class="docutils literal notranslate"><span class="pre">_RODATA</span></code>,
+<code class="docutils literal notranslate"><span class="pre">_BSS</span></code> or <code class="docutils literal notranslate"><span class="pre">_NOINIT</span></code>, only the selected memory is placed in the required
+memory region. For example:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">zephyr_code_relocate</span><span class="p">(</span><span class="s">FILES</span><span class="w"> </span><span class="s">src/file1.c</span><span class="w"> </span><span class="s">LOCATION</span><span class="w"> </span><span class="s">SRAM2_DATA</span><span class="p">)</span>
+<span class="nb">zephyr_code_relocate</span><span class="p">(</span><span class="s">FILES</span><span class="w"> </span><span class="s">src/file2.c</span><span class="w"> </span><span class="s">LOCATION</span><span class="w"> </span><span class="s">SRAM2_TEXT</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Multiple regions can also be appended together such as:
+<code class="docutils literal notranslate"><span class="pre">SRAM2_DATA_BSS_NOINIT</span></code>. This will place all data: value-initialized,
+zero-initialized and uninitialized inside <code class="docutils literal notranslate"><span class="pre">SRAM2</span></code>.</p></li>
+<li><p>Multiple files can be passed to the <code class="docutils literal notranslate"><span class="pre">FILES</span></code> argument, or CMake generator
+expressions can be used to relocate a comma-separated list of files.</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">file</span><span class="p">(</span><span class="s">GLOB</span><span class="w"> </span><span class="s">sources</span><span class="w"> </span><span class="s2">&quot;file*.c&quot;</span><span class="p">)</span>
+<span class="nb">zephyr_code_relocate</span><span class="p">(</span><span class="s">FILES</span><span class="w"> </span><span class="o">${</span><span class="nv">sources</span><span class="o">}</span><span class="w"> </span><span class="s">LOCATION</span><span class="w"> </span><span class="s">SRAM</span><span class="p">)</span>
+<span class="nb">zephyr_code_relocate</span><span class="p">(</span><span class="s">FILES</span><span class="w"> </span><span class="o">$&lt;</span><span class="nv">TARGET_PROPERTY:my_tgt,SOURCES</span><span class="o">&gt;</span><span class="w"> </span><span class="s">LOCATION</span><span class="w"> </span><span class="s">SRAM</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="section-filtering">
+<h3>Section Filtering<a class="headerlink" href="#section-filtering" title="Link to this heading"></a></h3>
+<p>By default, all sections of the specified files will be relocated. If
+<code class="docutils literal notranslate"><span class="pre">FILTER</span></code> is used, a regular expression is provided to select only
+the sections to be relocated.</p>
+<p>The regular expression applies to sections names which can be used to
+select the file’s symbols when this one has been built with
+<code class="docutils literal notranslate"><span class="pre">-ffunction-sections</span></code> and <code class="docutils literal notranslate"><span class="pre">-fdata-sections</span></code> which is the case by
+default.</p>
+<blockquote>
+<div><div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">zephyr_code_relocate</span><span class="p">(</span><span class="s">FILES</span><span class="w"> </span><span class="s">src/file1.c</span><span class="w"> </span><span class="s">FILTER</span><span class="w"> </span><span class="s2">&quot;.*\\.func1|.*\\.func2&quot;</span><span class="w"> </span><span class="s">LOCATION</span><span class="w"> </span><span class="s">SRAM2_TEXT</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The example above will only relocate <code class="docutils literal notranslate"><span class="pre">func1()</span></code> and <code class="docutils literal notranslate"><span class="pre">func2()</span></code> of file <code class="docutils literal notranslate"><span class="pre">src/file1.c</span></code></p>
+</section>
+<section id="nokeep-flag">
+<h3>NOKEEP flag<a class="headerlink" href="#nokeep-flag" title="Link to this heading"></a></h3>
+<p>By default, all relocated functions and variables will be marked with <code class="docutils literal notranslate"><span class="pre">KEEP()</span></code>
+when generating <code class="docutils literal notranslate"><span class="pre">linker_relocate.ld</span></code>.  Therefore, if any input file happens to
+contain unused symbols, then they will not be discarded by the linker, even when
+it is invoked with <code class="docutils literal notranslate"><span class="pre">--gc-sections</span></code>. If you’d like to override this behavior,
+you can pass <code class="docutils literal notranslate"><span class="pre">NOKEEP</span></code> to your <code class="docutils literal notranslate"><span class="pre">zephyr_code_relocate()</span></code> call.</p>
+<blockquote>
+<div><div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">zephyr_code_relocate</span><span class="p">(</span><span class="s">FILES</span><span class="w"> </span><span class="s">src/file1.c</span><span class="w"> </span><span class="s">LOCATION</span><span class="w"> </span><span class="s">SRAM2_TEXT</span><span class="w"> </span><span class="s">NOKEEP</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The example above will help ensure that any unused code found in the .text
+sections of <code class="docutils literal notranslate"><span class="pre">file1.c</span></code> will not stick to SRAM2.</p>
+</section>
+<section id="nocopy-flag">
+<h3>NOCOPY flag<a class="headerlink" href="#nocopy-flag" title="Link to this heading"></a></h3>
+<p>When a <code class="docutils literal notranslate"><span class="pre">NOCOPY</span></code> option is passed to the <code class="docutils literal notranslate"><span class="pre">zephyr_code_relocate()</span></code> function,
+the relocation code is not generated in <code class="docutils literal notranslate"><span class="pre">code_relocation.c</span></code>. This flag can be
+used when we want to move the content of a specific file (or set of files) to a
+XIP area.</p>
+<p>This example will place the .text section of the <code class="docutils literal notranslate"><span class="pre">xip_external_flash.c</span></code> file
+to the <code class="docutils literal notranslate"><span class="pre">EXTFLASH</span></code> memory region where it will be executed from (XIP). The
+.data will be relocated as usual into SRAM.</p>
+<blockquote>
+<div><div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">zephyr_code_relocate</span><span class="p">(</span><span class="s">FILES</span><span class="w"> </span><span class="s">src/xip_external_flash.c</span><span class="w"> </span><span class="s">LOCATION</span><span class="w"> </span><span class="s">EXTFLASH_TEXT</span><span class="w"> </span><span class="s">NOCOPY</span><span class="p">)</span>
+<span class="nb">zephyr_code_relocate</span><span class="p">(</span><span class="s">FILES</span><span class="w"> </span><span class="s">src/xip_external_flash.c</span><span class="w"> </span><span class="s">LOCATION</span><span class="w"> </span><span class="s">SRAM_DATA</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="relocating-libraries">
+<h3>Relocating libraries<a class="headerlink" href="#relocating-libraries" title="Link to this heading"></a></h3>
+<p>Libraries can be relocated using the LIBRARY argument to
+<code class="docutils literal notranslate"><span class="pre">zephyr_code_relocation()</span></code> with the library name. For example, the following
+snippet will relocate serial drivers to SRAM2:</p>
+<blockquote>
+<div><div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">zephyr_code_relocate</span><span class="p">(</span><span class="s">LIBRARY</span><span class="w"> </span><span class="s">drivers__serial</span><span class="w"> </span><span class="s">LOCATION</span><span class="w"> </span><span class="s">SRAM2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="tips">
+<h3>Tips<a class="headerlink" href="#tips" title="Link to this heading"></a></h3>
+<p>Take care if relocating kernel/arch files, some contain early initialization
+code that executes before code relocation takes place.</p>
+<p>Additional MPU/MMU configuration may be required to ensure that the
+destination memory region is configured to allow code execution.</p>
+</section>
+<section id="samples-tests">
+<h3>Samples/ Tests<a class="headerlink" href="#samples-tests" title="Link to this heading"></a></h3>
+<p>A test showcasing this feature is provided at
+<code class="docutils literal notranslate"><span class="pre">$ZEPHYR_BASE/tests/application_development/code_relocation</span></code></p>
+<p>This test shows how the code relocation feature is used.</p>
+<p>This test will place .text, .data, .bss from 3 files to various parts in the SRAM
+using a custom linker file derived from <code class="docutils literal notranslate"><span class="pre">include/zephyr/arch/arm/cortex_m/scripts/linker.ld</span></code></p>
+<p>A sample showcasing the NOCOPY flag is provided here: <a class="reference internal" href="../samples/application_development/code_relocation_nocopy/README.html#code_relocation_nocopy" title="Relocate code, data, or bss sections using a custom linker script.">Code relocation nocopy</a>.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

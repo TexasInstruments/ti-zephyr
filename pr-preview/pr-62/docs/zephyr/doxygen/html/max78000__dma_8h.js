@@ -1,0 +1,28 @@
+var max78000__dma_8h =
+[
+    [ "MAX78_DMA_SLOT_ADC", "max78000__dma_8h.html#a21946e016bc350337ee481fdecd5dc31", null ],
+    [ "MAX78_DMA_SLOT_CRC", "max78000__dma_8h.html#a57a7ef9f4ae8c6db6f78b789fac33f21", null ],
+    [ "MAX78_DMA_SLOT_I2C0_RX", "max78000__dma_8h.html#a828e58a06fddcb562fa9bf1bd457a62f", null ],
+    [ "MAX78_DMA_SLOT_I2C0_TX", "max78000__dma_8h.html#a023d8aac409ea08bee138ea6fed41bc9", null ],
+    [ "MAX78_DMA_SLOT_I2C1_RX", "max78000__dma_8h.html#a1788afc1b9bd9b8eb10e7e460008ef4b", null ],
+    [ "MAX78_DMA_SLOT_I2C1_TX", "max78000__dma_8h.html#a29c3b163b9dda961f998ace5405009bb", null ],
+    [ "MAX78_DMA_SLOT_I2C2_RX", "max78000__dma_8h.html#ae0d35bd8d5afe9d72cd350433051e852", null ],
+    [ "MAX78_DMA_SLOT_I2C2_TX", "max78000__dma_8h.html#ab8a342926682de42ba082b13d278950f", null ],
+    [ "MAX78_DMA_SLOT_I2S_RX", "max78000__dma_8h.html#a9128b048ce1b384a5154b30e1f9bad8c", null ],
+    [ "MAX78_DMA_SLOT_I2S_TX", "max78000__dma_8h.html#ae695fde1c5fd0714212be56b84b363a5", null ],
+    [ "MAX78_DMA_SLOT_MEMTOMEM", "max78000__dma_8h.html#a804f371fcbd8b1340116f8438b7b188d", null ],
+    [ "MAX78_DMA_SLOT_PCIF_RX", "max78000__dma_8h.html#a93bb2f789bbd725749a078d746489055", null ],
+    [ "MAX78_DMA_SLOT_PCIF_TX", "max78000__dma_8h.html#aaec39304514018ece49564641d060f9e", null ],
+    [ "MAX78_DMA_SLOT_SPI0_RX", "max78000__dma_8h.html#a07dc60872bc29b57a05fcccfbcb7a39d", null ],
+    [ "MAX78_DMA_SLOT_SPI0_TX", "max78000__dma_8h.html#adb6a50ef9089ebe08d5b95521b037346", null ],
+    [ "MAX78_DMA_SLOT_SPI1_RX", "max78000__dma_8h.html#ac4eb0187fa7ab1c0484c89ec1f607570", null ],
+    [ "MAX78_DMA_SLOT_SPI1_TX", "max78000__dma_8h.html#a6f38b67fc333fc709fde5ccc7e399976", null ],
+    [ "MAX78_DMA_SLOT_UART0_RX", "max78000__dma_8h.html#af20a164976c6fa2881df1cd32e85bb3a", null ],
+    [ "MAX78_DMA_SLOT_UART0_TX", "max78000__dma_8h.html#a7300e2d579c2884d7a3b237af452cdd4", null ],
+    [ "MAX78_DMA_SLOT_UART1_RX", "max78000__dma_8h.html#a83b8c4ad1bf081f36da5f623ef110f26", null ],
+    [ "MAX78_DMA_SLOT_UART1_TX", "max78000__dma_8h.html#a0bf86797983fa9d92b9872a89b5ab4c3", null ],
+    [ "MAX78_DMA_SLOT_UART2_RX", "max78000__dma_8h.html#a818af9d05cb91cdaf900eedd129c7f35", null ],
+    [ "MAX78_DMA_SLOT_UART2_TX", "max78000__dma_8h.html#a3990ce90b6db0e6372c6af56d4e294ac", null ],
+    [ "MAX78_DMA_SLOT_UART3_RX", "max78000__dma_8h.html#aae23d3a3d83e43bcd389ad000c83ba1b", null ],
+    [ "MAX78_DMA_SLOT_UART3_TX", "max78000__dma_8h.html#a6a7a6d09592f9fe03b88698d448e3b02", null ]
+];

@@ -1,0 +1,694 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Troubleshooting devicetree &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/build/dts/troubleshooting.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Devicetree versus Kconfig" href="dt-vs-kconfig.html" />
+    <link rel="prev" title="Devicetree HOWTOs" href="howtos.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Build and Configuration Systems</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../cmake/index.html">Build System (CMake)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Devicetree</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#devicetree-guide">Devicetree Guide</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="intro.html">Introduction to devicetree</a></li>
+<li class="toctree-l4"><a class="reference internal" href="design.html">Design goals</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bindings.html">Devicetree bindings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api-usage.html">Devicetree access from C/C++</a></li>
+<li class="toctree-l4"><a class="reference internal" href="phandles.html">Phandles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="zephyr-user-node.html">The <code class="docutils literal notranslate"><span class="pre">/zephyr,user</span></code> node</a></li>
+<li class="toctree-l4"><a class="reference internal" href="howtos.html">Devicetree HOWTOs</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Troubleshooting devicetree</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#try-again-with-a-pristine-build-directory">Try again with a pristine build directory</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#use-devicetree-diagnostics-tool-dt-doctor">Use Devicetree diagnostics tool (DT Doctor)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#make-sure-devicetree-h-is-included">Make sure &lt;devicetree.h&gt; is included</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#undefined-reference-to-device-dts-ord-n">undefined reference to <code class="docutils literal notranslate"><span class="pre">__device_dts_ord_&lt;N&gt;</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#make-sure-you-re-using-the-right-names">Make sure you’re using the right names</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#look-at-the-preprocessor-output">Look at the preprocessor output</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#do-not-track-macro-expansion">Do not track macro expansion</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#validate-properties">Validate properties</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#check-for-missing-bindings">Check for missing bindings</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#errors-with-dt-inst-apis">Errors with DT_INST_() APIs</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="dt-vs-kconfig.html">Devicetree versus Kconfig</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#devicetree-reference">Devicetree Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../kconfig/index.html">Configuration System (Kconfig)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../snippets/index.html">Snippets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../zephyr_cmake_package.html">Zephyr CMake Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sysbuild/index.html">Sysbuild (System build)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../version/index.html">Application version management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flashing/index.html">Flashing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signing/index.html">Signing Binaries</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Build and Configuration Systems</a> &raquo;</li>
+  
+     <li><a href="index.html">Devicetree</a> &raquo;</li>
+  
+  <li>Troubleshooting devicetree</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/build/dts/troubleshooting.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27build%2Fdts%2Ftroubleshooting%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Devicetree&env=-+Page%3A+build%2Fdts%2Ftroubleshooting%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="troubleshooting-devicetree">
+<span id="dt-trouble"></span><h1>Troubleshooting devicetree<a class="headerlink" href="#troubleshooting-devicetree" title="Link to this heading"></a></h1>
+<p>Here are some tips for fixing misbehaving devicetree related code.</p>
+<p>See <a class="reference internal" href="howtos.html#dt-howtos"><span class="std std-ref">Devicetree HOWTOs</span></a> for other “HOWTO” style information.</p>
+<section id="try-again-with-a-pristine-build-directory">
+<span id="dt-trouble-try-pristine"></span><h2>Try again with a pristine build directory<a class="headerlink" href="#try-again-with-a-pristine-build-directory" title="Link to this heading"></a></h2>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Try this first, before doing anything else.</p>
+</div>
+<p>See <a class="reference internal" href="../../develop/west/build-flash-debug.html#west-building-pristine"><span class="std std-ref">Pristine Builds</span></a> for examples, or just delete the build
+directory completely and retry.</p>
+<p>This is general advice which is especially applicable to debugging devicetree
+issues, because the outputs are created during the CMake configuration phase,
+and are not always regenerated when one of their inputs changes.</p>
+</section>
+<section id="use-devicetree-diagnostics-tool-dt-doctor">
+<h2>Use Devicetree diagnostics tool (DT Doctor)<a class="headerlink" href="#use-devicetree-diagnostics-tool-dt-doctor" title="Link to this heading"></a></h2>
+<p>An optional Devicetree diagnostics tool is available to help diagnose Devicetree issues. It can
+be enabled by passing the <code class="docutils literal notranslate"><span class="pre">-DZEPHYR_SCA_VARIANT=dtdoctor</span></code> argument to
+<a class="reference internal" href="../../develop/west/build-flash-debug.html#west-building"><span class="std std-ref">west build</span></a>.</p>
+<p>See <a class="reference internal" href="../../develop/sca/dtdoctor.html#dtdoctor"><span class="std std-ref">Devicetree diagnostics (dtdoctor)</span></a> for more information.</p>
+</section>
+<section id="make-sure-devicetree-h-is-included">
+<h2>Make sure &lt;devicetree.h&gt; is included<a class="headerlink" href="#make-sure-devicetree-h-is-included" title="Link to this heading"></a></h2>
+<p>Unlike Kconfig symbols, the <code class="file docutils literal notranslate"><span class="pre">devicetree.h</span></code> header must be included
+explicitly.</p>
+<p>Many Zephyr header files rely on information from devicetree, so including some
+other API may transitively include <code class="file docutils literal notranslate"><span class="pre">devicetree.h</span></code>, but that’s not
+guaranteed.</p>
+</section>
+<section id="undefined-reference-to-device-dts-ord-n">
+<h2>undefined reference to <code class="docutils literal notranslate"><span class="pre">__device_dts_ord_&lt;N&gt;</span></code><a class="headerlink" href="#undefined-reference-to-device-dts-ord-n" title="Link to this heading"></a></h2>
+<p>This usually happens on a line like this:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEVICE_DT_GET</span><span class="p">(</span><span class="n">NODE_ID</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">NODE_ID</span></code> is a valid <a class="reference internal" href="api-usage.html#dt-node-identifiers"><span class="std std-ref">node identifier</span></a>, but
+no device driver has allocated a <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code> for this devicetree node.
+You thus get a linker error, because you’re asking for a pointer to a device
+that isn’t defined.</p>
+<p>To fix it, you need to make sure that:</p>
+<ol class="arabic">
+<li><p>The node is enabled: the node must have <code class="docutils literal notranslate"><span class="pre">status</span> <span class="pre">=</span> <span class="pre">&quot;okay&quot;;</span></code>.</p>
+<p>(Recall that a missing <code class="docutils literal notranslate"><span class="pre">status</span></code> property means the same thing as <code class="docutils literal notranslate"><span class="pre">status</span>
+<span class="pre">=</span> <span class="pre">&quot;okay&quot;;</span></code>; see <a class="reference internal" href="intro-syntax-structure.html#dt-important-props"><span class="std std-ref">Important properties</span></a> for more information about
+<code class="docutils literal notranslate"><span class="pre">status</span></code>).</p>
+</li>
+<li><p>A device driver responsible for allocating the <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code> is enabled.
+That is, the Kconfig option which makes the build system compile the driver
+sources into your application needs to be set to <code class="docutils literal notranslate"><span class="pre">y</span></code>.</p>
+<p>(See <a class="reference internal" href="../kconfig/setting.html#setting-configuration-values"><span class="std std-ref">Setting Kconfig configuration values</span></a> for more information on setting
+Kconfig options.)</p>
+</li>
+</ol>
+<p>Below, <code class="docutils literal notranslate"><span class="pre">&lt;build&gt;</span></code> means your build directory.</p>
+<p><strong>Making sure the node is enabled</strong>:</p>
+<p>To find the devicetree node you need to check, use the number <code class="docutils literal notranslate"><span class="pre">&lt;N&gt;</span></code> from the
+linker error. Look for this number in the list of nodes at the top of
+<code class="file docutils literal notranslate"><span class="pre">&lt;build&gt;/zephyr/include/generated/zephyr/devicetree_generated.h</span></code>. For example, if
+<code class="docutils literal notranslate"><span class="pre">&lt;N&gt;</span></code> is 15, and your <code class="file docutils literal notranslate"><span class="pre">devicetree_generated.h</span></code> file looks like this,
+the node you are interested in is <code class="docutils literal notranslate"><span class="pre">/soc/i2c&#64;deadbeef</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/*
+ * Generated by gen_defines.py
+ *
+ * DTS input file:
+ *   &lt;build&gt;/zephyr/zephyr.dts.pre
+ *
+ * Directories with bindings:
+ *   $ZEPHYR_BASE/dts/bindings
+ *
+ * Node dependency ordering (ordinal and path):
+ *   0   /
+ *   1   /aliases
+[...]
+ *   15  /soc/i2c@deadbeef
+[...]
+</pre></div>
+</div>
+<p>Now look for this node in <code class="file docutils literal notranslate"><span class="pre">&lt;build&gt;/zephyr/zephyr.dts</span></code>, which is the final
+devicetree for your application build. (See <a class="reference internal" href="howtos.html#get-devicetree-outputs"><span class="std std-ref">Get your devicetree and generated header</span></a> for
+information and examples.)</p>
+<p>If the node has <code class="docutils literal notranslate"><span class="pre">status</span> <span class="pre">=</span> <span class="pre">&quot;disabled&quot;;</span></code> in <code class="file docutils literal notranslate"><span class="pre">zephyr.dts</span></code>, then you need
+to enable it by setting <code class="docutils literal notranslate"><span class="pre">status</span> <span class="pre">=</span> <span class="pre">&quot;okay&quot;;</span></code>, probably by using a devicetree
+<a class="reference internal" href="howtos.html#set-devicetree-overlays"><span class="std std-ref">overlay</span></a>. For example, if <code class="file docutils literal notranslate"><span class="pre">zephyr.dts</span></code>
+looks like this:</p>
+<div class="highlight-DTS notranslate"><div class="highlight"><pre><span></span><span class="nl">i2c0</span><span class="p">:</span><span class="w"> </span><span class="nf">i2c</span><span class="o">@</span><span class="mi">deadbeef</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;disabled&quot;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Then you should put this into your devicetree overlay and
+<a class="reference internal" href="#dt-trouble-try-pristine"><span class="std std-ref">Try again with a pristine build directory</span></a>:</p>
+<div class="highlight-DTS notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">i2c0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Make sure that you see <code class="docutils literal notranslate"><span class="pre">status</span> <span class="pre">=</span> <span class="pre">&quot;okay&quot;;</span></code> in <code class="file docutils literal notranslate"><span class="pre">zephyr.dts</span></code> after you
+rebuild.</p>
+<p><strong>Making sure the device driver is enabled</strong>:</p>
+<p>The first step is to figure out which device driver is responsible for handling
+your devicetree node and allocating devices for it. To do this, you need to
+start with the <code class="docutils literal notranslate"><span class="pre">compatible</span></code> property in your devicetree node, and find the
+driver that allocates <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code> instances for that compatible.</p>
+<p>If you’re not familiar with how devices are allocated from devicetree nodes
+based on compatible properties, the ZDS 2021 talk <a class="reference external" href="https://www.youtube.com/watch?v=sWaxQyIgEBY">A deep dive into the Zephyr
+2.5 device model</a> may be a useful place to start, along with the
+<a class="reference internal" href="../../kernel/drivers/index.html#device-model-api"><span class="std std-ref">Device Driver Model</span></a> pages. See <a class="reference internal" href="intro-syntax-structure.html#dt-important-props"><span class="std std-ref">Important properties</span></a> and the Devicetree
+specification for more information about <code class="docutils literal notranslate"><span class="pre">compatible</span></code>.</p>
+<p>There is currently no documentation for what device drivers exist and which
+devicetree compatibles they are associated with. You will have to figure this
+out by reading the source code:</p>
+<ul class="simple">
+<li><p>Look in <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/drivers">drivers</a> for the appropriate subdirectory that
+corresponds to the API your device implements</p></li>
+<li><p>Look inside that directory for relevant files until you figure out what the
+driver is, or realize there is no such driver.</p></li>
+</ul>
+<p>Often, but not always, you can find the driver by looking for a file that sets
+the <code class="docutils literal notranslate"><span class="pre">DT_DRV_COMPAT</span></code> macro to match your node’s <code class="docutils literal notranslate"><span class="pre">compatible</span></code> property,
+except lowercased and with special characters converted to underscores. For
+example, if your node’s compatible is <code class="docutils literal notranslate"><span class="pre">vnd,foo-device</span></code>, look for a file with this
+line:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#define DT_DRV_COMPAT vnd_foo_device</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This <strong>does not always work</strong> since not all drivers use <code class="docutils literal notranslate"><span class="pre">DT_DRV_COMPAT</span></code>.</p>
+</div>
+<p>If you find a driver, you next need to make sure the Kconfig option that
+compiles it is enabled. (If you don’t find a driver, and you are sure the
+compatible property is correct, then you need to write a driver. Writing
+drivers is outside the scope of this documentation page.)</p>
+<p>Continuing the above example, if your devicetree node looks like this now:</p>
+<div class="highlight-DTS notranslate"><div class="highlight"><pre><span></span><span class="nl">i2c0</span><span class="p">:</span><span class="w"> </span><span class="nf">i2c</span><span class="o">@</span><span class="mi">deadbeef</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;nordic,nrf-twim&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Then you would look inside of <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/drivers/i2c">drivers/i2c</a> for the driver file
+that handles the compatible <code class="docutils literal notranslate"><span class="pre">nordic,nrf-twim</span></code>. In this case, that is
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/drivers/i2c/i2c_nrfx_twim.c">drivers/i2c/i2c_nrfx_twim.c</a>. Notice how even in cases where
+<code class="docutils literal notranslate"><span class="pre">DT_DRV_COMPAT</span></code> is not set, you can use information like driver file names as
+clues.</p>
+<p>Once you know the driver you want to enable, you need to make sure its Kconfig
+option is set to <code class="docutils literal notranslate"><span class="pre">y</span></code>. You can figure out which Kconfig option is needed by
+looking for a line similar to this one in the <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> file in
+the drivers subdirectory. Continuing the above example,
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/drivers/i2c/CMakeLists.txt">drivers/i2c/CMakeLists.txt</a> has a line that looks like this:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">zephyr_library_sources_ifdef</span><span class="p">(</span><span class="s">CONFIG_NRFX_TWIM</span><span class="w">       </span><span class="s">i2c_nrfx_twim.c</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This means that <a class="reference internal" href="../../kconfig.html#CONFIG_NRFX_TWIM" title="CONFIG_NRFX_TWIM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NRFX_TWIM</span></code></a> must be set to <code class="docutils literal notranslate"><span class="pre">y</span></code> in
+<code class="file docutils literal notranslate"><span class="pre">&lt;build&gt;/zephyr/.config</span></code> file.</p>
+<p>If your driver’s Kconfig is not set to <code class="docutils literal notranslate"><span class="pre">y</span></code>, you need to figure out what you
+need to do to make that happen. Often, this will happen automatically as soon
+as you enable the devicetree node. Otherwise, it is sometimes as simple as
+adding a line like this to your application’s <code class="file docutils literal notranslate"><span class="pre">prj.conf</span></code> file and then
+making sure to <a class="reference internal" href="#dt-trouble-try-pristine"><span class="std std-ref">Try again with a pristine build directory</span></a>:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_FOO</span><span class="o">=</span><span class="s">y</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">CONFIG_FOO</span></code> is the option that <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> uses to decide
+whether or not to compile the driver.</p>
+<p>However, there may be other problems in your way, such as unmet Kconfig
+dependencies that you also have to enable before you can enable your driver.</p>
+<p>Consult the Kconfig file that defines <code class="docutils literal notranslate"><span class="pre">CONFIG_FOO</span></code> (for your value of
+<code class="docutils literal notranslate"><span class="pre">FOO</span></code>) for more information.</p>
+</section>
+<section id="make-sure-you-re-using-the-right-names">
+<span id="dt-use-the-right-names"></span><h2>Make sure you’re using the right names<a class="headerlink" href="#make-sure-you-re-using-the-right-names" title="Link to this heading"></a></h2>
+<p>Remember that:</p>
+<ul class="simple">
+<li><p>In C/C++, devicetree names must be lowercased and special characters must be
+converted to underscores. Zephyr’s generated devicetree header has DTS names
+converted in this way into the C tokens used by the preprocessor-based
+<code class="docutils literal notranslate"><span class="pre">&lt;devicetree.h&gt;</span></code> API.</p></li>
+<li><p>In overlays, use devicetree node and property names the same way they
+would appear in any DTS file. Zephyr overlays are just DTS fragments.</p></li>
+</ul>
+<p>For example, if you’re trying to <strong>get</strong> the <code class="docutils literal notranslate"><span class="pre">clock-frequency</span></code> property of a
+node with path <code class="docutils literal notranslate"><span class="pre">/soc/i2c&#64;12340000</span></code> in a C/C++ file:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * foo.c: lowercase-and-underscores names</span>
+<span class="cm"> */</span>
+
+<span class="cm">/* Don&#39;t do this: */</span>
+<span class="cp">#define MY_CLOCK_FREQ DT_PROP(DT_PATH(soc, i2c@1234000), clock-frequency)</span>
+<span class="cm">/*                                           ^               ^</span>
+<span class="cm"> *                                        @ should be _     - should be _  */</span>
+
+<span class="cm">/* Do this instead: */</span>
+<span class="cp">#define MY_CLOCK_FREQ DT_PROP(DT_PATH(soc, i2c_1234000), clock_frequency)</span>
+<span class="cm">/*                                           ^               ^           */</span>
+</pre></div>
+</div>
+<p>And if you’re trying to <strong>set</strong> that property in a devicetree overlay:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/*
+ * foo.overlay: DTS names with special characters, etc.
+ */
+
+/* Don&#39;t do this; you&#39;ll get devicetree errors. */
+&amp;{/soc/i2c_12340000/} {
+     clock_frequency = &lt;115200&gt;;
+};
+
+/* Do this instead. Overlays are just DTS fragments. */
+&amp;{/soc/i2c@12340000/} {
+     clock-frequency = &lt;115200&gt;;
+};
+</pre></div>
+</div>
+</section>
+<section id="look-at-the-preprocessor-output">
+<h2>Look at the preprocessor output<a class="headerlink" href="#look-at-the-preprocessor-output" title="Link to this heading"></a></h2>
+<p>To save preprocessor output files, enable the
+<a class="reference internal" href="../../kconfig.html#CONFIG_COMPILER_SAVE_TEMPS" title="CONFIG_COMPILER_SAVE_TEMPS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_COMPILER_SAVE_TEMPS</span></code></a> option. For example, to build
+<a class="reference internal" href="../../samples/hello_world/README.html#hello_world" title="Print &quot;Hello World&quot; to the console.">Hello World</a> with west with this option set, use:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>BOARD<span class="w"> </span>samples/hello_world<span class="w"> </span>--<span class="w"> </span>-DCONFIG_COMPILER_SAVE_TEMPS<span class="o">=</span>y
+</pre></div>
+</div>
+<p>This will create a preprocessor output file named <code class="file docutils literal notranslate"><span class="pre">foo.c.i</span></code> in the build
+directory for each source file <code class="file docutils literal notranslate"><span class="pre">foo.c</span></code>.</p>
+<p>You can then search for the file in the build directory to see what your
+devicetree macros expanded to. For example, on macOS and Linux, using <code class="docutils literal notranslate"><span class="pre">find</span></code>
+to find <code class="file docutils literal notranslate"><span class="pre">main.c.i</span></code>:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>find<span class="w"> </span>build<span class="w"> </span>-name<span class="w"> </span>main.c.i
+build/CMakeFiles/app.dir/src/main.c.i
+</pre></div>
+</div>
+<p>It’s usually easiest to run a style formatter on the results before opening
+them. For example, to use <code class="docutils literal notranslate"><span class="pre">clang-format</span></code> to reformat the file in place:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>clang-format<span class="w"> </span>-i<span class="w"> </span>build/CMakeFiles/app.dir/src/main.c.i
+</pre></div>
+</div>
+<p>You can then open the file in your favorite editor to view the final C results
+after preprocessing.</p>
+</section>
+<section id="do-not-track-macro-expansion">
+<h2>Do not track macro expansion<a class="headerlink" href="#do-not-track-macro-expansion" title="Link to this heading"></a></h2>
+<p>Compiler messages for devicetree errors can sometimes be very long. This
+typically happens when the compiler prints a message for every step of a
+complex macro expansion that has several intermediate expansion steps.</p>
+<p>To prevent the compiler from doing this, you can disable the
+<a class="reference internal" href="../../kconfig.html#CONFIG_COMPILER_TRACK_MACRO_EXPANSION" title="CONFIG_COMPILER_TRACK_MACRO_EXPANSION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_COMPILER_TRACK_MACRO_EXPANSION</span></code></a> option. This typically
+reduces the output to one message per error.</p>
+<p>For example, to build <a class="reference internal" href="../../samples/hello_world/README.html#hello_world" title="Print &quot;Hello World&quot; to the console.">Hello World</a> with west and this option disabled,
+use:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>BOARD<span class="w"> </span>samples/hello_world<span class="w"> </span>--<span class="w"> </span>-DCONFIG_COMPILER_TRACK_MACRO_EXPANSION<span class="o">=</span>n
+</pre></div>
+</div>
+</section>
+<section id="validate-properties">
+<h2>Validate properties<a class="headerlink" href="#validate-properties" title="Link to this heading"></a></h2>
+<p>If you’re getting a compile error reading a node property, check your node
+identifier and property. For example, if you get a build error on a line that
+looks like this:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">baud_rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DT_PROP</span><span class="p">(</span><span class="n">DT_NODELABEL</span><span class="p">(</span><span class="n">my_serial</span><span class="p">),</span><span class="w"> </span><span class="n">current_speed</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Try checking the node by adding this to the file and recompiling:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#if !DT_NODE_EXISTS(DT_NODELABEL(my_serial))</span>
+<span class="cp">#error &quot;whoops&quot;</span>
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+<p>If you see the “whoops” error message when you rebuild, the node identifier
+isn’t referring to a valid node. <a class="reference internal" href="howtos.html#get-devicetree-outputs"><span class="std std-ref">Get your devicetree and generated header</span></a> and debug from
+there.</p>
+<p>Some hints for what to check next if you don’t see the “whoops” error message:</p>
+<ul class="simple">
+<li><p>did you <a class="reference internal" href="#dt-use-the-right-names"><span class="std std-ref">Make sure you’re using the right names</span></a>?</p></li>
+<li><p>does the <a class="reference internal" href="api-usage.html#dt-checking-property-exists"><span class="std std-ref">property exist</span></a>?</p></li>
+<li><p>does the node have a <a class="reference internal" href="bindings.html#dt-bindings"><span class="std std-ref">matching binding</span></a>?</p></li>
+<li><p>does the binding define the property?</p></li>
+</ul>
+</section>
+<section id="check-for-missing-bindings">
+<span id="missing-dt-binding"></span><h2>Check for missing bindings<a class="headerlink" href="#check-for-missing-bindings" title="Link to this heading"></a></h2>
+<p>See <a class="reference internal" href="bindings.html#dt-bindings"><span class="std std-ref">Devicetree bindings</span></a> for information about bindings, and
+<a class="reference internal" href="api/bindings.html#devicetree-binding-index"><span class="std std-ref">Bindings index</span></a> for information on bindings built into Zephyr.</p>
+<p>If the build fails to <a class="reference internal" href="howtos.html#dts-find-binding"><span class="std std-ref">Find a devicetree binding</span></a> for a node, then either the
+node’s <code class="docutils literal notranslate"><span class="pre">compatible</span></code> property is not defined, or its value has no matching
+binding. If the property is set, check for typos in its name. In a devicetree
+source file, <code class="docutils literal notranslate"><span class="pre">compatible</span></code> should look like <code class="docutils literal notranslate"><span class="pre">&quot;vnd,some-device&quot;</span></code> –
+<a class="reference internal" href="#dt-use-the-right-names"><span class="std std-ref">Make sure you’re using the right names</span></a>.</p>
+<p>If your binding file is not under <code class="file docutils literal notranslate"><span class="pre">zephyr/dts</span></code>, you may need to set
+<a class="reference internal" href="../../develop/application/index.html#dts-root"><span class="std std-ref">DTS_ROOT</span></a>; see <a class="reference internal" href="bindings-intro.html#dt-where-bindings-are-located"><span class="std std-ref">Where bindings are located</span></a>.</p>
+</section>
+<section id="errors-with-dt-inst-apis">
+<h2>Errors with DT_INST_() APIs<a class="headerlink" href="#errors-with-dt-inst-apis" title="Link to this heading"></a></h2>
+<p>If you’re using an API like <a class="reference internal" href="../../doxygen/html/group__devicetree-inst.html#ga9dce2e631b2a94804e8f2bcc76c6eff8" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">DT_INST_PROP()</span></code></a>, you must define
+<code class="docutils literal notranslate"><span class="pre">DT_DRV_COMPAT</span></code> to the lowercase-and-underscores version of the compatible
+you are interested in. See <a class="reference internal" href="howtos.html#dt-create-devices-inst"><span class="std std-ref">Option 1: create devices using instance numbers</span></a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

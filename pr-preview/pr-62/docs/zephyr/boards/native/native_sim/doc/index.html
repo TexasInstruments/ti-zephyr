@@ -1,0 +1,1316 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Native simulator - native_sim &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=b2ece5be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/board.css?v=df47193c" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/boards/native/native_sim/doc/index.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+      <script src="../../../../_static/js/board.js?v=69b4ef71"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="NRF52 simulated board (BabbleSim)" href="../../nrf_bsim/doc/nrf52_bsim.html" />
+    <link rel="prev" title="Cross-compiling the POSIX architecture" href="cross_compile.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">Supported Boards and Shields</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../01space/index.html">01space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../96boards/index.html">96Boards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../aconno/index.html">Aconno</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../acrn/index.html">Project ACRN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../actinius/index.html">Actinius</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../adafruit/index.html">Adafruit Industries LLC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../adi/index.html">Analog Devices, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../aesc/index.html">Aesc Silicon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../aithinker/index.html">Ai-Thinker Co.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../alientek/index.html">Alientek</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../alif/index.html">Alif Semiconductor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ambiq/index.html">Ambiq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../amd/index.html">Advanced Micro Devices (AMD), Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../andestech/index.html">Andes Technology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../antmicro/index.html">Antmicro</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../arduino/index.html">Arduino</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../arm/index.html">ARM Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../aspeed/index.html">ASPEED Technology Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../atmarktechno/index.html">Atmark Techno</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../atmel/index.html">Atmel Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../bbc/index.html">BBC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../bcdevices/index.html">Blue Clover Devices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../beagle/index.html">BeagleBoard.org Foundation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../bflb/index.html">Bouffalo Lab Intelligent Technology (Nanjing) Co., Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../blackberry/index.html">BlackBerry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../blues/index.html">Blues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../brcm/index.html">Broadcom Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../bytesatwork/index.html">bytesatwork</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cdns/index.html">Cadence Design Systems Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../circuitdojo/index.html">Circuit Dojo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cirrus/index.html">Cirrus Logic, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contextualelectronics/index.html">Contextual Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../coredevices/index.html">Core Devices LLC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../croxel/index.html">Croxel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ct/index.html">CTHINGS.CO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cypress/index.html">Cypress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cytron/index.html">Cytron</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dfrobot/index.html">DFRobot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../digilent/index.html">Digilent, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../doiting/index.html">Doctors of Intelligence &amp; Technology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dptechnics/index.html">DPTechnics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dragino/index.html">Dragino</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ebyte/index.html">Chengdu Ebyte Electronic Technology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../efinix/index.html">Efinix, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../egis/index.html">Egis Technology Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../elan/index.html">Elan Microelectronics Corp.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../electronut/index.html">Electronut Labs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../element14/index.html">Element 14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../embedsky/index.html">Guangdong Embedsky Technology Co., Ltd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ene/index.html">ENE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../enjoydigital/index.html">EnjoyDigital</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../espressif/index.html">Espressif</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ezurio/index.html">Ezurio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../fanke/index.html">Fanke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../firefly/index.html">Firefly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../fobe/index.html">FoBE Studio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../framework/index.html">Framework Computer Inc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../franzininho/index.html">Franzininho</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../fysetc/index.html">FYSETC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gaisler/index.html">Gaisler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gardena/index.html">GARDENA GmbH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gd/index.html">GigaDevice Semiconductor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../google/index.html">Google, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../hardkernel/index.html">HardKernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../heltec/index.html">Heltec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../holyiot/index.html">Shenzhen Holyiot Technology Co.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../iar/index.html">IAR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../infineon/index.html">Infineon Technologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../innblue/index.html">innblue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../intel/index.html">Intel Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ite/index.html">ITE Tech. Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../khadas/index.html">Khadas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../kincony/index.html">Kincony</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../kws/index.html">KWS Computersysteme Gmbh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lilygo/index.html">Lilygo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../longan/index.html">Longan Labs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lowrisc/index.html">lowRISC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../luatos/index.html">Luatos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../m5stack/index.html">M5Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../madmachine/index.html">Mad Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../makerbase/index.html">Makerbase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../makerdiary/index.html">Maker Diary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../mediatek/index.html">Mediatek Audio DSPs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../microchip/index.html">Microchip Technology Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../mikroe/index.html">MikroElektronika d.o.o.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../mxchip/index.html">MXCHIP</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">POSIX/Native Boards</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../doc/arch_soc.html">The POSIX architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../doc/bsim_boards_design.html">Bsim boards</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cross_compile.html">Cross-compiling the POSIX architecture</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Native simulator - native_sim</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#host-system-dependencies">Host system dependencies</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#important-limitations-and-unsupported-features">Important limitations and unsupported features</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#how-to-use-it">How to use it</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#compiling">Compiling</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#running">Running</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#debugging">Debugging</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#address-sanitizer-asan">Address Sanitizer (ASan)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#undefined-behavior-sanitizer-ubsan">Undefined Behavior Sanitizer (UBSan)</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#coverage-reports">Coverage reports</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#and-64bit-versions">32 and 64bit versions</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#c-library-choice">C library choice</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cross-compiling-native-sim">Cross-compiling native_sim</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rationale-for-this-port-and-comparison-with-other-options">Rationale for this port and comparison with other options</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#architecture">Architecture</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#about-time-in-native-sim">About time in native_sim</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#peripherals">Peripherals</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pty-uart">PTY UART</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#tty-uart">TTY UART</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#subsystems-backends">Subsystems backends</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#emulators">Emulators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#host-fuse-filesystem-access">Host (FUSE) filesystem access</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#peripherals-and-backends-c-library-compatibility">Peripherals and backends C library compatibility</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../nrf_bsim/doc/nrf52_bsim.html">NRF52 simulated board (BabbleSim)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../nrf_bsim/doc/nrf5340bsim.html">NRF5340 simulated boards (BabbleSim)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../nrf_bsim/doc/nrf54l15bsim.html">NRF54L15 simulated board (BabbleSim)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../nrf_bsim/doc/nrf54lm20bsim.html">NRF54LM20 simulated board (BabbleSim)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../nordic/index.html">Nordic Semiconductor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../norik/index.html">Norik Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../nuvoton/index.html">Nuvoton Technology Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../nxp/index.html">NXP Semiconductors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../oct/index.html">Octavo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../olimex/index.html">OLIMEX Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../openhwgroup/index.html">OpenHW Group</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../openisa/index.html">OpenISA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../others/index.html">Other and unknown vendors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../panasonic/index.html">Panasonic Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../particle/index.html">Particle Industries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../pcbcupid/index.html">PCB Cupid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../peregrine/index.html">Peregrine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../phytec/index.html">PHYTEC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../pimoroni/index.html">Pimoroni Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../pine64/index.html">Pine64</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../pjrc/index.html">PJRC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../qcom/index.html">Qualcomm Technologies, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../qemu/index.html">QEMU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../qorvo/index.html">Qorvo, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quicklogic/index.html">QuickLogic Corp.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../rakwireless/index.html">RAKwireless</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../raspberrypi/index.html">Raspberry Pi Foundation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../raytac/index.html">Raytac Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../realtek/index.html">Realtek</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../renesas/index.html">Renesas Electronics Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../renode/index.html">Renode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../retronix/index.html">Retronix Technology Inc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ronoth/index.html">Ronoth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ruiside/index.html">Ruiside</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ruuvi/index.html">Ruuvi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sc/index.html">Space Cubics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../seagate/index.html">Seagate Technology PLC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../seco/index.html">SECO SpA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../seeed/index.html">Seeed Technology Co., Ltd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../segger/index.html">SEGGER Microcontroller GmbH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sensry/index.html">Sensry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../shields/index.html">Shields</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sifive/index.html">SiFive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sifli/index.html">SiFli Technologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../silabs/index.html">Silicon Labs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sipeed/index.html">Sipeed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../snps/index.html">Synopsys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../solderedelectronics/index.html">Soldered Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sparkfun/index.html">SparkFun Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../st/index.html">STMicroelectronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../starfive/index.html">StarFive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../steelseries/index.html">SteelSeries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../syna/index.html">Synaptics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tdk/index.html">TDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../technexion/index.html">TECHNEXION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../telink/index.html">Telink Semiconductor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../thirdreality/index.html">Third Reality, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ti/index.html">Texas Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../toradex/index.html">Toradex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../u-blox/index.html">u-blox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../udoo/index.html">UDOO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../up-bridge-the-gap/index.html">UP Bridge the Gap.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../variscite/index.html">Variscite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../vcc-gnd/index.html">VCC-GND</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../vicharak/index.html">Vicharak</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../viewe/index.html">VIEWE Display Co., Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../vngiotlab/index.html">VNG Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../waveshare/index.html">Waveshare Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../wch/index.html">WCH - Nanjing Qinheng Microelectronics Co.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../we/index.html">Würth Elektronik</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../weact/index.html">WeAct Studio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../wemos/index.html">Wemos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../witte/index.html">Witte</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../wiznet/index.html">WIZnet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../xen/index.html">Xen Hypervisor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../xunlong/index.html">Shenzhen Xunlong Software Co., Limited</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">Supported Boards and Shields</a> &raquo;</li>
+  
+     <li><a href="../../index.html">POSIX/Native Boards</a> &raquo;</li>
+  
+  <li>Native simulator - native_sim</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main//boards/native/native_sim/doc/index.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27boards%2Fnative%2Fnative_sim%2Fdoc%2Findex%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Boards%2FSoCs%2Carea%3A+native+port&env=-+Page%3A+boards%2Fnative%2Fnative_sim%2Fdoc%2Findex%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="native_sim">
+<h1>Native simulator - native_sim<a class="headerlink" href="#native_sim" title="Link to this heading"></a></h1>
+<aside class="board-overview sidebar">
+<p class="sidebar-title">Board Overview</p>
+<dl class="field-list">
+<dt class="field-odd">Name<span class="colon">:</span></dt>
+<dd class="field-odd"><code class="docutils literal notranslate"><span class="pre">native_sim</span></code></dd>
+<dt class="field-even">Vendor<span class="colon">:</span></dt>
+<dd class="field-even"><p>Zephyr Project</p>
+</dd>
+<dt class="field-odd">Status<span class="colon">:</span></dt>
+<dd class="field-odd"><p><abbr title="At least one active maintainer is looking after this board">Maintained</abbr></p>
+</dd>
+<dt class="field-even">Architecture<span class="colon">:</span></dt>
+<dd class="field-even"><p>posix</p>
+</dd>
+<dt class="field-odd">SoC<span class="colon">:</span></dt>
+<dd class="field-odd"><p>native</p>
+</dd>
+</dl>
+
+                <div id="board-github-link">
+                    <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main//boards/native/native_sim/doc/index.rst/../.." class="btn btn-info fa fa-github"
+                        target="_blank">
+                        Browse board sources
+                    </a>
+                </div>
+                </aside>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">native_sim</span></code> board is a <a class="reference internal" href="../../doc/arch_soc.html#posix-arch"><span class="std std-ref">POSIX architecture</span></a> based board.
+With it, a Zephyr application can be compiled together with
+the Zephyr kernel, and libraries, creating a normal Linux executable.</p>
+<p><code class="docutils literal notranslate"><span class="pre">native_sim</span></code> is based on the
+<a class="reference external" href="https://github.com/BabbleSim/native_simulator/">native simulator</a>
+and the <a class="reference internal" href="../../doc/arch_soc.html#posix-arch"><span class="std std-ref">POSIX architecture</span></a>.</p>
+<p>This board does not intend to simulate any particular HW, but it provides
+a few peripherals such as an Ethernet driver, display, UART, etc., to enable
+developing and testing application code which would require them.
+See <a class="reference internal" href="#peripherals">Peripherals</a> for more information.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">native_sim</span></code> is an evolution of its predecessor <code class="docutils literal notranslate"><span class="pre">native_posix</span></code>.</div>
+<div class="line">Some components, code, options names, and documentation will still use the old native_posix
+names. But all components which worked with native_posix will work with native_sim.</div>
+</div>
+</div>
+</section>
+<section id="host-system-dependencies">
+<h2>Host system dependencies<a class="headerlink" href="#host-system-dependencies" title="Link to this heading"></a></h2>
+<p>Please check the
+<a class="reference internal" href="../../doc/arch_soc.html#posix-arch-deps"><span class="std std-ref">Posix Arch Dependencies</span></a></p>
+</section>
+<section id="important-limitations-and-unsupported-features">
+<span id="nativesim-important-limitations"></span><h2>Important limitations and unsupported features<a class="headerlink" href="#important-limitations-and-unsupported-features" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">native_sim</span></code> is based on the <a class="reference internal" href="../../doc/arch_soc.html#posix-arch"><span class="std std-ref">POSIX architecture</span></a>, and therefore
+<a class="reference internal" href="../../doc/arch_soc.html#posix-arch-limitations"><span class="std std-ref">its limitations</span></a> and considerations apply to it.</p>
+<p>Similarly, it inherits the POSIX architecture
+<a class="reference internal" href="../../doc/arch_soc.html#posix-arch-unsupported"><span class="std std-ref">unsupported features set</span></a>.</p>
+<p>Note that some drivers may have limitations, or may not support their whole driver API optional
+functionality.</p>
+</section>
+<section id="how-to-use-it">
+<span id="native-sim-how-to-use"></span><h2>How to use it<a class="headerlink" href="#how-to-use-it" title="Link to this heading"></a></h2>
+<section id="compiling">
+<h3>Compiling<a class="headerlink" href="#compiling" title="Link to this heading"></a></h3>
+<p>To build, simply specify the <code class="docutils literal notranslate"><span class="pre">native_sim</span></code> board as target:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>native_sim<span class="w"> </span>samples/hello_world
+</pre></div>
+</div>
+</section>
+<section id="running">
+<h3>Running<a class="headerlink" href="#running" title="Link to this heading"></a></h3>
+<p>The result of the compilation is an executable (<code class="docutils literal notranslate"><span class="pre">zephyr.exe</span></code>) placed in the
+<code class="docutils literal notranslate"><span class="pre">zephyr/</span></code> subdirectory of the <code class="docutils literal notranslate"><span class="pre">build</span></code> folder.
+Run the <code class="docutils literal notranslate"><span class="pre">zephyr.exe</span></code> executable as you would any other Linux console application.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./build/zephyr/zephyr.exe
+<span class="gp"># </span>Press<span class="w"> </span>Ctrl+C<span class="w"> </span>to<span class="w"> </span><span class="nb">exit</span>
+</pre></div>
+</div>
+<p>This executable accepts several command line options depending on the
+compilation configuration.
+You can run it with the <code class="docutils literal notranslate"><span class="pre">--help</span></code> command line switch to get a list of
+available options.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./build/zephyr/zephyr.exe<span class="w"> </span>--help
+</pre></div>
+</div>
+<p>Note that the Zephyr kernel does not actually exit once the application is
+finished. It simply goes into the idle loop forever.
+Therefore you must stop the application manually (Ctrl+C in Linux).</p>
+<p>Application tests using the <a class="reference internal" href="../../../../develop/test/ztest.html#test-framework"><span class="std std-ref">ztest framework</span></a> will exit after all
+tests have completed.</p>
+<p>If you want your application to gracefully finish when it reaches some point,
+you may add a conditionally compiled (<a class="reference internal" href="../../../../kconfig.html#CONFIG_ARCH_POSIX" title="CONFIG_ARCH_POSIX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARCH_POSIX</span></code></a>) call to
+<code class="docutils literal notranslate"><span class="pre">nsi_exit(int</span> <span class="pre">status)</span></code> at that point.</p>
+</section>
+<section id="debugging">
+<span id="native-sim-debug"></span><h3>Debugging<a class="headerlink" href="#debugging" title="Link to this heading"></a></h3>
+<p>Since the Zephyr executable is a native application, it can be debugged and
+instrumented as any other native program. The program is compiled with debug
+information, so it can be run directly in, for example, <code class="docutils literal notranslate"><span class="pre">gdb</span></code> or instrumented
+with <code class="docutils literal notranslate"><span class="pre">valgrind</span></code>.</p>
+<p>Because the execution of your Zephyr application is normally deterministic
+(there are no asynchronous or random components), you can execute the
+code multiple times and get the exact same result. Instrumenting the
+code does not affect its execution.</p>
+<p>To ease debugging you may want to compile your code without optimizations
+(e.g., <code class="docutils literal notranslate"><span class="pre">-O0</span></code>) by setting <a class="reference internal" href="../../../../kconfig.html#CONFIG_NO_OPTIMIZATIONS" title="CONFIG_NO_OPTIMIZATIONS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NO_OPTIMIZATIONS</span></code></a>.</p>
+<p>For ease of debugging consider using an IDE as GUI for your debugger.</p>
+</section>
+<section id="address-sanitizer-asan">
+<span id="native-sim-asan"></span><h3>Address Sanitizer (ASan)<a class="headerlink" href="#address-sanitizer-asan" title="Link to this heading"></a></h3>
+<p>You can also build Zephyr with the <a class="reference external" href="https://github.com/google/sanitizers/wiki/AddressSanitizer">Address Sanitizer</a>. To do this, set
+<a class="reference internal" href="../../../../kconfig.html#CONFIG_ASAN" title="CONFIG_ASAN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ASAN</span></code></a>, for example, in the application project file, or in the
+<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> or <code class="docutils literal notranslate"><span class="pre">cmake</span></code> command line invocation.</p>
+<p>Note that you will need the ASan library installed in your system.
+In Debian/Ubuntu this is <code class="docutils literal notranslate"><span class="pre">libasan1</span></code>.</p>
+</section>
+<section id="undefined-behavior-sanitizer-ubsan">
+<h3>Undefined Behavior Sanitizer (UBSan)<a class="headerlink" href="#undefined-behavior-sanitizer-ubsan" title="Link to this heading"></a></h3>
+<p>You can also build Zephyr with the <a class="reference external" href="https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html">Undefined Behavior Sanitizer</a>. To do this, set
+<a class="reference internal" href="../../../../kconfig.html#CONFIG_UBSAN" title="CONFIG_UBSAN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_UBSAN</span></code></a>, for example, in the application project file, or in the
+<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> or <code class="docutils literal notranslate"><span class="pre">cmake</span></code> command line invocation.</p>
+</section>
+<section id="coverage-reports">
+<h3>Coverage reports<a class="headerlink" href="#coverage-reports" title="Link to this heading"></a></h3>
+<p>See
+<a class="reference internal" href="../../../../develop/test/coverage.html#coverage-posix"><span class="std std-ref">coverage reports using the POSIX architecture</span></a>.</p>
+</section>
+<section id="and-64bit-versions">
+<span id="native-sim32-64"></span><h3>32 and 64bit versions<a class="headerlink" href="#and-64bit-versions" title="Link to this heading"></a></h3>
+<p>native_sim comes with two targets: A 32 bit and 64 bit version.
+The 32 bit version, <code class="docutils literal notranslate"><span class="pre">native_sim</span></code>, is the default target, which will compile
+your code for the ILP32 ABI (i386 in a x86 or x86_64 system) where pointers
+and longs are 32 bits.
+This mimics the ABI of most embedded systems Zephyr targets,
+and is therefore normally best to test and debug your code, as some bugs are
+dependent on the size of pointers and longs.
+This target requires either a 64 bit system with multilib support installed or
+one with a 32bit userspace.</p>
+<p>The 64 bit version, <code class="docutils literal notranslate"><span class="pre">native_sim/native/64</span></code>, compiles your code targeting the
+LP64 ABI (x86-64 in x86 systems), where pointers and longs are 64 bits.
+You can use this target if you cannot compile or run 32 bit binaries.</p>
+</section>
+</section>
+<section id="c-library-choice">
+<span id="native-sim-clib-choice"></span><h2>C library choice<a class="headerlink" href="#c-library-choice" title="Link to this heading"></a></h2>
+<p>native_sim may be compiled with a choice of C libraries.
+By default it will be compiled with the host C library (<a class="reference internal" href="../../../../kconfig.html#CONFIG_EXTERNAL_LIBC" title="CONFIG_EXTERNAL_LIBC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_EXTERNAL_LIBC</span></code></a>),
+but you can also select to build it with <a class="reference internal" href="../../../../kconfig.html#CONFIG_MINIMAL_LIBC" title="CONFIG_MINIMAL_LIBC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MINIMAL_LIBC</span></code></a> or with
+<a class="reference internal" href="../../../../kconfig.html#CONFIG_PICOLIBC" title="CONFIG_PICOLIBC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PICOLIBC</span></code></a>.
+If you select some feature which are not compatible with the host C library,
+<a class="reference internal" href="../../../../develop/languages/c/picolibc.html#c-library-picolibc"><span class="std std-ref">Picolibc</span></a> will be selected by default instead.</p>
+<p>When building with either <a class="reference internal" href="../../../../develop/languages/c/minimal_libc.html#c-library-minimal"><span class="std std-ref">minimal</span></a> or <a class="reference internal" href="../../../../develop/languages/c/picolibc.html#c-library-picolibc"><span class="std std-ref">Picolibc</span></a>
+you will build your code in a more similar way as when building for the embedded target,
+you will be able to test your code interacting with that C library,
+and there will be no conflicts with the <a class="reference internal" href="../../../../services/portability/posix/index.html#posix-support"><span class="std std-ref">POSIX OS abstraction</span></a> shim,
+but, accessing the host for test purposes from your embedded code will be more
+difficult, and you will have a limited choice of
+<a class="reference internal" href="#native-sim-peripherals-c-compat"><span class="std std-ref">drivers and backends to chose from</span></a>.</p>
+</section>
+<section id="cross-compiling-native-sim">
+<h2>Cross-compiling native_sim<a class="headerlink" href="#cross-compiling-native-sim" title="Link to this heading"></a></h2>
+<p>It is possible to <a class="reference internal" href="cross_compile.html#posix-arch-cross-compile"><span class="std std-ref">cross compile native_sim</span></a>.</p>
+</section>
+<section id="rationale-for-this-port-and-comparison-with-other-options">
+<h2>Rationale for this port and comparison with other options<a class="headerlink" href="#rationale-for-this-port-and-comparison-with-other-options" title="Link to this heading"></a></h2>
+<p>The native_sim board shares the overall
+<a class="reference internal" href="../../doc/arch_soc.html#posix-arch-rationale"><span class="std std-ref">intent of the POSIX architecture</span></a>,
+while being a HW agnostic test platform which in some cases utilizes the host
+OS peripherals.
+It does not intend to model any particular HW, and as such can only be used
+to develop and test application code which is far decoupled from the HW.</p>
+<p>For developing and testing SW which requires specific HW, while retaining the
+benefits of the POSIX architecture other solutions like the
+<a class="reference internal" href="../../doc/bsim_boards_design.html#bsim-boards"><span class="std std-ref">bsim boards</span></a>
+should be considered.</p>
+<p>Check the <a class="reference internal" href="../../doc/arch_soc.html#posix-arch-compare"><span class="std std-ref">POSIX architecture comparison</span></a>
+with other development and test options for more insights.</p>
+</section>
+<section id="architecture">
+<span id="native-sim-architecture"></span><h2>Architecture<a class="headerlink" href="#architecture" title="Link to this heading"></a></h2>
+<p>This board is based on the POSIX architecture port of Zephyr and shares
+<a class="reference internal" href="../../doc/arch_soc.html#posix-arch-architecture"><span class="std std-ref">its basic architecture</span></a> regarding threading
+and CPU/HW scheduling.</p>
+<p>If you are interested on the inner workings of the native simulator itself, you can check
+<a class="reference external" href="https://github.com/BabbleSim/native_simulator/blob/main/docs/README.md">its documentation</a>.</p>
+<p>This board does not try to emulate any particular embedded CPU or SOC.
+The code is compiled natively for the host system (typically x86).</p>
+<section id="about-time-in-native-sim">
+<h3>About time in native_sim<a class="headerlink" href="#about-time-in-native-sim" title="Link to this heading"></a></h3>
+<p>Normally simulated time runs fully decoupled from the real host time
+and as fast as the host compute power would allow.
+This is desirable when running in a debugger or testing in batch, but not if
+interacting with external interfaces based on the real host time.</p>
+<p>The Zephyr kernel is only aware of the simulated time as provided by the
+HW models. Therefore any normal Zephyr thread will also know only about
+simulated time.</p>
+<p>The only link between the simulated time and the real/host time, if any,
+is created by the clock and timer model.</p>
+<p>This model can be configured to slow down the execution of native_sim to
+real time.
+You can do this with the <code class="docutils literal notranslate"><span class="pre">--rt</span></code> and <code class="docutils literal notranslate"><span class="pre">--no-rt</span></code> options from the command line.
+The default behavior is set with
+<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NATIVE_SIM_SLOWDOWN_TO_REAL_TIME</span></code>.</p>
+<p>Note that all this model does is wait before raising the
+next system tick interrupt until the corresponding real/host time.
+If, for some reason, native_sim runs slower than real time, all this
+model can do is “catch up” as soon as possible by not delaying the
+following ticks.
+So if the host load is too high, or you are running in a debugger, you will
+see simulated time lagging behind the real host time.
+This solution ensures that normal runs are still deterministic while
+providing an illusion of real timeness to the observer.</p>
+<p>When locked to real time, simulated time can also be set to run faster or
+slower than real time.
+This can be controlled with the <code class="docutils literal notranslate"><span class="pre">--rt-ratio=&lt;ratio&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">-rt-drift=&lt;drift&gt;</span></code>
+command line options. Note that both of these options control the same
+underlying mechanism, and that <code class="docutils literal notranslate"><span class="pre">drift</span></code> is by definition equal to
+<code class="docutils literal notranslate"><span class="pre">ratio</span> <span class="pre">-</span> <span class="pre">1</span></code>.
+It is also possible to adjust this clock speed on the fly with
+<code class="xref c c-func docutils literal notranslate"><span class="pre">native_rtc_adjust_clock()</span></code>.</p>
+<p>In this way if, for example, <code class="docutils literal notranslate"><span class="pre">--rt-ratio=2</span></code> is given, the simulated time
+will advance at twice the real time speed.
+Similarly if <code class="docutils literal notranslate"><span class="pre">--rt-drift=-100e-6</span></code> is given, the simulated time will progress
+100ppm slower than real time.
+Note that these 2 options have no meaning when running in non real-time
+mode.</p>
+<section id="how-simulated-time-and-real-time-relate-to-each-other">
+<h4>How simulated time and real time relate to each other<a class="headerlink" href="#how-simulated-time-and-real-time-relate-to-each-other" title="Link to this heading"></a></h4>
+<p>Simulated time (<code class="docutils literal notranslate"><span class="pre">st</span></code>) can be calculated from real time (<code class="docutils literal notranslate"><span class="pre">rt</span></code>) as</p>
+<div class="math notranslate nohighlight">
+\[st = (rt - last\_rt) \times ratio + last\_st\]</div>
+<p>And vice-versa:</p>
+<div class="math notranslate nohighlight">
+\[rt = (st - last\_st) / ratio + last\_rt\]</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">last_rt</span></code> and <code class="docutils literal notranslate"><span class="pre">last_st</span></code> are respectively the real time and the
+simulated time when the last clock ratio adjustment took place.</p>
+<p>All times are kept in microseconds.</p>
+</section>
+</section>
+</section>
+<section id="peripherals">
+<span id="native-sim-peripherals"></span><h2>Peripherals<a class="headerlink" href="#peripherals" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">native_sim</span></code> board supports the hardware features listed below.</p>
+<div class="legend admonition">
+  <dl class="supported-hardware field-list">
+    <dt>
+      <span class="location-chip onchip">on-chip</span> /
+      <span class="location-chip onboard">on-board</span>
+    </dt>
+    <dd>
+      Feature integrated in the SoC / present on the board.
+    </dd>
+    <dt>
+      <span class="count okay-count">2</span> /
+      <span class="count disabled-count">2</span>
+    </dt>
+    <dd>
+      Number of instances that are enabled / disabled. <br/>
+      Click on the label to see the first instance of this feature in the board/SoC DTS files.
+    </dd>
+    <dt>
+      <code class="docutils literal notranslate"><span class="pre">vnd,foo</span></code>
+    </dt>
+    <dd>
+      Compatible string for the Devicetree binding matching the feature. <br/>
+      Click on the link to view the binding documentation.
+    </dd>
+  </dl>
+</div><div class="docutils container" id="native_sim-hw-features">
+</div>
+<script>board_data = {"board_name": "native_sim", "revision_default": null, "targets": []}</script><p>Here are more details on the peripherals that are currently provided with this board:</p>
+<dl>
+<dt><strong>Interrupt controller</strong></dt><dd><p>A simple yet generic interrupt controller is provided. It can nest interrupts
+and provides interrupt priorities. Interrupts can be individually masked or
+unmasked. SW interrupts are also supported.</p>
+</dd>
+<dt><strong>Clock, timer and system tick model</strong></dt><dd><p>This model provides the system tick timer. By default
+<a class="reference internal" href="../../../../kconfig.html#CONFIG_SYS_CLOCK_TICKS_PER_SEC" title="CONFIG_SYS_CLOCK_TICKS_PER_SEC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SYS_CLOCK_TICKS_PER_SEC</span></code></a> configures it to tick every 10ms.</p>
+<p>Please refer to the section <a class="reference internal" href="#about-time-in-native-sim">About time in native_sim</a> for more
+information.</p>
+</dd>
+<dt><strong>UART/Serial</strong></dt><dd><p>Two optional native UART drivers are available:</p>
+<dl class="simple">
+<dt><strong>PTY driver (UART_NATIVE_PTY)</strong></dt><dd><p>With this driver, Zephyr UART devices can be created. These
+can be connected to the Linux process stdin/stdout or a newly created
+pseudo-tty. For more information refer to the section <a class="reference internal" href="#pty-uart">PTY UART</a>.</p>
+</dd>
+<dt><strong>TTY driver (UART_NATIVE_TTY)</strong></dt><dd><p>An UART driver for interacting with host-attached serial port devices
+(eg. USB to UART dongles). For more information refer to the section
+<a class="reference internal" href="#tty-uart">TTY UART</a>.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>Real time clock</strong></dt><dd><p>The real time clock model provides a model of a constantly powered clock.
+By default this is initialized to the host time at boot.</p>
+<p>This RTC can also be set to start from time 0 with the <code class="docutils literal notranslate"><span class="pre">--rtc-reset</span></code> command
+line option.</p>
+<p>It is possible to offset the RTC clock value at boot with the
+<code class="docutils literal notranslate"><span class="pre">--rtc-offset=&lt;offset&gt;</span></code> option,
+or to adjust it dynamically with the function <code class="xref c c-func docutils literal notranslate"><span class="pre">native_rtc_offset()</span></code>.</p>
+<p>After start, this RTC advances with the simulated time, and is therefore
+affected by the simulated time speed ratio.
+See <a class="reference internal" href="#about-time-in-native-sim">About time in native_sim</a> for more information.</p>
+<p>The time can be queried with the functions <code class="xref c c-func docutils literal notranslate"><span class="pre">native_rtc_gettime_us()</span></code>
+and <code class="xref c c-func docutils literal notranslate"><span class="pre">native_rtc_gettime()</span></code>. Both accept as parameter the clock source:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">RTC_CLOCK_BOOT</span></code>: It counts the simulated time passed since boot.
+It is not subject to offset adjustments</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RTC_CLOCK_REALTIME</span></code>: RTC persistent time. It is affected by
+offset adjustments.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RTC_CLOCK_PSEUDOHOSTREALTIME</span></code>: A version of the real host time,
+as if the host was also affected by the clock speed ratio and offset
+adjustments performed to the simulated clock and this RTC. Normally
+this value will be a couple of hundredths of microseconds ahead of the
+simulated time, depending on the host execution speed.
+This clock source should be used with care, as depending on the actual
+execution speed of native_sim and the host load,
+it may return a value considerably ahead of the simulated time.</p></li>
+</ul>
+<p>Note this device does not yet have an <a class="reference internal" href="../../../../hardware/peripherals/rtc.html#rtc-api"><span class="std std-ref">RTC API compatible driver</span></a>.</p>
+</dd>
+</dl>
+<dl class="simple" id="nsim-per-entr">
+<dt><strong>Entropy device</strong></dt><dd><p>An entropy device based on the host <code class="xref c c-func docutils literal notranslate"><span class="pre">random()</span></code> API.
+This device will generate the same sequence of random numbers if initialized
+with the same random seed.
+You can change this random seed value by using the command line option:
+<code class="samp docutils literal notranslate"><span class="pre">--seed=</span><em><span class="pre">&lt;random_seed&gt;</span></em></code> where the value specified is a 32-bit integer
+such as 97229 (decimal),  0x17BCD (hex), or 0275715 (octal).</p>
+</dd>
+</dl>
+<dl id="nsim-per-ethe">
+<dt><strong>Ethernet driver</strong></dt><dd><p>A simple TAP based ethernet driver is provided. The driver expects that the
+<strong>zeth</strong> network interface already exists in the host system. The <strong>zeth</strong>
+network interface can be created by the <code class="docutils literal notranslate"><span class="pre">net-setup.sh</span></code> script found in
+the <a class="reference external" href="https://github.com/zephyrproject-rtos/net-tools">net-tools</a> zephyr project repository. User can communicate with the
+Zephyr instance via the <strong>zeth</strong> network interface. Multiple TAP based
+network interfaces can be created if needed. The IP address configuration
+can be specified for each network interface instance.</p>
+<p>Note that this device can only be used with Linux hosts.</p>
+</dd>
+</dl>
+<dl class="simple" id="nsim-per-offloaded-sockets">
+<dt><strong>Offloaded sockets driver</strong></dt><dd><p>This driver is an alternative to the <a class="reference internal" href="#nsim-per-ethe"><span class="std std-ref">TAP based ethernet driver</span></a>. Instead of using a virtual network in the Linux side, this
+driver utilizes Linux’s standard BSD socket API. With this, multiple Zephyr
+applications can communicate over the Linux loopback interface.
+The benefit of this approach is that root privileges are not required and
+that the process is connected to the same interface as other Linux processes
+instead of a virtual network, facilitating testing without the need for extra
+setup in the host. The drawback is that the L2 layer of Zephyr’s networking
+stack is not exercised.</p>
+</dd>
+</dl>
+<dl id="nsim-bt-host-cont">
+<dt><strong>Bluetooth controller</strong></dt><dd><p>It’s possible to use the host’s Bluetooth adapter as a Bluetooth
+controller for Zephyr. To do this the HCI device needs to be passed as
+a command line option to <code class="docutils literal notranslate"><span class="pre">zephyr.exe</span></code>. For example, to use <code class="docutils literal notranslate"><span class="pre">hci0</span></code>,
+use <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">zephyr.exe</span> <span class="pre">--bt-dev=hci0</span></code>. Using the device requires root
+privileges (or the CAP_NET_ADMIN POSIX capability, to be exact) so
+<code class="docutils literal notranslate"><span class="pre">zephyr.exe</span></code> needs to be run through <code class="docutils literal notranslate"><span class="pre">sudo</span></code>. The chosen HCI device
+must be powered down and support Bluetooth Low Energy (i.e. support the
+Bluetooth specification version 4.0 or greater).</p>
+<p>Another possibility is to use a HCI TCP server which acts as a
+<a class="reference internal" href="../../../../connectivity/bluetooth/bluetooth-tools.html#bluetooth-virtual-posix"><span class="std std-ref">virtual Bluetooth controller</span></a> over TCP.
+To connect to a HCI TCP server its IP address and port number must
+be specified. For example, to connect to a HCI TCP server with IP
+address 127.0.0.0 and port number 1020 use <code class="docutils literal notranslate"><span class="pre">zephyr.exe</span> <span class="pre">--bt-dev=127.0.0.1:1020</span></code>.
+This alternative option is mainly aimed for testing Bluetooth connectivity over
+a virtual Bluetooth controller that does not depend on the Linux Bluetooth
+stack and its HCI interface.</p>
+</dd>
+</dl>
+<dl class="simple" id="nsim-per-usb">
+<dt><strong>USB controller</strong></dt><dd><p>It’s possible to use the Virtual USB controller working over USB/IP
+protocol. More information can be found in
+<a class="reference internal" href="../../../../connectivity/usb/device/usb_device.html#testing-usb-native-sim"><span class="std std-ref">Testing USB over USP/IP in native_sim</span></a>.</p>
+</dd>
+</dl>
+<dl id="nsim-per-disp-sdl">
+<dt><strong>Display driver</strong></dt><dd><p>A display driver is provided that creates a window on the host machine to
+render display content.</p>
+<p>When building for the default 32bit <code class="docutils literal notranslate"><span class="pre">native_sim</span></code> target this driver requires a 32-bit version of
+the <a class="reference external" href="https://www.libsdl.org">SDL2</a> development library on the host machine. For
+<a class="reference internal" href="#native-sim32-64"><span class="std std-ref">64bit native_sim</span></a> builds you need to have the 64bit version installed.
+You may also need to set <code class="docutils literal notranslate"><span class="pre">pkg-config</span></code> to correctly pickup the SDL2 install path.</p>
+<p>On Ubuntu the package is <code class="docutils literal notranslate"><span class="pre">libsdl2-dev</span></code> whose 64bit version is likely installed by default.
+On an Ubuntu 18.04 host system, you can install the <code class="docutils literal notranslate"><span class="pre">pkg-config</span></code> and the 32bit
+<code class="docutils literal notranslate"><span class="pre">libsdl2-dev:i386</span></code> packages, and configure the pkg-config search path with these commands:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>dpkg<span class="w"> </span>--add-architecture<span class="w"> </span>i386
+<span class="gp">$ </span>sudo<span class="w"> </span>apt<span class="w"> </span>update
+<span class="gp">$ </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>pkg-config<span class="w"> </span>libsdl2-dev:i386
+<span class="gp">$ </span><span class="nb">export</span><span class="w"> </span><span class="nv">PKG_CONFIG_PATH</span><span class="o">=</span>/usr/lib/i386-linux-gnu/pkgconfig
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl id="nsim-per-flash-simu">
+<dt><strong>EEPROM simulator</strong></dt><dd><p>The EEPROM simulator can also be used in the native targets. In these, you have the added feature
+of keeping the EEPROM content on a file on the host filesystem.
+By default this is kept in the file <code class="file docutils literal notranslate"><span class="pre">eeprom.bin</span></code> in the current working directory, but you
+can select the location of this file and its name with the command line parameter <code class="docutils literal notranslate"><span class="pre">--eeprom</span></code>.
+Some more information can be found in <a class="reference internal" href="../../../../hardware/emulator/index.html#emul-eeprom-simu-brief"><span class="std std-ref">the emulators page</span></a>.</p>
+</dd>
+<dt><strong>Flash simulator</strong></dt><dd><p>The flash simulator can also be used in the native targets. In this you have the option to keep
+the flash content in a binary file on the host file system or in RAM. The behavior of the flash
+device can be configured through the native_sim board devicetree or Kconfig settings under
+<a class="reference internal" href="../../../../kconfig.html#CONFIG_FLASH_SIMULATOR" title="CONFIG_FLASH_SIMULATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FLASH_SIMULATOR</span></code></a>.</p>
+<p>By default the binary data is located in the file <code class="file docutils literal notranslate"><span class="pre">flash.bin</span></code> in the current
+working directory. The location of this file can be changed through the
+command line parameter <code class="docutils literal notranslate"><span class="pre">--flash</span></code>. The flash data will be stored in raw format
+and the file will be truncated to match the size specified in the devicetree
+configuration. In case the file does not exists the driver will take care of
+creating the file, else the existing file is used.</p>
+<p>Some more information can be found in <a class="reference internal" href="../../../../hardware/emulator/index.html#emul-flash-simu-brief"><span class="std std-ref">the emulators page</span></a>.</p>
+<p>The flash content can be accessed from the host system, as explained in the
+<a class="reference internal" href="#host-fuse-filesystem-access">Host (FUSE) filesystem access</a> section.</p>
+</dd>
+<dt><strong>Input events</strong></dt><dd><p>Two optional native input drivers are available:</p>
+<dl>
+<dt><strong>evdev driver</strong></dt><dd><p>A driver is provided to read input events from a Linux evdev input device and
+inject them back into the Zephyr input subsystem.</p>
+<p>The driver is automatically enabled when <a class="reference internal" href="../../../../kconfig.html#CONFIG_INPUT" title="CONFIG_INPUT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INPUT</span></code></a> is
+enabled and the devicetree contains a node such as:</p>
+<div class="highlight-dts notranslate"><div class="highlight"><pre><span></span><span class="nf">evdev</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,native-linux-evdev&quot;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The application then has to be run with a command line option to specify
+which evdev device node has to be used, for example
+<code class="docutils literal notranslate"><span class="pre">zephyr.exe</span> <span class="pre">--evdev=/dev/input/event0</span></code>.</p>
+</dd>
+<dt><strong>Input SDL touch</strong></dt><dd><p>This driver emulates a touch panel input using the SDL library. It can be enabled with
+<a class="reference internal" href="../../../../kconfig.html#CONFIG_INPUT_SDL_TOUCH" title="CONFIG_INPUT_SDL_TOUCH"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INPUT_SDL_TOUCH</span></code></a> and configured with the device tree binding
+<a class="reference internal" href="../../../../build/dts/api/bindings/input/zephyr%2Cinput-sdl-touch.html#std-dtcompatible-zephyr-input-sdl-touch"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,input-sdl-touch</span></code></a>.</p>
+<p>More information on using SDL and the Display driver can be found in
+<a class="reference internal" href="#nsim-per-disp-sdl"><span class="std std-ref">its section</span></a>.</p>
+</dd>
+</dl>
+</dd>
+<dt><strong>CAN controller</strong></dt><dd><p>It is possible to use a host CAN controller with the native SocketCAN Linux driver. It can be
+enabled with <a class="reference internal" href="../../../../kconfig.html#CONFIG_CAN_NATIVE_LINUX" title="CONFIG_CAN_NATIVE_LINUX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CAN_NATIVE_LINUX</span></code></a> and configured with the device tree binding
+<a class="reference internal" href="../../../../build/dts/api/bindings/can/zephyr%2Cnative-linux-can.html#std-dtcompatible-zephyr-native-linux-can"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,native-linux-can</span></code></a>.</p>
+<p>By default, the native simulator expects a SocketCAN network device called <code class="docutils literal notranslate"><span class="pre">zcan0</span></code>. It is
+possible to specify which SocketCAN network device will be used by the app by using the
+<code class="docutils literal notranslate"><span class="pre">--can-if</span></code> command-line option. This option overrides <strong>every</strong> Linux SocketCAN driver instance
+to use the specified interface.</p>
+<p>SocketCAN support can be enabled by using the <a class="reference internal" href="../../../../snippets/socketcan-native-sim/README.html#snippet-socketcan-native-sim"><span class="std std-ref">SocketCAN on Native Simulator Snippet (socketcan-native-sim)</span></a>.</p>
+</dd>
+</dl>
+<section id="pty-uart">
+<span id="native-ptty-uart"></span><h3>PTY UART<a class="headerlink" href="#pty-uart" title="Link to this heading"></a></h3>
+<p>This driver is automatically enabled when devicetree contains nodes with the
+<code class="docutils literal notranslate"><span class="pre">&quot;zephyr,native-pty-uart&quot;</span></code> compatible property and <code class="docutils literal notranslate"><span class="pre">okay</span></code> status and
+<a class="reference internal" href="../../../../kconfig.html#CONFIG_SERIAL" title="CONFIG_SERIAL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SERIAL</span></code></a> is set.
+By default one ready UART of this type is setup in DTS, but any number can be enabled as desired.</p>
+<p>Normally these UARTs are connected to new pseudoterminals PTYs, i.e. <code class="file docutils literal notranslate"><span class="pre">/dev/pts</span><em><span class="pre">&lt;nbr&gt;</span></em></code>,
+but it is also possible to map one of them to the executable’s <code class="docutils literal notranslate"><span class="pre">stdin</span></code> and <code class="docutils literal notranslate"><span class="pre">stdout</span></code>.
+This can be done in two ways, either with the command line option <code class="docutils literal notranslate"><span class="pre">--&lt;uart_name&gt;_stdinout</span></code>
+(where <code class="docutils literal notranslate"><span class="pre">&lt;uart_name&gt;</span></code> is the UART DTS node name), or, for the first PTY UART instance by choosing
+<a class="reference internal" href="../../../../kconfig.html#CONFIG_UART_NATIVE_PTY_0_ON_STDINOUT" title="CONFIG_UART_NATIVE_PTY_0_ON_STDINOUT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_UART_NATIVE_PTY_0_ON_STDINOUT</span></code></a> instead of the default
+<a class="reference internal" href="../../../../kconfig.html#CONFIG_UART_NATIVE_PTY_0_ON_OWN_PTY" title="CONFIG_UART_NATIVE_PTY_0_ON_OWN_PTY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_UART_NATIVE_PTY_0_ON_OWN_PTY</span></code></a>.
+For interactive use with the <a class="reference internal" href="../../../../services/shell/index.html#shell-api"><span class="std std-ref">Shell</span></a>, it is recommended to choose the PTY option.
+The <code class="docutils literal notranslate"><span class="pre">STDINOUT</span></code> option can be used for automated testing, such as when piping other processes’
+output to control it. This is because the shell subsystem expects access to a raw terminal,
+which (by default) a normal Linux terminal is not.</p>
+<p>When a UART is connected to a new PTY, the name of the newly created UART pseudo-terminal will be
+displayed in the console.
+If you want to interact with it manually, you should attach a terminal emulator to it.
+This can be done, for example with the command:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>xterm<span class="w"> </span>-e<span class="w"> </span>screen<span class="w"> </span>/dev/&lt;ptyn&gt;<span class="w"> </span><span class="p">&amp;</span>
+<span class="gp"># </span>Or<span class="w"> </span><span class="k">if</span><span class="w"> </span>you<span class="w"> </span>prefer<span class="w"> </span>gnome-terminal:
+<span class="gp">$ </span>gnome-terminal<span class="w"> </span>--<span class="w"> </span>screen<span class="w"> </span>/dev/&lt;ptyn&gt;<span class="w"> </span><span class="p">&amp;</span>
+</pre></div>
+</div>
+<p>where <code class="file docutils literal notranslate"><span class="pre">/dev/</span><em><span class="pre">&lt;ptyn&gt;</span></em></code> should be replaced with the actual PTY device.</p>
+<p>You may also chose to automatically attach a terminal emulator to any of these UARTs.
+To automatically attach one to all these UARTs, pass the command line option <code class="docutils literal notranslate"><span class="pre">-attach_uart</span></code> to the
+executable. To automatically attach one to a single UART use <code class="docutils literal notranslate"><span class="pre">-&lt;uart_name&gt;_attach_uart</span></code>.
+The command used for attaching to the new shell can be set for all UARTs with the command line
+option <code class="docutils literal notranslate"><span class="pre">-attach_uart_cmd=&lt;&quot;cmd&quot;&gt;</span></code>, or for each individual UART with
+<code class="docutils literal notranslate"><span class="pre">-&lt;uart_name&gt;_attach_uart_cmd</span></code>. Where the default command is given by
+<a class="reference internal" href="../../../../kconfig.html#CONFIG_UART_NATIVE_PTY_AUTOATTACH_DEFAULT_CMD" title="CONFIG_UART_NATIVE_PTY_AUTOATTACH_DEFAULT_CMD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_UART_NATIVE_PTY_AUTOATTACH_DEFAULT_CMD</span></code></a>.
+Note that the default command assumes both <code class="docutils literal notranslate"><span class="pre">xterm</span></code> and <code class="docutils literal notranslate"><span class="pre">screen</span></code> are installed in the system.</p>
+<p>Note that these <code class="docutils literal notranslate"><span class="pre">uart_cmd</span></code> commands can be effectively any shell command including lists of
+commands. Therefore it is possible to invoke any other script or program from it.
+Those commands will be run right after the PTY is created.
+For example, if one wanted to create a link to the newly created PTY, and have it removed when the
+program ends, one could do:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>zephyr.exe<span class="w"> </span>--uart_attach_uart_cmd<span class="o">=</span><span class="s1">&#39;ln -s %s /tmp/somename&#39;</span><span class="w"> </span><span class="p">;</span><span class="w"> </span>rm<span class="w"> </span>/tmp/somename
+</pre></div>
+</div>
+<p>This driver supports poll mode, interrupt mode and async mode.
+Neither runtime configuration or line control are supported.</p>
+</section>
+<section id="tty-uart">
+<span id="native-tty-uart"></span><h3>TTY UART<a class="headerlink" href="#tty-uart" title="Link to this heading"></a></h3>
+<p>With this driver an application can use the polling and interrupt based UART APIs to write and read
+characters to and from a connected serial port device.</p>
+<p>This driver is automatically enabled when a devicetree contains a node
+with <code class="docutils literal notranslate"><span class="pre">&quot;zephyr,native-tty-uart&quot;</span></code> compatible property and <code class="docutils literal notranslate"><span class="pre">okay</span></code> status, such
+as one below.</p>
+<div class="highlight-dts notranslate"><div class="highlight"><pre><span></span><span class="nf">uart</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="w">  </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;zephyr,native-tty-uart&quot;</span><span class="p">;</span>
+<span class="w">  </span><span class="n">serial-port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/dev/ttyUSB0&quot;</span><span class="p">;</span>
+<span class="w">  </span><span class="n">current-speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">115200</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Interaction with serial ports can be configured in several different ways:</p>
+<ul class="simple">
+<li><p>The default serial port and baud rate can be set via the device tree
+properties <code class="docutils literal notranslate"><span class="pre">serial-port</span></code> and <code class="docutils literal notranslate"><span class="pre">current-speed</span></code> respectively.  The
+<code class="docutils literal notranslate"><span class="pre">serial-port</span></code> property is optional.</p></li>
+<li><p>Serial port and baud rate can also be set via command line options <code class="docutils literal notranslate"><span class="pre">X_port</span></code>
+and <code class="docutils literal notranslate"><span class="pre">X_baud</span></code> respectively, where <code class="docutils literal notranslate"><span class="pre">X</span></code> is a name of a node. Command line
+options override values from the devicetree.</p></li>
+<li><p>The rest of the configuration options such as number of data and stop bits,
+parity, as well as baud rate can be set at runtime with <code class="docutils literal notranslate"><span class="pre">uart_configure</span></code>.</p></li>
+<li><p>This driver can emulate an interrupt-driven UART by enabling
+<a class="reference internal" href="../../../../kconfig.html#CONFIG_UART_INTERRUPT_DRIVEN" title="CONFIG_UART_INTERRUPT_DRIVEN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_UART_INTERRUPT_DRIVEN</span></code></a>.</p></li>
+</ul>
+<p>Multiple instances of such uart drivers are supported.</p>
+<p>The <a class="reference internal" href="../../../../samples/drivers/uart/native_tty/README.html#uart-native-tty" title="Use native TTY driver to send and receive data between two UART-to-USB bridge dongles.">Native TTY UART</a> sample app provides a working example of the
+driver.</p>
+<p>This driver only supports poll mode and interrupt mode. Async mode is not
+supported.
+It has runtime configuration support, but no line control support.</p>
+</section>
+</section>
+<section id="subsystems-backends">
+<span id="native-sim-backends"></span><h2>Subsystems backends<a class="headerlink" href="#subsystems-backends" title="Link to this heading"></a></h2>
+<p>Apart from its own peripherals, the native_sim board also has some dedicated
+backends for some of Zephyr’s subsystems. These backends are designed to ease
+development by integrating more seamlessly with the host operating system:</p>
+<dl id="nsim-back-console">
+<dt><strong>Console backend</strong>:</dt><dd><p>A console backend which by default is configured to
+redirect any <a class="reference internal" href="../../../../doxygen/html/printk_8h.html#a768a7dff8592b69f327a08f96b00fa54" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">printk()</span></code></a> write to the native host application’s
+<code class="docutils literal notranslate"><span class="pre">stdout</span></code>.</p>
+<p>This driver is selected by default if no UART driver is compiled in.
+Otherwise <a class="reference internal" href="../../../../kconfig.html#CONFIG_UART_CONSOLE" title="CONFIG_UART_CONSOLE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_UART_CONSOLE</span></code></a> will be set to select the UART as
+console backend.</p>
+</dd>
+</dl>
+<dl id="nsim-back-logger">
+<dt><strong>Logger backend</strong>:</dt><dd><p>A backend which prints all logger output to the process <code class="docutils literal notranslate"><span class="pre">stdout</span></code>.
+It supports timestamping, which can be enabled with
+<a class="reference internal" href="../../../../kconfig.html#CONFIG_LOG_BACKEND_FORMAT_TIMESTAMP" title="CONFIG_LOG_BACKEND_FORMAT_TIMESTAMP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_BACKEND_FORMAT_TIMESTAMP</span></code></a>; and colored output which can
+be enabled with <a class="reference internal" href="../../../../kconfig.html#CONFIG_LOG_BACKEND_SHOW_COLOR" title="CONFIG_LOG_BACKEND_SHOW_COLOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_BACKEND_SHOW_COLOR</span></code></a> and controlled
+with the command line options <code class="docutils literal notranslate"><span class="pre">--color</span></code>, <code class="docutils literal notranslate"><span class="pre">--no-color</span></code> and
+<code class="docutils literal notranslate"><span class="pre">--force-color</span></code>.</p>
+<p>In native_sim, by default, the logger is configured with
+<a class="reference internal" href="../../../../kconfig.html#CONFIG_LOG_MODE_IMMEDIATE" title="CONFIG_LOG_MODE_IMMEDIATE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_MODE_IMMEDIATE</span></code></a>.</p>
+<p>This backend can be selected with <a class="reference internal" href="../../../../kconfig.html#CONFIG_LOG_BACKEND_NATIVE_POSIX" title="CONFIG_LOG_BACKEND_NATIVE_POSIX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_BACKEND_NATIVE_POSIX</span></code></a>
+and is enabled by default.</p>
+</dd>
+</dl>
+<dl class="simple" id="nsim-back-trace">
+<dt><strong>Tracing</strong>:</dt><dd><p>A backend/”bottom” for Zephyr’s CTF tracing subsystem which writes the tracing
+data to a file in the host filesystem.
+More information can be found in <a class="reference internal" href="../../../../services/tracing/index.html#ctf"><span class="std std-ref">Common Tracing Format</span></a></p>
+</dd>
+</dl>
+</section>
+<section id="emulators">
+<h2>Emulators<a class="headerlink" href="#emulators" title="Link to this heading"></a></h2>
+<p>All <a class="reference internal" href="../../../../hardware/emulator/index.html#emulators"><span class="std std-ref">available HW emulators</span></a> can be used with native_sim.</p>
+</section>
+<section id="host-fuse-filesystem-access">
+<span id="native-fuse-flash"></span><h2>Host (FUSE) filesystem access<a class="headerlink" href="#host-fuse-filesystem-access" title="Link to this heading"></a></h2>
+<p>When building Zephyr with a filesystem, the device partitions can be exposed through the host file
+system by enabling <a class="reference internal" href="../../../../kconfig.html#CONFIG_FUSE_FS_ACCESS" title="CONFIG_FUSE_FS_ACCESS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FUSE_FS_ACCESS</span></code></a>. This option enables a FUSE
+(File system in User space) layer that mounts the simulated embedded filesystem in the host
+filesystem, maps the Zephyr file system calls to the required UNIX file system calls, and provides
+access to its partitions with normal operating system commands such as <code class="docutils literal notranslate"><span class="pre">cd</span></code>, <code class="docutils literal notranslate"><span class="pre">ls</span></code> and <code class="docutils literal notranslate"><span class="pre">mkdir</span></code>.</p>
+<p>By default the partitions are exposed through the directory <code class="file docutils literal notranslate"><span class="pre">flash/</span></code> in the
+current working directory. This directory can be changed via the command line
+option <code class="docutils literal notranslate"><span class="pre">--flash-mount</span></code>.</p>
+<p>On exit, the native_sim board application will take care of unmounting the
+directory. In the unfortunate case that the native_sim board application
+crashes, you can cleanup the stale mount point by using the program
+<code class="docutils literal notranslate"><span class="pre">fusermount</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>fusermount<span class="w"> </span>-u<span class="w"> </span>flash
+</pre></div>
+</div>
+<p>You can chose to use the v2 FUSE host library or the v3 with
+<a class="reference internal" href="../../../../kconfig.html#CONFIG_FUSE_LIBRARY_VERSION" title="CONFIG_FUSE_LIBRARY_VERSION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FUSE_LIBRARY_VERSION</span></code></a>. By default v3 is selected.
+When using the v2, a minimal version of 2.6 is necessary. For v3, 3.0 should suffice.
+You will also need <code class="docutils literal notranslate"><span class="pre">pkg-config</span></code> setup to correctly pickup the FUSE install path and compiler flags.
+Note that using this feature with the 32-bit native_sim variant requires the 32-bit version of the
+corresponding FUSE library.</p>
+<p>For example, to use the v3 of the library, on a Ubuntu 24.04 host system, install the <code class="docutils literal notranslate"><span class="pre">pkg-config</span></code>
+and <code class="docutils literal notranslate"><span class="pre">libfuse3-dev:i386</span></code> for 32-bit builds, and <code class="docutils literal notranslate"><span class="pre">libfuse3-dev</span></code> for 64-bit builds:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>dpkg<span class="w"> </span>--add-architecture<span class="w"> </span>i386
+<span class="gp">$ </span>sudo<span class="w"> </span>apt<span class="w"> </span>update
+<span class="gp">$ </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>pkg-config<span class="w"> </span>libfuse3-dev:i386<span class="w"> </span>libfuse3-dev
+<span class="gp">$ </span><span class="nb">export</span><span class="w"> </span><span class="nv">PKG_CONFIG_PATH</span><span class="o">=</span>/usr/lib/i386-linux-gnu/pkgconfig
+</pre></div>
+</div>
+<p>Similarly <code class="docutils literal notranslate"><span class="pre">libfuse-dev:i386</span></code> and <code class="docutils literal notranslate"><span class="pre">libfuse-dev</span></code> provide the 32 and 64-bit FUSE v2 library
+and headers.</p>
+</section>
+<section id="peripherals-and-backends-c-library-compatibility">
+<span id="native-sim-peripherals-c-compat"></span><h2>Peripherals and backends C library compatibility<a class="headerlink" href="#peripherals-and-backends-c-library-compatibility" title="Link to this heading"></a></h2>
+<p>Today, some native_sim peripherals and backends are, so far, only available when compiling with the
+host libC (<a class="reference internal" href="../../../../kconfig.html#CONFIG_EXTERNAL_LIBC" title="CONFIG_EXTERNAL_LIBC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_EXTERNAL_LIBC</span></code></a>):</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Drivers/backends vs libC choice</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Driver class</p></th>
+<th class="head"><p>driver name</p></th>
+<th class="head"><p>driver kconfig</p></th>
+<th class="head"><p>libC choices</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ADC</p></td>
+<td><p>ADC emul</p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_ADC_EMUL" title="CONFIG_ADC_EMUL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ADC_EMUL</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-odd"><td><p>Bluetooth</p></td>
+<td><p><a class="reference internal" href="#nsim-bt-host-cont"><span class="std std-ref">Userchan</span></a></p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_BT_USERCHAN" title="CONFIG_BT_USERCHAN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_USERCHAN</span></code></a></p></td>
+<td><p>Host and pico libC</p></td>
+</tr>
+<tr class="row-even"><td><p>CAN</p></td>
+<td><p>CAN native Linux</p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_CAN_NATIVE_LINUX" title="CONFIG_CAN_NATIVE_LINUX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CAN_NATIVE_LINUX</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-odd"><td><p>Console backend</p></td>
+<td><p><a class="reference internal" href="#nsim-back-console"><span class="std std-ref">POSIX arch console</span></a></p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_POSIX_ARCH_CONSOLE" title="CONFIG_POSIX_ARCH_CONSOLE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_POSIX_ARCH_CONSOLE</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-even"><td><p>Display</p></td>
+<td><p><a class="reference internal" href="#nsim-per-disp-sdl"><span class="std std-ref">Display SDL</span></a></p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_SDL_DISPLAY" title="CONFIG_SDL_DISPLAY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SDL_DISPLAY</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-odd"><td><p>Entropy</p></td>
+<td><p><a class="reference internal" href="#nsim-per-entr"><span class="std std-ref">Native simulator entropy</span></a></p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_FAKE_ENTROPY_NATIVE_SIM" title="CONFIG_FAKE_ENTROPY_NATIVE_SIM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FAKE_ENTROPY_NATIVE_SIM</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-even"><td><p>EEPROM</p></td>
+<td><p>EEPROM simulator</p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_EEPROM_SIMULATOR" title="CONFIG_EEPROM_SIMULATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_EEPROM_SIMULATOR</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-odd"><td><p>EEPROM</p></td>
+<td><p>EEPROM emulator</p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_EEPROM_EMULATOR" title="CONFIG_EEPROM_EMULATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_EEPROM_EMULATOR</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-even"><td><p>Ethernet</p></td>
+<td><p><a class="reference internal" href="#nsim-per-ethe"><span class="std std-ref">Eth native_tap</span></a></p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_ETH_NATIVE_TAP" title="CONFIG_ETH_NATIVE_TAP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ETH_NATIVE_TAP</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-odd"><td><p>Flash</p></td>
+<td><p><a class="reference internal" href="#nsim-per-flash-simu"><span class="std std-ref">Flash simulator</span></a></p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_FLASH_SIMULATOR" title="CONFIG_FLASH_SIMULATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FLASH_SIMULATOR</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-even"><td><p>FUSE</p></td>
+<td><p><a class="reference internal" href="#native-fuse-flash"><span class="std std-ref">Host based filesystem access</span></a></p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_FUSE_FS_ACCESS" title="CONFIG_FUSE_FS_ACCESS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FUSE_FS_ACCESS</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-odd"><td><p>GPIO</p></td>
+<td><p>GPIO emulator</p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_GPIO_EMUL" title="CONFIG_GPIO_EMUL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_GPIO_EMUL</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-even"><td><p>GPIO</p></td>
+<td><p>SDL GPIO emulator</p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_GPIO_EMUL_SDL" title="CONFIG_GPIO_EMUL_SDL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_GPIO_EMUL_SDL</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-odd"><td><p>HWINFO</p></td>
+<td><p>HWINFO native</p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_HWINFO_NATIVE" title="CONFIG_HWINFO_NATIVE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HWINFO_NATIVE</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-even"><td><p>I2C</p></td>
+<td><p>I2C emulator</p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_I2C_EMUL" title="CONFIG_I2C_EMUL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_I2C_EMUL</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-odd"><td><p>Input</p></td>
+<td><p>Input SDL touch</p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_INPUT_SDL_TOUCH" title="CONFIG_INPUT_SDL_TOUCH"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INPUT_SDL_TOUCH</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-even"><td><p>Input</p></td>
+<td><p>Linux evdev</p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_NATIVE_LINUX_EVDEV" title="CONFIG_NATIVE_LINUX_EVDEV"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NATIVE_LINUX_EVDEV</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-odd"><td><p>Logger backend</p></td>
+<td><p><a class="reference internal" href="#nsim-back-logger"><span class="std std-ref">Native backend</span></a></p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_LOG_BACKEND_NATIVE_POSIX" title="CONFIG_LOG_BACKEND_NATIVE_POSIX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_BACKEND_NATIVE_POSIX</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-even"><td><p>Offloaded sockets</p></td>
+<td><p><a class="reference internal" href="#nsim-per-offloaded-sockets"><span class="std std-ref">Offloaded sockets driver</span></a></p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_NATIVE_OFFLOADED_SOCKETS" title="CONFIG_NET_NATIVE_OFFLOADED_SOCKETS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_NATIVE_OFFLOADED_SOCKETS</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-odd"><td><p>RTC</p></td>
+<td><p>RTC emul</p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_RTC_EMUL" title="CONFIG_RTC_EMUL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_RTC_EMUL</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-even"><td><p>Serial</p></td>
+<td><p><a class="reference internal" href="#native-ptty-uart"><span class="std std-ref">UART native PTY</span></a></p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_UART_NATIVE_PTY" title="CONFIG_UART_NATIVE_PTY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_UART_NATIVE_PTY</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-odd"><td><p>Serial</p></td>
+<td><p><a class="reference internal" href="#native-tty-uart"><span class="std std-ref">UART native TTY</span></a></p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_UART_NATIVE_TTY" title="CONFIG_UART_NATIVE_TTY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_UART_NATIVE_TTY</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-even"><td><p>SPI</p></td>
+<td><p>SPI emul</p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_SPI_EMUL" title="CONFIG_SPI_EMUL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SPI_EMUL</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-odd"><td><p>System tick</p></td>
+<td><p>Native_sim timer</p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_NATIVE_SIM_TIMER" title="CONFIG_NATIVE_SIM_TIMER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NATIVE_SIM_TIMER</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-even"><td><p>Tracing</p></td>
+<td><p><a class="reference internal" href="#nsim-back-trace"><span class="std std-ref">Posix tracing backend</span></a></p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_TRACING_BACKEND_POSIX" title="CONFIG_TRACING_BACKEND_POSIX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TRACING_BACKEND_POSIX</span></code></a></p></td>
+<td><p>All</p></td>
+</tr>
+<tr class="row-odd"><td><p>USB</p></td>
+<td><p><a class="reference internal" href="#nsim-per-usb"><span class="std std-ref">USB native posix</span></a></p></td>
+<td><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_USB_NATIVE_POSIX" title="CONFIG_USB_NATIVE_POSIX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USB_NATIVE_POSIX</span></code></a></p></td>
+<td><p>Host libC</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,150 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: dac-leds
+.. _dtbinding_dac_leds:
+
+dac-leds
+########
+
+.. sidebar:: Overview
+
+   :Name: ``dac-leds``
+   :Vendor: :ref:`Generic or vendor-independent <dt_no_vendor>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=dac-leds>` using
+               this compatible
+   :Driver: :zephyr_file:`drivers/led/led_dac.c`
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   Group of DAC-controlled LEDs.
+
+   Each LED is defined in a child node of the dac-leds node.
+
+Examples
+********
+
+.. code-block:: dts
+
+   / {
+           leds {
+                   compatible = "dac-leds";
+                   /* led_0 uses dac1 channel 0 with 12 bit resolution. */
+                   led_0 {
+                           dac-dev = <&dac1>;
+                           channel = <0>;
+                           resolution = <12>;
+                   };
+                   /* led_1 uses dac1 channel 1 with 12 bit resolution and is setup to supply an
+                    * LED directly.
+                    */
+                   led_1 {
+                           dac-dev = <&dac1>;
+                           channel = <1>;
+                           resolution = <12>;
+                           voltage-min-brightness-mv = <1400>;
+                           voltage-max-brightness-mv = <2700>;
+                           voltage-max-dac-mv = <3300>;
+                           output-buffer;
+                   };
+           };
+   };
+
+
+Properties
+**********
+
+Top level properties
+====================
+
+No top-level properties.
+
+Child node properties
+=====================
+
+.. list-table::
+   :widths: 1 1 4
+   :header-rows: 1
+
+   * - Name
+     - Type
+     - Details
+
+   * - ``dac-dev``
+     - ``phandle``
+     - .. code-block:: none
+
+          Property containing phandle to DAC e.g. &dac.
+
+
+
+       This property is **required**.
+
+   * - ``channel``
+     - ``int``
+     - .. code-block:: none
+
+          The DAC channel.
+
+
+
+       This property is **required**.
+
+   * - ``resolution``
+     - ``int``
+     - .. code-block:: none
+
+          The DAC resolution to use.
+
+
+
+       This property is **required**.
+
+   * - ``voltage-min-brightness-mv``
+     - ``int``
+     - .. code-block:: none
+
+          Voltage at brightness 0%.
+          If not specified the minimum DAC output voltage is used.
+
+
+
+   * - ``voltage-max-brightness-mv``
+     - ``int``
+     - .. code-block:: none
+
+          Voltage at brightness 100%.
+          If not specified the maximum DAC output voltage is used.
+
+
+
+   * - ``voltage-max-dac-mv``
+     - ``int``
+     - .. code-block:: none
+
+          The DAC maximum output voltage.
+          Required if voltage-min-brightness-mv or voltage-max-brightness-mv is set.
+
+
+
+   * - ``output-buffer``
+     - ``boolean``
+     - .. code-block:: none
+
+          Enable the output buffer of the DAC.
+          This is required if it is used to drive an LED directly.
+
+
+

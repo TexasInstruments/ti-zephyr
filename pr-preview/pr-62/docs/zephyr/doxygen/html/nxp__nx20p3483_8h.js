@@ -1,0 +1,26 @@
+var nxp__nx20p3483_8h =
+[
+    [ "NX20P3483_I_THRESHOLD_0_400", "nxp__nx20p3483_8h.html#a01e88bd25544ef1b78dd827d1c2e5617", null ],
+    [ "NX20P3483_I_THRESHOLD_0_600", "nxp__nx20p3483_8h.html#a01c0a5e748cbec1d0eaacfd96777c3ed", null ],
+    [ "NX20P3483_I_THRESHOLD_0_800", "nxp__nx20p3483_8h.html#aa37b0b29dd9f9dcf7105e5874bdcd2dd", null ],
+    [ "NX20P3483_I_THRESHOLD_1_000", "nxp__nx20p3483_8h.html#aa82642189aa6ac76be81e53a27f3762a", null ],
+    [ "NX20P3483_I_THRESHOLD_1_200", "nxp__nx20p3483_8h.html#a7ddaafb391b23fc3a2f12c8ce60c23d1", null ],
+    [ "NX20P3483_I_THRESHOLD_1_400", "nxp__nx20p3483_8h.html#a7d6bae95fc42879ca0371b58404a68ef", null ],
+    [ "NX20P3483_I_THRESHOLD_1_600", "nxp__nx20p3483_8h.html#a6875038b55b68cb0a86a1dd47b408405", null ],
+    [ "NX20P3483_I_THRESHOLD_1_800", "nxp__nx20p3483_8h.html#a5ca486d29fe42aa5087936d9ddf4035c", null ],
+    [ "NX20P3483_I_THRESHOLD_2_000", "nxp__nx20p3483_8h.html#aad5dabb5f3fc9c58caacdf46f0fb2679", null ],
+    [ "NX20P3483_I_THRESHOLD_2_200", "nxp__nx20p3483_8h.html#aa57c7f675aa36b162828c3400210d993", null ],
+    [ "NX20P3483_I_THRESHOLD_2_400", "nxp__nx20p3483_8h.html#ad23e7f07522a6a3cd3e25ceec5d4ee4b", null ],
+    [ "NX20P3483_I_THRESHOLD_2_600", "nxp__nx20p3483_8h.html#a2b5e221c6dad9c413617e3f12a7ca494", null ],
+    [ "NX20P3483_I_THRESHOLD_2_800", "nxp__nx20p3483_8h.html#aa3b9477158e4a6c9d2b4928f587e042d", null ],
+    [ "NX20P3483_I_THRESHOLD_3_000", "nxp__nx20p3483_8h.html#ad6f168c120300621e64501b60281595c", null ],
+    [ "NX20P3483_I_THRESHOLD_3_200", "nxp__nx20p3483_8h.html#afe418b67bd88404754160e81dd11513f", null ],
+    [ "NX20P3483_I_THRESHOLD_3_400", "nxp__nx20p3483_8h.html#a3bd75e69586f1eb2c940d6084835b7e8", null ],
+    [ "NX20P3483_U_THRESHOLD_10_0", "nxp__nx20p3483_8h.html#a215d3560f7b36c3a8695c2115cc4c049", null ],
+    [ "NX20P3483_U_THRESHOLD_11_5", "nxp__nx20p3483_8h.html#a19a12afc1b81ef3c168427f9f73ee063", null ],
+    [ "NX20P3483_U_THRESHOLD_14_0", "nxp__nx20p3483_8h.html#a17d0763919603fd93005f250f552936a", null ],
+    [ "NX20P3483_U_THRESHOLD_17_0", "nxp__nx20p3483_8h.html#a88d4cc486beaf9100ab2daf011ddd0a7", null ],
+    [ "NX20P3483_U_THRESHOLD_23_0", "nxp__nx20p3483_8h.html#a2b8ac5267360db1c585f7063e65e9e80", null ],
+    [ "NX20P3483_U_THRESHOLD_6_0", "nxp__nx20p3483_8h.html#a719ad4e492dbb242087ef4e4d493a19d", null ],
+    [ "NX20P3483_U_THRESHOLD_6_8", "nxp__nx20p3483_8h.html#adcca7412607bffd0ce9829f5be057fde", null ]
+];

@@ -1,0 +1,692 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bluetooth: GAP Shell &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=b2ece5be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/tabs.css?v=a5c4661c" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/connectivity/bluetooth/shell/host/gap.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script src="../../../../_static/tabs.js?v=3030b3cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Bluetooth: GATT Shell" href="gatt.html" />
+    <link rel="prev" title="Bluetooth: Classic: RFCOMM Shell" href="../classic/rfcomm.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">Connectivity</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">Bluetooth</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../features.html">Supported features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-qual.html">Qualification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-arch.html">Stack Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-le-host.html">LE Host</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/audio/bluetooth-le-audio-arch.html">LE Audio Stack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/audio/bluetooth-le-audio-arch.html#le-audio-resources">LE Audio resources</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-ctlr-arch.html">LE Controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-dev.html">Application Development</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth-tools.html">Tools</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../bluetooth-shell.html">Shell</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../audio/bap.html">Bluetooth: Basic Audio Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../audio/bap_broadcast_assistant.html">Bluetooth: Basic Audio Profile: Broadcast Assistant Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../audio/bap_scan_delegator.html">Bluetooth: Basic Audio Profile: Scan Delegator Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../audio/cap.html">Bluetooth: Common Audio Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../audio/ccp.html">Bluetooth: Call Control Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../audio/csip.html">Bluetooth: Coordinated Set Identification Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../audio/gmap.html">Bluetooth: Gaming Audio Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../audio/mcp.html">Bluetooth: Media Control Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../audio/tbs.html">Bluetooth: Telephone Bearer Service Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../audio/tmap.html">Bluetooth: Telephone and Media Audio Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../audio/pbp.html">Bluetooth: Public Broadcast Profile Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../classic/a2dp.html">Bluetooth: A2DP Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../classic/avrcp.html">Bluetooth: Classic: AVRCP Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../classic/goep.html">Bluetooth: Classic: GOEP Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../classic/hfp.html">Bluetooth: Classic: HFP Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../classic/l2cap.html">Bluetooth: Classic: L2CAP Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../classic/rfcomm.html">Bluetooth: Classic: RFCOMM Shell</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Bluetooth: GAP Shell</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#identities">Identities</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#scan-for-devices">Scan for devices</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#connecting-to-a-device">Connecting to a device</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#advertising">Advertising</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#filter-accept-list">Filter Accept List</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#enabling-security">Enabling security</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="gatt.html">Bluetooth: GATT Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="iso.html">Bluetooth: Isochronous Channels Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="l2cap.html">Bluetooth: L2CAP Shell</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-shell.html#bluetooth-shell-setup-and-usage">Bluetooth Shell Setup and Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-shell.html#logging">Logging</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../canbus/index.html">Controller Area Network (CAN) Bus Protocols</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../networking/index.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lora_lorawan/index.html">LoRa and LoRaWAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../usb/index.html">USB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modbus/index.html">Modbus</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">Connectivity</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Bluetooth</a> &raquo;</li>
+  
+     <li><a href="../../bluetooth-shell.html">Shell</a> &raquo;</li>
+  
+  <li>Bluetooth: GAP Shell</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/connectivity/bluetooth/shell/host/gap.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27connectivity%2Fbluetooth%2Fshell%2Fhost%2Fgap%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Bluetooth+Host%2Carea%3A+Bluetooth&env=-+Page%3A+connectivity%2Fbluetooth%2Fshell%2Fhost%2Fgap%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="bluetooth-gap-shell">
+<h1>Bluetooth: GAP Shell<a class="headerlink" href="#bluetooth-gap-shell" title="Link to this heading"></a></h1>
+<p>The GAP shell is the “main” shell of Bluetooth and handles connection management, scanning,
+advertising, and more.</p>
+<section id="identities">
+<h2>Identities<a class="headerlink" href="#identities" title="Link to this heading"></a></h2>
+<p>Identities are a Zephyr host concept, allowing a single physical device to behave like multiple
+logical Bluetooth devices.</p>
+<p>The shell allows the creation of multiple identities, to a maximum that is set by the Kconfig symbol
+<a class="reference internal" href="../../../../kconfig.html#CONFIG_BT_ID_MAX" title="CONFIG_BT_ID_MAX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_ID_MAX</span></code></a>. To create a new identity, use <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">id-create</span></code> command. You
+can then use it by selecting it with its ID <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">id-select</span> <span class="pre">&lt;id&gt;</span></code>. Finally, you can list all the
+available identities with <code class="code docutils literal notranslate"><span class="pre">id-show</span></code>.</p>
+</section>
+<section id="scan-for-devices">
+<h2>Scan for devices<a class="headerlink" href="#scan-for-devices" title="Link to this heading"></a></h2>
+<p>Start scanning by using the <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">scan</span> <span class="pre">on</span></code> command. Depending on the environment you’re in, you
+may see a lot of lines printed on the shell. To stop the scan, run <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">scan</span> <span class="pre">off</span></code>, the
+scrolling should stop.</p>
+<p>Here is an example of what you can expect:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bt<span class="w"> </span>scan<span class="w"> </span>on
+<span class="go">Bluetooth active scan enabled</span>
+<span class="go">[DEVICE]: CB:01:1A:2D:6E:AE (random), AD evt type 0, RSSI -78  C:1 S:1 D:0 SR:0 E:0 Prim: LE 1M, Secn: No packets, Interval: 0x0000 (0 us), SID: 0xff</span>
+<span class="go">[DEVICE]: 20:C2:EE:59:85:5B (random), AD evt type 3, RSSI -62  C:0 S:0 D:0 SR:0 E:0 Prim: LE 1M, Secn: No packets, Interval: 0x0000 (0 us), SID: 0xff</span>
+<span class="go">[DEVICE]: E3:72:76:87:2F:E8 (random), AD evt type 3, RSSI -74  C:0 S:0 D:0 SR:0 E:0 Prim: LE 1M, Secn: No packets, Interval: 0x0000 (0 us), SID: 0xff</span>
+<span class="go">[DEVICE]: 1E:19:25:8A:CB:84 (random), AD evt type 3, RSSI -67  C:0 S:0 D:0 SR:0 E:0 Prim: LE 1M, Secn: No packets, Interval: 0x0000 (0 us), SID: 0xff</span>
+<span class="go">[DEVICE]: 26:42:F3:D5:A0:86 (random), AD evt type 3, RSSI -73  C:0 S:0 D:0 SR:0 E:0 Prim: LE 1M, Secn: No packets, Interval: 0x0000 (0 us), SID: 0xff</span>
+<span class="go">[DEVICE]: 0C:61:D1:B9:5D:9E (random), AD evt type 3, RSSI -87  C:0 S:0 D:0 SR:0 E:0 Prim: LE 1M, Secn: No packets, Interval: 0x0000 (0 us), SID: 0xff</span>
+<span class="go">[DEVICE]: 20:C2:EE:59:85:5B (random), AD evt type 3, RSSI -66  C:0 S:0 D:0 SR:0 E:0 Prim: LE 1M, Secn: No packets, Interval: 0x0000 (0 us), SID: 0xff</span>
+<span class="go">[DEVICE]: 25:3F:7A:EE:0F:55 (random), AD evt type 3, RSSI -83  C:0 S:0 D:0 SR:0 E:0 Prim: LE 1M, Secn: No packets, Interval: 0x0000 (0 us), SID: 0xff</span>
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>scan<span class="w"> </span>off
+<span class="go">Scan successfully stopped</span>
+</pre></div>
+</div>
+<p>As you can see, this can lead to a high number of results. To reduce that number and easily find a
+specific device, you can enable scan filters. There are four types of filters: by name, by RSSI, by
+address and by periodic advertising interval. To apply a filter, use the <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">scan-set-filter</span></code>
+command followed by the type of filters. You can add multiple filters by using the commands again.</p>
+<p>For example, if you want to look only for devices with the name <em>test shell</em>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bt<span class="w"> </span>scan-filter-set<span class="w"> </span>name<span class="w"> </span><span class="s2">&quot;test shell&quot;</span>
+</pre></div>
+</div>
+<p>Or if you want to look for devices at a very close range:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bt<span class="w"> </span>scan-filter-set<span class="w"> </span>rssi<span class="w"> </span>-40
+<span class="go">RSSI cutoff set at -40 dB</span>
+</pre></div>
+</div>
+<p>Finally, if you want to remove all filters:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bt<span class="w"> </span>scan-filter-clear<span class="w"> </span>all
+</pre></div>
+</div>
+<p>You can use the command <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">scan</span> <span class="pre">on</span></code> to create an <em>active</em> scanner, meaning that the scanner
+will ask the advertisers for more information by sending a <em>scan request</em> packet. Alternatively, you
+can create a <em>passive scanner</em> by using the <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">scan</span> <span class="pre">passive</span></code> command, so the scanner will not
+ask the advertiser for more information.</p>
+</section>
+<section id="connecting-to-a-device">
+<h2>Connecting to a device<a class="headerlink" href="#connecting-to-a-device" title="Link to this heading"></a></h2>
+<p>To connect to a device, you need to know its address and type of address and use the
+<code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">connect</span></code> command with the address and the type as arguments.</p>
+<p>Here is an example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bt<span class="w"> </span>connect<span class="w"> </span><span class="m">52</span>:84:F6:BD:CE:48<span class="w"> </span>random
+<span class="go">Connection pending</span>
+<span class="go">Connected: 52:84:F6:BD:CE:48 (random)</span>
+<span class="go">Remote LMP version 5.3 (0x0c) subversion 0xffff manufacturer 0x05f1</span>
+<span class="go">LE Features: 0x000000000001412f</span>
+<span class="go">LE PHY updated: TX PHY LE 2M, RX PHY LE 2M</span>
+<span class="go">LE conn  param req: int (0x0018, 0x0028) lat 0 to 42</span>
+<span class="go">LE conn param updated: int 0x0028 lat 0 to 42</span>
+</pre></div>
+</div>
+<p>You can list the active connections of the shell using the <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">connections</span></code> command. The shell
+maximum number of connections is defined by <a class="reference internal" href="../../../../kconfig.html#CONFIG_BT_MAX_CONN" title="CONFIG_BT_MAX_CONN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_MAX_CONN</span></code></a>. You can disconnect
+from a connection with the
+<code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">disconnect</span> <span class="pre">&lt;address:</span> <span class="pre">XX:XX:XX:XX:XX:XX&gt;</span> <span class="pre">&lt;type:</span> <span class="pre">(public|random)&gt;</span></code> command.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you were scanning just before, you can connect to the last scanned device by
+simply running the <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">connect</span></code> command.</p>
+<p>Alternatively, you can use the <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">connect-name</span> <span class="pre">&lt;name&gt;</span></code> command to automatically
+enable scanning with a name filter and connect to the first match.</p>
+</div>
+</section>
+<section id="advertising">
+<h2>Advertising<a class="headerlink" href="#advertising" title="Link to this heading"></a></h2>
+<p>Begin advertising by using the <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">advertise</span> <span class="pre">on</span></code> command. This will use the default parameters
+and advertise a resolvable private address with the name of the device. You can choose to use the
+identity address instead by running the <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">advertise</span> <span class="pre">on</span> <span class="pre">identity</span></code> command. To stop
+advertising use the <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">advertise</span> <span class="pre">off</span></code> command.</p>
+<p>To enable more advanced features of advertising, you should create an advertiser using the
+<code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">adv-create</span></code> command. Parameters for the advertiser can be passed either at the creation of
+it or by using the <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">adv-param</span></code> command. To begin advertising with this newly created
+advertiser, use the <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">adv-start</span></code> command, and then the <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">adv-stop</span></code> command to stop
+advertising.</p>
+<p>When using the custom advertisers, you can choose if it will be connectable or scannable. This leads
+to four options: <code class="code docutils literal notranslate"><span class="pre">conn-scan</span></code>, <code class="code docutils literal notranslate"><span class="pre">conn-nscan</span></code>, <code class="code docutils literal notranslate"><span class="pre">nconn-scan</span></code> and <code class="code docutils literal notranslate"><span class="pre">nconn-nscan</span></code>.
+Those parameters are mandatory when creating an advertiser or updating its parameters.</p>
+<p>For example, if you want to create a connectable and scannable advertiser and start it:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bt<span class="w"> </span>adv-create<span class="w"> </span>conn-scan
+<span class="go">Created adv id: 0, adv: 0x200022f0</span>
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>adv-start
+<span class="go">Advertiser[0] 0x200022f0 set started</span>
+</pre></div>
+</div>
+<p>You may notice that with this, the custom advertiser does not advertise the device name; you need to
+add it. Continuing from the previous example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bt<span class="w"> </span>adv-stop
+<span class="go">Advertiser set stopped</span>
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>adv-data<span class="w"> </span>dev-name
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>adv-start
+<span class="go">Advertiser[0] 0x200022f0 set started</span>
+</pre></div>
+</div>
+<p>You should now see the name of the device in the advertising data. You can also set a custom name by
+using <code class="code docutils literal notranslate"><span class="pre">name</span> <span class="pre">&lt;custom</span> <span class="pre">name&gt;</span></code> instead of <code class="code docutils literal notranslate"><span class="pre">dev-name</span></code>. It is also possible to set the
+advertising data manually with the <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">adv-data</span></code> command. The following example shows how
+to set the advertiser name with it using raw advertising data:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bt<span class="w"> </span>adv-create<span class="w"> </span>conn-scan
+<span class="go">Created adv id: 0, adv: 0x20002348</span>
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>adv-data<span class="w"> </span>1009426C7565746F6F74682D5368656C6C
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>adv-start
+<span class="go">Advertiser[0] 0x20002348 set started</span>
+</pre></div>
+</div>
+<p>The data must be formatted according to the Bluetooth Core Specification (see version 5.3, vol. 3,
+part C, 11). In this example, the first octet is the size of the data (the data and one octet for
+the data type), the second one is the type of data, <code class="docutils literal notranslate"><span class="pre">0x09</span></code> is the Complete Local Name and the
+remaining data are the name in ASCII. So, on the other device you should see the name
+<em>Bluetooth-Shell</em>.</p>
+<p>When advertising, if others devices use an <em>active</em> scanner, you may receive <em>scan request</em> packets.
+To visualize those packets, you can add <code class="code docutils literal notranslate"><span class="pre">scan-reports</span></code> to the parameters of your advertiser.</p>
+<section id="directed-advertising">
+<h3>Directed Advertising<a class="headerlink" href="#directed-advertising" title="Link to this heading"></a></h3>
+<p>It is possible to use directed advertising on the shell if you want to reconnect to a device. The
+following example demonstrates how to create a directed advertiser with the address specified right
+after the parameter <code class="code docutils literal notranslate"><span class="pre">directed</span></code>. The <code class="code docutils literal notranslate"><span class="pre">low</span></code> parameter indicates that we want to use the
+low duty cycle mode, and the <code class="code docutils literal notranslate"><span class="pre">dir-rpa</span></code> parameter is required if the remote device is
+privacy-enabled and supports address resolution of the target address in directed advertisement.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bt<span class="w"> </span>adv-create<span class="w"> </span>conn-scan<span class="w"> </span>directed<span class="w"> </span>D7:54:03:CE:F3:B4<span class="w"> </span>random<span class="w"> </span>low<span class="w"> </span>dir-rpa
+<span class="go">Created adv id: 0, adv: 0x20002348</span>
+</pre></div>
+</div>
+<p>After that, you can start the advertiser and then the target device will be able to reconnect.</p>
+</section>
+<section id="extended-advertising">
+<h3>Extended Advertising<a class="headerlink" href="#extended-advertising" title="Link to this heading"></a></h3>
+<p>Let’s now have a look at some extended advertising features. To enable extended advertising, use the
+<code class="docutils literal notranslate"><span class="pre">ext-adv</span></code> parameter.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bt<span class="w"> </span>adv-create<span class="w"> </span>conn-nscan<span class="w"> </span>ext-adv
+<span class="go">Created adv id: 0, adv: 0x200022f0</span>
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>adv-start
+<span class="go">Advertiser[0] 0x200022f0 set started</span>
+</pre></div>
+</div>
+<p>This will create an extended advertiser, that is connectable and non-scannable.</p>
+</section>
+<section id="encrypted-advertising-data">
+<h3>Encrypted Advertising Data<a class="headerlink" href="#encrypted-advertising-data" title="Link to this heading"></a></h3>
+<p>Zephyr has support for the Encrypted Advertising Data feature. The <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">encrypted-ad</span></code>
+sub-commands allow managing the advertising data of a given advertiser.</p>
+<p>To encrypt the advertising data, key materials need to be provided, that can be done with <code class="code docutils literal notranslate"><span class="pre">bt</span>
+<span class="pre">encrypted-ad</span> <span class="pre">set-keys</span> <span class="pre">&lt;session</span> <span class="pre">key&gt;</span> <span class="pre">&lt;init</span> <span class="pre">vector&gt;</span></code>. The session key is 16 bytes long and the
+initialisation vector is 8 bytes long.</p>
+<p>You can add advertising data by using <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">encrypted-ad</span> <span class="pre">add-ad</span></code> and <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">encrypted-ad</span>
+<span class="pre">add-ead</span></code>. The former will take add one advertising data structure (as defined in the Core
+Specification), when the later will read the given data, encrypt them and then add the generated
+encrypted advertising data structure. It’s possible to mix encrypted and non-encrypted data, when
+done adding advertising data, <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">encrypted-ad</span> <span class="pre">commit-ad</span></code> can be used to apply the change to
+the data to the selected advertiser. After that the advertiser can be started as described
+previously. It’s possible to clear the advertising data by using <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">encrypted-ad</span> <span class="pre">clear-ad</span></code>.</p>
+<p>On the Central side, it’s possible to decrypt the received encrypted advertising data by setting the
+correct keys material as described earlier and then enabling the decrypting of the data with
+<code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">encrypted-ad</span> <span class="pre">decrypt-scan</span> <span class="pre">on</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To see the advertising data in the scan report <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">scan-verbose-output</span></code> need to be
+enabled.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It’s possible to increase the length of the advertising data by increasing the value of
+<a class="reference internal" href="../../../../kconfig.html#CONFIG_BT_CTLR_ADV_DATA_LEN_MAX" title="CONFIG_BT_CTLR_ADV_DATA_LEN_MAX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_CTLR_ADV_DATA_LEN_MAX</span></code></a> and
+<a class="reference internal" href="../../../../kconfig.html#CONFIG_BT_CTLR_SCAN_DATA_LEN_MAX" title="CONFIG_BT_CTLR_SCAN_DATA_LEN_MAX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_CTLR_SCAN_DATA_LEN_MAX</span></code></a>.</p>
+</div>
+<p>Here is a simple example demonstrating the usage of EAD:</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-UGVyaXBoZXJhbA==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-UGVyaXBoZXJhbA==" name="UGVyaXBoZXJhbA==" role="tab" tabindex="0">Peripheral</button><button aria-controls="panel-0-Q2VudHJhbA==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-Q2VudHJhbA==" name="Q2VudHJhbA==" role="tab" tabindex="-1">Central</button></div><div aria-labelledby="tab-0-UGVyaXBoZXJhbA==" class="sphinx-tabs-panel group-tab" id="panel-0-UGVyaXBoZXJhbA==" name="UGVyaXBoZXJhbA==" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bt<span class="w"> </span>init
+<span class="go">...</span>
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>adv-create<span class="w"> </span>conn-nscan<span class="w"> </span>ext-adv
+<span class="go">Created adv id: 0, adv: 0x81769a0</span>
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>encrypted-ad<span class="w"> </span>set-keys<span class="w"> </span>9ba22d3824efc70feb800c80294cba38<span class="w"> </span>2e83f3d4d47695b6
+<span class="go">session key set to:</span>
+<span class="go">00000000: 9b a2 2d 38 24 ef c7 0f  eb 80 0c 80 29 4c ba 38 |..-8$... ....)L.8|</span>
+<span class="go">initialisation vector set to:</span>
+<span class="go">00000000: 2e 83 f3 d4 d4 76 95 b6                          |.....v..         |</span>
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>encrypted-ad<span class="w"> </span>add-ad<span class="w"> </span>06097368656C6C
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>encrypted-ad<span class="w"> </span>add-ead<span class="w"> </span>03ffdead03ffbeef
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>encrypted-ad<span class="w"> </span>commit-ad
+<span class="go">Advertising data for Advertiser[0] 0x81769a0 updated.</span>
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>adv-start
+<span class="go">Advertiser[0] 0x81769a0 set started</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-Q2VudHJhbA==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-Q2VudHJhbA==" name="Q2VudHJhbA==" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bt<span class="w"> </span>init
+<span class="go">...</span>
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>scan-verbose-output<span class="w"> </span>on
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>encrypted-ad<span class="w"> </span>set-keys<span class="w"> </span>9ba22d3824efc70feb800c80294cba38<span class="w"> </span>2e83f3d4d47695b6
+<span class="go">session key set to:</span>
+<span class="go">00000000: 9b a2 2d 38 24 ef c7 0f  eb 80 0c 80 29 4c ba 38 |..-8$... ....)L.8|</span>
+<span class="go">initialisation vector set to:</span>
+<span class="go">00000000: 2e 83 f3 d4 d4 76 95 b6                          |.....v..         |</span>
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>encrypted-ad<span class="w"> </span>decrypt-scan<span class="w"> </span>on
+<span class="go">Received encrypted advertising data will now be decrypted using provided key materials.</span>
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>scan<span class="w"> </span>on
+<span class="go">Bluetooth active scan enabled</span>
+<span class="go">[DEVICE]: 68:49:30:68:49:30 (random), AD evt type 5, RSSI -59   shell C:1 S:0 D:0 SR:0 E:1 Prim: LE 1M, Secn: LE 2M, Interval: 0x0000 (0 us), SID: 0x0</span>
+<span class="go">        [SCAN DATA START - EXT_ADV]</span>
+<span class="go">        Type 0x09:    shell</span>
+<span class="go">        Type 0x31: Encrypted Advertising Data: 0xe2, 0x17, 0xed, 0x04, 0xe7, 0x02, 0x1d, 0xc9, 0x40, 0x07, uart:~0x18, 0x90, 0x6c, 0x4b, 0xfe, 0x34, 0xad</span>
+<span class="go">        [START DECRYPTED DATA]</span>
+<span class="go">        Type 0xff: 0xde, 0xad</span>
+<span class="go">        Type 0xff: 0xbe, 0xef</span>
+<span class="go">        [END DECRYPTED DATA]</span>
+<span class="go">        [SCAN DATA END]</span>
+<span class="go">...</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+</section>
+<section id="filter-accept-list">
+<h2>Filter Accept List<a class="headerlink" href="#filter-accept-list" title="Link to this heading"></a></h2>
+<p>It’s possible to create a list of allowed addresses that can be used to
+connect to those addresses automatically. Here is how to do it:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bt<span class="w"> </span>fal-add<span class="w"> </span><span class="m">47</span>:38:76:EA:29:36<span class="w"> </span>random
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>fal-add<span class="w"> </span><span class="m">66</span>:C8:80:2A:05:73<span class="w"> </span>random
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>fal-connect<span class="w"> </span>on
+</pre></div>
+</div>
+<p>The shell will then connect to the first available device. In the example, if both devices are
+advertising at the same time, we will connect to the first address added to the list.</p>
+<p>The Filter Accept List can also be used for scanning or advertising by using the option <code class="code docutils literal notranslate"><span class="pre">fal</span></code>.
+For example, if we want to scan for a bunch of selected addresses, we can set up a Filter Accept
+List:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bt<span class="w"> </span>fal-add<span class="w"> </span><span class="m">65</span>:4B:9E:83:AF:73<span class="w"> </span>random
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>fal-add<span class="w"> </span><span class="m">73</span>:72:82:B4:8F:B9<span class="w"> </span>random
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>fal-add<span class="w"> </span>5D:85:50:1C:72:64<span class="w"> </span>random
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>scan<span class="w"> </span>on<span class="w"> </span>fal
+</pre></div>
+</div>
+<p>You should see only those three addresses reported by the scanner.</p>
+</section>
+<section id="enabling-security">
+<h2>Enabling security<a class="headerlink" href="#enabling-security" title="Link to this heading"></a></h2>
+<p>When connected to a device, you can enable multiple levels of security, here is the list for
+Bluetooth LE:</p>
+<ul class="simple">
+<li><p><strong>1</strong> No encryption and no authentication;</p></li>
+<li><p><strong>2</strong> Encryption and no authentication;</p></li>
+<li><p><strong>3</strong> Encryption and authentication;</p></li>
+<li><p><strong>4</strong> Bluetooth LE Secure Connection.</p></li>
+</ul>
+<p>To enable security, use the <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">security</span> <span class="pre">&lt;level&gt;</span></code> command. For levels requiring authentication
+(level 3 and above), you must first set the authentication method. To do it, you can use the
+<code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">auth</span> <span class="pre">all</span></code> command. After that, when you will set the security level, you will be asked to
+confirm the passkey on both devices. On the shell side, do it with the command
+<code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">auth-passkey-confirm</span></code>.</p>
+<section id="pairing">
+<h3>Pairing<a class="headerlink" href="#pairing" title="Link to this heading"></a></h3>
+<p>Enabling authentication requires the devices to be bondable. By default the shell is bondable. You
+can make the shell not bondable using <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">bondable</span> <span class="pre">off</span></code>. You can list all the devices you are
+paired with using the command <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">bonds</span></code>.</p>
+<p>The maximum number of paired devices is set using <a class="reference internal" href="../../../../kconfig.html#CONFIG_BT_MAX_PAIRED" title="CONFIG_BT_MAX_PAIRED"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_MAX_PAIRED</span></code></a>. You can
+remove a paired device using <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">clear</span> <span class="pre">&lt;address:</span> <span class="pre">XX:XX:XX:XX:XX:XX&gt;</span> <span class="pre">&lt;type:</span> <span class="pre">(public|random)&gt;</span></code>
+or remove all paired devices with the command <code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">clear</span> <span class="pre">all</span></code>.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

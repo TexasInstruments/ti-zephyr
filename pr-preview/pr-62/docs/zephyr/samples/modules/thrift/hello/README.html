@@ -1,0 +1,590 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="Implement a simple Apache Thrift client-server application." name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apache Thrift Hello World &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=b2ece5be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/tabs.css?v=a5c4661c" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/samples/modules/thrift/hello/README.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script src="../../../../_static/tabs.js?v=3030b3cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Networking" href="../../../net/net.html" />
+    <link rel="prev" title="Apache Thrift" href="../thrift.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1 current"><a class="category-link reference internal" href="../../../index.html">Samples and Demos</a><ul class="current">
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../application_development/application_development.html">Application Development</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../arch/index.html">Architecture-dependent Samples</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../basic/basic.html">Basic</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../bluetooth/bluetooth.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../boards/boards.html">Boards</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../cpp/cpp.html">C++</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../data_structures/data_structures.html">Data Structures</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../drivers/drivers.html">Drivers</a></li>
+<li class="toctree-l2 current"><a class="category-link reference internal" href="../../index.html">External modules</a><ul class="current">
+<li class="toctree-l3 current"><a class="category-link reference internal" href="../thrift.html">Apache Thrift</a><ul class="current">
+<li class="toctree-l4 current"><a class="code-sample-link current reference internal" href="#" title="Implement a simple Apache Thrift client-server application.">Apache Thrift Hello World</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../cmsis_dsp/cmsis_dsp.html">CMSIS-DSP</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../lvgl/lvgl.html">LVGL</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../tflite-micro/tflite-micro.html">TensorFlow Lite for Microcontrollers</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../chre/README.html" title="Run nanoapps on Zephyr using the Context Hub Runtime Environment (CHRE).">Android's Context Hub Runtime Environment (CHRE)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../canopennode/README.html" title="Use the CANopenNode CANopen protocol stack in Zephyr.">CANopenNode</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../nanopb/README.html" title="Serialize and deserialize structured data using the nanopb module.">Nanopb</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../kernel/index.html">Kernel and Scheduler</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../net/net.html">Networking</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../posix/posix.html">POSIX API</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../psa/index.html">PSA</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../regulator/index.html">Regulator</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../sensor/sensor.html">Sensors</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../shields/shields.html">Shields</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/subsys.html">Subsystems</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../sysbuild/sysbuild.html">Sysbuild</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../tfm_integration/tfm_integration.html">TF-M Integration</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../userspace/index.html">Userspace</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../../synchronization/README.html" title="Manipulate basic kernel synchronization primitives.">Basic Synchronization</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../../philosophers/README.html" title="Implement a solution to the Dining Philosophers problem using Zephyr kernel services.">Dining Philosophers</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../../hello_world/README.html" title="Print &quot;Hello World&quot; to the console.">Hello World</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">Samples and Demos</a> &raquo;</li>
+  
+     <li><a href="../../index.html">External modules</a> &raquo;</li>
+  
+     <li><a href="../thrift.html">Apache Thrift</a> &raquo;</li>
+  
+  <li>Apache Thrift Hello World</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main//samples/modules/thrift/hello/README.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27samples%2Fmodules%2Fthrift%2Fhello%2FREADME%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Samples%2Carea%3A+Thrift%2Carea%3A+Serialization&env=-+Page%3A+samples%2Fmodules%2Fthrift%2Fhello%2FREADME%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="thrift-hello">
+<h1>Apache Thrift Hello World<a class="headerlink" href="#thrift-hello" title="Link to this heading"></a></h1>
+<p>
+                <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main//samples/modules/thrift/hello/README.rst/.." class="btn btn-info fa fa-github"
+                    target="_blank" style="text-align: center;">
+                    Browse source code on GitHub
+                </a>
+                </p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<figure class="align-center">
+<img alt="Thrift Layers" src="../../../../_images/thrift-layers.png" />
+</figure>
+</section>
+<section id="what-is-thrift">
+<h2>What is Thrift?<a class="headerlink" href="#what-is-thrift" title="Link to this heading"></a></h2>
+<p><a class="reference external" href="https://github.com/apache/thrift">Apache Thrift</a> is an <a class="reference external" href="https://en.wikipedia.org/wiki/Interface_description_language">IDL</a> specification, <a class="reference external" href="https://en.wikipedia.org/wiki/Remote_procedure_call">RPC</a> framework, and
+<a class="reference external" href="https://en.wikipedia.org/wiki/Automatic_programming">code generator</a>. It works across all major operating systems, supports over
+27 programming languages, 7 protocols, and 6 low-level transports. Thrift was
+originally developed at <a class="reference external" href="https://thrift.apache.org/static/files/thrift-20070401.pdf">Facebook in 2006</a> and then shared with the
+<a class="reference external" href="https://www.apache.org">Apache Software Foundation</a>. Thrift supports a rich set of types and data
+structures, and abstracts away transport and protocol details, which lets
+developers focus on application logic.</p>
+</section>
+<section id="id1">
+<h2>Overview<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p>This sample application includes a client and server implementing the RPC
+interface described in <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/samples/modules/thrift/hello/hello.thrift">samples/modules/thrift/hello/hello.thrift</a>.
+The purpose of this example is to demonstrate how components at different
+layers in thrift can be combined to build an application with desired features.</p>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Optional Modules</p></li>
+</ul>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Download optional modules with west</span><a class="headerlink" href="#id2" title="Link to this code"></a></div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west config manifest.group-filter -- +optional</span>
+<span class="go">west update</span>
+</pre></div>
+</div>
+</div>
+<ul class="simple">
+<li><p>QEMU Networking (described in <a class="reference internal" href="../../../../connectivity/networking/qemu_setup.html#networking-with-qemu"><span class="std std-ref">Networking with QEMU</span></a>)</p></li>
+<li><p>Thrift dependencies installed for your host OS</p></li>
+</ul>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-VWJ1bnR1" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-VWJ1bnR1" name="VWJ1bnR1" role="tab" tabindex="0">Ubuntu</button><button aria-controls="panel-0-bWFjT1M=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-bWFjT1M=" name="bWFjT1M=" role="tab" tabindex="-1">macOS</button></div><div aria-labelledby="tab-0-VWJ1bnR1" class="sphinx-tabs-panel group-tab" id="panel-0-VWJ1bnR1" name="VWJ1bnR1" role="tabpanel" tabindex="0"><div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">Install thrift dependencies in Ubuntu</span><a class="headerlink" href="#id3" title="Link to this code"></a></div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>libboost-all-dev<span class="w"> </span>thrift-compiler<span class="w"> </span>libthrift-dev
+</pre></div>
+</div>
+</div>
+</div><div aria-labelledby="tab-0-bWFjT1M=" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-bWFjT1M=" name="bWFjT1M=" role="tabpanel" tabindex="0"><div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">Install thrift dependencies in macOS</span><a class="headerlink" href="#id4" title="Link to this code"></a></div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>brew<span class="w"> </span>install<span class="w"> </span>boost<span class="w"> </span>openssl<span class="w"> </span>thrift
+</pre></div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="building-and-running">
+<h2>Building and Running<a class="headerlink" href="#building-and-running" title="Link to this heading"></a></h2>
+<p>This application can be run on a Linux host, with either the server or the
+client in the QEMU environment, and the peer is built and run natively on
+the host.</p>
+<section id="building-the-native-client-and-server">
+<h3>Building the Native Client and Server<a class="headerlink" href="#building-the-native-client-and-server" title="Link to this heading"></a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>make<span class="w"> </span>-j<span class="w"> </span>-C<span class="w"> </span>samples/modules/thrift/hello/client/
+<span class="gp">$ </span>make<span class="w"> </span>-j<span class="w"> </span>-C<span class="w"> </span>samples/modules/thrift/hello/server/
+</pre></div>
+</div>
+<p>Under <code class="docutils literal notranslate"><span class="pre">client/</span></code>, 3 executables will be generated, and components
+used in each layer of them are listed below:</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>hello_client</p></td>
+<td><p>TSocket</p></td>
+<td><p>TBufferedTransport</p></td>
+<td><p>TBinaryProtocol</p></td>
+</tr>
+<tr class="row-even"><td><p>hello_client_compact</p></td>
+<td><p>TSocket</p></td>
+<td><p>TBufferedTransport</p></td>
+<td><p>TCompactProtocol</p></td>
+</tr>
+<tr class="row-odd"><td><p>hello_client_ssl</p></td>
+<td><p>TSSLSocket</p></td>
+<td><p>TBufferedTransport</p></td>
+<td><p>TBinaryProtocol</p></td>
+</tr>
+</tbody>
+</table>
+<p>The same applies for the server. Only the client and the server with the
+same set of stacks can communicate.</p>
+<p>Additionally, there is a <code class="docutils literal notranslate"><span class="pre">hello_client.py</span></code> Python script that can be used
+interchangeably with the <code class="docutils literal notranslate"><span class="pre">hello_client</span></code> C++ application to illustrate the
+cross-language capabilities of Thrift.</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>hello_client.py</p></td>
+<td><p>TSocket</p></td>
+<td><p>TBufferedTransport</p></td>
+<td><p>TBinaryProtocol</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="running-the-zephyr-server-in-qemu">
+<h3>Running the Zephyr Server in QEMU<a class="headerlink" href="#running-the-zephyr-server-in-qemu" title="Link to this heading"></a></h3>
+<p>Build the Zephyr version of the <code class="docutils literal notranslate"><span class="pre">hello/server</span></code> sample application like this:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>board_name<span class="w"> </span>samples/modules/thrift/hello/server
+</pre></div>
+</div>
+<p>To enable advanced features, extra arguments should be passed accordingly:</p>
+<ul class="simple">
+<li><p>TCompactProtocol: <code class="docutils literal notranslate"><span class="pre">-DCONFIG_THRIFT_COMPACT_PROTOCOL=y</span></code></p></li>
+<li><p>TSSLSocket: <code class="docutils literal notranslate"><span class="pre">-DCONF_FILE=&quot;prj.conf</span> <span class="pre">../overlay-tls.conf&quot;</span></code></p></li>
+</ul>
+<p>For example, to build for <code class="docutils literal notranslate"><span class="pre">qemu_x86_64</span></code> with TSSLSocket support:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>qemu_x86_64<span class="w"> </span>samples/modules/thrift/hello/server<span class="w"> </span>--<span class="w"> </span>-DCONF_FILE<span class="o">=</span><span class="s2">&quot;prj.conf ../overlay-tls.conf&quot;</span>
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>run
+</pre></div>
+</div>
+<p>In another terminal, run the <code class="docutils literal notranslate"><span class="pre">hello_client</span></code> sample app compiled for the
+host OS:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./hello_client<span class="w"> </span><span class="m">192</span>.0.2.1
+<span class="gp">$ </span>./hello_client_compact<span class="w"> </span><span class="m">192</span>.0.2.1
+<span class="gp">$ </span>./hello_client_ssl<span class="w"> </span><span class="m">192</span>.0.2.1<span class="w"> </span>../native-cert.pem<span class="w"> </span>../native-key.pem<span class="w"> </span>../qemu-cert.pem
+</pre></div>
+</div>
+<p>You should observe the following in the original <code class="docutils literal notranslate"><span class="pre">hello/server</span></code> terminal:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ping</span>
+<span class="go">echo: Hello, world!</span>
+<span class="go">counter: 1</span>
+<span class="go">counter: 2</span>
+<span class="go">counter: 3</span>
+<span class="go">counter: 4</span>
+<span class="go">counter: 5</span>
+</pre></div>
+</div>
+<p>In the client terminal, run <code class="docutils literal notranslate"><span class="pre">hello_client.py</span></code> app under the host OS (not
+described for compact or ssl variants for brevity):</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./hello_client.py
+</pre></div>
+</div>
+<p>You should observe the following in the original <code class="docutils literal notranslate"><span class="pre">hello/server</span></code> terminal.
+Note that the server’s state is not discarded (the counter continues to
+increase).</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ping</span>
+<span class="go">echo: Hello, world!</span>
+<span class="go">counter: 6</span>
+<span class="go">counter: 7</span>
+<span class="go">counter: 8</span>
+<span class="go">counter: 9</span>
+<span class="go">counter: 10</span>
+</pre></div>
+</div>
+</section>
+<section id="running-the-zephyr-client-in-qemu">
+<h3>Running the Zephyr Client in QEMU<a class="headerlink" href="#running-the-zephyr-client-in-qemu" title="Link to this heading"></a></h3>
+<p>In another terminal, run the <code class="docutils literal notranslate"><span class="pre">hello_server</span></code> sample app compiled for the
+host OS:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./hello_server<span class="w"> </span><span class="m">0</span>.0.0.0
+<span class="gp">$ </span>./hello_server_compact<span class="w"> </span><span class="m">0</span>.0.0.0
+<span class="gp">$ </span>./hello_server_ssl<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>../native-cert.pem<span class="w"> </span>../native-key.pem<span class="w"> </span>../qemu-cert.pem
+</pre></div>
+</div>
+<p>Then, in another terminal, run the corresponding <code class="docutils literal notranslate"><span class="pre">hello/client</span></code> sample:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>qemu_x86_64<span class="w"> </span>samples/modules/thrift/hello/client
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>run
+</pre></div>
+</div>
+<p>The additional arguments for advanced features are the same as
+<code class="docutils literal notranslate"><span class="pre">hello/server</span></code>.</p>
+<p>You should observe the following in the original <code class="docutils literal notranslate"><span class="pre">hello_server</span></code> terminal:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ping</span>
+<span class="go">echo: Hello, world!</span>
+<span class="go">counter: 1</span>
+<span class="go">counter: 2</span>
+<span class="go">counter: 3</span>
+<span class="go">counter: 4</span>
+<span class="go">counter: 5</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<script type="application/ld+json">
+                {"@context": "http://schema.org", "@type": "SoftwareSourceCode", "name": "Apache Thrift Hello World", "description": "Implement a simple Apache Thrift client-server application.", "codeSampleType": "full", "codeRepository": "https://github.com/zephyrproject-rtos/zephyr/blob/main//samples/modules/thrift/hello/README.rst"}
+                </script>
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

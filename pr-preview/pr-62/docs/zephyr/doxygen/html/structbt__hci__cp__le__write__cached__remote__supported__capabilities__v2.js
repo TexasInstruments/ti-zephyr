@@ -1,0 +1,26 @@
+var structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2 =
+[
+    [ "cs_sync_phys_supported", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#a2077365a697d7085d7db97fb35c391f4", null ],
+    [ "handle", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#ac599d7323d560b8f554bbaaf70aabd8b", null ],
+    [ "max_antenna_paths_supported", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#ad7c6799d86889b67d86ca44bac4238a6", null ],
+    [ "max_consecutive_procedures_supported", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#aead25f8f371ed85e66d05af852b90a9e", null ],
+    [ "modes_supported", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#a1ff4fede6b4d942f64ec2b94b222703b", null ],
+    [ "nadm_random_capability", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#a22f1010c9f4de7902480d3f84d499fb1", null ],
+    [ "nadm_sounding_capability", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#a225720841ea95409879d51bd9a031fb7", null ],
+    [ "num_antennas_supported", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#a6bb274c4c2ff4dc2c6136b0bc7515be3", null ],
+    [ "num_config_supported", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#a65a5b6ebdbc5793ca800ee202cb4676c", null ],
+    [ "roles_supported", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#a6eff7fb52e3ef1074eb875af4c79a8aa", null ],
+    [ "rtt_aa_only_n", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#a17d3094a1b93665e755b2111074de42c", null ],
+    [ "rtt_capability", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#a0872c2a5399e1d82f334796dd35379ad", null ],
+    [ "rtt_random_payload_n", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#a214f693e10c331091e34f09c2cfc9749", null ],
+    [ "rtt_sounding_n", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#ad342355fdc6396d6680b7e215ef4b16e", null ],
+    [ "subfeatures_supported", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#a2e8693852819f5e4afa8cae90f8ae92c", null ],
+    [ "t_fcs_times_supported", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#abf661cac9a1a2a5bf38180dbfc486bcd", null ],
+    [ "t_ip1_times_supported", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#ac370abefdc5a7acdf1e3c72093d11018", null ],
+    [ "t_ip2_ipt_times_supported", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#a30cee084044918cb450060a164bd4b30", null ],
+    [ "t_ip2_times_supported", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#a8c63e46cf58623b3ca9cbfa7b802744e", null ],
+    [ "t_pm_times_supported", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#ac930e63945abfc0cdfdaa79164e114fa", null ],
+    [ "t_sw_ipt_time_supported", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#a8aa60cab3469fadd342a0a9b0d1b094f", null ],
+    [ "t_sw_time_supported", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#afbe4805ccd9db70a596afdabb6963885", null ],
+    [ "tx_snr_capability", "structbt__hci__cp__le__write__cached__remote__supported__capabilities__v2.html#ae757536a884e640451e35dd2fca90605", null ]
+];

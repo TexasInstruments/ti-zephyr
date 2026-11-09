@@ -1,0 +1,1581 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Application Development &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/develop/application/index.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Debugging" href="../debug/index.html" />
+    <link rel="prev" title="Environment Variables" href="../env_vars.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Developing with Zephyr</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/index.html">Getting Started Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beyond-GSG.html">Beyond the Getting Started Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env_vars.html">Environment Variables</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Application Development</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#application-types">Application types</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#zephyr-repository-application">Zephyr repository application</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#zephyr-workspace-application">Zephyr workspace application</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#zephyr-freestanding-application">Zephyr freestanding application</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-an-application">Creating an Application</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#using-a-reference-workspace-application">Using a Reference Workspace Application</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#basic-example-application-usage">Basic example-application Usage</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#advanced-example-application-usage">Advanced example-application Usage</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#creating-an-application-by-hand">Creating an Application by Hand</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#important-build-system-variables">Important Build System Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#application-cmakelists-txt">Application CMakeLists.txt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cmakecache-txt">CMakeCache.txt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#application-configuration">Application Configuration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#application-configuration-directory">Application Configuration Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kconfig-configuration">Kconfig Configuration</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#experimental-features">Experimental features</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#devicetree-overlays">Devicetree Overlays</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#file-suffixes">File Suffixes</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#application-specific-code">Application-Specific Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#third-party-library-code">Third-party Library Code</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#building-an-application">Building an Application</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#basics">Basics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#build-directory-contents">Build Directory Contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rebuilding-an-application">Rebuilding an Application</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#building-for-a-board-revision">Building for a board revision</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#run-an-application">Run an Application</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#running-on-a-board">Running on a Board</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#running-in-an-emulator">Running in an Emulator</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#custom-board-devicetree-and-soc-definitions">Custom Board, Devicetree and SOC Definitions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#boards">Boards</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#soc-definitions">SOC Definitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#devicetree-definitions">Devicetree Definitions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../debug/index.html">Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/index.html">API Status and Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../languages/index.html">Language Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optimizations/index.html">Optimizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flash_debug/index.html">Flashing and Hardware Debugging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html">Modules (External projects)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../west/index.html">West (Zephyr’s meta-tool)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../test/index.html">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sca/index.html">Static Code Analysis (SCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains/index.html">Toolchains</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/index.html">Tools and IDEs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Developing with Zephyr</a> &raquo;</li>
+  
+  <li>Application Development</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/develop/application/index.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27develop%2Fapplication%2Findex%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Documentation&env=-+Page%3A+develop%2Fapplication%2Findex%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="application-development">
+<span id="application"></span><h1>Application Development<a class="headerlink" href="#application-development" title="Link to this heading"></a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In this document, we’ll assume:</p>
+<ul class="simple">
+<li><p>your <strong>application directory</strong>, <code class="file docutils literal notranslate"><span class="pre">&lt;app&gt;</span></code>, is something like <code class="file docutils literal notranslate"><span class="pre">&lt;home&gt;/zephyrproject/app</span></code></p></li>
+<li><p>its <strong>build directory</strong> is <code class="file docutils literal notranslate"><span class="pre">&lt;app&gt;/build</span></code></p></li>
+</ul>
+<p>These terms are defined below. On Linux/macOS, &lt;home&gt; is equivalent to
+<code class="docutils literal notranslate"><span class="pre">~</span></code>. On Windows, it’s <code class="docutils literal notranslate"><span class="pre">%userprofile%</span></code>.</p>
+<p>Keeping your application inside the workspace (<code class="file docutils literal notranslate"><span class="pre">&lt;home&gt;/zephyrproject</span></code>)
+makes it easier to use <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> and other commands with it. (You can
+put your application anywhere as long as <a class="reference internal" href="#important-build-vars"><span class="std std-ref">ZEPHYR_BASE</span></a> is set appropriately, though.)</p>
+</div>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>Zephyr’s build system is based on <a class="reference external" href="https://www.cmake.org">CMake</a>.</p>
+<p>The build system is application-centric, and requires Zephyr-based applications
+to initiate building the Zephyr source code. The application build controls
+the configuration and build process of both the application and Zephyr itself,
+compiling them into a single binary.</p>
+<p>The main zephyr repository contains Zephyr’s source code, configuration files,
+and build system. You also likely have installed various <a class="reference internal" href="../modules.html#modules"><span class="std std-ref">Modules (External projects)</span></a>
+alongside the zephyr repository, which provide third party source code
+integration.</p>
+<p>The files in the <strong>application directory</strong> link Zephyr and any modules with the
+application. This directory contains all application-specific files, such as
+application-specific configuration files and source code.</p>
+<p>Here are the files in a simple Zephyr application:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;app&gt;
+├── CMakeLists.txt
+├── app.overlay
+├── prj.conf
+├── VERSION
+└── src
+    └── main.c
+</pre></div>
+</div>
+<p>These contents are:</p>
+<ul>
+<li><p><strong>CMakeLists.txt</strong>: This file tells the build system where to find the other
+application files, and links the application directory with Zephyr’s CMake
+build system. This link provides features supported by Zephyr’s build system,
+such as board-specific configuration files, the ability to run and
+debug compiled binaries on real or emulated hardware, and more.</p></li>
+<li><p><strong>app.overlay</strong>: This is a devicetree overlay file that specifies
+application-specific changes which should be applied to the base devicetree
+for any board you build for. The purpose of devicetree overlays is
+usually to configure something about the hardware used by the application.</p>
+<p>The build system looks for <code class="file docutils literal notranslate"><span class="pre">app.overlay</span></code> by default, but you can add
+more devicetree overlays, and other default files are also searched for.</p>
+<p>See <a class="reference internal" href="../../build/dts/index.html#devicetree"><span class="std std-ref">Devicetree</span></a> for more information about devicetree.</p>
+</li>
+<li><p><strong>prj.conf</strong>: This is a Kconfig fragment that specifies application-specific
+values for one or more Kconfig options. These application settings are merged
+with other settings to produce the final configuration. The purpose of
+Kconfig fragments is usually to configure the software features used by
+the application.</p>
+<p>The build system looks for <code class="file docutils literal notranslate"><span class="pre">prj.conf</span></code> by default, but you can add more
+Kconfig fragments, and other default files are also searched for.</p>
+<p>See <a class="reference internal" href="#application-kconfig"><span class="std std-ref">Kconfig Configuration</span></a> below for more information.</p>
+</li>
+<li><p><strong>VERSION</strong>: A text file that contains several version information fields.
+These fields let you manage the lifecycle of the application and automate
+providing the application version when signing application images.</p>
+<p>See <a class="reference internal" href="../../build/version/index.html#app-version-details"><span class="std std-ref">Application version management</span></a> for more information about this file and how to use it.</p>
+</li>
+<li><p><strong>main.c</strong>: A source code file. Applications typically contain source files
+written in C, C++, or assembly language. The Zephyr convention is to place
+them in a subdirectory of <code class="file docutils literal notranslate"><span class="pre">&lt;app&gt;</span></code> named <code class="file docutils literal notranslate"><span class="pre">src</span></code>.</p></li>
+</ul>
+<p>Once an application has been defined, you will use CMake to generate a <strong>build
+directory</strong>, which contains the files you need to build the application and
+Zephyr, then link them together into a final binary you can run on your board.
+The easiest way to do this is with <a class="reference internal" href="../west/build-flash-debug.html#west-building"><span class="std std-ref">west build</span></a>, but you
+can use CMake directly also. Application build artifacts are always generated
+in a separate build directory: Zephyr does not support “in-tree” builds.</p>
+<p>The following sections describe how to create, build, and run Zephyr
+applications, followed by more detailed reference material.</p>
+</section>
+<section id="application-types">
+<span id="zephyr-app-types"></span><h2>Application types<a class="headerlink" href="#application-types" title="Link to this heading"></a></h2>
+<p>We distinguish three basic types of Zephyr application based on where
+<code class="file docutils literal notranslate"><span class="pre">&lt;app&gt;</span></code> is located:</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Application type</p></td>
+<td><p><code class="file docutils literal notranslate"><span class="pre">&lt;app&gt;</span></code> location</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#zephyr-repo-app"><span class="std std-ref">repository</span></a></p></td>
+<td><p>zephyr repository</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#zephyr-workspace-app"><span class="std std-ref">workspace</span></a></p></td>
+<td><p>west workspace where Zephyr is
+installed</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#zephyr-freestanding-app"><span class="std std-ref">freestanding</span></a></p></td>
+<td><p>other locations</p></td>
+</tr>
+</tbody>
+</table>
+<p>We’ll discuss these more below. To learn how the build system supports each
+type, see <a class="reference internal" href="../../build/zephyr_cmake_package.html#cmake-pkg"><span class="std std-ref">Zephyr CMake Package</span></a>.</p>
+<section id="zephyr-repository-application">
+<span id="zephyr-repo-app"></span><h3>Zephyr repository application<a class="headerlink" href="#zephyr-repository-application" title="Link to this heading"></a></h3>
+<p>An application located within the <code class="docutils literal notranslate"><span class="pre">zephyr</span></code> source code repository in a Zephyr
+<a class="reference internal" href="../west/workspaces.html#west-workspaces"><span class="std std-ref">west workspace</span></a> is referred to as a Zephyr repository
+application. In the following example, the <a class="reference internal" href="../../samples/hello_world/README.html#hello_world" title="Print &quot;Hello World&quot; to the console."><span class="xref zephyr zephyr-code-sample">hello_world sample</span></a> is a Zephyr repository application:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>zephyrproject/
+├─── .west/
+│    └─── config
+└─── zephyr/
+     ├── arch/
+     ├── boards/
+     ├── cmake/
+     ├── samples/
+     │    ├── hello_world/
+     │    └── ...
+     ├── tests/
+     └── ...
+</pre></div>
+</div>
+</section>
+<section id="zephyr-workspace-application">
+<span id="zephyr-workspace-app"></span><h3>Zephyr workspace application<a class="headerlink" href="#zephyr-workspace-application" title="Link to this heading"></a></h3>
+<p>An application located within a <a class="reference internal" href="../west/workspaces.html#west-workspaces"><span class="std std-ref">workspace</span></a>, but outside
+the zephyr repository itself, is referred to as a Zephyr workspace application.
+In the following example, <code class="docutils literal notranslate"><span class="pre">app</span></code> is a Zephyr workspace application:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>zephyrproject/
+├─── .west/
+│    └─── config
+├─── zephyr/
+├─── bootloader/
+├─── modules/
+├─── tools/
+├─── &lt;vendor/private-repositories&gt;/
+└─── applications/
+     └── app/
+</pre></div>
+</div>
+</section>
+<section id="zephyr-freestanding-application">
+<span id="zephyr-freestanding-app"></span><h3>Zephyr freestanding application<a class="headerlink" href="#zephyr-freestanding-application" title="Link to this heading"></a></h3>
+<p>A Zephyr application located outside of a Zephyr <a class="reference internal" href="../west/workspaces.html#west-workspaces"><span class="std std-ref">workspace</span></a> is referred to as a Zephyr freestanding application. In the
+following example, <code class="docutils literal notranslate"><span class="pre">app</span></code> is a Zephyr freestanding application:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;home&gt;/
+├─── zephyrproject/
+│     ├─── .west/
+│     │    └─── config
+│     ├── zephyr/
+│     ├── bootloader/
+│     ├── modules/
+│     └── ...
+│
+└─── app/
+     ├── CMakeLists.txt
+     ├── prj.conf
+     └── src/
+         └── main.c
+</pre></div>
+</div>
+</section>
+</section>
+<section id="creating-an-application">
+<span id="zephyr-creating-app"></span><h2>Creating an Application<a class="headerlink" href="#creating-an-application" title="Link to this heading"></a></h2>
+<p>In Zephyr, you can either use a reference workspace application or create your application by hand.</p>
+<section id="using-a-reference-workspace-application">
+<span id="zephyr-creating-app-from-example"></span><h3>Using a Reference Workspace Application<a class="headerlink" href="#using-a-reference-workspace-application" title="Link to this heading"></a></h3>
+<p>The <a class="reference external" href="https://github.com/zephyrproject-rtos/example-application">example-application</a> Git repository contains a reference <a class="reference internal" href="#zephyr-workspace-app"><span class="std std-ref">workspace
+application</span></a>. It is recommended to use it as a reference
+when creating your own application as described in the following sections.</p>
+<p>The example-application repository demonstrates how to use several
+commonly-used features, such as:</p>
+<ul class="simple">
+<li><p>Custom <a class="reference internal" href="../../hardware/porting/board_porting.html#board-porting-guide"><span class="std std-ref">board ports</span></a></p></li>
+<li><p>Custom <a class="reference internal" href="../../build/dts/bindings.html#dt-bindings"><span class="std std-ref">devicetree bindings</span></a></p></li>
+<li><p>Custom <a class="reference internal" href="../../kernel/drivers/index.html#device-model-api"><span class="std std-ref">device drivers</span></a></p></li>
+<li><p>Continuous Integration (CI) setup, including using <a class="reference internal" href="../test/twister.html#twister-script"><span class="std std-ref">twister</span></a></p></li>
+<li><p>A custom west <a class="reference internal" href="../west/extensions.html#west-extensions"><span class="std std-ref">extension command</span></a></p></li>
+</ul>
+<section id="basic-example-application-usage">
+<h4>Basic example-application Usage<a class="headerlink" href="#basic-example-application-usage" title="Link to this heading"></a></h4>
+<p>The easiest way to get started with the example-application repository within
+an existing Zephyr workspace is to follow these steps:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd &lt;home&gt;/zephyrproject</span>
+<span class="go">git clone https://github.com/zephyrproject-rtos/example-application my-app</span>
+</pre></div>
+</div>
+<p>The directory name <code class="file docutils literal notranslate"><span class="pre">my-app</span></code> above is arbitrary: change it as needed. You
+can now go into this directory and adapt its contents to suit your needs. Since
+you are using an existing Zephyr workspace, you can use <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> or any
+other west commands to build, flash, and debug.</p>
+</section>
+<section id="advanced-example-application-usage">
+<h4>Advanced example-application Usage<a class="headerlink" href="#advanced-example-application-usage" title="Link to this heading"></a></h4>
+<p>You can also use the example-application repository as a starting point for
+building your own customized Zephyr-based software distribution. This lets you
+do things like:</p>
+<ul class="simple">
+<li><p>remove Zephyr modules you don’t need</p></li>
+<li><p>add additional custom repositories of your own</p></li>
+<li><p>override repositories provided by Zephyr with your own versions</p></li>
+<li><p>share the results with others and collaborate further</p></li>
+</ul>
+<p>The example-application repository contains a <code class="file docutils literal notranslate"><span class="pre">west.yml</span></code> file and is
+therefore also a west <a class="reference internal" href="../west/basics.html#west-workspace"><span class="std std-ref">manifest repository</span></a>. Use this to
+create a new, customized workspace by following these steps:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd &lt;home&gt;</span>
+<span class="go">mkdir my-workspace</span>
+<span class="go">cd my-workspace</span>
+<span class="go">git clone https://github.com/zephyrproject-rtos/example-application my-manifest-repo</span>
+<span class="go">west init -l my-manifest-repo</span>
+</pre></div>
+</div>
+<p>This will create a new workspace with the <a class="reference internal" href="../west/workspaces.html#west-t2"><span class="std std-ref">T2 topology</span></a>, with
+<code class="file docutils literal notranslate"><span class="pre">my-manifest-repo</span></code> as the manifest repository. The <code class="file docutils literal notranslate"><span class="pre">my-workspace</span></code>
+and <code class="file docutils literal notranslate"><span class="pre">my-manifest-repo</span></code> names are arbitrary: change them as needed.</p>
+<p>Next, customize the manifest repository. The initial contents of this
+repository will match the example-application’s contents when you clone it. You
+can then edit <code class="file docutils literal notranslate"><span class="pre">my-manifest-repo/west.yml</span></code> to your liking, changing the
+set of repositories in it as you wish. See <a class="reference internal" href="../west/manifest.html#west-manifest-import"><span class="std std-ref">Manifest Imports</span></a> for many
+examples of how to add or remove different repositories from your workspace as
+needed. Make any other changes you need to other files.</p>
+<p>When you are satisfied, you can run:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west update
+</pre></div>
+</div>
+<p>and your workspace will be ready for use.</p>
+<p>If you push the resulting <code class="file docutils literal notranslate"><span class="pre">my-manifest-repo</span></code> repository somewhere else,
+you can share your work with others. For example, let’s say you push the
+repository to <code class="docutils literal notranslate"><span class="pre">https://git.example.com/my-manifest-repo</span></code>. Other people can
+then set up a matching workspace by running:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west init -m https://git.example.com/my-manifest-repo my-workspace
+cd my-workspace
+west update
+</pre></div>
+</div>
+<p>From now on, you can collaborate on the shared software by pushing changes to
+the repositories you are using and updating <code class="file docutils literal notranslate"><span class="pre">my-manifest-repo/west.yml</span></code>
+as needed to add and remove repositories, or change their contents.</p>
+</section>
+</section>
+<section id="creating-an-application-by-hand">
+<span id="zephyr-creating-app-by-hand"></span><h3>Creating an Application by Hand<a class="headerlink" href="#creating-an-application-by-hand" title="Link to this heading"></a></h3>
+<p>You can follow these steps to create a basic application directory from
+scratch. However, using the <a class="reference external" href="https://github.com/zephyrproject-rtos/example-application">example-application</a> repository or one of
+Zephyr’s <a class="reference internal" href="../../samples/index.html#samples">Samples and Demos</a> as a starting point is likely to be easier.</p>
+<ol class="arabic">
+<li><p>Create an application directory.</p>
+<p>For example, in a Unix shell or Windows <code class="docutils literal notranslate"><span class="pre">cmd.exe</span></code> prompt:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">mkdir app</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Building Zephyr or creating an application in a directory with spaces
+anywhere on the path is not supported. So the Windows path
+<code class="file docutils literal notranslate"><span class="pre">C:\Users\YourName\app</span></code> will work, but
+<code class="file docutils literal notranslate"><span class="pre">C:\Users\Your</span> <span class="pre">Name\app</span></code> will not.</p>
+</div>
+</li>
+<li><p>Create your source code files.</p>
+<p>It’s recommended to place all application source code in a subdirectory
+named <code class="file docutils literal notranslate"><span class="pre">src</span></code>.  This makes it easier to distinguish between project
+files and sources.</p>
+<p>Continuing the previous example, enter:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd app</span>
+<span class="go">mkdir src</span>
+</pre></div>
+</div>
+</li>
+<li><p>Place your application source code in the <code class="file docutils literal notranslate"><span class="pre">src</span></code> sub-directory. For
+this example, we’ll assume you created a file named <code class="file docutils literal notranslate"><span class="pre">src/main.c</span></code>.</p></li>
+<li><p>Create a file named <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> in the <code class="docutils literal notranslate"><span class="pre">app</span></code> directory with the
+following contents:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.20.0</span><span class="p">)</span>
+
+<span class="nb">find_package</span><span class="p">(</span><span class="s">Zephyr</span><span class="p">)</span>
+<span class="nb">project</span><span class="p">(</span><span class="s">my_zephyr_app</span><span class="p">)</span>
+
+<span class="nb">target_sources</span><span class="p">(</span><span class="s">app</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">src/main.c</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">cmake_minimum_required()</span></code> call is required by CMake. It is also
+invoked by the Zephyr package on the next line. CMake will error out if
+its version is older than either the version in your
+<code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> or the version number in the Zephyr package.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">find_package(Zephyr)</span></code> pulls in the Zephyr build system, which creates a
+CMake target named <code class="docutils literal notranslate"><span class="pre">app</span></code> (see <a class="reference internal" href="../../build/zephyr_cmake_package.html#cmake-pkg"><span class="std std-ref">Zephyr CMake Package</span></a>). Adding sources to this
+target is how you include them in the build. The Zephyr package will
+define <code class="docutils literal notranslate"><span class="pre">Zephyr-Kernel</span></code> as a CMake project and enable support for the
+<code class="docutils literal notranslate"><span class="pre">C</span></code>, <code class="docutils literal notranslate"><span class="pre">CXX</span></code>, <code class="docutils literal notranslate"><span class="pre">ASM</span></code> languages.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">project(my_zephyr_app)</span></code> defines your application’s CMake
+project.  This must be called after <code class="docutils literal notranslate"><span class="pre">find_package(Zephyr)</span></code> to avoid
+interference with Zephyr’s <code class="docutils literal notranslate"><span class="pre">project(Zephyr-Kernel)</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">target_sources(app</span> <span class="pre">PRIVATE</span> <span class="pre">src/main.c)</span></code> is to add your source file to
+the <code class="docutils literal notranslate"><span class="pre">app</span></code> target. This must come after <code class="docutils literal notranslate"><span class="pre">find_package(Zephyr)</span></code> which
+defines the target. You can add as many files as you want with
+<code class="docutils literal notranslate"><span class="pre">target_sources()</span></code>.</p></li>
+</ul>
+</li>
+<li><p>Create at least one Kconfig fragment for your application (usually named
+<code class="file docutils literal notranslate"><span class="pre">prj.conf</span></code>) and set Kconfig option values needed by your application
+there. See <a class="reference internal" href="#application-kconfig"><span class="std std-ref">Kconfig Configuration</span></a>. If no Kconfig options need to be set,
+create an empty file.</p></li>
+<li><p>Configure any devicetree overlays needed by your application, usually in a
+file named <code class="file docutils literal notranslate"><span class="pre">app.overlay</span></code>. See <a class="reference internal" href="../../build/dts/howtos.html#set-devicetree-overlays"><span class="std std-ref">Set devicetree overlays</span></a>.</p></li>
+<li><p>Set up any other files you may need, such as <a class="reference internal" href="../test/twister.html#twister-script"><span class="std std-ref">twister</span></a>
+configuration files, continuous integration files, documentation, etc.</p></li>
+</ol>
+</section>
+</section>
+<section id="important-build-system-variables">
+<span id="important-build-vars"></span><h2>Important Build System Variables<a class="headerlink" href="#important-build-system-variables" title="Link to this heading"></a></h2>
+<p>You can control the Zephyr build system using many variables. This
+section describes the most important ones that every Zephyr developer
+should know about.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The variables <strong class="makevar">BOARD</strong>, <strong class="makevar">CONF_FILE</strong>, and
+<strong class="makevar">DTC_OVERLAY_FILE</strong> can be supplied to the build system in
+3 ways (in order of precedence):</p>
+<ul class="simple">
+<li><p>As a parameter to the <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> or <code class="docutils literal notranslate"><span class="pre">cmake</span></code> invocation via the
+<code class="docutils literal notranslate"><span class="pre">-D</span></code> command-line switch. If you have multiple overlay files, you should
+use quotations, <code class="docutils literal notranslate"><span class="pre">&quot;file1.overlay;file2.overlay&quot;</span></code></p></li>
+<li><p>As <a class="reference internal" href="../env_vars.html#env-vars"><span class="std std-ref">Environment Variables</span></a>.</p></li>
+<li><p>As a <code class="docutils literal notranslate"><span class="pre">set(&lt;VARIABLE&gt;</span> <span class="pre">&lt;VALUE&gt;)</span></code> statement in your <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></p></li>
+</ul>
+</div>
+<ul>
+<li><p><strong class="makevar">ZEPHYR_BASE</strong>: Zephyr base variable used by the build system.
+<code class="docutils literal notranslate"><span class="pre">find_package(Zephyr)</span></code> will automatically set this as a cached CMake
+variable. But <code class="docutils literal notranslate"><span class="pre">ZEPHYR_BASE</span></code> can also be set as an environment variable in
+order to force CMake to use a specific Zephyr installation.</p></li>
+<li><p><strong class="makevar">BOARD</strong>: Selects the board that the application’s build
+will use for the default configuration.  See <a class="reference internal" href="../../boards/index.html#boards"><span class="std std-ref">Supported Boards and Shields</span></a> for
+built-in boards, and <a class="reference internal" href="../../hardware/porting/board_porting.html#board-porting-guide"><span class="std std-ref">Board Porting Guide</span></a> for information on
+adding board support.</p></li>
+<li><p><strong class="makevar">CONF_FILE</strong>: Indicates the name of one or more Kconfig configuration
+fragment files. Multiple filenames can be separated with either spaces or
+semicolons. Each file includes Kconfig configuration values that override
+the default configuration values.</p>
+<p>See <a class="reference internal" href="../../build/kconfig/setting.html#initial-conf"><span class="std std-ref">The Initial Configuration</span></a> for more information.</p>
+</li>
+<li><p><strong class="makevar">EXTRA_CONF_FILE</strong>: Additional Kconfig configuration fragment files.
+Multiple filenames can be separated with either spaces or semicolons. This
+can be useful in order to leave <strong class="makevar">CONF_FILE</strong> at its default value,
+but “mix in” some additional configuration options.</p></li>
+<li><p><strong class="makevar">DTC_OVERLAY_FILE</strong>: One or more devicetree overlay files to use.
+Multiple files can be separated with semicolons.
+See <a class="reference internal" href="../../build/dts/howtos.html#set-devicetree-overlays"><span class="std std-ref">Set devicetree overlays</span></a> for examples and <a class="reference internal" href="../../build/dts/intro.html#devicetree-intro"><span class="std std-ref">Introduction to devicetree</span></a>
+for information about devicetree and Zephyr.</p></li>
+<li><p><strong class="makevar">EXTRA_DTC_OVERLAY_FILE</strong>: Additional devicetree overlay files to use.
+Multiple files can be separated with semicolons. This can be useful to leave
+<strong class="makevar">DTC_OVERLAY_FILE</strong> at its default value, but “mix in” some additional
+overlay files.</p></li>
+<li><p><strong class="makevar">SHIELD</strong>: see <a class="reference internal" href="../../hardware/porting/shields.html#shields"><span class="std std-ref">Shields</span></a></p></li>
+<li><p><strong class="makevar">ZEPHYR_MODULES</strong>: A <a class="reference external" href="https://cmake.org/cmake/help/latest/manual/cmake-language.7.html#lists">CMake list</a> containing absolute paths of
+additional directories with source code, Kconfig, etc. that should be used in
+the application build. See <a class="reference internal" href="../modules.html#modules"><span class="std std-ref">Modules (External projects)</span></a> for details. If you set this
+variable, it must be a complete list of all modules to use, as the build
+system will not automatically pick up any modules from west.</p></li>
+<li><p><strong class="makevar">EXTRA_ZEPHYR_MODULES</strong>: Like <strong class="makevar">ZEPHYR_MODULES</strong>, except these
+will be added to the list of modules found via west, instead of replacing it.</p></li>
+<li><p><strong class="makevar">FILE_SUFFIX</strong>: Optional suffix for filenames that will be added to Kconfig
+fragments and devicetree overlays (if these files exists, otherwise will fallback to
+the name without the prefix). See <a class="reference internal" href="#application-file-suffixes"><span class="std std-ref">File Suffixes</span></a> for details.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can use a <a class="reference internal" href="../../build/zephyr_cmake_package.html#cmake-build-config-package"><span class="std std-ref">Zephyr Build Configuration CMake packages</span></a> to share common settings for
+these variables.</p>
+</div>
+</section>
+<section id="application-cmakelists-txt">
+<span id="zephyr-app-cmakelists"></span><h2>Application CMakeLists.txt<a class="headerlink" href="#application-cmakelists-txt" title="Link to this heading"></a></h2>
+<p>Every application must have a <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> file. This file is the
+entry point, or top level, of the build system. The final <code class="file docutils literal notranslate"><span class="pre">zephyr.elf</span></code>
+image contains both the application and the kernel libraries.</p>
+<p>This section describes some of what you can do in your <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>.
+Make sure to follow these steps in order.</p>
+<ol class="arabic">
+<li><p>If you only want to build for one board, add the name of the board
+configuration for your application on a new line. For example:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">set</span><span class="p">(</span><span class="s">BOARD</span><span class="w"> </span><span class="s">qemu_x86</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Refer to <a class="reference internal" href="../../boards/index.html#boards"><span class="std std-ref">Supported Boards and Shields</span></a> for more information on available boards.</p>
+<p>The Zephyr build system determines a value for <strong class="makevar">BOARD</strong> by checking
+the following, in order (when a BOARD value is found, CMake stops looking
+further down the list):</p>
+<ul class="simple">
+<li><p>Any previously used value as determined by the CMake cache takes highest
+precedence. This ensures you don’t try to run a build with a different
+<strong class="makevar">BOARD</strong> value than you set during the build configuration step.</p></li>
+<li><p>Any value given on the CMake command line (directly or indirectly via
+<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code>) using <code class="docutils literal notranslate"><span class="pre">-DBOARD=YOUR_BOARD</span></code> will be checked for and
+used next.</p></li>
+<li><p>If an <a class="reference internal" href="../env_vars.html#env-vars"><span class="std std-ref">environment variable</span></a> <code class="docutils literal notranslate"><span class="pre">BOARD</span></code> is set, its value
+will then be used.</p></li>
+<li><p>Finally, if you set <code class="docutils literal notranslate"><span class="pre">BOARD</span></code> in your application <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>
+as described in this step, this value will be used.</p></li>
+</ul>
+</li>
+<li><p>If your application uses a configuration file or files other than
+the usual <code class="file docutils literal notranslate"><span class="pre">prj.conf</span></code>, add lines setting the <strong class="makevar">CONF_FILE</strong>
+variable to these files appropriately. If multiple filenames are given,
+separate them by a single space or semicolon.  CMake lists can be used to
+build up configuration fragment files in a modular way when you want to
+avoid setting <strong class="makevar">CONF_FILE</strong> in a single place. For example:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">set</span><span class="p">(</span><span class="s">CONF_FILE</span><span class="w"> </span><span class="s2">&quot;fragment_file1.conf&quot;</span><span class="p">)</span>
+<span class="nb">list</span><span class="p">(</span><span class="s">APPEND</span><span class="w"> </span><span class="s">CONF_FILE</span><span class="w"> </span><span class="s2">&quot;fragment_file2.conf&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="../../build/kconfig/setting.html#initial-conf"><span class="std std-ref">The Initial Configuration</span></a> for more information.</p>
+</li>
+<li><p>If your application uses devicetree overlays, you may need to set
+<a class="reference internal" href="#important-build-vars"><span class="std std-ref">DTC_OVERLAY_FILE</span></a>.
+See <a class="reference internal" href="../../build/dts/howtos.html#set-devicetree-overlays"><span class="std std-ref">Set devicetree overlays</span></a>.</p></li>
+<li><p>If your application has its own kernel configuration options,
+create a <code class="file docutils literal notranslate"><span class="pre">Kconfig</span></code> file in the same directory as your
+application’s <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>.</p>
+<p>See <a class="reference internal" href="../../build/kconfig/index.html#kconfig"><span class="std std-ref">the Kconfig section of the manual</span></a> for detailed
+Kconfig documentation.</p>
+<p>An (unlikely) advanced use case would be if your application has its own
+unique configuration <strong>options</strong> that are set differently depending on the
+build configuration.</p>
+<p>If you just want to set application specific <strong>values</strong> for existing Zephyr
+configuration options, refer to the <strong class="makevar">CONF_FILE</strong> description above.</p>
+<p>Structure your <code class="file docutils literal notranslate"><span class="pre">Kconfig</span></code> file like this:</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="c1"># SPDX-License-Identifier: Apache-2.0</span>
+
+<span class="k">mainmenu</span><span class="w"> </span><span class="s2">&quot;Your Application Name&quot;</span>
+
+<span class="c1"># Your application configuration options go here</span>
+
+<span class="c1"># Sources Kconfig.zephyr in the Zephyr root directory.</span>
+<span class="c1">#</span>
+<span class="c1"># Note: All &#39;source&#39; statements work relative to the Zephyr root directory (due</span>
+<span class="c1"># to the $srctree environment variable being set to $ZEPHYR_BASE). If you want</span>
+<span class="c1"># to &#39;source&#39; relative to the current Kconfig file instead, use &#39;rsource&#39; (or a</span>
+<span class="c1"># path relative to the Zephyr root).</span>
+<span class="k">source</span><span class="w"> </span><span class="s2">&quot;Kconfig.zephyr&quot;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Environment variables in <code class="docutils literal notranslate"><span class="pre">source</span></code> statements are expanded directly, so
+you do not need to define an <code class="docutils literal notranslate"><span class="pre">option</span> <span class="pre">env=&quot;ZEPHYR_BASE&quot;</span></code> Kconfig
+“bounce” symbol. If you use such a symbol, it must have the same name as
+the environment variable.</p>
+<p>See <a class="reference internal" href="../../build/kconfig/extensions.html#kconfig-extensions"><span class="std std-ref">Kconfig extensions</span></a> for more information.</p>
+</div>
+<p>The <code class="file docutils literal notranslate"><span class="pre">Kconfig</span></code> file is automatically detected when placed in
+the application directory, but it is also possible for it to be
+found elsewhere if the CMake variable <strong class="makevar">KCONFIG_ROOT</strong> is
+set with an absolute path.</p>
+</li>
+<li><p>Specify that the application requires Zephyr on a new line, <strong>after any
+lines added from the steps above</strong>:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">find_package</span><span class="p">(</span><span class="s">Zephyr</span><span class="p">)</span>
+<span class="nb">project</span><span class="p">(</span><span class="s">my_zephyr_app</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">find_package(Zephyr</span> <span class="pre">REQUIRED</span> <span class="pre">HINTS</span> <span class="pre">$ENV{ZEPHYR_BASE})</span></code> can be used if
+enforcing a specific Zephyr installation by explicitly
+setting the <code class="docutils literal notranslate"><span class="pre">ZEPHYR_BASE</span></code> environment variable should be
+supported. All samples in Zephyr supports the <code class="docutils literal notranslate"><span class="pre">ZEPHYR_BASE</span></code>
+environment variable.</p>
+</div>
+</li>
+<li><p>Now add any application source files to the ‘app’ target
+library, each on their own line, like so:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">target_sources</span><span class="p">(</span><span class="s">app</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">src/main.c</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>Below is a simple example <code class="file docutils literal notranslate"><span class="pre">CMakeList.txt</span></code>:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">set</span><span class="p">(</span><span class="s">BOARD</span><span class="w"> </span><span class="s">qemu_x86</span><span class="p">)</span>
+
+<span class="nb">find_package</span><span class="p">(</span><span class="s">Zephyr</span><span class="p">)</span>
+<span class="nb">project</span><span class="p">(</span><span class="s">my_zephyr_app</span><span class="p">)</span>
+
+<span class="nb">target_sources</span><span class="p">(</span><span class="s">app</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">src/main.c</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The Cmake property <code class="docutils literal notranslate"><span class="pre">HEX_FILES_TO_MERGE</span></code>
+leverages the application configuration provided by
+Kconfig and CMake to let you merge externally built hex files
+with the hex file generated when building the Zephyr application.
+For example:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">set_property</span><span class="p">(</span><span class="s">GLOBAL</span><span class="w"> </span><span class="s">APPEND</span><span class="w"> </span><span class="s">PROPERTY</span><span class="w"> </span><span class="s">HEX_FILES_TO_MERGE</span>
+<span class="w">    </span><span class="o">${</span><span class="nv">app_bootloader_hex</span><span class="o">}</span>
+<span class="w">    </span><span class="o">${</span><span class="nv">PROJECT_BINARY_DIR</span><span class="o">}</span><span class="s">/</span><span class="o">${</span><span class="nv">KERNEL_HEX_NAME</span><span class="o">}</span>
+<span class="w">    </span><span class="o">${</span><span class="nv">app_provision_hex</span><span class="o">}</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="cmakecache-txt">
+<span id="zephyr-app-cmakecache"></span><h2>CMakeCache.txt<a class="headerlink" href="#cmakecache-txt" title="Link to this heading"></a></h2>
+<p>CMake uses a CMakeCache.txt file as persistent key/value string
+storage used to cache values between runs, including compile and build
+options and paths to library dependencies. This cache file is created
+when CMake is run in an empty build folder.</p>
+<p>For more details about the CMakeCache.txt file see the official <a class="reference external" href="https://cmake.org/cmake/help/book/mastering-cmake/chapter/CMake%20Cache.html">CMake Cache</a>
+documentation.</p>
+</section>
+<section id="application-configuration">
+<h2>Application Configuration<a class="headerlink" href="#application-configuration" title="Link to this heading"></a></h2>
+<section id="application-configuration-directory">
+<span id="id1"></span><h3>Application Configuration Directory<a class="headerlink" href="#application-configuration-directory" title="Link to this heading"></a></h3>
+<p>Zephyr will use configuration files from the application’s configuration
+directory except for files with an absolute path provided by the arguments
+described earlier, for example <code class="docutils literal notranslate"><span class="pre">CONF_FILE</span></code>, <code class="docutils literal notranslate"><span class="pre">EXTRA_CONF_FILE</span></code>,
+<code class="docutils literal notranslate"><span class="pre">DTC_OVERLAY_FILE</span></code>, and <code class="docutils literal notranslate"><span class="pre">EXTRA_DTC_OVERLAY_FILE</span></code>.</p>
+<p>The application configuration directory is defined by the
+<code class="docutils literal notranslate"><span class="pre">APPLICATION_CONFIG_DIR</span></code> variable.</p>
+<p><code class="docutils literal notranslate"><span class="pre">APPLICATION_CONFIG_DIR</span></code> will be set by one of the sources below with the
+highest priority listed first.</p>
+<ol class="arabic simple">
+<li><p>If <code class="docutils literal notranslate"><span class="pre">APPLICATION_CONFIG_DIR</span></code> is specified by the user with
+<code class="docutils literal notranslate"><span class="pre">-DAPPLICATION_CONFIG_DIR=&lt;path&gt;</span></code> or in a CMake file before
+<code class="docutils literal notranslate"><span class="pre">find_package(Zephyr)</span></code> then this folder is used a the application’s
+configuration directory.</p></li>
+<li><p>The application’s source directory.</p></li>
+</ol>
+</section>
+<section id="kconfig-configuration">
+<span id="application-kconfig"></span><h3>Kconfig Configuration<a class="headerlink" href="#kconfig-configuration" title="Link to this heading"></a></h3>
+<p>Application configuration options are usually set in <code class="file docutils literal notranslate"><span class="pre">prj.conf</span></code> in the
+application directory. For example, C++ support could be enabled with this
+assignment:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_CPP</span><span class="o">=</span><span class="s">y</span>
+</pre></div>
+</div>
+<p>Looking at <a class="reference internal" href="../../samples/index.html#samples"><span class="xref zephyr zephyr-code-sample-category">existing samples</span></a> is a good way to get
+started.</p>
+<p>See <a class="reference internal" href="../../build/kconfig/setting.html#setting-configuration-values"><span class="std std-ref">Setting Kconfig configuration values</span></a> for detailed documentation on setting
+Kconfig configuration values. The <a class="reference internal" href="../../build/kconfig/setting.html#initial-conf"><span class="std std-ref">The Initial Configuration</span></a> section on the same page
+explains how the initial configuration is derived. See <a class="reference internal" href="../../kconfig.html#kconfig-search"><span class="std std-ref">Kconfig Search</span></a>
+for a complete list of configuration options.
+See <a class="reference internal" href="../../security/hardening-tool.html#hardening"><span class="std std-ref">Hardening Tool</span></a> for security information related with Kconfig options.</p>
+<p>The other pages in the <a class="reference internal" href="../../build/kconfig/index.html#kconfig"><span class="std std-ref">Kconfig section of the manual</span></a> are also
+worth going through, especially if you planning to add new configuration
+options.</p>
+<section id="experimental-features">
+<h4>Experimental features<a class="headerlink" href="#experimental-features" title="Link to this heading"></a></h4>
+<p>Zephyr is a project under constant development and thus there are features that
+are still in early stages of their development cycle. Such features will be
+marked <code class="docutils literal notranslate"><span class="pre">[EXPERIMENTAL]</span></code> in their Kconfig title.</p>
+<p>The <a class="reference internal" href="../../kconfig.html#CONFIG_WARN_EXPERIMENTAL" title="CONFIG_WARN_EXPERIMENTAL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_WARN_EXPERIMENTAL</span></code></a> setting can be used to enable warnings
+at CMake configure time if any experimental feature is enabled.</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_WARN_EXPERIMENTAL</span><span class="o">=</span><span class="s">y</span>
+</pre></div>
+</div>
+<p>For example, if option <code class="docutils literal notranslate"><span class="pre">CONFIG_FOO</span></code> is experimental, then enabling it and
+<a class="reference internal" href="../../kconfig.html#CONFIG_WARN_EXPERIMENTAL" title="CONFIG_WARN_EXPERIMENTAL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_WARN_EXPERIMENTAL</span></code></a> will print the following warning at
+CMake configure time when you build an application:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>warning: Experimental symbol FOO is enabled.
+</pre></div>
+</div>
+</section>
+</section>
+<section id="devicetree-overlays">
+<h3>Devicetree Overlays<a class="headerlink" href="#devicetree-overlays" title="Link to this heading"></a></h3>
+<p>See <a class="reference internal" href="../../build/dts/howtos.html#set-devicetree-overlays"><span class="std std-ref">Set devicetree overlays</span></a>.</p>
+</section>
+<section id="file-suffixes">
+<span id="application-file-suffixes"></span><h3>File Suffixes<a class="headerlink" href="#file-suffixes" title="Link to this heading"></a></h3>
+<p>Zephyr applications might want to have a single code base with multiple configurations for
+different build/product variants which would necessitate different Kconfig options and devicetree
+configuration. In order to better configure this, Zephyr provides a <strong class="makevar">FILE_SUFFIX</strong> option
+when configuring applications that can be automatically appended to filenames. This is applied to
+Kconfig fragments and board overlays but with a fallback so that if such files do not exist, the
+files without these suffixes will be used instead.</p>
+<p>Given the following example project layout:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;app&gt;
+├── CMakeLists.txt
+├── prj.conf
+├── prj_mouse.conf
+├── boards
+│   ├── native_sim.overlay
+│   └── qemu_cortex_m3_mouse.overlay
+└── src
+    └── main.c
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>If this is built normally without <code class="docutils literal notranslate"><span class="pre">FILE_SUFFIX</span></code> being defined for <code class="docutils literal notranslate"><span class="pre">native_sim</span></code> then
+<code class="docutils literal notranslate"><span class="pre">prj.conf</span></code> and <code class="docutils literal notranslate"><span class="pre">boards/native_sim.overlay</span></code> will be used.</p></li>
+<li><p>If this is built normally without <code class="docutils literal notranslate"><span class="pre">FILE_SUFFIX</span></code> being defined for <code class="docutils literal notranslate"><span class="pre">qemu_cortex_m3</span></code> then
+<code class="docutils literal notranslate"><span class="pre">prj.conf</span></code> will be used, no application devicetree overlay will be used.</p></li>
+<li><p>If this is built with <code class="docutils literal notranslate"><span class="pre">FILE_SUFFIX</span></code> set to <code class="docutils literal notranslate"><span class="pre">mouse</span></code> for <code class="docutils literal notranslate"><span class="pre">native_sim</span></code> then
+<code class="docutils literal notranslate"><span class="pre">prj_mouse.conf</span></code> and <code class="docutils literal notranslate"><span class="pre">boards/native_sim.overlay</span></code> will be used (there is no
+<code class="docutils literal notranslate"><span class="pre">native_sim_mouse.overlay</span></code> file so it falls back to <code class="docutils literal notranslate"><span class="pre">native_sim.overlay</span></code>).</p></li>
+<li><p>If this is built with <code class="docutils literal notranslate"><span class="pre">FILE_SUFFIX</span></code> set to <code class="docutils literal notranslate"><span class="pre">mouse</span></code> for <code class="docutils literal notranslate"><span class="pre">qemu_cortex_m3</span></code> then
+<code class="docutils literal notranslate"><span class="pre">prj_mouse.conf</span></code> will be used and <code class="docutils literal notranslate"><span class="pre">boards/qemu_cortex_m3_mouse.overlay</span></code> will be used.</p></li>
+</ul>
+</section>
+</section>
+<section id="application-specific-code">
+<h2>Application-Specific Code<a class="headerlink" href="#application-specific-code" title="Link to this heading"></a></h2>
+<p>Application-specific source code files are normally added to the
+application’s <code class="file docutils literal notranslate"><span class="pre">src</span></code> directory. If the application adds a large
+number of files the developer can group them into sub-directories
+under <code class="file docutils literal notranslate"><span class="pre">src</span></code>, to whatever depth is needed.</p>
+<p>Application-specific source code should not use symbol name prefixes that have
+been reserved by the kernel for its own use. For more information, see <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/wiki/Naming-Conventions">Naming
+Conventions</a>.</p>
+<section id="third-party-library-code">
+<h3>Third-party Library Code<a class="headerlink" href="#third-party-library-code" title="Link to this heading"></a></h3>
+<p>It is possible to build library code outside the application’s <code class="file docutils literal notranslate"><span class="pre">src</span></code>
+directory but it is important that both application and library code targets
+the same Application Binary Interface (ABI). On most architectures there are
+compiler flags that control the ABI targeted, making it important that both
+libraries and applications have certain compiler flags in common. It may also
+be useful for glue code to have access to Zephyr kernel header files.</p>
+<p>To make it easier to integrate third-party components, the Zephyr
+build system has defined CMake functions that give application build
+scripts access to the zephyr compiler options. The functions are
+documented and defined in <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/cmake/modules/extensions.cmake">cmake/modules/extensions.cmake</a>
+and follow the naming convention <code class="docutils literal notranslate"><span class="pre">zephyr_get_&lt;type&gt;_&lt;format&gt;</span></code>.</p>
+<p>The following variables will often need to be exported to the
+third-party build system.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CMAKE_C_COMPILER</span></code>, <code class="docutils literal notranslate"><span class="pre">CMAKE_AR</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ARCH</span></code> and <code class="docutils literal notranslate"><span class="pre">BOARD</span></code>, together with several variables that identify the
+Zephyr kernel version.</p></li>
+</ul>
+<p><a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/samples/application_development/external_lib">samples/application_development/external_lib</a> is a sample
+project that demonstrates some of these features.</p>
+</section>
+</section>
+<section id="building-an-application">
+<span id="build-an-application"></span><h2>Building an Application<a class="headerlink" href="#building-an-application" title="Link to this heading"></a></h2>
+<p>The Zephyr build system compiles and links all components of an application
+into a single application image that can be run on simulated hardware or real
+hardware.</p>
+<p>Like any other CMake-based system, the build process takes place <a class="reference internal" href="../../build/cmake/index.html#cmake-details"><span class="std std-ref">in
+two stages</span></a>. First, build files (also known as a buildsystem)
+are generated using the <code class="docutils literal notranslate"><span class="pre">cmake</span></code> command-line tool while specifying a
+generator. This generator determines the native build tool the buildsystem
+will use in the second stage.
+The second stage runs the native build tool to actually build the
+source files and generate an image. To learn more about these concepts refer to
+the <a class="reference external" href="https://cmake.org/cmake/help/latest/manual/cmake.1.html#description">CMake introduction</a> in the official CMake documentation.</p>
+<p>Although the default build tool in Zephyr is <a class="reference internal" href="../west/index.html#west"><span class="std std-ref">west</span></a>, Zephyr’s
+meta-tool, which invokes <code class="docutils literal notranslate"><span class="pre">cmake</span></code> and the underlying build tool (<code class="docutils literal notranslate"><span class="pre">ninja</span></code> or
+<code class="docutils literal notranslate"><span class="pre">make</span></code>) behind the scenes, you can also choose to invoke <code class="docutils literal notranslate"><span class="pre">cmake</span></code> directly if
+you prefer.  On Linux and macOS you can choose between the <code class="docutils literal notranslate"><span class="pre">make</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ninja</span></code>
+generators (i.e. build tools), whereas on Windows you need to use <code class="docutils literal notranslate"><span class="pre">ninja</span></code>,
+since <code class="docutils literal notranslate"><span class="pre">make</span></code> is not supported on this platform.
+For simplicity we will use <code class="docutils literal notranslate"><span class="pre">ninja</span></code> throughout this guide, and if you
+choose to use <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> to build your application know that it will
+default to <code class="docutils literal notranslate"><span class="pre">ninja</span></code> under the hood.</p>
+<p>As an example, let’s build the Hello World sample for the <code class="docutils literal notranslate"><span class="pre">reel_board</span></code>:</p>
+<p>Using west:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>reel_board<span class="w"> </span>samples/hello_world
+</pre></div>
+</div>
+<p>Using CMake and ninja:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+<span class="c1"># Use cmake to configure a Ninja-based buildsystem:</span>
+cmake<span class="w"> </span>-Bbuild<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>reel_board<span class="w"> </span>samples/hello_world
+
+<span class="c1"># Now run the build tool on the generated build system:</span>
+ninja<span class="w"> </span>-Cbuild
+</pre></div>
+</div>
+<p>On Linux and macOS, you can also build with <code class="docutils literal notranslate"><span class="pre">make</span></code> instead of <code class="docutils literal notranslate"><span class="pre">ninja</span></code>:</p>
+<p>Using west:</p>
+<ul class="simple">
+<li><p>to use <code class="docutils literal notranslate"><span class="pre">make</span></code> just once, add <code class="docutils literal notranslate"><span class="pre">--</span> <span class="pre">-G&quot;Unix</span> <span class="pre">Makefiles&quot;</span></code> to the west build
+command line; see the <a class="reference internal" href="../west/build-flash-debug.html#west-building-generator"><span class="std std-ref">west build</span></a>
+documentation for an example.</p></li>
+<li><p>to use <code class="docutils literal notranslate"><span class="pre">make</span></code> by default from now on, run <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">config</span> <span class="pre">build.generator</span>
+<span class="pre">&quot;Unix</span> <span class="pre">Makefiles&quot;</span></code>.</p></li>
+</ul>
+<p>Using CMake directly:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+<span class="c1"># Use cmake to configure a Make-based buildsystem:</span>
+cmake<span class="w"> </span>-Bbuild<span class="w"> </span>-DBOARD<span class="o">=</span>reel_board<span class="w"> </span>samples/hello_world
+
+<span class="c1"># Now run the build tool on the generated build system:</span>
+make<span class="w"> </span>-Cbuild
+</pre></div>
+</div>
+<section id="basics">
+<h3>Basics<a class="headerlink" href="#basics" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p>Navigate to the application directory <code class="file docutils literal notranslate"><span class="pre">&lt;app&gt;</span></code>.</p></li>
+<li><p>Enter the following commands to build the application’s <code class="file docutils literal notranslate"><span class="pre">zephyr.elf</span></code>
+image for the board specified in the command-line parameters:</p>
+<p>Using west:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>&lt;board&gt;
+</pre></div>
+</div>
+<p>Using CMake and ninja:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+
+<span class="c1"># Use cmake to configure a Ninja-based buildsystem:</span>
+cmake<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>&lt;board&gt;<span class="w"> </span>..
+
+<span class="c1"># Now run the build tool on the generated build system:</span>
+ninja
+</pre></div>
+</div>
+<p>If desired, you can build the application using the configuration settings
+specified in an alternate <code class="file docutils literal notranslate"><span class="pre">.conf</span></code> file using the <code class="code docutils literal notranslate"><span class="pre">CONF_FILE</span></code>
+parameter. These settings will override the settings in the application’s
+<code class="file docutils literal notranslate"><span class="pre">.config</span></code> file or its default <code class="file docutils literal notranslate"><span class="pre">.conf</span></code> file. For example:</p>
+<p>Using west:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>&lt;board&gt;<span class="w"> </span>--<span class="w"> </span>-DCONF_FILE<span class="o">=</span>prj.alternate.conf
+</pre></div>
+</div>
+<p>Using CMake and ninja:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+cmake<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>&lt;board&gt;<span class="w"> </span>-DCONF_FILE<span class="o">=</span>prj.alternate.conf<span class="w"> </span>..
+ninja
+</pre></div>
+</div>
+<p>As described in the previous section, you can instead choose to permanently
+set the board and configuration settings by either exporting <strong class="makevar">BOARD</strong>
+and <strong class="makevar">CONF_FILE</strong> environment variables or by setting their values
+in your <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> using <code class="docutils literal notranslate"><span class="pre">set()</span></code> statements.
+Additionally, <code class="docutils literal notranslate"><span class="pre">west</span></code> allows you to <a class="reference internal" href="../west/build-flash-debug.html#west-building-config"><span class="std std-ref">set a default board</span></a>.</p>
+</li>
+</ol>
+</section>
+<section id="build-directory-contents">
+<span id="id2"></span><h3>Build Directory Contents<a class="headerlink" href="#build-directory-contents" title="Link to this heading"></a></h3>
+<p>When using the Ninja generator a build directory looks like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;app&gt;/build
+├── build.ninja
+├── CMakeCache.txt
+├── CMakeFiles
+├── cmake_install.cmake
+├── rules.ninja
+└── zephyr
+</pre></div>
+</div>
+<p>The most notable files in the build directory are:</p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">build.ninja</span></code>, which can be invoked to build the application.</p></li>
+<li><p>A <code class="file docutils literal notranslate"><span class="pre">zephyr</span></code> directory, which is the working directory of the
+generated build system, and where most generated files are created and
+stored.</p></li>
+</ul>
+<p>After running <code class="docutils literal notranslate"><span class="pre">ninja</span></code>, the following build output files will be written to
+the <code class="file docutils literal notranslate"><span class="pre">zephyr</span></code> sub-directory of the build directory. (This is <strong>not the
+Zephyr base directory</strong>, which contains the Zephyr source code etc. and is
+described above.)</p>
+<ul>
+<li><p><code class="file docutils literal notranslate"><span class="pre">.config</span></code>, which contains the configuration settings
+used to build the application.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The previous version of <code class="file docutils literal notranslate"><span class="pre">.config</span></code> is saved to <code class="file docutils literal notranslate"><span class="pre">.config.old</span></code>
+whenever the configuration is updated. This is for convenience, as
+comparing the old and new versions can be handy.</p>
+</div>
+</li>
+<li><p>Various object files (<code class="file docutils literal notranslate"><span class="pre">.o</span></code> files and <code class="file docutils literal notranslate"><span class="pre">.a</span></code> files) containing
+compiled kernel and application code.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">zephyr.elf</span></code>, which contains the final combined application and
+kernel binary. Other binary output formats, such as <code class="file docutils literal notranslate"><span class="pre">.hex</span></code> and
+<code class="file docutils literal notranslate"><span class="pre">.bin</span></code>, are also supported.</p></li>
+</ul>
+</section>
+<section id="rebuilding-an-application">
+<span id="application-rebuild"></span><h3>Rebuilding an Application<a class="headerlink" href="#rebuilding-an-application" title="Link to this heading"></a></h3>
+<p>Application development is usually fastest when changes are continually tested.
+Frequently rebuilding your application makes debugging less painful
+as the application becomes more complex. It’s usually a good idea to
+rebuild and test after any major changes to the application’s source files,
+CMakeLists.txt files, or configuration settings.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The Zephyr build system rebuilds only the parts of the application image
+potentially affected by the changes. Consequently, rebuilding an application
+is often significantly faster than building it the first time.</p>
+</div>
+<p>Sometimes the build system doesn’t rebuild the application correctly
+because it fails to recompile one or more necessary files. You can force
+the build system to rebuild the entire application from scratch with the
+following procedure:</p>
+<ol class="arabic">
+<li><p>Open a terminal console on your host computer, and navigate to the
+build directory <code class="file docutils literal notranslate"><span class="pre">&lt;app&gt;/build</span></code>.</p></li>
+<li><p>Enter one of the following commands, depending on whether you want to use
+<code class="docutils literal notranslate"><span class="pre">west</span></code> or <code class="docutils literal notranslate"><span class="pre">cmake</span></code> directly to delete the application’s generated
+files, except for the <code class="file docutils literal notranslate"><span class="pre">.config</span></code> file that contains the
+application’s current configuration information.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west build -t clean</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ninja clean</span>
+</pre></div>
+</div>
+<p>Alternatively, enter one of the following commands to delete <em>all</em>
+generated files, including the <code class="file docutils literal notranslate"><span class="pre">.config</span></code> files that contain
+the application’s current configuration information for those board
+types.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west build -t pristine</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ninja pristine</span>
+</pre></div>
+</div>
+<p>If you use west, you can take advantage of its capability to automatically
+<a class="reference internal" href="../west/build-flash-debug.html#west-building-config"><span class="std std-ref">make the build folder pristine</span></a> whenever it is
+required.</p>
+</li>
+<li><p>Rebuild the application normally following the steps specified
+in <a class="reference internal" href="#build-an-application"><span class="std std-ref">Building an Application</span></a> above.</p></li>
+</ol>
+</section>
+<section id="building-for-a-board-revision">
+<span id="application-board-version"></span><h3>Building for a board revision<a class="headerlink" href="#building-for-a-board-revision" title="Link to this heading"></a></h3>
+<p>The Zephyr build system has support for specifying multiple hardware revisions
+of a single board with small variations. Using revisions allows the board
+support files to make minor adjustments to a board configuration without
+duplicating all the files described in <a class="reference internal" href="../../hardware/porting/board_porting.html#create-your-board-directory"><span class="std std-ref">Create your board directory</span></a> for
+each revision.</p>
+<p>To build for a particular revision, use <code class="docutils literal notranslate"><span class="pre">&lt;board&gt;&#64;&lt;revision&gt;</span></code> or
+<code class="docutils literal notranslate"><span class="pre">&lt;board&gt;&#64;&lt;revision&gt;/&lt;qualifiers&gt;</span></code> instead of plain <code class="docutils literal notranslate"><span class="pre">&lt;board&gt;</span></code> or
+<code class="docutils literal notranslate"><span class="pre">&lt;board&gt;/&lt;qualifiers&gt;</span></code>. For example:</p>
+<p>Using west:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>nrf9160dk@0.14.0/nrf9160/ns
+</pre></div>
+</div>
+<p>Using CMake and ninja:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+cmake<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>nrf9160dk@0.14.0/nrf9160/ns<span class="w"> </span>..
+ninja
+</pre></div>
+</div>
+<p>Check your board’s documentation for details on whether it has multiple
+revisions, and what revisions are supported.</p>
+<p>When targeting a board revision, the active revision will be printed at CMake
+configure time, like this:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">-- Board: plank, Revision: 1.5.0</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="run-an-application">
+<span id="application-run"></span><h2>Run an Application<a class="headerlink" href="#run-an-application" title="Link to this heading"></a></h2>
+<p>An application image can be run on a real board or emulated hardware.</p>
+<section id="running-on-a-board">
+<span id="application-run-board"></span><h3>Running on a Board<a class="headerlink" href="#running-on-a-board" title="Link to this heading"></a></h3>
+<p>Most boards supported by Zephyr let you flash a compiled binary using
+the <code class="docutils literal notranslate"><span class="pre">flash</span></code> target to copy the binary to the board and run it.
+Follow these instructions to flash and run an application on real
+hardware:</p>
+<ol class="arabic">
+<li><p>Build your application, as described in <a class="reference internal" href="#build-an-application"><span class="std std-ref">Building an Application</span></a>.</p></li>
+<li><p>Make sure your board is attached to your host computer. Usually, you’ll do
+this via USB.</p></li>
+<li><p>Run one of these console commands from the build directory,
+<code class="file docutils literal notranslate"><span class="pre">&lt;app&gt;/build</span></code>, to flash the compiled Zephyr image and run it on
+your board:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west flash</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ninja flash</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>The Zephyr build system integrates with the board support files to
+use hardware-specific tools to flash the Zephyr binary to your
+hardware, then run it.</p>
+<p>Each time you run the flash command, your application is rebuilt and flashed
+again.</p>
+<p>In cases where board support is incomplete, flashing via the Zephyr build
+system may not be supported. If you receive an error message about flash
+support being unavailable, consult <a class="reference internal" href="../../boards/index.html#boards"><span class="std std-ref">your board’s documentation</span></a>
+for additional information on how to flash your board.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When developing on Linux, it’s common to need to install
+board-specific udev rules to enable USB device access to
+your board as a non-root user. If flashing fails,
+consult your board’s documentation to see if this is
+necessary.</p>
+</div>
+</section>
+<section id="running-in-an-emulator">
+<span id="application-run-qemu"></span><h3>Running in an Emulator<a class="headerlink" href="#running-in-an-emulator" title="Link to this heading"></a></h3>
+<p>Zephyr has built-in emulator support for QEMU.
+It allows you to run and test an application virtually, before
+(or in lieu of) loading and running it on actual target hardware.</p>
+<p>Check out <a class="reference internal" href="../beyond-GSG.html#beyond-gsg"><span class="std std-ref">Beyond the Getting Started Guide</span></a> for additional steps needed on Windows.</p>
+<p>Follow these instructions to run an application via QEMU:</p>
+<ol class="arabic">
+<li><p>Build your application for one of the QEMU boards, as described in
+<a class="reference internal" href="#build-an-application"><span class="std std-ref">Building an Application</span></a>.</p>
+<p>For example, you could set <code class="docutils literal notranslate"><span class="pre">BOARD</span></code> to:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">qemu_x86</span></code> to emulate running on an x86-based board</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">qemu_cortex_m3</span></code> to emulate running on an ARM Cortex M3-based board</p></li>
+</ul>
+</li>
+<li><p>Run one of these console commands from the build directory,
+<code class="file docutils literal notranslate"><span class="pre">&lt;app&gt;/build</span></code>, to run the Zephyr binary in QEMU:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west build -t run</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ninja run</span>
+</pre></div>
+</div>
+</li>
+<li><p>Press <kbd class="kbd docutils literal notranslate">Ctrl</kbd> <kbd class="kbd docutils literal notranslate">A,</kbd> <kbd class="kbd docutils literal notranslate">X</kbd> to stop the application from running
+in QEMU.</p>
+<p>The application stops running and the terminal console prompt
+redisplays.</p>
+</li>
+</ol>
+<p>Each time you execute the run command, your application is rebuilt and run
+again.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the <a class="reference internal" href="../toolchains/zephyr_sdk.html#toolchain-zephyr-sdk"><span class="std std-ref">Zephyr SDK</span></a> is installed, the <code class="docutils literal notranslate"><span class="pre">run</span></code>
+target will use the SDK’s QEMU binary by default. To use another version of
+QEMU, <a class="reference internal" href="../env_vars.html#env-vars"><span class="std std-ref">set the environment variable</span></a> <code class="docutils literal notranslate"><span class="pre">QEMU_BIN_PATH</span></code>
+to the path of the QEMU binary you want to use instead.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can choose a specific emulator by appending <code class="docutils literal notranslate"><span class="pre">_&lt;emulator&gt;</span></code> to your
+target name, for example <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span> <span class="pre">-t</span> <span class="pre">run_qemu</span></code> or <code class="docutils literal notranslate"><span class="pre">ninja</span> <span class="pre">run_qemu</span></code>
+for QEMU.</p>
+</div>
+</section>
+</section>
+<section id="custom-board-devicetree-and-soc-definitions">
+<span id="custom-board-definition"></span><h2>Custom Board, Devicetree and SOC Definitions<a class="headerlink" href="#custom-board-devicetree-and-soc-definitions" title="Link to this heading"></a></h2>
+<p>In cases where the board or platform you are developing for is not yet
+supported by Zephyr, you can add board, Devicetree and SOC definitions
+to your application without having to add them to the Zephyr tree.</p>
+<p>The structure needed to support out-of-tree board and SOC development
+is similar to how boards and SOCs are maintained in the Zephyr tree. By using
+this structure, it will be much easier to upstream your platform related work into
+the Zephyr tree after your initial development is done.</p>
+<p>Add the custom board to your application or a dedicated repository using the
+following structure:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">boards/</span>
+<span class="go">soc/</span>
+<span class="go">CMakeLists.txt</span>
+<span class="go">prj.conf</span>
+<span class="go">README.rst</span>
+<span class="go">src/</span>
+</pre></div>
+</div>
+<p>where the <code class="docutils literal notranslate"><span class="pre">boards</span></code> directory hosts the board you are building for:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">.</span>
+<span class="go">├── boards</span>
+<span class="go">│   └── vendor</span>
+<span class="go">│       └── my_custom_board</span>
+<span class="go">│           ├── doc</span>
+<span class="go">│           │   └── img</span>
+<span class="go">│           └── support</span>
+<span class="go">└── src</span>
+</pre></div>
+</div>
+<p>and the <code class="docutils literal notranslate"><span class="pre">soc</span></code> directory hosts any SOC code. You can also have boards that are
+supported by a SOC that is available in the Zephyr tree.</p>
+<section id="boards">
+<h3>Boards<a class="headerlink" href="#boards" title="Link to this heading"></a></h3>
+<p>Use the vendor name as the folder name (which must match the vendor prefix in
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/dts/bindings/vendor-prefixes.txt">dts/bindings/vendor-prefixes.txt</a> if submitting upstream to Zephyr, or be
+<code class="docutils literal notranslate"><span class="pre">others</span></code> if it is not a vendor board) under <code class="docutils literal notranslate"><span class="pre">boards</span></code> for <code class="docutils literal notranslate"><span class="pre">my_custom_board</span></code>.</p>
+<p>Documentation (under <code class="docutils literal notranslate"><span class="pre">doc/</span></code>) and support files (under <code class="docutils literal notranslate"><span class="pre">support/</span></code>) are optional, but
+will be needed when submitting to Zephyr.</p>
+<p>The contents of <code class="docutils literal notranslate"><span class="pre">my_custom_board</span></code> should follow the same guidelines for any
+Zephyr board, and provide the following files:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>my_custom_board_defconfig
+my_custom_board.dts
+my_custom_board.yaml
+board.cmake
+board.h
+CMakeLists.txt
+doc/
+Kconfig.my_custom_board
+Kconfig.defconfig
+support/
+</pre></div>
+</div>
+<p>Once the board structure is in place, you can build your application
+targeting this board by specifying the location of your custom board
+information with the <code class="docutils literal notranslate"><span class="pre">-DBOARD_ROOT</span></code> parameter to the CMake
+build system:</p>
+<p>Using west:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>&lt;board<span class="w"> </span>name&gt;<span class="w"> </span>--<span class="w"> </span>-DBOARD_ROOT<span class="o">=</span>&lt;path<span class="w"> </span>to<span class="w"> </span>boards&gt;
+</pre></div>
+</div>
+<p>Using CMake and ninja:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>-Bbuild<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>&lt;board<span class="w"> </span>name&gt;<span class="w"> </span>-DBOARD_ROOT<span class="o">=</span>&lt;path<span class="w"> </span>to<span class="w"> </span>boards&gt;<span class="w"> </span>.
+ninja<span class="w"> </span>-Cbuild
+</pre></div>
+</div>
+<p>This will use your custom board configuration and will generate the
+Zephyr binary into your application directory.</p>
+<p>You can also define the <code class="docutils literal notranslate"><span class="pre">BOARD_ROOT</span></code> variable in the application
+<code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> file. Make sure to do so <strong>before</strong> pulling in the Zephyr
+boilerplate with <code class="docutils literal notranslate"><span class="pre">find_package(Zephyr</span> <span class="pre">...)</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When specifying <code class="docutils literal notranslate"><span class="pre">BOARD_ROOT</span></code> in a CMakeLists.txt, then an absolute path must
+be provided, for example <code class="docutils literal notranslate"><span class="pre">list(APPEND</span> <span class="pre">BOARD_ROOT</span> <span class="pre">${CMAKE_CURRENT_SOURCE_DIR}/&lt;extra-board-root&gt;)</span></code>.
+When using <code class="docutils literal notranslate"><span class="pre">-DBOARD_ROOT=&lt;board-root&gt;</span></code> both absolute and relative paths can
+be used. Relative paths are treated relatively to the application directory.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When using sysbuild, then <code class="docutils literal notranslate"><span class="pre">BOARD_ROOT</span></code> must defined in a module or in the sysbuild
+<code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> file, see <a class="reference internal" href="../../build/sysbuild/index.html#sysbuild-var-override"><span class="std std-ref">Configuring sysbuild internal state</span></a> for details.</p>
+</div>
+</section>
+<section id="soc-definitions">
+<h3>SOC Definitions<a class="headerlink" href="#soc-definitions" title="Link to this heading"></a></h3>
+<p>Similar to board support, the structure is similar to how SOCs are maintained in
+the Zephyr tree, for example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>soc
+└── st
+    └── stm32
+        ├── common
+        └── stm32l0x
+</pre></div>
+</div>
+<p>The file <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/soc/Kconfig">soc/Kconfig</a> will create the top-level
+<code class="docutils literal notranslate"><span class="pre">SoC/CPU/Configuration</span> <span class="pre">Selection</span></code> menu in Kconfig.</p>
+<p>Out of tree SoC definitions can be added to this menu using the <code class="docutils literal notranslate"><span class="pre">SOC_ROOT</span></code>
+CMake variable. This variable contains a semicolon-separated list of directories
+which contain SoC support files.</p>
+<p>Following the structure above, the following files can be added to load
+more SoCs into the menu.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>soc
+└── st
+    └── stm32
+        └── stm32l0x
+            ├── Kconfig
+            ├── Kconfig.soc
+            └── Kconfig.defconfig
+</pre></div>
+</div>
+<p>The Kconfig files above may describe the SoC or load additional SoC Kconfig files.</p>
+<p>An example of loading <code class="docutils literal notranslate"><span class="pre">stm32l0</span></code> specific Kconfig files in this structure:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>soc
+└── st
+    └── stm32
+        ├── Kconfig.soc
+        └── stm32l0x
+            └── Kconfig.soc
+</pre></div>
+</div>
+<p>can be done with the following content in <code class="docutils literal notranslate"><span class="pre">st/stm32/Kconfig.soc</span></code>:</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span>rsource<span class="w"> </span><span class="s2">&quot;*/Kconfig.soc&quot;</span>
+</pre></div>
+</div>
+<p>Once the SOC structure is in place, you can build your application
+targeting this platform by specifying the location of your custom platform
+information with the <code class="docutils literal notranslate"><span class="pre">-DSOC_ROOT</span></code> parameter to the CMake
+build system:</p>
+<p>Using west:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>&lt;board<span class="w"> </span>name&gt;<span class="w"> </span>--<span class="w"> </span>-DSOC_ROOT<span class="o">=</span>&lt;path<span class="w"> </span>to<span class="w"> </span>soc&gt;<span class="w"> </span>-DBOARD_ROOT<span class="o">=</span>&lt;path<span class="w"> </span>to<span class="w"> </span>boards&gt;
+</pre></div>
+</div>
+<p>Using CMake and ninja:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>-Bbuild<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>&lt;board<span class="w"> </span>name&gt;<span class="w"> </span>-DSOC_ROOT<span class="o">=</span>&lt;path<span class="w"> </span>to<span class="w"> </span>soc&gt;<span class="w"> </span>-DBOARD_ROOT<span class="o">=</span>&lt;path<span class="w"> </span>to<span class="w"> </span>boards&gt;<span class="w"> </span>.
+ninja<span class="w"> </span>-Cbuild
+</pre></div>
+</div>
+<p>This will use your custom platform configurations and will generate the
+Zephyr binary into your application directory.</p>
+<p>See <a class="reference internal" href="../modules.html#modules-build-settings"><span class="std std-ref">Build settings</span></a> for information on setting SOC_ROOT in a module’s
+<code class="file docutils literal notranslate"><span class="pre">zephyr/module.yml</span></code> file.</p>
+<p>Or you can define the <code class="docutils literal notranslate"><span class="pre">SOC_ROOT</span></code> variable in the application
+<code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> file. Make sure to do so <strong>before</strong> pulling in the
+Zephyr boilerplate with <code class="docutils literal notranslate"><span class="pre">find_package(Zephyr</span> <span class="pre">...)</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When specifying <code class="docutils literal notranslate"><span class="pre">SOC_ROOT</span></code> in a CMakeLists.txt, then an absolute path must
+be provided, for example <code class="docutils literal notranslate"><span class="pre">list(APPEND</span> <span class="pre">SOC_ROOT</span> <span class="pre">${CMAKE_CURRENT_SOURCE_DIR}/&lt;extra-soc-root&gt;</span></code>.
+When using <code class="docutils literal notranslate"><span class="pre">-DSOC_ROOT=&lt;soc-root&gt;</span></code> both absolute and relative paths can be
+used. Relative paths are treated relatively to the application directory.</p>
+</div>
+</section>
+<section id="devicetree-definitions">
+<span id="dts-root"></span><h3>Devicetree Definitions<a class="headerlink" href="#devicetree-definitions" title="Link to this heading"></a></h3>
+<p>Devicetree directory trees are found in <code class="docutils literal notranslate"><span class="pre">APPLICATION_SOURCE_DIR</span></code>,
+<code class="docutils literal notranslate"><span class="pre">BOARD_DIR</span></code>, and <code class="docutils literal notranslate"><span class="pre">ZEPHYR_BASE</span></code>, but additional trees, or DTS_ROOTs,
+can be added by creating this directory tree:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>include/
+dts/common/
+dts/arm/
+dts/
+dts/bindings/
+</pre></div>
+</div>
+<p>Where ‘arm’ is changed to the appropriate architecture. Each directory
+is optional. The binding directory contains bindings and the other
+directories contain files that can be included from DT sources.</p>
+<p>Once the directory structure is in place, you can use it by specifying
+its location through the <code class="docutils literal notranslate"><span class="pre">DTS_ROOT</span></code> CMake Cache variable:</p>
+<p>Using west:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>&lt;board<span class="w"> </span>name&gt;<span class="w"> </span>--<span class="w"> </span>-DDTS_ROOT<span class="o">=</span>&lt;path<span class="w"> </span>to<span class="w"> </span>dts<span class="w"> </span>root&gt;
+</pre></div>
+</div>
+<p>Using CMake and ninja:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>-Bbuild<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>&lt;board<span class="w"> </span>name&gt;<span class="w"> </span>-DDTS_ROOT<span class="o">=</span>&lt;path<span class="w"> </span>to<span class="w"> </span>dts<span class="w"> </span>root&gt;<span class="w"> </span>.
+ninja<span class="w"> </span>-Cbuild
+</pre></div>
+</div>
+<p>You can also define the variable in the application <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>
+file. Make sure to do so <strong>before</strong> pulling in the Zephyr boilerplate with
+<code class="docutils literal notranslate"><span class="pre">find_package(Zephyr</span> <span class="pre">...)</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When specifying <code class="docutils literal notranslate"><span class="pre">DTS_ROOT</span></code> in a CMakeLists.txt, then an absolute path must
+be provided, for example <code class="docutils literal notranslate"><span class="pre">list(APPEND</span> <span class="pre">DTS_ROOT</span> <span class="pre">${CMAKE_CURRENT_SOURCE_DIR}/&lt;extra-dts-root&gt;</span></code>.
+When using <code class="docutils literal notranslate"><span class="pre">-DDTS_ROOT=&lt;dts-root&gt;</span></code> both absolute and relative paths can be
+used. Relative paths are treated relatively to the application directory.</p>
+</div>
+<p>Devicetree source are passed through the C preprocessor, so you can
+include files that can be located in a <code class="docutils literal notranslate"><span class="pre">DTS_ROOT</span></code> directory.  By
+convention devicetree include files have a <code class="docutils literal notranslate"><span class="pre">.dtsi</span></code> extension.</p>
+<p>You can also use the preprocessor to control the content of a devicetree
+file, by specifying directives through the <code class="docutils literal notranslate"><span class="pre">DTS_EXTRA_CPPFLAGS</span></code> CMake
+Cache variable:</p>
+<p>Using west:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>&lt;board<span class="w"> </span>name&gt;<span class="w"> </span>--<span class="w"> </span>-DDTS_EXTRA_CPPFLAGS<span class="o">=</span>-DTEST_ENABLE_FEATURE
+</pre></div>
+</div>
+<p>Using CMake and ninja:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>-Bbuild<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>&lt;board<span class="w"> </span>name&gt;<span class="w"> </span>-DDTS_EXTRA_CPPFLAGS<span class="o">=</span>-DTEST_ENABLE_FEATURE<span class="w"> </span>.
+ninja<span class="w"> </span>-Cbuild
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,743 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAN Controller &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/hardware/peripherals/can/controller.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="CAN Transceiver" href="transceiver.html" />
+    <link rel="prev" title="Controller Area Network (CAN)" href="index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Hardware Support</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../arch/index.html">Architecture-related Guides</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../barriers/index.html">Barriers API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cache/index.html">Caching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../emulator/index.html">Zephyr’s device emulators/simulators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../emulator/bus_emulators.html">External Bus and Bus Connected Peripherals Emulators</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Peripherals</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../w1.html">1-Wire Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../adc.html">Analog-to-Digital Converter (ADC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../auxdisplay.html">Auxiliary Display (auxdisplay)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../audio/index.html">Audio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../bbram.html">Battery Backed RAM (BBRAM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../bc12.html">BC1.2 Devices (Experimental)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../biometrics.html">Biometrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../clock_control.html">Clock Control</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Controller Area Network (CAN)</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">CAN Controller</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#sending">Sending</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#receiving">Receiving</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#setting-the-bitrate">Setting the bitrate</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#socketcan">SocketCAN</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#samples">Samples</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#can-controller-api-reference">CAN Controller API Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="transceiver.html">CAN Transceiver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="shell.html">CAN Shell</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../charger.html">Chargers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../comparator.html">Comparator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../coredump.html">Coredump Device</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../counter.html">Counter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../crc.html">Cyclic Redundancy Check (CRC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dac.html">Digital-to-Analog Converter (DAC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dma.html">Direct Memory Access (DMA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../display/index.html">Display</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../eeprom/index.html">Electrically Erasable Programmable Read-Only Memory (EEPROM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../espi.html">Enhanced Serial Peripheral Interface (eSPI) Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../entropy.html">Entropy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../edac/index.html">Error Detection And Correction (EDAC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../flash.html">Flash</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fuel_gauge.html">Fuel Gauge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gnss.html">GNSS (Global Navigation Satellite System)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gpio.html">General-Purpose Input/Output (GPIO)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../haptics.html">Haptics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../hwinfo.html">Hardware Information</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../hwspinlock.html">Hardware Spinlocks (HWSPINLOCK)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../i2c_eeprom_target.html">I2C EEPROM Target</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../i3c.html">Improved Inter-Integrated Circuit (I3C) Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../i2c.html">Inter-Integrated Circuit (I2C) Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../ipm.html">Inter-Processor Mailbox (IPM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../led.html">Light-Emitting Diode (LED)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mdio.html">Management Data Input/Output (MDIO)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mspi.html">Multi-bit SPI Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mbox.html">Multi-Channel Inter-Processor Mailbox (MBOX)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mux.html">Multiplexer (MUX)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../opamp.html">Operational Amplifier (OPAMP)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../otp/index.html">One Time Programmable (OTP) memory devices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pcie.html">Peripheral Component Interconnect express Bus (PCIe)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../peci.html">Platform Environment Control Interface (PECI)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../ps2.html">PS/2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../psi5.html">Peripheral Sensor Interface (PSI5)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pwm.html">Pulse Width Modulation (PWM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../rtc.html">Real-Time Clock (RTC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../regulators.html">Regulators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reset.html">Reset Controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../retained_mem.html">Retained Memory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sdhc.html">Secure Digital (SD card) interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sensor/index.html">Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sent.html">Single Edge Nibble Transmission (SENT)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spi.html">Serial Peripheral Interface (SPI) Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stepper/index.html">Steppers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../smbus.html">System Management Bus (SMBus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uart.html">Universal Asynchronous Receiver-Transmitter (UART)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../usbc_vbus.html">USB-C VBUS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tcpc.html">USB Type-C Port Controller (TCPC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tgpio.html">Time-aware General-Purpose Input/Output (TGPIO)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../video.html">Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../watchdog.html">Watchdog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../wuc.html">Wakeup Controller (WUC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../pinctrl/index.html">Pin Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../porting/index.html">Porting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../virtualization/index.html">Virtualization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Hardware Support</a> &raquo;</li>
+  
+     <li><a href="../index.html">Peripherals</a> &raquo;</li>
+  
+     <li><a href="index.html">Controller Area Network (CAN)</a> &raquo;</li>
+  
+  <li>CAN Controller</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/hardware/peripherals/can/controller.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27hardware%2Fperipherals%2Fcan%2Fcontroller%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+CAN&env=-+Page%3A+hardware%2Fperipherals%2Fcan%2Fcontroller%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="can-controller">
+<span id="can-api"></span><h1>CAN Controller<a class="headerlink" href="#can-controller" title="Link to this heading"></a></h1>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id1">Overview</a></p></li>
+<li><p><a class="reference internal" href="#sending" id="id2">Sending</a></p></li>
+<li><p><a class="reference internal" href="#receiving" id="id3">Receiving</a></p></li>
+<li><p><a class="reference internal" href="#setting-the-bitrate" id="id4">Setting the bitrate</a></p></li>
+<li><p><a class="reference internal" href="#socketcan" id="id5">SocketCAN</a></p></li>
+<li><p><a class="reference internal" href="#samples" id="id6">Samples</a></p></li>
+<li><p><a class="reference internal" href="#can-controller-api-reference" id="id7">CAN Controller API Reference</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Overview</a><a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>Controller Area Network is a two-wire serial bus specified by the
+Bosch CAN Specification, Bosch CAN with Flexible Data-Rate specification and the
+ISO 11898-1:2003 standard.
+CAN is mostly known for its application in the automotive domain. However, it
+is also used in home and industrial automation and other products.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>CAN controllers can only initialize when the bus is in the idle (recessive)
+state for at least 11 recessive bits. Therefore you have to make sure that
+CAN RX is high, at least for a short time. This is also necessary for
+loopback mode.</p>
+</div>
+<p>The bit-timing as defined in ISO 11898-1:2003 looks as following:</p>
+<a class="reference internal image-reference" href="../../../_images/timing.svg"><img alt="CAN Timing" class="align-center" src="../../../_images/timing.svg" style="width: 40%;" />
+</a>
+<p>A single bit is split into four segments.</p>
+<ul class="simple">
+<li><p>Sync_Seg: The nodes synchronize at the edge of the Sync_Seg. It is always one time quantum in length.</p></li>
+<li><p>Prop_Seg: The signal propagation delay of the bus and other delays of the transceiver and node.</p></li>
+<li><p>Phase_Seg1 and Phase_Seg2 :Define the sampling point. The bit is sampled at the end of Phase_Seg1.</p></li>
+</ul>
+<p>The bit-rate is calculated from the time of a time quantum and the values
+defined above.
+A bit has the length of Sync_Seg plus Prop_Seg plus Phase_Seg1 plus Phase_Seg2
+multiplied by the time of single time quantum.
+The bit-rate is the inverse of the length of a single bit.</p>
+<p>A bit is sampled at the sampling point.
+The sample point is between Phase_Seg1 and PhaseSeg2 and therefore is a
+parameter that the user needs to choose.
+The CiA recommends setting the sample point to 87.5% of the bit.</p>
+<p>The resynchronization jump width (SJW) defines the amount of time quantum the
+sample point can be moved.
+The sample point is moved when resynchronization is needed.</p>
+<p>The timing parameters (SJW, bitrate and sampling point, or bitrate, Prop_Seg,
+Phase_Seg1and Phase_Seg2) are initially set from the device-tree and can be
+changed at run-time from the timing-API.</p>
+<p>CAN uses so-called identifiers to identify the frame instead of addresses to
+identify a node.
+This identifier can either have 11-bit width (Standard or Basic Frame) or
+29-bit in case of an Extended Frame. The Zephyr CAN API supports both Standard
+and Extended identifiers concurrently. A CAN frame starts with a dominant
+Start Of Frame bit. After that, the identifiers follow. This phase is called the
+arbitration phase. During the arbitration phase, write collisions are allowed.
+They resolve by the fact that dominant bits override recessive bits.
+Nodes monitor the bus and notice when their transmission is being overridden and
+in case, abort their transmission.
+This effectively gives lower number identifiers priority over higher number
+identifiers.</p>
+<p>Filters are used to allowlist identifiers that are of interest for the specific
+node. An identifier that doesn’t match any filter is ignored.
+Filters can either match exactly or a specified part of the identifier.
+This method is called masking.
+As an example, a mask with 11 bits set for standard or 29 bits set for extended
+identifiers must match perfectly.
+Bits that are set to zero in the mask are ignored when matching an identifier.
+Most CAN controllers implement a limited number of filters in hardware.
+The number of filters is also limited in Kconfig to save memory.</p>
+<p>Errors may occur during transmission. In case a node detects an erroneous frame,
+it partially overrides the current frame with an error-frame.
+Error-frames can either be error passive or error active, depending on the state
+of the controller.
+In case the controller is in error active state, it sends six consecutive
+dominant bits, which is a violation of the stuffing rule that all nodes can
+detect. The sender may resend the frame right after.</p>
+<p>An initialized node can be in one of the following states:</p>
+<ul class="simple">
+<li><p>Error-active</p></li>
+<li><p>Error-passive</p></li>
+<li><p>Bus-off</p></li>
+</ul>
+<p>After initialization, the node is in the error-active state. In this state, the
+node is allowed to send active error frames, ACK, and overload frames.
+Every node has a receive- and transmit-error counter.
+If either the receive- or the transmit-error counter exceeds 127,
+the node changes to error-passive state.
+In this state, the node is not allowed to send error-active frames anymore.
+If the transmit-error counter increases further to 255, the node changes to the
+bus-off state. In this state, the node is not allowed to send any dominant bits
+to the bus. Nodes in the bus-off state may recover after receiving 128
+occurrences of 11 concurrent recessive bits.</p>
+<p>You can read more about CAN bus in this
+<a class="reference external" href="https://en.wikipedia.org/wiki/CAN_bus">CAN Wikipedia article</a>.</p>
+<p>Zephyr supports following CAN features:</p>
+<ul class="simple">
+<li><p>Standard and Extended Identifiers</p></li>
+<li><p>Filters with Masking</p></li>
+<li><p>Loopback and Silent mode</p></li>
+<li><p>Remote Request</p></li>
+</ul>
+</section>
+<section id="sending">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Sending</a><a class="headerlink" href="#sending" title="Link to this heading"></a></h2>
+<p>The following code snippets show how to send data.</p>
+<p>This basic sample sends a CAN frame with standard identifier 0x123 and eight
+bytes of data. When passing NULL as the callback, as shown in this example,
+the send function blocks until the frame is sent and acknowledged by at least
+one other node or an error occurred. The timeout only takes effect on acquiring
+a mailbox. When a transmitting mailbox is assigned, sending cannot be canceled.</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">can_frame</span><span class="w"> </span><span class="n">frame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x123</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">dlc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">}</span>
+<span class="p">};</span>
+<span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="k">const</span><span class="w"> </span><span class="n">can_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEVICE_DT_GET</span><span class="p">(</span><span class="n">DT_CHOSEN</span><span class="p">(</span><span class="n">zephyr_canbus</span><span class="p">));</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">can_send</span><span class="p">(</span><span class="n">can_dev</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">frame</span><span class="p">,</span><span class="w"> </span><span class="n">K_MSEC</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">LOG_ERR</span><span class="p">(</span><span class="s">&quot;Sending failed [%d]&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ret</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This example shows how to send a frame with extended identifier 0x1234567 and
+two bytes of data. The provided callback is called when the message is sent, or
+an error occurred. Passing <a class="reference internal" href="../../../doxygen/html/group__clock__apis.html#ga0bb4b83f0222193b21a8910311bab0ca" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_FOREVER</span></code></a> to the timeout causes the
+function to block until a transfer mailbox is assigned to the frame or an error
+occurred. It does not block until the message is sent like the example above.</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">tx_callback</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">user_data</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">sender</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">user_data</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">error</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">LOG_ERR</span><span class="p">(</span><span class="s">&quot;Sending failed [%d]</span><span class="se">\n</span><span class="s">Sender: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">error</span><span class="p">,</span><span class="w"> </span><span class="n">sender</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">send_function</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">can_dev</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">struct</span><span class="w"> </span><span class="nc">can_frame</span><span class="w"> </span><span class="n">frame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="p">.</span><span class="n">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CAN_FRAME_IDE</span><span class="p">,</span>
+<span class="w">                </span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x1234567</span><span class="p">,</span>
+<span class="w">                </span><span class="p">.</span><span class="n">dlc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="n">frame</span><span class="p">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="n">frame</span><span class="p">.</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">can_send</span><span class="p">(</span><span class="n">can_dev</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">frame</span><span class="p">,</span><span class="w"> </span><span class="n">K_FOREVER</span><span class="p">,</span><span class="w"> </span><span class="n">tx_callback</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Sender 1&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="receiving">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Receiving</a><a class="headerlink" href="#receiving" title="Link to this heading"></a></h2>
+<p>Frames are only received when they match a filter.
+The following code snippets show how to receive frames by adding filters.</p>
+<p>Here we have an example for a receiving callback as used for
+<a class="reference internal" href="../../../doxygen/html/group__can__controller.html#gae9dd69a13b960f773ab07bb0bb13b5e9" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">can_add_rx_filter()</span></code></a>. The user data argument is passed when the filter is
+added.</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">rx_callback_function</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">can_frame</span><span class="w"> </span><span class="o">*</span><span class="n">frame</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">user_data</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="p">...</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="n">something</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">frame</span><span class="w"> </span><span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The following snippet shows how to add a filter with a callback function.
+It is the most efficient but also the most critical way to receive messages.
+The callback function is called from an interrupt context, which means that the
+callback function should be as short as possible and must not block.
+Adding callback functions is not allowed from userspace context.</p>
+<p>The filter for this example is configured to match the identifier 0x123 exactly.</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">can_filter</span><span class="w"> </span><span class="n">my_filter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0U</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x123</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CAN_STD_ID_MASK</span>
+<span class="p">};</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">filter_id</span><span class="p">;</span>
+<span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="k">const</span><span class="w"> </span><span class="n">can_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEVICE_DT_GET</span><span class="p">(</span><span class="n">DT_CHOSEN</span><span class="p">(</span><span class="n">zephyr_canbus</span><span class="p">));</span>
+
+<span class="n">filter_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">can_add_rx_filter</span><span class="p">(</span><span class="n">can_dev</span><span class="p">,</span><span class="w"> </span><span class="n">rx_callback_function</span><span class="p">,</span><span class="w"> </span><span class="n">callback_arg</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_filter</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">filter_id</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">LOG_ERR</span><span class="p">(</span><span class="s">&quot;Unable to add rx filter [%d]&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">filter_id</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Here an example for <a class="reference internal" href="../../../doxygen/html/group__can__controller.html#gaaac20a068b7f32d2f38d1601d588b35c" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">can_add_rx_filter_msgq()</span></code></a> is shown. With this
+function, it is possible to receive frames synchronously. This function can be
+called from userspace context.  The size of the message queue should be as big
+as the expected backlog.</p>
+<p>The filter for this example is configured to match the extended identifier
+0x1234567 exactly.</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">can_filter</span><span class="w"> </span><span class="n">my_filter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CAN_FILTER_IDE</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x1234567</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CAN_EXT_ID_MASK</span>
+<span class="p">};</span>
+<span class="n">CAN_MSGQ_DEFINE</span><span class="p">(</span><span class="n">my_can_msgq</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">can_frame</span><span class="w"> </span><span class="n">rx_frame</span><span class="p">;</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">filter_id</span><span class="p">;</span>
+<span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="k">const</span><span class="w"> </span><span class="n">can_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEVICE_DT_GET</span><span class="p">(</span><span class="n">DT_CHOSEN</span><span class="p">(</span><span class="n">zephyr_canbus</span><span class="p">));</span>
+
+<span class="n">filter_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">can_add_rx_filter_msgq</span><span class="p">(</span><span class="n">can_dev</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_can_msgq</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_filter</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">filter_id</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">LOG_ERR</span><span class="p">(</span><span class="s">&quot;Unable to add rx msgq [%d]&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">filter_id</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">k_msgq_get</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_can_msgq</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rx_frame</span><span class="p">,</span><span class="w"> </span><span class="n">K_FOREVER</span><span class="p">);</span>
+<span class="w">  </span><span class="p">...</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="n">something</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">frame</span><span class="w"> </span><span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="../../../doxygen/html/group__can__controller.html#ga822aa3142ea01582d5cfb8b478fb2847" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">can_remove_rx_filter()</span></code></a> removes the given filter.</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="n">can_remove_rx_filter</span><span class="p">(</span><span class="n">can_dev</span><span class="p">,</span><span class="w"> </span><span class="n">filter_id</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="setting-the-bitrate">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Setting the bitrate</a><a class="headerlink" href="#setting-the-bitrate" title="Link to this heading"></a></h2>
+<p>The bitrate and sampling point is initially set at runtime. To change it from
+the application, one can use the <a class="reference internal" href="../../../doxygen/html/group__can__controller.html#ga1b134af5d6286ea0fee130b6da5217da" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">can_set_timing()</span></code></a> API. The <a class="reference internal" href="../../../doxygen/html/group__can__controller.html#gac27fe64142603f0d32d422594356b2d7" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">can_calc_timing()</span></code></a>
+function can calculate timing from a bitrate and sampling point in permille.
+The following example sets the bitrate to 250k baud with the sampling point at
+87.5%.</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">can_timing</span><span class="w"> </span><span class="n">timing</span><span class="p">;</span>
+<span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="k">const</span><span class="w"> </span><span class="n">can_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEVICE_DT_GET</span><span class="p">(</span><span class="n">DT_CHOSEN</span><span class="p">(</span><span class="n">zephyr_canbus</span><span class="p">));</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">can_calc_timing</span><span class="p">(</span><span class="n">can_dev</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">timing</span><span class="p">,</span><span class="w"> </span><span class="mi">250000</span><span class="p">,</span><span class="w"> </span><span class="mi">875</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">&quot;Sample-Point error: %d&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">ret</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">LOG_ERR</span><span class="p">(</span><span class="s">&quot;Failed to calc a valid timing&quot;</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">can_stop</span><span class="p">(</span><span class="n">can_dev</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">LOG_ERR</span><span class="p">(</span><span class="s">&quot;Failed to stop CAN controller&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">can_set_timing</span><span class="p">(</span><span class="n">can_dev</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">timing</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">LOG_ERR</span><span class="p">(</span><span class="s">&quot;Failed to set timing&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">can_start</span><span class="p">(</span><span class="n">can_dev</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">LOG_ERR</span><span class="p">(</span><span class="s">&quot;Failed to start CAN controller&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>A similar API exists for calculating and setting the timing for the data phase for CAN FD capable
+controllers. See <a class="reference internal" href="../../../doxygen/html/group__can__controller.html#ga606cf9fda4c66a0f4abf74e1d357eac2" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">can_set_timing_data()</span></code></a> and <a class="reference internal" href="../../../doxygen/html/group__can__controller.html#ga358cd73ed59c2099f4b2c6ceb397ca11" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">can_calc_timing_data()</span></code></a>.</p>
+</section>
+<section id="socketcan">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">SocketCAN</a><a class="headerlink" href="#socketcan" title="Link to this heading"></a></h2>
+<p>Zephyr additionally supports SocketCAN, a BSD socket implementation of the
+Zephyr CAN API.
+SocketCAN brings the convenience of the well-known BSD Socket API to
+Controller Area Networks. It is compatible with the Linux SocketCAN
+implementation, where many other high-level CAN projects build on top.
+Note that frames are routed to the network stack instead of passed directly,
+which adds some computation and memory overhead.</p>
+</section>
+<section id="samples">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Samples</a><a class="headerlink" href="#samples" title="Link to this heading"></a></h2>
+<p>We have two ready-to-build samples demonstrating use of the Zephyr CAN API:
+<a class="reference internal" href="../../../samples/drivers/can/counter/README.html#can-counter" title="Send and receive CAN messages."><span class="xref zephyr zephyr-code-sample">Zephyr CAN counter sample</span></a> and
+<a class="reference internal" href="../../../samples/net/sockets/can/README.html#socket-can" title="Send and receive raw CAN frames using BSD sockets API."><span class="xref zephyr zephyr-code-sample">SocketCAN sample</span></a>.</p>
+</section>
+<section id="can-controller-api-reference">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">CAN Controller API Reference</a><a class="headerlink" href="#can-controller-api-reference" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../../doxygen/html/group__can__controller.html" title=""><span class="pre">CAN</span> <span class="pre">Controller</span></a></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/drivers/can/babbling/README.html#can-babbling" title="Simulate a babbling CAN node.">Controller Area Network (CAN) babbling node</a></span><span class="code-sample-description">Simulate a babbling CAN node.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/drivers/can/counter/README.html#can-counter" title="Send and receive CAN messages.">Controller Area Network (CAN) counter</a></span><span class="code-sample-description">Send and receive CAN messages.</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

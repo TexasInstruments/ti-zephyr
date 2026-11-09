@@ -1,0 +1,546 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="group__spsc__lockfree" kind="group">
+    <compoundname>spsc_lockfree</compoundname>
+    <title>SPSC API</title>
+    <innerfile refid="spsc__lockfree_8h">spsc_lockfree.h</innerfile>
+    <innerclass refid="structspsc" prot="private">spsc</innerclass>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="group__spsc__lockfree_1ga18aecd57468b7e6b3779c86952647238" prot="public" static="no">
+        <name>SPSC_INITIALIZER</name>
+        <param><defname>sz</defname></param>
+        <param><defname>buf</defname></param>
+        <initializer>        {                                                                                          \
+                ._spsc =                                                                           \
+                        {                                                                          \
+                                .acquire = 0,                                                      \
+                                .consume = 0,                                                      \
+                                .in = <ref refid="group__atomic__apis_1gaadfbba86627ee7eeb07e04f712550f73" kindref="member">ATOMIC_INIT</ref>(0),                                              \
+                                .out = <ref refid="group__atomic__apis_1gaadfbba86627ee7eeb07e04f712550f73" kindref="member">ATOMIC_INIT</ref>(0),                                             \
+                                .mask = sz - 1,                                                    \
+                        },                                                                         \
+                .buffer = buf,                                                                     \
+        }</initializer>
+        <briefdescription>
+<para>Statically initialize an spsc. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>sz</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Size of the spsc, must be power of 2 (ex: 2, 4, 8) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>buf</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Buffer pointer </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_lockfree.h" line="82" column="9" bodyfile="zephyr/sys/spsc_lockfree.h" bodystart="82" bodyend="93"/>
+      </memberdef>
+      <memberdef kind="define" id="group__spsc__lockfree_1gaef8a80e3a9bc0d30e1e3b29ff7b6ba85" prot="public" static="no">
+        <name>SPSC_DECLARE</name>
+        <param><defname>name</defname></param>
+        <param><defname>type</defname></param>
+        <initializer>        struct spsc_##name {                                                                       \
+                struct spsc _spsc;                                                                 \
+                type * const buffer;                                                               \
+        }</initializer>
+        <briefdescription>
+<para>Declare an anonymous struct type for an spsc. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>name</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Name of the spsc symbol to be provided </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>type</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Type stored in the spsc </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_lockfree.h" line="101" column="9" bodyfile="zephyr/sys/spsc_lockfree.h" bodystart="101" bodyend="105"/>
+      </memberdef>
+      <memberdef kind="define" id="group__spsc__lockfree_1ga8d1ccd780f9e0656fffc59ffc828fd1f" prot="public" static="no">
+        <name>SPSC_DEFINE</name>
+        <param><defname>name</defname></param>
+        <param><defname>type</defname></param>
+        <param><defname>sz</defname></param>
+        <initializer>        <ref refid="include_2zephyr_2toolchain_2llvm_8h_1a3d1703c1ea506915af01cc9c0fd81926" kindref="member">BUILD_ASSERT</ref>(<ref refid="group__sys-util_1ga52d277cbf33f76350b2fcb21c24640ee" kindref="member">IS_POWER_OF_TWO</ref>(sz));                                                         \
+        static type __spsc_buf_##name[sz];                                                         \
+        <ref refid="group__spsc__lockfree_1gaef8a80e3a9bc0d30e1e3b29ff7b6ba85" kindref="member">SPSC_DECLARE</ref>(name, type) name = <ref refid="group__spsc__lockfree_1ga18aecd57468b7e6b3779c86952647238" kindref="member">SPSC_INITIALIZER</ref>(sz, __spsc_buf_##name);</initializer>
+        <briefdescription>
+<para>Define an spsc with a fixed size. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>name</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Name of the spsc symbol to be provided </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>type</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Type stored in the spsc </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sz</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Size of the spsc, must be power of 2 (ex: 2, 4, 8) </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_lockfree.h" line="114" column="9" bodyfile="zephyr/sys/spsc_lockfree.h" bodystart="114" bodyend="117"/>
+      </memberdef>
+      <memberdef kind="define" id="group__spsc__lockfree_1ga4b191cf95a0fdae8a197037ab252a58c" prot="public" static="no">
+        <name>spsc_size</name>
+        <param><defname>spsc</defname></param>
+        <initializer>((spsc)-&gt;_spsc.mask + 1)</initializer>
+        <briefdescription>
+<para>Size of the SPSC queue. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>spsc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>SPSC reference </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_lockfree.h" line="124" column="9" bodyfile="zephyr/sys/spsc_lockfree.h" bodystart="124" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__spsc__lockfree_1gaca6733f19cd9d05ff27176d3ef813490" prot="public" static="no">
+        <name>spsc_reset</name>
+        <param><defname>spsc</defname></param>
+        <initializer>        ({                                                                                         \
+                (spsc)-&gt;_spsc.consume = 0;                                                         \
+                (spsc)-&gt;_spsc.acquire = 0;                                                         \
+                <ref refid="group__atomic__apis_1ga5f0555245d8932c2e7f7e94575e1a095" kindref="member">atomic_set</ref>(&amp;(spsc)-&gt;_spsc.in, 0);                                                  \
+                <ref refid="group__atomic__apis_1ga5f0555245d8932c2e7f7e94575e1a095" kindref="member">atomic_set</ref>(&amp;(spsc)-&gt;_spsc.out, 0);                                                 \
+        })</initializer>
+        <briefdescription>
+<para>Initialize/reset a spsc such that its empty. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Note that this is not safe to do while being used in a producer/consumer situation with multiple calling contexts (isrs/threads).</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>spsc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>SPSC to initialize/reset </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_lockfree.h" line="155" column="9" bodyfile="zephyr/sys/spsc_lockfree.h" bodystart="155" bodyend="161"/>
+      </memberdef>
+      <memberdef kind="define" id="group__spsc__lockfree_1gaa9e6c12ab0d83759b1387be9d299462d" prot="public" static="no">
+        <name>spsc_acquire</name>
+        <param><defname>spsc</defname></param>
+        <initializer>        ({                                                                                         \
+                <ref refid="lib_2libc_2minimal_2include_2sys_2types_8h_1a4089fb16419d359081465355db05f846" kindref="member">unsigned</ref> long idx = z_spsc_in(spsc) + (spsc)-&gt;_spsc.acquire;                       \
+                <ref refid="stdbool_8h_1abb452686968e48b67397da5f97445f5b" kindref="member">bool</ref> spsc_acq = (idx - z_spsc_out(spsc)) &lt; <ref refid="group__spsc__lockfree_1ga4b191cf95a0fdae8a197037ab252a58c" kindref="member">spsc_size</ref>(spsc);                        \
+                if (spsc_acq) {                                                                    \
+                        (spsc)-&gt;_spsc.acquire += 1;                                                \
+                }                                                                                  \
+                spsc_acq ? &amp;((spsc)-&gt;buffer[z_spsc_mask(spsc, idx)]) : <ref refid="iar__missing__defs_8h_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>;                       \
+        })</initializer>
+        <briefdescription>
+<para>Acquire an element to produce from the SPSC. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>spsc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>SPSC to acquire an element from for producing</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>A pointer to the acquired element or null if the spsc is full </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_lockfree.h" line="170" column="9" bodyfile="zephyr/sys/spsc_lockfree.h" bodystart="170" bodyend="178"/>
+      </memberdef>
+      <memberdef kind="define" id="group__spsc__lockfree_1ga8f3308d2e1ef28d29f9eabd46ed90bde" prot="public" static="no">
+        <name>spsc_produce</name>
+        <param><defname>spsc</defname></param>
+        <initializer>        ({                                                                                         \
+                if ((spsc)-&gt;_spsc.acquire &gt; 0) {                                                   \
+                        (spsc)-&gt;_spsc.acquire -= 1;                                                \
+                        <ref refid="group__atomic__apis_1ga518c07595daaca29a9e53071ed59c9c0" kindref="member">atomic_add</ref>(&amp;(spsc)-&gt;_spsc.in, 1);                                          \
+                }                                                                                  \
+        })</initializer>
+        <briefdescription>
+<para>Produce one previously acquired element to the SPSC. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This makes one element available to the consumer immediately</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>spsc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>SPSC to produce the previously acquired element or do nothing </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_lockfree.h" line="187" column="9" bodyfile="zephyr/sys/spsc_lockfree.h" bodystart="187" bodyend="193"/>
+      </memberdef>
+      <memberdef kind="define" id="group__spsc__lockfree_1ga971fea8aa902ccaac6a3ac787046d0cd" prot="public" static="no">
+        <name>spsc_produce_all</name>
+        <param><defname>spsc</defname></param>
+        <initializer>        ({                                                                                         \
+                if ((spsc)-&gt;_spsc.acquire &gt; 0) {                                                   \
+                        <ref refid="lib_2libc_2minimal_2include_2sys_2types_8h_1a4089fb16419d359081465355db05f846" kindref="member">unsigned</ref> long acquired = (spsc)-&gt;_spsc.acquire;                            \
+                        (spsc)-&gt;_spsc.acquire = 0;                                                 \
+                        <ref refid="group__atomic__apis_1ga518c07595daaca29a9e53071ed59c9c0" kindref="member">atomic_add</ref>(&amp;(spsc)-&gt;_spsc.in, acquired);                                   \
+                }                                                                                  \
+        })</initializer>
+        <briefdescription>
+<para>Produce all previously acquired elements to the SPSC. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This makes all previous acquired elements available to the consumer immediately</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>spsc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>SPSC to produce all previously acquired elements or do nothing </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_lockfree.h" line="203" column="9" bodyfile="zephyr/sys/spsc_lockfree.h" bodystart="203" bodyend="210"/>
+      </memberdef>
+      <memberdef kind="define" id="group__spsc__lockfree_1ga30f61cd259725e8a06b920517d23df01" prot="public" static="no">
+        <name>spsc_drop_all</name>
+        <param><defname>spsc</defname></param>
+        <initializer>        do {                                                                                       \
+                (spsc)-&gt;_spsc.acquire = 0;                                                         \
+        } while (<ref refid="stdbool_8h_1a65e9886d74aaee76545e83dd09011727" kindref="member">false</ref>)</initializer>
+        <briefdescription>
+<para>Drop all previously acquired elements. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This makes all previous acquired elements available to be acquired again</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>spsc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>SPSC to drop all previously acquired elements or do nothing </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_lockfree.h" line="219" column="9" bodyfile="zephyr/sys/spsc_lockfree.h" bodystart="219" bodyend="222"/>
+      </memberdef>
+      <memberdef kind="define" id="group__spsc__lockfree_1gacca4ce3da7128ecadb861b47bd55bf9b" prot="public" static="no">
+        <name>spsc_consume</name>
+        <param><defname>spsc</defname></param>
+        <initializer>        ({                                                                                         \
+                <ref refid="lib_2libc_2minimal_2include_2sys_2types_8h_1a4089fb16419d359081465355db05f846" kindref="member">unsigned</ref> long idx = z_spsc_out(spsc) + (spsc)-&gt;_spsc.consume;                      \
+                <ref refid="stdbool_8h_1abb452686968e48b67397da5f97445f5b" kindref="member">bool</ref> has_consumable = (idx != z_spsc_in(spsc));                                    \
+                if (has_consumable) {                                                              \
+                        (spsc)-&gt;_spsc.consume += 1;                                                \
+                }                                                                                  \
+                has_consumable ? &amp;((spsc)-&gt;buffer[z_spsc_mask(spsc, idx)]) : <ref refid="iar__missing__defs_8h_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>;                 \
+        })</initializer>
+        <briefdescription>
+<para>Consume an element from the spsc. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>spsc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Spsc to consume from</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Pointer to element or null if no consumable elements left </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_lockfree.h" line="231" column="9" bodyfile="zephyr/sys/spsc_lockfree.h" bodystart="231" bodyend="239"/>
+      </memberdef>
+      <memberdef kind="define" id="group__spsc__lockfree_1ga4d20e781b0f811a08334375664d74726" prot="public" static="no">
+        <name>spsc_release</name>
+        <param><defname>spsc</defname></param>
+        <initializer>        ({                                                                                         \
+                if ((spsc)-&gt;_spsc.consume &gt; 0) {                                                   \
+                        (spsc)-&gt;_spsc.consume -= 1;                                                \
+                        <ref refid="group__atomic__apis_1ga518c07595daaca29a9e53071ed59c9c0" kindref="member">atomic_add</ref>(&amp;(spsc)-&gt;_spsc.out, 1);                                         \
+                }                                                                                  \
+        })</initializer>
+        <briefdescription>
+<para>Release a consumed element. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>spsc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>SPSC to release consumed element or do nothing </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_lockfree.h" line="246" column="9" bodyfile="zephyr/sys/spsc_lockfree.h" bodystart="246" bodyend="252"/>
+      </memberdef>
+      <memberdef kind="define" id="group__spsc__lockfree_1ga624be14173fbb26c8b09e50e9e0d46a2" prot="public" static="no">
+        <name>spsc_release_all</name>
+        <param><defname>spsc</defname></param>
+        <initializer>        ({                                                                                         \
+                if ((spsc)-&gt;_spsc.consume &gt; 0) {                                                   \
+                        <ref refid="lib_2libc_2minimal_2include_2sys_2types_8h_1a4089fb16419d359081465355db05f846" kindref="member">unsigned</ref> long consumed = (spsc)-&gt;_spsc.consume;                            \
+                        (spsc)-&gt;_spsc.consume = 0;                                                 \
+                        <ref refid="group__atomic__apis_1ga518c07595daaca29a9e53071ed59c9c0" kindref="member">atomic_add</ref>(&amp;(spsc)-&gt;_spsc.out, consumed);                                  \
+                }                                                                                  \
+        })</initializer>
+        <briefdescription>
+<para>Release all consumed elements. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>spsc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>SPSC to release consumed elements or do nothing </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_lockfree.h" line="259" column="9" bodyfile="zephyr/sys/spsc_lockfree.h" bodystart="259" bodyend="266"/>
+      </memberdef>
+      <memberdef kind="define" id="group__spsc__lockfree_1ga2bed9808d75ed0617e4442fd6d69244c" prot="public" static="no">
+        <name>spsc_acquirable</name>
+        <param><defname>spsc</defname></param>
+        <initializer>        ({ (((spsc)-&gt;_spsc.in + (spsc)-&gt;_spsc.acquire) - (spsc)-&gt;_spsc.out) - <ref refid="group__spsc__lockfree_1ga4b191cf95a0fdae8a197037ab252a58c" kindref="member">spsc_size</ref>(spsc); })</initializer>
+        <briefdescription>
+<para>Count of acquirable in spsc. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>spsc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>SPSC to get item count for </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_lockfree.h" line="273" column="9" bodyfile="zephyr/sys/spsc_lockfree.h" bodystart="273" bodyend="274"/>
+      </memberdef>
+      <memberdef kind="define" id="group__spsc__lockfree_1gae2b68434c49078b1a55930b4a99aacdf" prot="public" static="no">
+        <name>spsc_consumable</name>
+        <param><defname>spsc</defname></param>
+        <initializer>({ (spsc)-&gt;_spsc.in - (spsc)-&gt;_spsc.out - (spsc)-&gt;_spsc.consume; })</initializer>
+        <briefdescription>
+<para>Count of consumables in spsc. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>spsc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>SPSC to get item count for </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_lockfree.h" line="281" column="9" bodyfile="zephyr/sys/spsc_lockfree.h" bodystart="281" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__spsc__lockfree_1gac382c3a75dbc1df5d6d40df8c7d54266" prot="public" static="no">
+        <name>spsc_peek</name>
+        <param><defname>spsc</defname></param>
+        <initializer>        ({                                                                                         \
+                <ref refid="lib_2libc_2minimal_2include_2sys_2types_8h_1a4089fb16419d359081465355db05f846" kindref="member">unsigned</ref> long idx = z_spsc_out(spsc) + (spsc)-&gt;_spsc.consume;                      \
+                <ref refid="stdbool_8h_1abb452686968e48b67397da5f97445f5b" kindref="member">bool</ref> has_consumable = (idx != z_spsc_in(spsc));                                    \
+                has_consumable ? &amp;((spsc)-&gt;buffer[z_spsc_mask(spsc, idx)]) : <ref refid="iar__missing__defs_8h_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>;                 \
+        })</initializer>
+        <briefdescription>
+<para>Peek at the first available item in queue. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>spsc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Spsc to peek into</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Pointer to element or null if no consumable elements left </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_lockfree.h" line="290" column="9" bodyfile="zephyr/sys/spsc_lockfree.h" bodystart="290" bodyend="295"/>
+      </memberdef>
+      <memberdef kind="define" id="group__spsc__lockfree_1gaba7acaae1e0a8a9b82b73ed15acf89a9" prot="public" static="no">
+        <name>spsc_next</name>
+        <param><defname>spsc</defname></param>
+        <param><defname>item</defname></param>
+        <initializer>        ({                                                                                         \
+                <ref refid="lib_2libc_2minimal_2include_2sys_2types_8h_1a4089fb16419d359081465355db05f846" kindref="member">unsigned</ref> long idx = ((item) - (spsc)-&gt;buffer);                                     \
+                <ref refid="stdbool_8h_1abb452686968e48b67397da5f97445f5b" kindref="member">bool</ref> has_next =                                                                    \
+                        z_spsc_mask(spsc, (idx + 1)) != (z_spsc_mask(spsc, z_spsc_in(spsc)));      \
+                has_next ? &amp;((spsc)-&gt;buffer[z_spsc_mask((spsc), idx + 1)]) : <ref refid="iar__missing__defs_8h_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>;                 \
+        })</initializer>
+        <briefdescription>
+<para>Peek at the next item in the queue from a given one. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>spsc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>SPSC to peek at </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>item</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to an item in the queue</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Pointer to element or null if none left </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_lockfree.h" line="306" column="9" bodyfile="zephyr/sys/spsc_lockfree.h" bodystart="306" bodyend="312"/>
+      </memberdef>
+      <memberdef kind="define" id="group__spsc__lockfree_1gabdcbd5a0dc5ea88811967494361c0bfc" prot="public" static="no">
+        <name>spsc_prev</name>
+        <param><defname>spsc</defname></param>
+        <param><defname>item</defname></param>
+        <initializer>        ({                                                                                         \
+                <ref refid="lib_2libc_2minimal_2include_2sys_2types_8h_1a4089fb16419d359081465355db05f846" kindref="member">unsigned</ref> long idx = ((item) - &amp;(spsc)-&gt;buffer[0]) / <ref refid="retained__mem_8h_1a8c945f5e523f7f88fe4d09bfe304240e" kindref="member">sizeof</ref>((spsc)-&gt;buffer[0]);     \
+                <ref refid="stdbool_8h_1abb452686968e48b67397da5f97445f5b" kindref="member">bool</ref> has_prev = idx != z_spsc_mask(spsc, z_spsc_out(spsc));                        \
+                has_prev ? &amp;((spsc)-&gt;buffer[z_spsc_mask(spsc, idx - 1)]) : <ref refid="iar__missing__defs_8h_1a070d2ce7b6bb7e5c05602aa8c308d0c4" kindref="member">NULL</ref>;                   \
+        })</initializer>
+        <briefdescription>
+<para>Get the previous item in the queue from a given one. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>spsc</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>SPSC to peek at </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>item</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to an item in the queue</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Pointer to element or null if none left </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/spsc_lockfree.h" line="322" column="9" bodyfile="zephyr/sys/spsc_lockfree.h" bodystart="322" bodyend="327"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Single Producer Single Consumer (SPSC) Lockfree Queue API. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

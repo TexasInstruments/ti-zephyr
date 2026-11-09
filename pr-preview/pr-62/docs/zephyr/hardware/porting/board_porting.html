@@ -1,0 +1,1257 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Board Porting Guide &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/hardware/porting/board_porting.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Shields" href="shields.html" />
+    <link rel="prev" title="SoC Porting Guide" href="soc_porting.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Hardware Support</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../arch/index.html">Architecture-related Guides</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../barriers/index.html">Barriers API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cache/index.html">Caching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/index.html">Zephyr’s device emulators/simulators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/bus_emulators.html">External Bus and Bus Connected Peripherals Emulators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../peripherals/index.html">Peripherals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pinctrl/index.html">Pin Control</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Porting</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="arch.html">Architecture Porting Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soc_porting.html">SoC Porting Guide</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Board Porting Guide</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#transition-to-the-current-hardware-model">Transition to the current hardware model</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hardware-support-hierarchy">Hardware support hierarchy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#board-terminology">Board terminology</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#make-sure-your-soc-is-supported">Make sure your SoC is supported</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#architecture">Architecture</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#cpu-core">CPU Core</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#soc">SoC</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#create-your-board-directory">Create your board directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#write-your-board-yaml">Write your board YAML</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#write-your-devicetree">Write your devicetree</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#example-frdm-k64f-and-hexiwear-k64">Example: FRDM-K64F and Hexiwear K64</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#write-kconfig-files">Write Kconfig files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#build-test-and-fix">Build, test, and fix</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#general-recommendations">General recommendations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#flash-and-debug-support">Flash and debug support</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiple-board-revisions">Multiple board revisions</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#fuzzy-revision-matching">Fuzzy revision matching</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#exact-revision-matching">Exact revision matching</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#board-revision-configuration-adjustment">Board revision configuration adjustment</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#custom-revision-cmake-files">Custom revision.cmake files</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#contributing-your-board">Contributing your board</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#board-extensions">Board extensions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="shields.html">Shields</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">Virtualization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Hardware Support</a> &raquo;</li>
+  
+     <li><a href="index.html">Porting</a> &raquo;</li>
+  
+  <li>Board Porting Guide</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/hardware/porting/board_porting.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27hardware%2Fporting%2Fboard_porting%27&labels=bug%2Carea%3A+Documentation&env=-+Page%3A+hardware%2Fporting%2Fboard_porting%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="board-porting-guide">
+<span id="id1"></span><h1>Board Porting Guide<a class="headerlink" href="#board-porting-guide" title="Link to this heading"></a></h1>
+<p>To add Zephyr support for a new <a class="reference internal" href="../../glossary.html#term-board"><span class="xref std std-term">board</span></a>, you at least need a <em>board
+directory</em> with various files in it. Files in the board directory inherit
+support for at least one SoC and all of its features. Therefore, Zephyr must
+support your <a class="reference internal" href="../../glossary.html#term-SoC"><span class="xref std std-term">SoC</span></a> as well.</p>
+<section id="transition-to-the-current-hardware-model">
+<span id="hw-model-v2"></span><h2>Transition to the current hardware model<a class="headerlink" href="#transition-to-the-current-hardware-model" title="Link to this heading"></a></h2>
+<p>Shortly after Zephyr 3.6.0 was released, a new hardware model was introduced to
+Zephyr. This new model overhauls the way both SoCs and boards are named and
+defined, and adds support for features that had been identified as important
+over the years. Among them:</p>
+<ul class="simple">
+<li><p>Support for multi-core, multi-arch AMP (Asymmetrical Multi Processing) SoCs</p></li>
+<li><p>Support for multi-SoC boards</p></li>
+<li><p>Support for reusing the SoC and board Kconfig trees outside of the Zephyr
+build system</p></li>
+<li><p>Support for advanced use cases with <a class="reference internal" href="../../build/sysbuild/index.html#sysbuild"><span class="std std-ref">Sysbuild (System build)</span></a></p></li>
+<li><p>Removal of all existing arbitrary and inconsistent uses of Kconfig and folder
+names</p></li>
+</ul>
+<p>All the documentation in this page refers to the current hardware model. Please
+refer to the documentation in Zephyr v3.6.0 (or earlier) for information on the
+previous, now obsolete, hardware model.</p>
+<p>More information about the rationale, development and concepts behind the new
+model can be found in the <a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/51831">original issue</a>, the
+<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/50305">original Pull Request</a> and, for a complete set of changes
+introduced, the <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/commit/8dc3f856229ce083c956aa301c31a23e65bd8cd8">hardware model v2 commit</a>.</p>
+<p>Some non-critical features, enhancements and improvements of the new hardware
+model are still in development. Check the
+<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/69546">hardware model v2 enhancements issue</a> for a complete list.</p>
+<p>The transition from the previous hardware model to the current one (commonly
+referred to as “hardware model v2”) requires modifications to all existing board
+and SoC definitions. A decision was made not to provide direct backwards
+compatibility for the previous model, which leaves users transitioning from a
+previous version of Zephyr to one including the new model (v3.7.0 and onwards)
+with two options if they have an out-of-tree board (or SoC):</p>
+<ol class="arabic simple">
+<li><p>Convert the out-of-tree board to the current hardware model (recommended)</p></li>
+<li><p>Take the SoC definition from Zephyr v3.6.0 and copy it to your downstream
+repository (ensuring that the build system can find it via a
+<a class="reference internal" href="../../develop/modules.html#modules"><span class="std std-ref">zephyr module</span></a> or <code class="docutils literal notranslate"><span class="pre">SOC_ROOT</span></code>). This will allow your board,
+defined in the previous hardware model, to continue to work</p></li>
+</ol>
+<p>When converting your board from the previous to the current hardware model, we
+recommend first reading through this page to understand the model in detail. You
+can then use the <a class="reference external" href="https://github.com/zephyrproject-rtos/example-application/pull/58">example-application conversion Pull Request</a> as an example on
+how to port a simple board. Additionally, a <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/main/scripts/utils/board_v1_to_v2.py">conversion script</a> is available
+and works reliably in many cases (though multi-core SoCs may not be handled
+entirely). Finally, the <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/commit/8dc3f856229ce083c956aa301c31a23e65bd8cd8">hardware model v2 commit</a> contains the full conversion
+of all existing boards from the old to the current model, so you can use it as a
+complete conversion reference.</p>
+</section>
+<section id="hardware-support-hierarchy">
+<span id="hw-support-hierarchy"></span><h2>Hardware support hierarchy<a class="headerlink" href="#hardware-support-hierarchy" title="Link to this heading"></a></h2>
+<p>Zephyr’s hardware support is based on a series of hierarchical abstractions.
+Primarily, each <a class="reference internal" href="../../glossary.html#term-board"><span class="xref std std-term">board</span></a> has one or more <a class="reference internal" href="../../glossary.html#term-SoC"><span class="xref std std-term">SoC</span></a>.
+Each SoC can be optionally classed into an <a class="reference internal" href="../../glossary.html#term-SoC-series"><span class="xref std std-term">SoC series</span></a>, which in turn may optionally belong to an <a class="reference internal" href="../../glossary.html#term-SoC-family"><span class="xref std std-term">SoC family</span></a>.
+Each SoC has one or more <a class="reference internal" href="../../glossary.html#term-CPU-cluster"><span class="xref std std-term">CPU cluster</span></a>, each containing one or more <a class="reference internal" href="../../glossary.html#term-CPU-core"><span class="xref std std-term">CPU core</span></a> of a particular <a class="reference internal" href="../../glossary.html#term-architecture"><span class="xref std std-term">architecture</span></a>.</p>
+<p>You can visualize the hierarchy in the diagram below:</p>
+<figure class="align-center" id="id6">
+<a class="reference internal image-reference" href="../../_images/hierarchy.png"><img alt="Hardware support Hierarchy" src="../../_images/hierarchy.png" style="width: 500px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Hardware support Hierarchy</span><a class="headerlink" href="#id6" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Below are some examples of the hierarchy described in this section, in the form
+of a <a class="reference internal" href="../../glossary.html#term-board"><span class="xref std std-term">board</span></a> per row with its corresponding hierarchy entries. Notice how
+the <a class="reference internal" href="../../glossary.html#term-SoC-series"><span class="xref std std-term">SoC series</span></a> and <a class="reference internal" href="../../glossary.html#term-SoC-family"><span class="xref std std-term">SoC family</span></a> levels are not always used.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><a class="reference internal" href="../../glossary.html#term-board-name"><span class="xref std std-term">board name</span></a></p></th>
+<th class="head"><p><a class="reference internal" href="../../glossary.html#term-board-qualifiers"><span class="xref std std-term">board qualifiers</span></a></p></th>
+<th class="head"><p><a class="reference internal" href="../../glossary.html#term-SoC"><span class="xref std std-term">SoC</span></a></p></th>
+<th class="head"><p><a class="reference internal" href="../../glossary.html#term-SoC-series"><span class="xref std std-term">SoC Series</span></a></p></th>
+<th class="head"><p><a class="reference internal" href="../../glossary.html#term-SoC-family"><span class="xref std std-term">SoC family</span></a></p></th>
+<th class="head"><p>CPU core</p></th>
+<th class="head"><p><a class="reference internal" href="../../glossary.html#term-architecture"><span class="xref std std-term">architecture</span></a></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="../../boards/nordic/nrf52dk/doc/index.html#nrf52dk">nRF52 DK</a></p></td>
+<td><p>nrf52832</p></td>
+<td><p>nRF52832</p></td>
+<td><p>nRF52</p></td>
+<td><p>Nordic nRF</p></td>
+<td><p>Arm Cortex-M4</p></td>
+<td><p>ARMv7-M</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../boards/nxp/frdm_k64f/doc/index.html#frdm_k64f"><span class="xref zephyr zephyr-board">frdm_k64f</span></a></p></td>
+<td><p>mk64f12</p></td>
+<td><p>MK64F12</p></td>
+<td><p>Kinetis K6x</p></td>
+<td><p>NXP Kinetis</p></td>
+<td><p>Arm Cortex-M4</p></td>
+<td><p>ARMv7-M</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../boards/openisa/rv32m1_vega/doc/index.html#rv32m1_vega"><span class="xref zephyr zephyr-board">rv32m1_vega</span></a></p></td>
+<td><p>openisa_rv32m1/ri5cy</p></td>
+<td><p>RV32M1</p></td>
+<td><p>(Not used)</p></td>
+<td><p>(Not used)</p></td>
+<td><p>RI5CY</p></td>
+<td><p>RISC-V RV32</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="2"><p><a class="reference internal" href="../../boards/nordic/nrf5340dk/doc/index.html#nrf5340dk">nRF5340 DK</a></p></td>
+<td><p>nrf5340/cpuapp</p></td>
+<td><p>nRF5340</p></td>
+<td><p>nRF53</p></td>
+<td><p>Nordic nRF</p></td>
+<td><p>Arm Cortex-M33</p></td>
+<td><p>ARMv8-M</p></td>
+</tr>
+<tr class="row-even"><td><p>nrf5340/cpunet</p></td>
+<td><p>nRF5340</p></td>
+<td><p>nRF53</p></td>
+<td><p>Nordic nRF</p></td>
+<td><p>Arm Cortex-M33</p></td>
+<td><p>ARMv8-M</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="3"><p><a class="reference internal" href="../../boards/nxp/imx8mp_evk/doc/index.html#imx8mp_evk"><span class="xref zephyr zephyr-board">mimx8mp_evk</span></a></p></td>
+<td><p>mimx8ml8/a53</p></td>
+<td><p>i.MX8M Plus</p></td>
+<td><p>i.MX8M</p></td>
+<td><p>NXP i.MX</p></td>
+<td><p>Arm Cortex-A53</p></td>
+<td><p>ARMv8-A</p></td>
+</tr>
+<tr class="row-even"><td><p>mimx8ml8/m7</p></td>
+<td><p>i.MX8M Plus</p></td>
+<td><p>i.MX8M</p></td>
+<td><p>NXP i.MX</p></td>
+<td><p>Arm Cortex-M7</p></td>
+<td><p>ARMv7-M</p></td>
+</tr>
+<tr class="row-odd"><td><p>mimx8ml8/adsp</p></td>
+<td><p>i.MX8M Plus</p></td>
+<td><p>i.MX8M</p></td>
+<td><p>NXP i.MX</p></td>
+<td><p>Cadence HIFI4</p></td>
+<td><p>Xtensa LX6</p></td>
+</tr>
+</tbody>
+</table>
+<p>Additional details about terminology can be found in the next section.</p>
+</section>
+<section id="board-terminology">
+<span id="id2"></span><h2>Board terminology<a class="headerlink" href="#board-terminology" title="Link to this heading"></a></h2>
+<p>The previous section introduced the hierarchical manner in which Zephyr
+classifies and implements hardware support.
+This section focuses on the terminology used around hardware support, and in
+particular when defining and working with boards and SoCs.</p>
+<p>The overall set of terms used around the concept of board in Zephyr is depicted
+in the image below, which uses the <a class="reference internal" href="../../boards/ezurio/bl5340_dvk/doc/index.html#bl5340_dvk">BL5340 DVK</a> board as reference.</p>
+<figure class="align-center" id="id7">
+<a class="reference internal image-reference" href="../../_images/board-terminology.svg"><img alt="Board terminology diagram" src="../../_images/board-terminology.svg" style="width: 500px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Board terminology diagram</span><a class="headerlink" href="#id7" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The diagram shows the different terms that are used to describe boards:</p>
+<ul class="simple">
+<li><p>The <a class="reference internal" href="../../glossary.html#term-board-name"><span class="xref std std-term">board name</span></a>: <code class="docutils literal notranslate"><span class="pre">bl5340_dvk</span></code></p></li>
+<li><p>The optional <a class="reference internal" href="../../glossary.html#term-board-revision"><span class="xref std std-term">board revision</span></a>: <code class="docutils literal notranslate"><span class="pre">1.2.0</span></code></p></li>
+<li><p>The <a class="reference internal" href="../../glossary.html#term-board-qualifiers"><span class="xref std std-term">board qualifiers</span></a>, that optionally describe the <a class="reference internal" href="../../glossary.html#term-SoC"><span class="xref std std-term">SoC</span></a>,
+<a class="reference internal" href="../../glossary.html#term-CPU-cluster"><span class="xref std std-term">CPU cluster</span></a> and <a class="reference internal" href="../../glossary.html#term-variant"><span class="xref std std-term">variant</span></a>: <code class="docutils literal notranslate"><span class="pre">nrf5340/cpuapp/ns</span></code></p></li>
+<li><p>The <a class="reference internal" href="../../glossary.html#term-board-target"><span class="xref std std-term">board target</span></a>, which uniquely identifies a combination of the above
+and can be used to specify the hardware to build for when using the tooling
+provided by Zephyr: <code class="docutils literal notranslate"><span class="pre">bl5340_dvk&#64;1.2.0/nrf5340/cpuapp/ns</span></code></p></li>
+</ul>
+<p>Formally this can also be seen as
+<code class="samp docutils literal notranslate"><em><span class="pre">board</span> <span class="pre">name</span></em><span class="pre">[&#64;</span><em><span class="pre">revision</span></em><span class="pre">][/</span><em><span class="pre">board</span> <span class="pre">qualifiers</span></em><span class="pre">]</span></code>, which can be extended to
+<code class="samp docutils literal notranslate"><em><span class="pre">board</span> <span class="pre">name</span></em><span class="pre">[&#64;</span><em><span class="pre">revision</span></em><span class="pre">][/</span><em><span class="pre">SoC</span></em><span class="pre">[/</span><em><span class="pre">CPU</span> <span class="pre">cluster</span></em><span class="pre">][/</span><em><span class="pre">variant</span></em><span class="pre">]]</span></code>.</p>
+<p>If a board contains only one single-core SoC, then the SoC can be omitted from
+the board target. This implies that if the board does not define any board
+qualifiers, the board name can be used as a board target. Conversely, if
+board qualifiers are part of the board definition, then the SoC can be omitted
+by leaving it out but including the corresponding forward-slashes: <code class="docutils literal notranslate"><span class="pre">//</span></code>.</p>
+<p>Continuing with the example above, The board <a class="reference internal" href="../../boards/ezurio/bl5340_dvk/doc/index.html#bl5340_dvk">BL5340 DVK</a> is a single SoC
+board where the SoC defines two CPU clusters: <code class="docutils literal notranslate"><span class="pre">cpuapp</span></code> and <code class="docutils literal notranslate"><span class="pre">cpunet</span></code>. One of
+the CPU clusters, <code class="docutils literal notranslate"><span class="pre">cpuapp</span></code>, additionally defines a non-secure board variant,
+<code class="docutils literal notranslate"><span class="pre">ns</span></code>.</p>
+<p>The board qualifiers <code class="docutils literal notranslate"><span class="pre">nrf5340/cpuapp/ns</span></code> can be read as:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">nrf5340</span></code>: The SoC, which is a Nordic nRF5340 dual-core SoC</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cpuapp</span></code>: The CPU cluster <code class="docutils literal notranslate"><span class="pre">cpuapp</span></code>, which consists of a single Cortex-M33
+CPU core. The number of cores in a CPU cluster cannot be determined from the
+board qualifiers.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ns</span></code>: a variant, in this case <code class="docutils literal notranslate"><span class="pre">ns</span></code> is a common variant name in
+Zephyr denoting a non-secure build for boards supporting <a class="reference internal" href="../../services/tfm/index.html#tfm"><span class="std std-ref">Trusted Firmware-M (TF-M)</span></a>.</p></li>
+</ul>
+<p>Not all SoCs define CPU clusters or variants. For example a simple board
+like the <a class="reference internal" href="../../boards/nordic/thingy52/doc/index.html#thingy52">Thingy:52</a> contains a single SoC with no CPU clusters and
+no variants.
+For <code class="docutils literal notranslate"><span class="pre">thingy52</span></code> the board target <code class="docutils literal notranslate"><span class="pre">thingy52/nrf52832</span></code> can be read as:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">thingy52</span></code>: board name.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nrf52832</span></code>: The board qualifiers, in this case identical to the SoC, which
+is a Nordic nRF52832.</p></li>
+</ul>
+</section>
+<section id="make-sure-your-soc-is-supported">
+<h2>Make sure your SoC is supported<a class="headerlink" href="#make-sure-your-soc-is-supported" title="Link to this heading"></a></h2>
+<p>Start by making sure your SoC is supported by Zephyr. If it is, it’s time to
+<a class="reference internal" href="#create-your-board-directory"><span class="std std-ref">Create your board directory</span></a>. If you don’t know, try:</p>
+<ul class="simple">
+<li><p>checking <a class="reference internal" href="../../boards/index.html#boards"><span class="std std-ref">Supported Boards and Shields</span></a> for names that look relevant, and reading individual
+board documentation to find out for sure.</p></li>
+<li><p>asking your SoC vendor</p></li>
+</ul>
+<p>If you need to add a SoC, CPU cluster, or even architecture support, this is the
+wrong page, but here is some general advice.</p>
+<section id="architecture">
+<h3>Architecture<a class="headerlink" href="#architecture" title="Link to this heading"></a></h3>
+<p>See <a class="reference internal" href="arch.html#architecture-porting-guide"><span class="std std-ref">Architecture Porting Guide</span></a>.</p>
+</section>
+<section id="cpu-core">
+<h3>CPU Core<a class="headerlink" href="#cpu-core" title="Link to this heading"></a></h3>
+<p>CPU core support files go in <code class="docutils literal notranslate"><span class="pre">core</span></code> subdirectories under <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/arch">arch</a>,
+e.g. <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/arch/x86/core">arch/x86/core</a>.</p>
+<p>See <a class="reference internal" href="../../develop/beyond-GSG.html#gs-toolchain"><span class="std std-ref">Install a Toolchain</span></a> for information about toolchains (compiler, linker,
+etc.) supported by Zephyr. If you need to support a new toolchain,
+<a class="reference internal" href="../../build/index.html#build-overview"><span class="std std-ref">Build and Configuration Systems</span></a> is a good place to start learning about the build system.
+Please reach out to the community if you are looking for advice or want to
+collaborate on toolchain support.</p>
+</section>
+<section id="soc">
+<h3>SoC<a class="headerlink" href="#soc" title="Link to this heading"></a></h3>
+<p>Zephyr SoC support files are in architecture-specific subdirectories of
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/soc">soc</a>. They are generally grouped by SoC family.</p>
+<p>When adding a new SoC family or series for a vendor that already has SoC
+support within Zephyr, please try to extract common functionality into shared
+files to avoid duplication. If there is no support for your vendor yet, you can
+add it in a new directory <code class="docutils literal notranslate"><span class="pre">zephyr/soc/&lt;VENDOR&gt;/&lt;YOUR-SOC&gt;</span></code>; please use
+self-explanatory directory names.</p>
+</section>
+</section>
+<section id="create-your-board-directory">
+<span id="id3"></span><h2>Create your board directory<a class="headerlink" href="#create-your-board-directory" title="Link to this heading"></a></h2>
+<p>Once you’ve found an existing board that uses your SoC, you can usually start
+by copy/pasting its board directory and changing its contents for your
+hardware.</p>
+<p>You need to give your board a unique name. Run <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">boards</span></code> for a list of
+names that are already taken, and pick something new. Let’s say your board is
+called <code class="docutils literal notranslate"><span class="pre">plank</span></code> (please don’t actually use that name).</p>
+<p>Start by creating the board directory <code class="docutils literal notranslate"><span class="pre">zephyr/boards/&lt;VENDOR&gt;/plank</span></code>, where
+<code class="docutils literal notranslate"><span class="pre">&lt;VENDOR&gt;</span></code> is your vendor subdirectory. (You don’t have to put your
+board directory in the zephyr repository, but it’s the easiest way to get
+started. See <a class="reference internal" href="../../develop/application/index.html#custom-board-definition"><span class="std std-ref">Custom Board, Devicetree and SOC Definitions</span></a> for documentation on moving your
+board directory to a separate repository once it’s working.)</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">&lt;VENDOR&gt;</span></code> subdirectory is mandatory if contributing your board
+to Zephyr, but if your board is placed in a local repo, then any folder
+structure under <code class="docutils literal notranslate"><span class="pre">&lt;your-repo&gt;/boards</span></code> is permitted.
+If the vendor is defined in the list in
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/dts/bindings/vendor-prefixes.txt">dts/bindings/vendor-prefixes.txt</a> then you must use
+that vendor prefix as <code class="docutils literal notranslate"><span class="pre">&lt;VENDOR&gt;</span></code>. <code class="docutils literal notranslate"><span class="pre">others</span></code> may be used as vendor prefix if
+the vendor is not defined.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The board directory name does not need to match the name of the board.
+Multiple boards can even be defined in one directory.</p>
+</div>
+<p>Your board directory should look like this:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>boards/&lt;VENDOR&gt;/plank
+├── board.yml
+├── board.cmake
+├── CMakeLists.txt
+├── doc
+│   ├── plank.webp
+│   └── index.rst
+├── Kconfig.plank
+├── Kconfig.defconfig
+├── plank_&lt;qualifiers&gt;_defconfig
+├── plank_&lt;qualifiers&gt;.dts
+└── plank_&lt;qualifiers&gt;.yaml
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">plank</span></code> with your board’s name, of course.</p>
+<p>The mandatory files are:</p>
+<ol class="arabic simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">board.yml</span></code>: a YAML file describing the high-level meta data of the
+boards such as the boards names, their SoCs, and variants.
+CPU clusters for multi-core SoCs are not described in this file as they are
+inherited from the SoC’s YAML description.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">plank_&lt;qualifiers&gt;.dts</span></code>: a hardware description
+in <a class="reference internal" href="../../build/dts/index.html#dt-guide"><span class="std std-ref">devicetree</span></a> format. This declares your SoC, connectors,
+and any other hardware components such as LEDs, buttons, sensors, or
+communication peripherals (USB, Bluetooth controller, etc).</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">Kconfig.plank</span></code>: the base software configuration for selecting SoC and
+other board and SoC related settings. Kconfig settings outside of the board
+and SoC tree must not be selected. To select general Zephyr Kconfig settings
+the <code class="file docutils literal notranslate"><span class="pre">Kconfig</span></code> file must be used.</p></li>
+</ol>
+<p>The optional files are:</p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">Kconfig</span></code>, <code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code> software configuration in
+<a class="reference internal" href="../../build/kconfig/index.html#kconfig"><span class="std std-ref">Configuration System (Kconfig)</span></a> formats. This provides default settings for software features
+and peripheral drivers.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">plank_defconfig</span></code> and <code class="file docutils literal notranslate"><span class="pre">plank_&lt;qualifiers&gt;_defconfig</span></code>: software
+configuration in Kconfig <code class="docutils literal notranslate"><span class="pre">.conf</span></code> format.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">board.cmake</span></code>: used for <a class="reference internal" href="#flash-and-debug-support"><span class="std std-ref">Flash and debug support</span></a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>: if you need to add additional source files to
+your build.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">doc/index.rst</span></code>, <code class="file docutils literal notranslate"><span class="pre">doc/plank.webp</span></code>: documentation for and a picture
+of your board. You only need this if you’re <a class="reference internal" href="#contributing-your-board"><span class="std std-ref">Contributing your board</span></a> to
+Zephyr.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">plank_&lt;qualifiers&gt;.yaml</span></code>: a YAML file with miscellaneous metadata used
+by the <a class="reference internal" href="../../develop/test/twister.html#twister-script"><span class="std std-ref">Test Runner (Twister)</span></a>.</p></li>
+</ul>
+<p>Board qualifiers of the form <code class="docutils literal notranslate"><span class="pre">&lt;soc&gt;/&lt;cpucluster&gt;/&lt;variant&gt;</span></code> are normalized so
+that <code class="docutils literal notranslate"><span class="pre">/</span></code> is replaced with <code class="docutils literal notranslate"><span class="pre">_</span></code> when used for filenames, for example:
+<code class="docutils literal notranslate"><span class="pre">soc1/foo</span></code> becomes <code class="docutils literal notranslate"><span class="pre">soc1_foo</span></code> when used in filenames.</p>
+</section>
+<section id="write-your-board-yaml">
+<span id="board-description"></span><h2>Write your board YAML<a class="headerlink" href="#write-your-board-yaml" title="Link to this heading"></a></h2>
+<p>The board YAML file describes the board at a high level.
+This includes the SoC, board variants, and board revisions.</p>
+<p>Detailed configurations, such as hardware description and configuration are done
+in devicetree and Kconfig.</p>
+<p>The skeleton of the board YAML file is:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">board</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;board-name&gt;</span>
+<span class="w">  </span><span class="nt">vendor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;board-vendor&gt;</span>
+<span class="w">  </span><span class="nt">revision</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;major.minor.patch|letter|number|custom&gt;</span>
+<span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;default-revision-value&gt;</span>
+<span class="w">    </span><span class="nt">exact</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;true|false&gt;</span>
+<span class="w">    </span><span class="nt">revisions</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;revA&gt;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;revB&gt;</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">  </span><span class="nt">socs</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;soc-1&gt;</span>
+<span class="w">    </span><span class="nt">variants</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;variant-1&gt;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;variant-2&gt;</span>
+<span class="w">      </span><span class="nt">variants</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;sub-variant-2-1&gt;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;soc-2&gt;</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</pre></div>
+</div>
+<p>It is possible to have multiple boards located in the board folder.
+If multiple boards are placed in the same board folder, then the file
+<code class="file docutils literal notranslate"><span class="pre">board.yml</span></code> must describe those in a list as:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">boards</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;board-name-1&gt;</span>
+<span class="w">  </span><span class="nt">vendor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;board-vendor&gt;</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;board-name-2&gt;</span>
+<span class="w">  </span><span class="nt">vendor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;board-vendor&gt;</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="nn">...</span>
+</pre></div>
+</div>
+</section>
+<section id="write-your-devicetree">
+<span id="default-board-configuration"></span><h2>Write your devicetree<a class="headerlink" href="#write-your-devicetree" title="Link to this heading"></a></h2>
+<p>The devicetree file <code class="file docutils literal notranslate"><span class="pre">boards/&lt;vendor&gt;/plank/plank_&lt;qualifiers&gt;.dts</span></code> describes your board
+hardware in the Devicetree Source (DTS) format (as usual, change <code class="docutils literal notranslate"><span class="pre">plank</span></code> to
+your board’s name). If you’re new to devicetree, see <a class="reference internal" href="../../build/dts/intro.html#devicetree-intro"><span class="std std-ref">Introduction to devicetree</span></a>.</p>
+<p>In general, <code class="file docutils literal notranslate"><span class="pre">plank_&lt;qualifiers&gt;.dts</span></code> should look like this:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cp">/dts-v1/</span><span class="p">;</span>
+<span class="cp">#include</span><span class="cm"> </span><span class="cpf">&lt;your_soc_vendor/your_soc.dtsi&gt;</span>
+
+<span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;A human readable name&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;yourcompany,plank&quot;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="nf">chosen</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">zephyr</span><span class="p">,</span><span class="n">console</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">your_uart_console</span><span class="p">;</span>
+<span class="w">                </span><span class="n">zephyr</span><span class="p">,</span><span class="n">sram</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">your_memory_node</span><span class="p">;</span>
+<span class="w">                </span><span class="cm">/* other chosen settings  for your hardware */</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="cm">/*</span>
+<span class="cm">         * Your board-specific hardware: buttons, LEDs, sensors, etc.</span>
+<span class="cm">         */</span>
+
+<span class="w">        </span><span class="nf">leds</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;gpio-leds&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="nl">led0</span><span class="p">:</span><span class="w"> </span><span class="nf">led_0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="cm">/* GPIO your LED is hooked up to */</span><span class="w"> </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;LED 0&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="p">};</span>
+<span class="w">                </span><span class="cm">/* ... other LEDs ... */</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="nf">buttons</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;gpio-keys&quot;</span><span class="p">;</span>
+<span class="w">                </span><span class="cm">/* ... your button definitions ... */</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="cm">/* These aliases are provided for compatibility with samples */</span>
+<span class="w">        </span><span class="nf">aliases</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">led0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">led0</span><span class="p">;</span><span class="w"> </span><span class="cm">/* now you support the blinky sample! */</span>
+<span class="w">                </span><span class="cm">/* other aliases go here */</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="o">&amp;</span><span class="nf">some_peripheral_you_want_to_enable</span><span class="cm"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* like a GPIO or SPI controller */</span>
+<span class="w">        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="o">&amp;</span><span class="nf">another_peripheral_you_want</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>In the case a board has only a single SoC, without any board variants then the dts file can be
+named <code class="file docutils literal notranslate"><span class="pre">&lt;plank&gt;.dts</span></code> instead, however this is not recommended due to the file silently be
+unused if a variant or other SoC is added to the board.</p>
+<p>If you’re in a hurry, simple hardware can usually be supported by copy/paste
+followed by trial and error. If you want to understand details, you will need
+to read the rest of the devicetree documentation and the devicetree
+specification.</p>
+<section id="example-frdm-k64f-and-hexiwear-k64">
+<span id="dt-k6x-example"></span><h3>Example: FRDM-K64F and Hexiwear K64<a class="headerlink" href="#example-frdm-k64f-and-hexiwear-k64" title="Link to this heading"></a></h3>
+<p>This section contains concrete examples related to writing your board’s
+devicetree.</p>
+<p>The FRDM-K64F and Hexiwear K64 board devicetrees are defined in
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/boards/nxp/frdm_k64f/frdm_k64f.dts">frdm_k64fs.dts</a> and
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/boards/mikroe/hexiwear/hexiwear_mk64f12.dts">hexiwear_k64.dts</a>
+respectively. Both boards have NXP SoCs from the same Kinetis SoC family, the
+K6X.</p>
+<p>Common devicetree definitions for K6X are stored in <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/dts/arm/nxp/kinetis/nxp_k6x.dtsi">nxp_k6x.dtsi</a>, which is included by both board
+<code class="file docutils literal notranslate"><span class="pre">.dts</span></code> files. <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/dts/arm/nxp/kinetis/nxp_k6x.dtsi">nxp_k6x.dtsi</a>
+in turn includes
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/dts/arm/armv7-m.dtsi">armv7-m.dtsi</a>, which has common definitions
+for Arm v7-M cores.</p>
+<p>Since <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/dts/arm/nxp/kinetis/nxp_k6x.dtsi">nxp_k6x.dtsi</a> is meant to be
+generic across K6X-based boards, it leaves many devices disabled by default
+using <code class="docutils literal notranslate"><span class="pre">status</span></code> properties.  For example, there is a CAN controller defined as
+follows (with unimportant parts skipped):</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nl">can0</span><span class="p">:</span><span class="w"> </span><span class="nf">can</span><span class="o">@</span><span class="mi">40024000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="p">...</span>
+<span class="w">     </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;disabled&quot;</span><span class="p">;</span>
+<span class="w">     </span><span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>It is up to the board <code class="file docutils literal notranslate"><span class="pre">.dts</span></code> or application overlay files to enable these
+devices as desired, by setting <code class="docutils literal notranslate"><span class="pre">status</span> <span class="pre">=</span> <span class="pre">&quot;okay&quot;</span></code>. The board <code class="file docutils literal notranslate"><span class="pre">.dts</span></code>
+files are also responsible for any board-specific configuration of the device,
+such as adding nodes for on-board sensors, LEDs, buttons, etc.</p>
+<p>For example, FRDM-K64 (but not Hexiwear K64) <code class="file docutils literal notranslate"><span class="pre">.dts</span></code> enables the CAN
+controller and sets the bus speed:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">can0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;okay&quot;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">&amp;can0</span> <span class="pre">{</span> <span class="pre">...</span> <span class="pre">};</span></code> syntax adds/overrides properties on the node with label
+<code class="docutils literal notranslate"><span class="pre">can0</span></code>, i.e. the <code class="docutils literal notranslate"><span class="pre">can&#64;4002400</span></code> node defined in the <code class="file docutils literal notranslate"><span class="pre">.dtsi</span></code> file.</p>
+<p>Other examples of board-specific customization is pointing properties in
+<code class="docutils literal notranslate"><span class="pre">aliases</span></code> and <code class="docutils literal notranslate"><span class="pre">chosen</span></code> to the right nodes (see <a class="reference internal" href="../../build/dts/intro-syntax-structure.html#dt-alias-chosen"><span class="std std-ref">Aliases and chosen nodes</span></a>), and
+making GPIO/pinmux assignments.</p>
+</section>
+</section>
+<section id="write-kconfig-files">
+<span id="board-kconfig-files"></span><h2>Write Kconfig files<a class="headerlink" href="#write-kconfig-files" title="Link to this heading"></a></h2>
+<p>Zephyr uses the Kconfig language to configure software features. Your board
+needs to provide some Kconfig settings before you can compile a Zephyr
+application for it.</p>
+<p>Setting Kconfig configuration values is documented in detail in
+<a class="reference internal" href="../../build/kconfig/setting.html#setting-configuration-values"><span class="std std-ref">Setting Kconfig configuration values</span></a>.</p>
+<p>There is one mandatory Kconfig file in the board directory, and several optional
+files for a board named <code class="docutils literal notranslate"><span class="pre">plank</span></code>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>boards/&lt;vendor&gt;/plank
+├── Kconfig
+├── Kconfig.plank
+├── Kconfig.defconfig
+└── plank_&lt;qualifiers&gt;_defconfig
+</pre></div>
+</div>
+<dl>
+<dt><code class="file docutils literal notranslate"><span class="pre">Kconfig.plank</span></code></dt><dd><p>A shared Kconfig file which can be sourced both in Zephyr Kconfig and sysbuild
+Kconfig trees.</p>
+<p>This file selects the SoC in the Kconfig tree and potential other SoC related
+Kconfig settings. This file must not select anything outside the reusable
+Kconfig board and SoC trees.</p>
+<p>A <code class="file docutils literal notranslate"><span class="pre">Kconfig.plank</span></code> may look like this:</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">config</span><span class="w"> </span>BOARD_PLANK
+<span class="w">        </span><span class="k">select</span><span class="w"> </span>SOC_SOC1
+</pre></div>
+</div>
+<p>The Kconfig symbols <code class="samp docutils literal notranslate"><span class="pre">BOARD_</span><em><span class="pre">board</span></em></code> and
+<code class="samp docutils literal notranslate"><span class="pre">BOARD_</span><em><span class="pre">normalized_board_target</span></em></code> are constructed by the build
+system, therefore no type shall be defined in above code snippet.</p>
+</dd>
+<dt><code class="file docutils literal notranslate"><span class="pre">Kconfig</span></code></dt><dd><p>Included by <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/boards/Kconfig">boards/Kconfig</a>.</p>
+<p>This file can add Kconfig settings which are specific to the current board.</p>
+<p>Not all boards have a <code class="file docutils literal notranslate"><span class="pre">Kconfig</span></code> file.</p>
+<p>A board specific setting should be defining a custom setting and usually with
+a prompt, like this:</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">config</span><span class="w"> </span>BOARD_FEATURE
+<span class="w">        </span><span class="nb">bool</span><span class="w"> </span><span class="s2">&quot;Board specific feature&quot;</span>
+</pre></div>
+</div>
+<p>If the setting name is identical to an existing Kconfig setting in Zephyr and
+only modifies the default value of said setting, then
+<code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code> should be used  instead.</p>
+</dd>
+<dt><code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code></dt><dd><p>Board-specific default values for Kconfig options.</p>
+<p>Not all boards have a <code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code> file.</p>
+<p>The entire file should be inside an <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">BOARD_PLANK</span></code> / <code class="docutils literal notranslate"><span class="pre">endif</span></code> pair of
+lines, like this:</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span>BOARD_PLANK
+
+<span class="k">config</span><span class="w"> </span>FOO
+<span class="w">        </span><span class="k">default</span><span class="w"> </span>y
+
+<span class="k">if</span><span class="w"> </span>NETWORKING
+
+<span class="k">config</span><span class="w"> </span>SOC_ETHERNET_DRIVER
+<span class="w">        </span><span class="k">default</span><span class="w"> </span>y
+
+<span class="k">endif</span><span class="w"> </span><span class="c1"># NETWORKING</span>
+
+<span class="k">endif</span><span class="w"> </span><span class="c1"># BOARD_PLANK</span>
+</pre></div>
+</div>
+</dd>
+<dt><code class="file docutils literal notranslate"><span class="pre">plank_&lt;qualifiers&gt;_defconfig</span></code> (or <code class="file docutils literal notranslate"><span class="pre">plank_defconfig</span></code> in limited circumstances)</dt><dd><p>A Kconfig fragment that is merged as-is into the final build directory
+<code class="file docutils literal notranslate"><span class="pre">.config</span></code> whenever an application is compiled for your board.</p>
+<p><code class="file docutils literal notranslate"><span class="pre">plank_defconfig</span></code> can only be used with boards that have no qualifiers, no variants and a
+single SoC present, though this style of naming is not recommended due to samples/tests or
+downstream usage breaking suddenly without warning if a new SoC or board variant/qualifier is
+added to an board in upstream Zephyr.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Multiple files are not merged and there is no fallback mechanism for files, this means if there
+is a board with 2 different SoCs and each one has 2 board variants, a <code class="file docutils literal notranslate"><span class="pre">plank_defconfig</span></code>
+file would be wholly unused, for the first qualifier and variant
+<code class="file docutils literal notranslate"><span class="pre">plank_&lt;soc1&gt;_&lt;variant1&gt;_defconfig</span></code> will be used, it will not include other file.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">_defconfig</span></code> should contain mandatory settings for your UART,
+console, etc. The results are architecture-specific, but typically look
+something like this:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_GPIO</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_CONSOLE</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_UART_CONSOLE</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_SERIAL</span><span class="o">=</span><span class="s">y</span>
+</pre></div>
+</div>
+</div>
+<dl class="simple">
+<dt><code class="file docutils literal notranslate"><span class="pre">plank_x_y_z_defconfig</span></code> / <code class="file docutils literal notranslate"><span class="pre">plank_&lt;qualifiers&gt;_x_y_z_defconfig</span></code></dt><dd><p>A Kconfig fragment that is merged as-is into the final build directory
+<code class="file docutils literal notranslate"><span class="pre">.config</span></code> whenever an application is compiled for your board revision
+<code class="docutils literal notranslate"><span class="pre">x.y.z</span></code>.</p>
+</dd>
+</dl>
+</section>
+<section id="build-test-and-fix">
+<h2>Build, test, and fix<a class="headerlink" href="#build-test-and-fix" title="Link to this heading"></a></h2>
+<p>Now it’s time to build and test the application(s) you want to run on your
+board until you’re satisfied.</p>
+<p>For example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west build -b plank samples/hello_world</span>
+<span class="go">west flash</span>
+</pre></div>
+</div>
+<p>For <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code> to work, see <a class="reference internal" href="#flash-and-debug-support"><span class="std std-ref">Flash and debug support</span></a> below. You can
+also just flash <code class="file docutils literal notranslate"><span class="pre">build/zephyr/zephyr.elf</span></code>, <code class="file docutils literal notranslate"><span class="pre">zephyr.hex</span></code>, or
+<code class="file docutils literal notranslate"><span class="pre">zephyr.bin</span></code> with any other tools you prefer.</p>
+</section>
+<section id="general-recommendations">
+<span id="porting-general-recommendations"></span><h2>General recommendations<a class="headerlink" href="#general-recommendations" title="Link to this heading"></a></h2>
+<p>For consistency and to make it easier for users to build applications which remain board agnostic,
+please follow these guidelines when porting a board you intend to contribute to Zephyr:</p>
+<dl>
+<dt>Enable valuable components in Devicetree</dt><dd><p>Devicetree nodes for valuable onboard components (LEDs, buttons, sensors, onboard
+USB/Ethernet/BLE/Wi-Fi, etc.) must be <strong>enabled by default</strong> and have correct pin control and
+driver configuration so that they work out of the box.</p>
+</dd>
+<dt>Keep subsystems disabled by default (Kconfig)</dt><dd><p>Do not enable subsystems in the board defconfig unless they are strictly required for basic board
+operation, or are explicitly listed as exceptions in these recommendations.</p>
+</dd>
+<dt>Configure system clock and tick source</dt><dd><p>Set up a functioning system clock and tick source.</p>
+</dd>
+<dt>Provide a default console</dt><dd><p>Use the <code class="docutils literal notranslate"><span class="pre">zephyr,console</span></code> chosen node to point to the UART controller used for console output.</p>
+<p>Boards with built-in debug or a USB-to-UART adapter should set the console to the UART controller
+connected to that adapter.</p>
+<p>USB-only boards without any debug adapter must include the common USB CDC-ACM
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/boards/common/usb/Kconfig.cdc_acm_serial.defconfig">Kconfig</a> and <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/boards/common/usb/cdc_acm_serial.dtsi">DTS</a> fragments to enable CDC-ACM UART as a default backend
+for logging and shell.</p>
+</dd>
+<dt>Add <a class="reference internal" href="shields.html#shield-interfaces"><span class="std std-ref">shield interface</span></a> definitions</dt><dd><p>For boards exposing standard expansion headers, add connector nodes and pin-muxing. Enable only
+the peripherals needed for the expected/standard connector functionality.</p>
+</dd>
+<dt>Configure pins and peripheral instances</dt><dd><p>Map peripherals to the correct pins (e.g., SPI on Arduino SPI pins) and provide default pinmux
+entries supporting the board’s features.</p>
+</dd>
+<dt>Enable networking interfaces</dt><dd><p>If networking hardware is present, configure default interfaces for each supported technology so
+that networking samples work out of the box.</p>
+</dd>
+<dt>Enable GPIO controllers</dt><dd><p>All GPIO ports connected to onboard components or expansion headers should be enabled.</p>
+</dd>
+<dt>Enable MPU and stack protection</dt><dd><p>It is recommended to enable the MPU when available (unless memory resources are too limited).
+When the MPU is enabled, it is recommended to also enable hardware stack protection
+(<a class="reference internal" href="../../kconfig.html#CONFIG_HW_STACK_PROTECTION" title="CONFIG_HW_STACK_PROTECTION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HW_STACK_PROTECTION</span></code></a>) to ease debugging by allowing the kernel to detect stack overflows.</p>
+</dd>
+</dl>
+</section>
+<section id="flash-and-debug-support">
+<span id="id4"></span><h2>Flash and debug support<a class="headerlink" href="#flash-and-debug-support" title="Link to this heading"></a></h2>
+<p>Zephyr supports <a class="reference internal" href="../../develop/west/build-flash-debug.html#west-build-flash-debug"><span class="std std-ref">Building, Flashing and Debugging</span></a> via west extension commands.</p>
+<p>To add <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code> and <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span></code> support for your board, you need to
+create a <code class="file docutils literal notranslate"><span class="pre">board.cmake</span></code> file in your board directory. This file’s job is
+to configure a “runner” for your board. (There’s nothing special you need to
+do to get <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> support for your board.)</p>
+<p>“Runners” are Zephyr-specific Python classes that wrap <a class="reference internal" href="../../develop/flash_debug/host-tools.html#flash-debug-host-tools"><span class="std std-ref">flash and debug
+host tools</span></a> and integrate with west and the zephyr build
+system to support <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code> and related commands. Each runner supports
+flashing, debugging, or both. You need to configure the arguments to these
+Python scripts in your <code class="file docutils literal notranslate"><span class="pre">board.cmake</span></code> to support those commands like this
+example <code class="file docutils literal notranslate"><span class="pre">board.cmake</span></code>:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">board_runner_args</span><span class="p">(</span><span class="s">jlink</span><span class="w"> </span><span class="s2">&quot;--device=nrf52&quot;</span><span class="w"> </span><span class="s2">&quot;--speed=4000&quot;</span><span class="p">)</span>
+<span class="nb">board_runner_args</span><span class="p">(</span><span class="s">pyocd</span><span class="w"> </span><span class="s2">&quot;--target=nrf52&quot;</span><span class="w"> </span><span class="s2">&quot;--frequency=4000000&quot;</span><span class="p">)</span>
+
+<span class="nb">include</span><span class="p">(</span><span class="o">${</span><span class="nv">ZEPHYR_BASE</span><span class="o">}</span><span class="s">/boards/common/nrfutil.board.cmake</span><span class="p">)</span>
+<span class="nb">include</span><span class="p">(</span><span class="o">${</span><span class="nv">ZEPHYR_BASE</span><span class="o">}</span><span class="s">/boards/common/nrfjprog.board.cmake</span><span class="p">)</span>
+<span class="nb">include</span><span class="p">(</span><span class="o">${</span><span class="nv">ZEPHYR_BASE</span><span class="o">}</span><span class="s">/boards/common/jlink.board.cmake</span><span class="p">)</span>
+<span class="nb">include</span><span class="p">(</span><span class="o">${</span><span class="nv">ZEPHYR_BASE</span><span class="o">}</span><span class="s">/boards/common/pyocd.board.cmake</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This example configures the <code class="docutils literal notranslate"><span class="pre">nrfutil</span></code>, <code class="docutils literal notranslate"><span class="pre">nrfjprog</span></code>, <code class="docutils literal notranslate"><span class="pre">jlink</span></code>, and <code class="docutils literal notranslate"><span class="pre">pyocd</span></code>
+runners.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Runners usually have names which match the tools they wrap, so the <code class="docutils literal notranslate"><span class="pre">jlink</span></code>
+runner wraps Segger’s J-Link tools, and so on. But the runner command line
+options like <code class="docutils literal notranslate"><span class="pre">--speed</span></code> etc. are specific to the Python scripts.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Runners and board configuration should be created without being targeted to
+a single operating system if the tool supports multiple operating systems,
+nor should it rely upon special system setup/configuration. For example; do
+not assume that a user will have prior knowledge/configuration or (if using
+Linux) special udev rules installed, do not assume one specific <code class="docutils literal notranslate"><span class="pre">/dev/X</span></code>
+device for all platforms as this will not be compatible with Windows or
+macOS, and allow for overriding of the selected device so that multiple
+boards can be connected to a single system and flashed/debugged at the
+choice of the user.</p>
+</div>
+<p>For more details:</p>
+<ul class="simple">
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span> <span class="pre">--context</span></code> to see a list of available runners which support
+flashing, and <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span> <span class="pre">--context</span> <span class="pre">-r</span> <span class="pre">&lt;RUNNER&gt;</span></code> to view the specific options
+available for an individual runner.</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span> <span class="pre">--context</span></code> and <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span> <span class="pre">--context</span> <span class="pre">&lt;RUNNER&gt;</span></code> to get
+the same output for runners which support debugging.</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span> <span class="pre">--help</span></code> and <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span> <span class="pre">--help</span></code> for top-level options
+for flashing and debugging.</p></li>
+<li><p>See <a class="reference internal" href="../../develop/west/build-flash-debug.html#west-runner"><span class="std std-ref">Configuration Options</span></a> for Python APIs.</p></li>
+<li><p>Look for <code class="file docutils literal notranslate"><span class="pre">board.cmake</span></code> files for other boards similar to your own for
+more examples.</p></li>
+</ul>
+<p>To see what a <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code> or <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span></code> command is doing exactly, run it
+in verbose mode:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>--verbose<span class="w"> </span>flash
+west<span class="w"> </span>--verbose<span class="w"> </span>debug
+</pre></div>
+</div>
+<p>Verbose mode prints any host tool commands the runner uses.</p>
+<p>The order of the <code class="docutils literal notranslate"><span class="pre">include()</span></code> calls in your <code class="file docutils literal notranslate"><span class="pre">board.cmake</span></code> matters. The
+first <code class="docutils literal notranslate"><span class="pre">include</span></code> sets the default runner if it’s not already set. For example,
+including <code class="docutils literal notranslate"><span class="pre">nrfjprog.board.cmake</span></code> first means that <code class="docutils literal notranslate"><span class="pre">nrfjprog</span></code> is the default
+flash runner for this board. Since <code class="docutils literal notranslate"><span class="pre">nrfjprog</span></code> does not support debugging,
+<code class="docutils literal notranslate"><span class="pre">jlink</span></code> is the default debug runner.</p>
+</section>
+<section id="multiple-board-revisions">
+<span id="porting-board-revisions"></span><h2>Multiple board revisions<a class="headerlink" href="#multiple-board-revisions" title="Link to this heading"></a></h2>
+<p>See <a class="reference internal" href="../../develop/application/index.html#application-board-version"><span class="std std-ref">Building for a board revision</span></a> for basics on this feature from the user
+perspective.</p>
+<p>Board revisions are described in the <code class="docutils literal notranslate"><span class="pre">revision</span></code> entry of the
+<code class="file docutils literal notranslate"><span class="pre">board.yml</span></code>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">board</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">revision</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;major.minor.patch|letter|number|custom&gt;</span>
+<span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;default-revision-value&gt;</span>
+<span class="w">    </span><span class="nt">exact</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;true|false&gt;</span>
+<span class="w">    </span><span class="nt">revisions</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;revA&gt;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;revB&gt;</span>
+</pre></div>
+</div>
+<p>Zephyr natively supports the following revision formats:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">major.minor.patch</span></code>: match a three digit revision, such as <code class="docutils literal notranslate"><span class="pre">1.2.3</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">number</span></code>: matches integer revisions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">letter</span></code>: matches single letter revisions from <code class="docutils literal notranslate"><span class="pre">A</span></code> to <code class="docutils literal notranslate"><span class="pre">Z</span></code> only</p></li>
+</ul>
+<section id="fuzzy-revision-matching">
+<span id="board-fuzzy-revision-matching"></span><h3>Fuzzy revision matching<a class="headerlink" href="#fuzzy-revision-matching" title="Link to this heading"></a></h3>
+<p>Fuzzy revision matching is enabled per default.</p>
+<p>If the user selects a revision between those available, the closest revision
+number that is not larger than the user’s choice is used. For example, if the
+board <code class="docutils literal notranslate"><span class="pre">plank</span></code> defines revisions <code class="docutils literal notranslate"><span class="pre">0.5.0</span></code>, and <code class="docutils literal notranslate"><span class="pre">1.5.0</span></code> and the user builds
+for <code class="docutils literal notranslate"><span class="pre">plank&#64;0.7.0</span></code>, the build system will target revision <code class="docutils literal notranslate"><span class="pre">0.5.0</span></code>.</p>
+<p>The build system will print this at CMake configuration time:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">-- Board: plank, Revision: 0.7.0 (Active: 0.5.0)</span>
+</pre></div>
+</div>
+<p>This allows you to only create revision configuration files for board revision
+numbers that introduce incompatible changes.</p>
+<p>Similarly for <code class="docutils literal notranslate"><span class="pre">letter</span></code> revision format, if revisions <code class="docutils literal notranslate"><span class="pre">A</span></code>, <code class="docutils literal notranslate"><span class="pre">D</span></code>, and <code class="docutils literal notranslate"><span class="pre">F</span></code>
+are defined and the user builds for <code class="docutils literal notranslate"><span class="pre">plank&#64;E</span></code>, the build system will target
+revision <code class="docutils literal notranslate"><span class="pre">D</span></code>.</p>
+</section>
+<section id="exact-revision-matching">
+<h3>Exact revision matching<a class="headerlink" href="#exact-revision-matching" title="Link to this heading"></a></h3>
+<p>Exact revision matching is enabled when <code class="docutils literal notranslate"><span class="pre">exact:</span> <span class="pre">true</span></code> is specified in the
+revision section in <code class="file docutils literal notranslate"><span class="pre">board.yml</span></code>.</p>
+<p>When exact is defined then building for <code class="docutils literal notranslate"><span class="pre">plank&#64;0.7.0</span></code> in the above example
+will result in the following error message:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Board revision `0.7.0` not found.  Please specify a valid board revision.</span>
+</pre></div>
+</div>
+</section>
+<section id="board-revision-configuration-adjustment">
+<h3>Board revision configuration adjustment<a class="headerlink" href="#board-revision-configuration-adjustment" title="Link to this heading"></a></h3>
+<p>When the user builds for board <code class="docutils literal notranslate"><span class="pre">plank&#64;&lt;revision&gt;</span></code> it is possible to make
+adjustments to the board’s normal configuration.</p>
+<p>As described in the <a class="reference internal" href="#default-board-configuration"><span class="std std-ref">Write your devicetree</span></a> and
+<a class="reference internal" href="#board-kconfig-files"><span class="std std-ref">Write Kconfig files</span></a> sections the board default configuration is created
+from the files <code class="file docutils literal notranslate"><span class="pre">&lt;board&gt;.dts</span></code> / <code class="file docutils literal notranslate"><span class="pre">&lt;board&gt;_&lt;qualifiers&gt;.dts</span></code> and
+<code class="file docutils literal notranslate"><span class="pre">&lt;board&gt;_defconfig</span></code> / <code class="file docutils literal notranslate"><span class="pre">&lt;board&gt;_&lt;qualifiers&gt;_defconfig</span></code>.
+When building for a specific board revision, the above files are used as a
+starting point and the following board files will be used in addition:</p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">&lt;board&gt;_&lt;qualifiers&gt;_&lt;revision&gt;_defconfig</span></code>: a specific revision
+defconfig which is only used for the board and SOC / variants identified by
+<code class="docutils literal notranslate"><span class="pre">&lt;board&gt;_&lt;qualifiers&gt;</span></code>.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">&lt;board&gt;_&lt;revision&gt;_defconfig</span></code>: a specific revision defconfig which is
+used for the board regardless of the SOC / variants.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">&lt;board&gt;_&lt;qualifiers&gt;_&lt;revision&gt;.overlay</span></code>: a specific revision dts
+overlay which is only used for the board and SOC / variants identified by
+<code class="docutils literal notranslate"><span class="pre">&lt;board&gt;_&lt;qualifiers&gt;</span></code>.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">&lt;board&gt;_&lt;revision&gt;.overlay</span></code>: a specific revision dts overlay which is
+used for the board regardless of the SOC / variants.</p></li>
+</ul>
+<p>This split allows boards with multiple SoCs, multi-core SoCs, or variants to
+place common revision adjustments which apply to all SoCs and variants in a
+single file, while still providing the ability to place SoC or variant specific
+adjustments in a dedicated revision file.</p>
+<p>Using the <code class="docutils literal notranslate"><span class="pre">plank</span></code> board from previous sections, then we could have the following
+revision adjustments:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>boards/zephyr/plank
+├── plank_0_5_0_defconfig          # Kconfig adjustment for all plank board qualifiers on revision 0.5.0
+├── plank_0_5_0.overlay            # DTS overlay for all plank board qualifiers on revision 0.5.0
+└── plank_soc1_foo_1_5_0_defconfig # Kconfig adjustment for plank board when building for soc1 variant foo on revision 1.5.0
+</pre></div>
+</div>
+</section>
+</section>
+<section id="custom-revision-cmake-files">
+<h2>Custom revision.cmake files<a class="headerlink" href="#custom-revision-cmake-files" title="Link to this heading"></a></h2>
+<p>Some boards may not use board revisions supported natively by Zephyr.
+For example string revisions.</p>
+<p>One reason why Zephyr doesn’t support string revisions is that strings can take
+many forms and it’s not always clear if the given strings are just strings, such
+as <code class="docutils literal notranslate"><span class="pre">blue</span></code>, <code class="docutils literal notranslate"><span class="pre">green</span></code>, <code class="docutils literal notranslate"><span class="pre">red</span></code>, etc. or if they provide an order which can be
+matched against higher or lower revisions, such as <code class="docutils literal notranslate"><span class="pre">alpha</span></code>, <code class="docutils literal notranslate"><span class="pre">beta`</span></code>,
+<code class="docutils literal notranslate"><span class="pre">gamma</span></code>.</p>
+<p>Due to the sheer number of possibilities with strings, including the possibility
+of doing regex matches internally, then string revisions must be done using
+<code class="docutils literal notranslate"><span class="pre">custom</span></code> revision type.</p>
+<p>To indicate to the build system that <code class="docutils literal notranslate"><span class="pre">custom</span></code> revisions are used, the format
+field in the <code class="docutils literal notranslate"><span class="pre">revision</span></code> section of the <code class="file docutils literal notranslate"><span class="pre">board.yml</span></code> must be written as:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">board</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">revision</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom</span>
+</pre></div>
+</div>
+<p>When using custom revisions then a <code class="file docutils literal notranslate"><span class="pre">revision.cmake</span></code> must be created in the
+board directory.</p>
+<p>The <code class="file docutils literal notranslate"><span class="pre">revision.cmake</span></code> will be included by the build system when building
+for the board and it is the responsibility of the file to validate the revision
+specified by the user.</p>
+<p>The <strong class="makevar">BOARD_REVISION</strong> variable holds the revision value specified by the
+user.</p>
+<p>To signal to the build system that it should use a different revision than the
+one specified by the user, <code class="file docutils literal notranslate"><span class="pre">revision.cmake</span></code> can set the variable
+<code class="docutils literal notranslate"><span class="pre">ACTIVE_BOARD_REVISION</span></code> to the revision to use instead. The corresponding
+Kconfig files and devicetree overlays must be named
+<code class="file docutils literal notranslate"><span class="pre">&lt;board&gt;_&lt;ACTIVE_BOARD_REVISION&gt;_defconfig</span></code> and
+<code class="file docutils literal notranslate"><span class="pre">&lt;board&gt;_&lt;ACTIVE_BOARD_REVISION&gt;.overlay</span></code>.</p>
+</section>
+<section id="contributing-your-board">
+<span id="id5"></span><h2>Contributing your board<a class="headerlink" href="#contributing-your-board" title="Link to this heading"></a></h2>
+<p>If you want to contribute your board to Zephyr, first – thanks!</p>
+<p>There are some extra things you’ll need to do:</p>
+<ol class="arabic simple">
+<li><p>Make sure you’ve followed all the <a class="reference internal" href="#porting-general-recommendations"><span class="std std-ref">General recommendations</span></a>.
+They are requirements for boards included with Zephyr.</p></li>
+<li><p>Add documentation for your board using the template file
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/doc/templates/board.tmpl">doc/templates/board.tmpl</a>. See <a class="reference internal" href="../../contribute/documentation/generation.html#zephyr-doc"><span class="std std-ref">Documentation Generation</span></a> for
+information on how to build your documentation before submitting
+your pull request.</p></li>
+<li><p>Prepare a pull request adding your board which follows the
+<a class="reference internal" href="../../contribute/guidelines.html#contribute-guidelines"><span class="std std-ref">Contribution Guidelines</span></a>.</p></li>
+</ol>
+</section>
+<section id="board-extensions">
+<span id="extend-board"></span><h2>Board extensions<a class="headerlink" href="#board-extensions" title="Link to this heading"></a></h2>
+<p>The board hardware model in Zephyr allows you to extend an existing board with
+new board variants. Such board extensions can be done in your custom repository
+and thus outside of the Zephyr repository.</p>
+<p>Extending an existing board with an extra variant allows you to adjust an
+existing board and thereby during build to select building for the existing,
+unmodified board, or the new variant.</p>
+<p>To extend an existing board, first create a <code class="file docutils literal notranslate"><span class="pre">board.yml</span></code> in your extended
+board. Make sure to use the directory structure described in
+<a class="reference internal" href="#create-your-board-directory"><span class="std std-ref">Create your board directory</span></a>.</p>
+<p>The skeleton of the board YAML file for extending a board is:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">board</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">extend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;existing-board-name&gt;</span>
+<span class="w">  </span><span class="nt">variants</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;new-variant&gt;</span>
+<span class="w">      </span><span class="nt">qualifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;existing-qualifier&gt;</span>
+</pre></div>
+</div>
+<p>When extending a board, your board directory should look like:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>boards/&lt;VENDOR&gt;/plank
+├── board.yml
+├── plank_&lt;new-qualifiers&gt;_defconfig
+└── plank_&lt;new-qualifiers&gt;.dts
+</pre></div>
+</div>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">plank</span></code> with the real name of the board you extend.</p>
+<p>In some cases you might want to also adjust additional settings, like the
+<code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code> or <code class="file docutils literal notranslate"><span class="pre">Kconfig.</span><em><span class="pre">board</span></em></code>.
+Therefore it is also possible to provide the following in addition when
+extending a board.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>boards/&lt;VENDOR&gt;/plank
+├── board.cmake
+├── Kconfig
+├── Kconfig.plank
+├── Kconfig.defconfig
+└── plank_&lt;new-qualifiers&gt;.yaml
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

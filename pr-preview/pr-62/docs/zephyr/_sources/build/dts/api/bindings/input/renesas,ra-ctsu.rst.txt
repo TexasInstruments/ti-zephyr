@@ -1,0 +1,699 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: renesas,ra-ctsu
+.. _dtbinding_renesas_ra_ctsu:
+
+renesas,ra-ctsu
+###############
+
+.. sidebar:: Overview
+
+   :Name: ``renesas,ra-ctsu``
+   :Vendor: :ref:`Renesas Electronics Corporation <dt_vendor_renesas>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=renesas,ra-ctsu>` using
+               this compatible
+   :Driver: :zephyr_file:`drivers/input/input_renesas_ra_ctsu.c`
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   Renesas RA Capacitive Sensing Unit
+
+Properties
+**********
+
+Top level properties
+====================
+
+
+These property descriptions apply to "renesas,ra-ctsu"
+nodes themselves. This page also describes child node
+properties in the following sections.
+
+.. tabs::
+
+   .. group-tab:: Node specific properties
+
+      Properties not inherited from the base binding file.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``pinctrl-0``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the first state. Content is specific to the
+                selected pin controller driver implementation.
+
+
+
+             This property is **required**.
+
+         * - ``variant``
+           - ``string``
+           - .. code-block:: none
+
+                Determine which ctsu device is in use
+
+
+             This property is **required**.
+
+             Legal values: ``ctsua``, ``ctsu2``
+
+         * - ``clock-div``
+           - ``int``
+           - .. code-block:: none
+
+                Select divider value for operating input clock. Default as div by 1.
+
+
+             Default value: ``1``
+
+             Legal values: ``1``, ``2``, ``4``, ``8``
+
+         * - ``pwr-supply-sel``
+           - ``string``
+           - .. code-block:: none
+
+                CTSU Transmission Power Supply Select (for both CTSUa and CTSU2).
+
+
+             Default value: ``internal-power``
+
+             Legal values: ``vcc``, ``internal-power``
+
+         * - ``pwr-supply-sel2``
+           - ``string``
+           - .. code-block:: none
+
+                CTSU Transmission Power Supply Select 2 (CTSU2 Only)
+
+
+             Default value: ``pwr-supply-sel``
+
+             Legal values: ``pwr-supply-sel``, ``vcc-private``
+
+         * - ``atune1``
+           - ``string``
+           - .. code-block:: none
+
+                CTSU Power Supply Capacity Adjustment (CTSUa Only):
+                - "normal": 40uA
+                - "high": 80uA
+
+
+
+             Default value: ``normal``
+
+             Legal values: ``normal``, ``high``
+
+         * - ``atune12``
+           - ``int``
+           - .. code-block:: none
+
+                CTSU Power Supply Capacity Adjustment in uA (CTSU2 Only)
+
+
+
+             Default value: ``40``
+
+             Legal values: ``80``, ``40``, ``20``, ``160``
+
+         * - ``measure-mode``
+           - ``string``
+           - .. code-block:: none
+
+                CTSU Measurement Mode Select
+
+
+             Default value: ``self-multi-scan``
+
+             Legal values: ``self-multi-scan``, ``mutual-full-scan``, ``mutual-cfc-scan``, ``current-scan``, ``correction-scan``, ``diagnosis-scan``
+
+         * - ``po-sel``
+           - ``string``
+           - .. code-block:: none
+
+                CTSU Non-Measured Channel Output Select (CTSU2 Only)
+
+
+             Default value: ``same-pulse``
+
+             Legal values: ``low-gpio``, ``hi-z``, ``low``, ``same-pulse``
+
+         * - ``tscap-gpios``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                CTSU TSCAP Pin. This pin is used to discharge the capacitior by
+                control to output low, before switching to CTSU function.
+
+
+
+             This property is **required**.
+
+         * - ``pinctrl-1``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the second state. See pinctrl-0.
+
+
+
+         * - ``pinctrl-2``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the third state. See pinctrl-0.
+
+
+
+         * - ``pinctrl-3``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the fourth state. See pinctrl-0.
+
+
+
+         * - ``pinctrl-4``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the fifth state. See pinctrl-0.
+
+
+
+         * - ``pinctrl-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Names for the provided states. The number of names needs to match the
+                number of states.
+
+
+
+
+
+   .. group-tab:: Deprecated node specific properties
+
+      Deprecated properties not inherited from the base binding file.
+
+      (None)
+
+   .. group-tab:: Base properties
+
+      Properties inherited from the base binding file, which defines
+      common properties that may be set on many nodes. Not all of these
+      may apply to the "renesas,ra-ctsu" compatible.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``clocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Information about the device's clock providers. In general, this property
+                should follow conventions established in the dt-schema binding:
+
+                  https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/clock/clock.yaml
+
+
+
+             This property is **required**.
+
+         * - ``interrupts``
+           - ``array``
+           - .. code-block:: none
+
+                IRQ number and priority to use for CTSU.
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``interrupt-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Interrupts must be given corresponding names so that the shim driver can recognize them.
+                - "ctsuwr": write interrupt
+                - "ctsurd": read interrupt
+                - "ctsufn": end interrupt
+
+
+
+             This property is **required**.
+
+         * - ``status``
+           - ``string``
+           - .. code-block:: none
+
+                Indicates the operational status of the hardware or other
+                resource that the node represents. In particular:
+
+                  - "okay" means the resource is operational and, for example,
+                    can be used by device drivers
+                  - "disabled" means the resource is not operational and the system
+                    should treat it as if it is not present
+
+                For details, see "2.3.4 status" in Devicetree Specification v0.4.
+
+
+
+             Legal values: ``okay``, ``disabled``, ``reserved``, ``fail``, ``fail-sss``
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``compatible``
+           - ``string-array``
+           - .. code-block:: none
+
+                This property is a list of strings that essentially define what
+                type of hardware or other resource this devicetree node
+                represents. Each device driver checks for specific compatible
+                property values to find the devicetree nodes that represent
+                resources that the driver should manage.
+
+                The recommended format is "vendor,device", The "vendor" part is
+                an abbreviated name of the vendor. The "device" is usually from
+                the datasheet.
+
+                The compatible property can have multiple values, ordered from
+                most- to least-specific. Having additional values is useful when the
+                device is a specific instance of a more general family, to allow the
+                system to match the most specific driver available.
+
+                For details, see "2.3.1 compatible" in Devicetree Specification v0.4.
+
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``reg``
+           - ``array``
+           - .. code-block:: none
+
+                Information used to address the device. The value is specific to
+                the device (i.e. is different depending on the compatible
+                property).
+
+                The "reg" property is typically a sequence of (address, length) pairs.
+                Each pair is called a "register block". Values are
+                conventionally written in hex.
+
+                For details, see "2.3.6 reg" in Devicetree Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``reg-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each register block in the "reg" property.
+                For example:
+
+                  / {
+                       soc {
+                           #address-cells = <1>;
+                           #size-cells = <1>;
+
+                           uart@1000 {
+                               reg = <0x1000 0x2000>, <0x3000 0x4000>;
+                               reg-names = "foo", "bar";
+                           };
+                       };
+                  };
+
+                The uart@1000 node has two register blocks:
+
+                  - one with base address 0x1000, size 0x2000, and name "foo"
+                  - another with base address 0x3000, size 0x4000, and name "bar"
+
+
+
+         * - ``interrupts-extended``
+           - ``compound``
+           - .. code-block:: none
+
+                Extended interrupt specifier for device, used as an alternative to
+                the "interrupts" property.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-parent``
+           - ``phandle``
+           - .. code-block:: none
+
+                If present, this refers to the node which handles interrupts generated
+                by this device.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``label``
+           - ``string``
+           - .. code-block:: none
+
+                Human readable string describing the device. Use of this property is
+                deprecated except as needed on a case-by-case basis.
+
+                For details, see "4.1.2 Miscellaneous Properties" in Devicetree
+                Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``clock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each clock provider in the "clocks" property.
+
+
+
+         * - ``#address-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by address fields
+                in "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+         * - ``#size-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by size fields in
+                "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+         * - ``dmas``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                DMA channel specifiers relevant to the device.
+
+
+
+         * - ``dma-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the DMA channel specifiers in the "dmas" property.
+
+
+
+         * - ``io-channels``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                IO channel specifiers relevant to the device.
+
+
+
+         * - ``io-channel-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the IO channel specifiers in the "io-channels" property.
+
+
+
+         * - ``mboxes``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Mailbox / IPM channel specifiers relevant to the device.
+
+
+
+         * - ``mbox-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the mbox specifiers in the "mboxes" property.
+
+
+
+         * - ``power-domains``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Power domain specifiers relevant to the device.
+
+
+
+         * - ``power-domain-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the power domain specifiers in the "power-domains" property.
+
+
+
+         * - ``#power-domain-cells``
+           - ``int``
+           - .. code-block:: none
+
+                Number of cells in power-domains property
+
+
+
+         * - ``hwlocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                HW spinlock id relevant to the device.
+
+
+
+         * - ``hwlock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the hwlock specifiers in the "hwlocks" property.
+
+
+
+         * - ``zephyr,deferred-init``
+           - ``boolean``
+           - .. code-block:: none
+
+                Do not initialize device automatically on boot. Device should be manually
+                initialized using device_init().
+
+
+
+         * - ``wakeup-source``
+           - ``boolean``
+           - .. code-block:: none
+
+                Property to identify that a device can be used as wake up source.
+
+                When this property is provided a specific flag is set into the
+                device that tells the system that the device is capable of
+                wake up the system.
+
+                Wake up capable devices are disabled (interruptions will not wake up
+                the system) by default but they can be enabled at runtime if necessary.
+
+
+
+         * - ``zephyr,pm-device-runtime-auto``
+           - ``boolean``
+           - .. code-block:: none
+
+                Automatically configure the device for runtime power management after the
+                init function runs.
+
+
+
+         * - ``zephyr,disabling-power-states``
+           - ``phandles``
+           - .. code-block:: none
+
+                List of power states that will disable this device power.
+
+
+
+
+
+
+Child node properties
+=====================
+
+.. list-table::
+   :widths: 1 1 4
+   :header-rows: 1
+
+   * - Name
+     - Type
+     - Details
+
+   * - ``ctsuchac``
+     - ``array``
+     - .. code-block:: none
+
+          TSCAP pin enable mask. Expected fields, in order, are:
+          - ctsuchac0: TS00-TS07 enable mask
+          - ctsuchac1: TS08-TS15 enable mask
+          - ctsuchac2: TS16-TS23 enable mask
+          - ctsuchac3: TS24-TS31 enable mask
+          - ctsuchac4: TS32-TS39 enable mask
+
+
+
+       Default value: ``[0, 0, 0, 0, 0]``
+
+   * - ``ctsuchtrc``
+     - ``array``
+     - .. code-block:: none
+
+          TSCAP pin mutual-tx mask. Expected fields, in order, are:
+          - ctsuchtrc0: TS00-TS07 mutual-tx mask
+          - ctsuchtrc1: TS08-TS15 mutual-tx mask
+          - ctsuchtrc2: TS16-TS23 mutual-tx mask
+          - ctsuchtrc3: TS24-TS31 mutual-tx mask
+          - ctsuchtrc4: TS32-TS39 mutual-tx mask
+
+
+
+       Default value: ``[0, 0, 0, 0, 0]``
+
+   * - ``rx-count``
+     - ``int``
+     - .. code-block:: none
+
+          The number of RX channels to be used. This should be set to the number of
+          channels that are enabled in the ctsuchac0-4 properties.
+
+
+
+   * - ``tx-count``
+     - ``int``
+     - .. code-block:: none
+
+          The number of TX channels to be used. This should be set to the number of
+          channels that are enabled in the ctsuchtrc0-4 properties.
+
+
+
+   * - ``ssdiv``
+     - ``string-array``
+     - .. code-block:: none
+
+          CTSU Spectrum Diffusion Frequency Division Setting (CTSUa Only)
+
+
+       Default value: ``[4.00]``
+
+       Legal values: ``4.00``, ``2.00``, ``1.33``, ``1.00``, ``0.80``, ``0.67``, ``0.57``, ``0.50``, ``0.44``, ``0.40``, ``0.36``, ``0.33``, ``0.31``, ``0.29``, ``0.27``, ``0.00``
+
+   * - ``so``
+     - ``array``
+     - .. code-block:: none
+
+          CTSU Sensor Offset Adjustment
+
+
+       Default value: ``[0]``
+
+   * - ``snum``
+     - ``array``
+     - .. code-block:: none
+
+          CTSU Measurement Count Setting
+
+
+       Default value: ``[0]``
+
+   * - ``sdpa``
+     - ``array``
+     - .. code-block:: none
+
+          CTSU Base Clock Setting
+
+
+       Default value: ``[0]``
+
+   * - ``on-freq``
+     - ``int``
+     - .. code-block:: none
+
+          The cumulative number of determinations of ON.
+
+
+   * - ``off-freq``
+     - ``int``
+     - .. code-block:: none
+
+          The cumulative number of determinations of OFF.
+
+
+   * - ``drift-freq``
+     - ``int``
+     - .. code-block:: none
+
+          Base value drift frequency (0 mean no use).
+
+
+   * - ``cancel-freq``
+     - ``int``
+     - .. code-block:: none
+
+          Maximum continuous ON (0 mean no use).
+
+
+   * - ``num-moving-avg``
+     - ``int``
+     - .. code-block:: none
+
+          The number of samples to use for moving average. If set to 0, no moving average is applied.
+          This is useful for smoothing the sensor readings.
+
+
+

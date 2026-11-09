@@ -1,0 +1,779 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Read and Decode &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/hardware/peripherals/sensor/read_and_decode.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Single Edge Nibble Transmission (SENT)" href="../sent.html" />
+    <link rel="prev" title="Fetch and Get" href="fetch_and_get.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Hardware Support</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../arch/index.html">Architecture-related Guides</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../barriers/index.html">Barriers API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cache/index.html">Caching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../emulator/index.html">Zephyr’s device emulators/simulators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../emulator/bus_emulators.html">External Bus and Bus Connected Peripherals Emulators</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Peripherals</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../w1.html">1-Wire Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../adc.html">Analog-to-Digital Converter (ADC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../auxdisplay.html">Auxiliary Display (auxdisplay)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../audio/index.html">Audio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../bbram.html">Battery Backed RAM (BBRAM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../bc12.html">BC1.2 Devices (Experimental)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../biometrics.html">Biometrics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../clock_control.html">Clock Control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../can/index.html">Controller Area Network (CAN)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../charger.html">Chargers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../comparator.html">Comparator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../coredump.html">Coredump Device</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../counter.html">Counter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../crc.html">Cyclic Redundancy Check (CRC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dac.html">Digital-to-Analog Converter (DAC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dma.html">Direct Memory Access (DMA)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../display/index.html">Display</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../eeprom/index.html">Electrically Erasable Programmable Read-Only Memory (EEPROM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../espi.html">Enhanced Serial Peripheral Interface (eSPI) Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../entropy.html">Entropy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../edac/index.html">Error Detection And Correction (EDAC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../flash.html">Flash</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fuel_gauge.html">Fuel Gauge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gnss.html">GNSS (Global Navigation Satellite System)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gpio.html">General-Purpose Input/Output (GPIO)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../haptics.html">Haptics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../hwinfo.html">Hardware Information</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../hwspinlock.html">Hardware Spinlocks (HWSPINLOCK)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../i2c_eeprom_target.html">I2C EEPROM Target</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../i3c.html">Improved Inter-Integrated Circuit (I3C) Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../i2c.html">Inter-Integrated Circuit (I2C) Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../ipm.html">Inter-Processor Mailbox (IPM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../led.html">Light-Emitting Diode (LED)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mdio.html">Management Data Input/Output (MDIO)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mspi.html">Multi-bit SPI Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mbox.html">Multi-Channel Inter-Processor Mailbox (MBOX)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mux.html">Multiplexer (MUX)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../opamp.html">Operational Amplifier (OPAMP)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../otp/index.html">One Time Programmable (OTP) memory devices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pcie.html">Peripheral Component Interconnect express Bus (PCIe)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../peci.html">Platform Environment Control Interface (PECI)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../ps2.html">PS/2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../psi5.html">Peripheral Sensor Interface (PSI5)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pwm.html">Pulse Width Modulation (PWM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../rtc.html">Real-Time Clock (RTC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../regulators.html">Regulators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../reset.html">Reset Controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../retained_mem.html">Retained Memory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sdhc.html">Secure Digital (SD card) interface</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Sensors</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="index.html#using-sensors">Using Sensors</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="attributes.html">Sensor Attributes</a></li>
+<li class="toctree-l5"><a class="reference internal" href="channels.html">Sensor Channels</a></li>
+<li class="toctree-l5"><a class="reference internal" href="triggers.html">Sensor Triggers</a></li>
+<li class="toctree-l5"><a class="reference internal" href="power_management.html">Power Management</a></li>
+<li class="toctree-l5"><a class="reference internal" href="device_tree.html">Device Tree</a></li>
+<li class="toctree-l5"><a class="reference internal" href="fetch_and_get.html">Fetch and Get</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">Read and Decode</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#implementing-sensor-drivers">Implementing Sensor Drivers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#api-reference">API Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../sent.html">Single Edge Nibble Transmission (SENT)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spi.html">Serial Peripheral Interface (SPI) Bus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stepper/index.html">Steppers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../smbus.html">System Management Bus (SMBus)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uart.html">Universal Asynchronous Receiver-Transmitter (UART)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../usbc_vbus.html">USB-C VBUS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tcpc.html">USB Type-C Port Controller (TCPC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tgpio.html">Time-aware General-Purpose Input/Output (TGPIO)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../video.html">Video</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../watchdog.html">Watchdog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../wuc.html">Wakeup Controller (WUC)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../pinctrl/index.html">Pin Control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../porting/index.html">Porting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../virtualization/index.html">Virtualization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Hardware Support</a> &raquo;</li>
+  
+     <li><a href="../index.html">Peripherals</a> &raquo;</li>
+  
+     <li><a href="index.html">Sensors</a> &raquo;</li>
+  
+  <li>Read and Decode</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/hardware/peripherals/sensor/read_and_decode.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27hardware%2Fperipherals%2Fsensor%2Fread_and_decode%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Sensors&env=-+Page%3A+hardware%2Fperipherals%2Fsensor%2Fread_and_decode%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="read-and-decode">
+<span id="sensor-read-and-decode"></span><h1>Read and Decode<a class="headerlink" href="#read-and-decode" title="Link to this heading"></a></h1>
+<p>The quickly stabilizing APIs for reading sensor data are:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../doxygen/html/group__sensor__interface.html#gace7f20e29b302e607ba274fe40a2c2bd" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sensor_read()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../../doxygen/html/group__sensor__interface.html#gaf53b015c47acab3c3acb4cb1d8ab827d" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sensor_read_async_mempool()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../../doxygen/html/group__sensor__interface.html#ga12db6fc43adce48d34c25c16fd2336a3" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sensor_get_decoder()</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../../doxygen/html/group__sensor__interface.html#ga018bca56056ae2558f9e45aeb2fa5f53" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sensor_decode()</span></code></a></p></li>
+</ul>
+<section id="benefits-over-sensor-fetch-and-get">
+<h2>Benefits over <a class="reference internal" href="fetch_and_get.html#sensor-fetch-and-get"><span class="std std-ref">Fetch and Get</span></a><a class="headerlink" href="#benefits-over-sensor-fetch-and-get" title="Link to this heading"></a></h2>
+<p>These APIs allow for a wider usage of sensors, sensor types, and data flows with
+sensors. These are the future looking APIs in Zephyr and solve many issues
+that have been run into with <a class="reference internal" href="fetch_and_get.html#sensor-fetch-and-get"><span class="std std-ref">Fetch and Get</span></a>.</p>
+<p><a class="reference internal" href="../../../doxygen/html/group__sensor__interface.html#gace7f20e29b302e607ba274fe40a2c2bd" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sensor_read()</span></code></a> and similar functions acquire sensor encoded data into
+a buffer provided by the caller. Decode (<a class="reference internal" href="../../../doxygen/html/group__sensor__interface.html#ga018bca56056ae2558f9e45aeb2fa5f53" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">sensor_decode()</span></code></a>) then
+decodes the sensor specific encoded data into fixed point <a class="reference internal" href="../../../doxygen/html/group__math__dsp.html#gadc89a3547f5324b7b3b95adec3806bc0" title=""><code class="xref c c-type docutils literal notranslate"><span class="pre">q31_t</span></code></a> values
+as vectors per channel. This allows further processing using fixed point DSP
+functions that work on vectors of data to be done (e.g. low-pass filters, FFT,
+fusion, etc).</p>
+<p>Reading is by default asynchronous in its implementation and takes advantage of
+<a class="reference internal" href="../../../services/rtio/index.html#rtio"><span class="std std-ref">Real Time I/O (RTIO)</span></a> to enable chaining asynchronous requests, or starting requests
+against many sensors simultaneously from a single call context.</p>
+<p>This enables incredibly useful code flows when working with sensors such as:</p>
+<ul class="simple">
+<li><p>Obtaining the raw sensor data, decoding never, later, or on a separate
+processor (e.g. a phone).</p></li>
+<li><p>Starting a read for sensors directly from an interrupt handler. No dedicated
+thread needed saving precious stack space. No work queue needed introducing
+variable latency. Starting a read for multiple sensors simultaneously from a
+single call context (interrupt/thread/work queue).</p></li>
+<li><p>Requesting multiple reads to the same device for Ping-Pong (double buffering)
+setups.</p></li>
+<li><p>Creating entire pipelines of data flow from sensors allowing for software
+defined virtual sensors (<a class="reference internal" href="../../../services/sensing/index.html#sensing"><span class="std std-ref">Sensing Subsystem</span></a>) all from a single thread with DAG
+process ordering.</p></li>
+<li><p>Potentially pre-programming DMAs to trigger on GPIO events, leaving the CPU
+entirely out of the loop in handling sensor events like FIFO watermarks.</p></li>
+</ul>
+<p>Additionally, other shortcomings of <a class="reference internal" href="fetch_and_get.html#sensor-fetch-and-get"><span class="std std-ref">Fetch and Get</span></a> related to memory
+and trigger handling are solved.</p>
+<ul class="simple">
+<li><p>Triggers result in enqueued events, not callbacks.</p></li>
+<li><p>Triggers can be setup to automatically fetch data. Potentially
+enabling pre-programmed DMA transfers on GPIO interrupts.</p></li>
+<li><p>Far less likely triggers are missed due to long held interrupt masks from
+callbacks and context swapping.</p></li>
+<li><p>Sensor FIFOs supported by wiring up FIFO triggers to read data into
+mempool allocated buffers.</p></li>
+<li><p>All sensor processing can be done in user mode (memory protected) threads.</p></li>
+<li><p>Multiple sensor channels of the same type are better supported.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For <a class="reference internal" href="#read-and-decode">Read and Decode</a> benefits to be fully realized requires
+<a class="reference internal" href="../../../services/rtio/index.html#rtio"><span class="std std-ref">Real Time I/O (RTIO)</span></a> compliant communication access to the sensor. Typically this means
+an <a class="reference internal" href="../../../services/rtio/index.html#rtio"><span class="std std-ref">Real Time I/O (RTIO)</span></a> enabled bus driver for SPI or I2C.</p>
+</div>
+</section>
+<section id="polling-read">
+<h2>Polling Read<a class="headerlink" href="#polling-read" title="Link to this heading"></a></h2>
+<p>Polling reads with <a class="reference internal" href="#read-and-decode">Read and Decode</a> can be accomplished by instantiating a
+polling I/O device (akin to a file descriptor) for the sensor with the desired
+channels to poll. Requesting either blocking or non-blocking reads, then
+optionally decoding the data into fixed point values.</p>
+<p>Polling a temperature sensor and printing its readout is likely the simplest
+sample to show how this all works.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * Copyright (c) 2024 Intel Corporation</span>
+<span class="cm"> *</span>
+<span class="cm"> * SPDX-License-Identifier: Apache-2.0</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/drivers/sensor.h&gt;</span>
+
+<span class="cp">#define TEMP_CHANNEL {SENSOR_CHAN_AMBIENT_TEMP, 0}</span>
+
+<span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="k">const</span><span class="w"> </span><span class="n">temp0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEVICE_DT_GET</span><span class="p">(</span><span class="n">DT_ALIAS</span><span class="p">(</span><span class="n">temp0</span><span class="p">));</span>
+
+<span class="n">SENSOR_DT_READ_IODEV</span><span class="p">(</span><span class="n">temp_iodev</span><span class="p">,</span><span class="w"> </span><span class="n">DT_ALIAS</span><span class="p">(</span><span class="n">temp0</span><span class="p">),</span><span class="w"> </span><span class="n">TEMP_CHANNEL</span><span class="p">);</span>
+<span class="n">RTIO_DEFINE</span><span class="p">(</span><span class="n">temp_ctx</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">	</span><span class="kt">int</span><span class="w"> </span><span class="n">rc</span><span class="p">;</span>
+<span class="w">	</span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">buf</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+<span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">sensor_q31_data</span><span class="w"> </span><span class="n">temp_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">sensor_decode_context</span><span class="w"> </span><span class="n">temp_decoder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SENSOR_DECODE_CONTEXT_INIT</span><span class="p">(</span>
+<span class="w">		</span><span class="n">SENSOR_DECODER_DT_GET</span><span class="p">(</span><span class="n">DT_ALIAS</span><span class="p">(</span><span class="n">temp0</span><span class="p">)),</span><span class="w"> </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">SENSOR_CHAN_AMBIENT_TEMP</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+
+<span class="w">	</span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="cm">/* Blocking read */</span>
+<span class="w">		</span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sensor_read</span><span class="p">(</span><span class="n">temp_iodev</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">temp_ctx</span><span class="p">,</span><span class="w"> </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">buf</span><span class="p">));</span>
+
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rc</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="n">printk</span><span class="p">(</span><span class="s">&quot;sensor_read() failed %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rc</span><span class="p">);</span>
+<span class="w">		</span><span class="p">}</span>
+
+<span class="w">		</span><span class="cm">/* Decode the data into a single q31 */</span>
+<span class="w">		</span><span class="n">sensor_decode</span><span class="p">(</span><span class="o">&amp;</span><span class="n">temp_decoder</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">temp_data</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+
+<span class="w">		</span><span class="n">printk</span><span class="p">(</span><span class="s">&quot;Temperature &quot;</span><span class="w"> </span><span class="n">PRIsensor_q31_data</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+<span class="w">		       </span><span class="n">PRIsensor_q31_data_arg</span><span class="p">(</span><span class="n">temp_data</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">));</span>
+
+<span class="w">		</span><span class="n">k_msleep</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="polling-read-with-multiple-sensors">
+<h2>Polling Read with Multiple Sensors<a class="headerlink" href="#polling-read-with-multiple-sensors" title="Link to this heading"></a></h2>
+<p>One of the benefits of Read and Decode is the ability to concurrently read many
+sensors with many channels in one thread. Effectively read requests are started
+asynchronously for all sensors and their channels. When each read completes we
+then decode the sensor data. Examples speak loudly and so a sample showing how
+this might work with multiple temperature sensors with multiple temperature
+channels:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * Copyright (c) 2024 Intel Corporation</span>
+<span class="cm"> *</span>
+<span class="cm"> * SPDX-License-Identifier: Apache-2.0</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/drivers/sensor.h&gt;</span>
+
+<span class="cp">#define TEMP_CHANNELS				\</span>
+<span class="cp">	{ SENSOR_CHAN_AMBIENT_TEMP, 0 },	\</span>
+<span class="cp">	{ SENSOR_CHAN_AMBIENT_TEMP, 1 }</span>
+<span class="cp">#define TEMP_ALIAS(id) DT_ALIAS(CONCAT(temp, id))</span>
+<span class="cp">#define TEMP_IODEV_SYM(id) CONCAT(temp_iodev, id)</span>
+<span class="cp">#define TEMP_IODEV_PTR(id) &amp;TEMP_IODEV_SYM(id)</span>
+<span class="cp">#define TEMP_DEFINE_IODEV(id)			\</span>
+<span class="cp">	SENSOR_DT_READ_IODEV(			\</span>
+<span class="cp">		TEMP_IODEV_SYM(id),		\</span>
+<span class="cp">		TEMP_ALIAS(id),			\</span>
+<span class="cp">		TEMP_CHANNELS			\</span>
+<span class="cp">		);</span>
+
+<span class="cp">#define NUM_SENSORS 2</span>
+
+<span class="n">LISTIFY</span><span class="p">(</span><span class="n">NUM_SENSORS</span><span class="p">,</span><span class="w"> </span><span class="n">TEMP_DEFINE_IODEV</span><span class="p">,</span><span class="w"> </span><span class="p">(;));</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">sensor_iodev</span><span class="w"> </span><span class="o">*</span><span class="n">iodevs</span><span class="p">[</span><span class="n">NUM_SENSORS</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">LISTIFY</span><span class="p">(</span><span class="n">NUM_SENSORS</span><span class="p">,</span><span class="w"> </span><span class="n">TEMP_IODEV_PTR</span><span class="p">,</span><span class="w"> </span><span class="p">(,))</span><span class="w"> </span><span class="p">};</span>
+
+<span class="n">RTIO_DEFINE_WITH_MEMPOOL</span><span class="p">(</span><span class="n">temp_ctx</span><span class="p">,</span><span class="w"> </span><span class="n">NUM_SENSORS</span><span class="p">,</span><span class="w"> </span><span class="n">NUM_SENSORS</span><span class="p">,</span><span class="w"> </span><span class="n">NUM_SENSORS</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">));</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">	</span><span class="kt">int</span><span class="w"> </span><span class="n">rc</span><span class="p">;</span>
+<span class="w">	</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">temp_frame_iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">sensor_q31_data</span><span class="w"> </span><span class="n">temp_data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">sensor_decoder_api</span><span class="w"> </span><span class="o">*</span><span class="n">decoder</span><span class="p">;</span>
+<span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">rtio_cqe</span><span class="w"> </span><span class="o">*</span><span class="n">cqe</span><span class="p">;</span>
+<span class="w">	</span><span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">;</span>
+<span class="w">	</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">buf_len</span><span class="p">;</span>
+
+<span class="w">	</span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="cm">/* Non-Blocking read for each sensor */</span>
+<span class="w">		</span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NUM_SENSORS</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sensor_read_async_mempool</span><span class="p">(</span><span class="n">iodevs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="o">&amp;</span><span class="n">temp_ctx</span><span class="p">,</span><span class="w"> </span><span class="n">iodevs</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+
+<span class="w">			</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rc</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">				</span><span class="n">printk</span><span class="p">(</span><span class="s">&quot;sensor_read() failed %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rc</span><span class="p">);</span>
+<span class="w">				</span><span class="k">return</span><span class="p">;</span>
+<span class="w">			</span><span class="p">}</span>
+<span class="w">		</span><span class="p">}</span>
+
+<span class="w">		</span><span class="cm">/* Wait for read completions */</span>
+<span class="w">		</span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NUM_SENSORS</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="n">cqe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rtio_cqe_consume_block</span><span class="p">(</span><span class="o">&amp;</span><span class="n">temp_ctx</span><span class="p">);</span>
+
+<span class="w">			</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cqe</span><span class="o">-&gt;</span><span class="n">result</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">				</span><span class="n">printk</span><span class="p">(</span><span class="s">&quot;async read failed %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cqe</span><span class="o">-&gt;</span><span class="n">result</span><span class="p">);</span>
+<span class="w">				</span><span class="k">return</span><span class="p">;</span>
+<span class="w">			</span><span class="p">}</span>
+
+<span class="w">			</span><span class="cm">/* Get the associated mempool buffer with the completion */</span>
+<span class="w">			</span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rtio_cqe_get_mempool_buffer</span><span class="p">(</span><span class="o">&amp;</span><span class="n">temp_ctx</span><span class="p">,</span><span class="w"> </span><span class="n">cqe</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">buf_len</span><span class="p">);</span>
+
+<span class="w">			</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rc</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">				</span><span class="n">printk</span><span class="p">(</span><span class="s">&quot;get mempool buffer failed %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rc</span><span class="p">);</span>
+<span class="w">				</span><span class="k">return</span><span class="p">;</span>
+<span class="w">			</span><span class="p">}</span>
+
+<span class="w">			</span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">sensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="k">struct</span><span class="w"> </span><span class="nc">sensor_read_config</span><span class="w"> </span><span class="o">*</span><span class="p">)</span>
+<span class="w">				</span><span class="p">((</span><span class="k">struct</span><span class="w"> </span><span class="nc">rtio_iodev</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">cqe</span><span class="o">-&gt;</span><span class="n">userdata</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">sensor</span><span class="p">;</span>
+
+<span class="w">			</span><span class="cm">/* Done with the completion event, release it */</span>
+<span class="w">			</span><span class="n">rtio_cqe_release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">temp_ctx</span><span class="p">,</span><span class="w"> </span><span class="n">cqe</span><span class="p">);</span>
+
+<span class="w">			</span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sensor_get_decoder</span><span class="p">(</span><span class="n">sensor</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">decoder</span><span class="p">);</span>
+<span class="w">			</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rc</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">				</span><span class="n">printk</span><span class="p">(</span><span class="s">&quot;sensor_get_decoder failed %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rc</span><span class="p">);</span>
+<span class="w">				</span><span class="k">return</span><span class="p">;</span>
+<span class="w">			</span><span class="p">}</span>
+
+<span class="w">			</span><span class="cm">/* Frame iterators, one per channel we are decoding */</span>
+<span class="w">			</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">temp_fits</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">			</span><span class="n">decoder</span><span class="o">-&gt;</span><span class="n">decode</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">SENSOR_CHAN_AMBIENT_TEMP</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">},</span>
+<span class="w">					</span><span class="o">&amp;</span><span class="n">temp_fits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">temp_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="w">			</span><span class="n">decoder</span><span class="o">-&gt;</span><span class="n">decode</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">SENSOR_CHAN_AMBIENT_TEMP</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">},</span>
+<span class="w">					</span><span class="o">&amp;</span><span class="n">temp_fits</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">temp_data</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+
+<span class="w">			</span><span class="cm">/* Done with the buffer, release it */</span>
+<span class="w">			</span><span class="n">rtio_release_buffer</span><span class="p">(</span><span class="o">&amp;</span><span class="n">temp_ctx</span><span class="p">,</span><span class="w"> </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">buf_len</span><span class="p">);</span>
+
+<span class="w">			</span><span class="n">printk</span><span class="p">(</span><span class="s">&quot;Temperature for %s channel 0 &quot;</span><span class="w"> </span><span class="n">PRIsensor_q31_data</span><span class="w"> </span><span class="s">&quot;, channel 1 &quot;</span>
+<span class="w">			    </span><span class="n">PRIsensor_q31_data</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+<span class="w">			    </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span>
+<span class="w">			    </span><span class="n">PRIsensor_q31_data_arg</span><span class="p">(</span><span class="n">temp_data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">			    </span><span class="n">PRIsensor_q31_data_arg</span><span class="p">(</span><span class="n">temp_data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="mi">0</span><span class="p">));</span>
+<span class="w">		</span><span class="p">}</span>
+<span class="w">	</span><span class="p">}</span>
+
+<span class="w">	</span><span class="n">k_msleep</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="streaming">
+<h2>Streaming<a class="headerlink" href="#streaming" title="Link to this heading"></a></h2>
+<p>Handling triggers with <a class="reference internal" href="#read-and-decode">Read and Decode</a> works by setting up a stream I/O device
+configuration. A stream specifies the set of triggers to capture and if data
+should be captured with the event.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * Copyright (c) 2024 Intel Corporation</span>
+<span class="cm"> *</span>
+<span class="cm"> * SPDX-License-Identifier: Apache-2.0</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/drivers/sensor.h&gt;</span>
+
+<span class="cp">#define ACCEL_TRIGGERS						\</span>
+<span class="cp">	{ SENSOR_TRIG_DRDY, SENSOR_STREAM_DATA_INCLUDE },	\</span>
+<span class="cp">	{ SENSOR_TRIG_TAP, SENSOR_STREAM_DATA_NOP }</span>
+<span class="cp">#define ACCEL_ALIAS(id) DT_ALIAS(CONCAT(accel, id))</span>
+<span class="cp">#define ACCEL_IODEV_SYM(id) CONCAT(accel_iodev, id)</span>
+<span class="cp">#define ACCEL_IODEV_PTR(id) &amp;ACCEL_IODEV_SYM(id)</span>
+<span class="cp">#define ACCEL_DEFINE_IODEV(id)					\</span>
+<span class="cp">	SENSOR_DT_STREAM_IODEV(					\</span>
+<span class="cp">		ACCEL_IODEV_SYM(id),				\</span>
+<span class="cp">		ACCEL_ALIAS(id),				\</span>
+<span class="cp">		ACCEL_TRIGGERS					\</span>
+<span class="cp">		);</span>
+
+<span class="cp">#define NUM_SENSORS 2</span>
+
+<span class="n">LISTIFY</span><span class="p">(</span><span class="n">NUM_SENSORS</span><span class="p">,</span><span class="w"> </span><span class="n">ACCEL_DEFINE_IODEV</span><span class="p">,</span><span class="w"> </span><span class="p">(;));</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">sensor_iodev</span><span class="w"> </span><span class="o">*</span><span class="n">iodevs</span><span class="p">[</span><span class="n">NUM_SENSORS</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">LISTIFY</span><span class="p">(</span><span class="n">NUM_SENSORS</span><span class="p">,</span><span class="w"> </span><span class="n">ACCEL_IODEV_PTR</span><span class="p">,</span><span class="w"> </span><span class="p">(,))</span><span class="w"> </span><span class="p">};</span>
+
+<span class="n">RTIO_DEFINE_WITH_MEMPOOL</span><span class="p">(</span><span class="n">accel_ctx</span><span class="p">,</span><span class="w"> </span><span class="n">NUM_SENSORS</span><span class="p">,</span><span class="w"> </span><span class="n">NUM_SENSORS</span><span class="p">,</span><span class="w"> </span><span class="n">NUM_SENSORS</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">));</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">	</span><span class="kt">int</span><span class="w"> </span><span class="n">rc</span><span class="p">;</span>
+<span class="w">	</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">accel_frame_iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">sensor_three_axis_data</span><span class="w"> </span><span class="n">accel_data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">sensor_decoder_api</span><span class="w"> </span><span class="o">*</span><span class="n">decoder</span><span class="p">;</span>
+<span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">rtio_cqe</span><span class="w"> </span><span class="o">*</span><span class="n">cqe</span><span class="p">;</span>
+<span class="w">	</span><span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">;</span>
+<span class="w">	</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">buf_len</span><span class="p">;</span>
+<span class="w">	</span><span class="k">struct</span><span class="w"> </span><span class="nc">rtio_sqe</span><span class="w"> </span><span class="o">*</span><span class="n">handles</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+
+<span class="w">	</span><span class="cm">/* Start the streams */</span>
+<span class="w">	</span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">NUM_SENSORS</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="n">sensor_stream</span><span class="p">(</span><span class="n">iodevs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="o">&amp;</span><span class="n">accel_ctx</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">handles</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="w">	</span><span class="p">}</span>
+
+<span class="w">	</span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">		</span><span class="n">cqe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rtio_cqe_consume_block</span><span class="p">(</span><span class="o">&amp;</span><span class="n">accel_ctx</span><span class="p">);</span>
+
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cqe</span><span class="o">-&gt;</span><span class="n">result</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="n">printk</span><span class="p">(</span><span class="s">&quot;async read failed %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cqe</span><span class="o">-&gt;</span><span class="n">result</span><span class="p">);</span>
+<span class="w">			</span><span class="k">return</span><span class="p">;</span>
+<span class="w">		</span><span class="p">}</span>
+
+<span class="w">		</span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rtio_cqe_get_mempool_buffer</span><span class="p">(</span><span class="o">&amp;</span><span class="n">accel_ctx</span><span class="p">,</span><span class="w"> </span><span class="n">cqe</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">buf_len</span><span class="p">);</span>
+
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rc</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="n">printk</span><span class="p">(</span><span class="s">&quot;get mempool buffer failed %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rc</span><span class="p">);</span>
+<span class="w">			</span><span class="k">return</span><span class="p">;</span>
+<span class="w">		</span><span class="p">}</span>
+
+<span class="w">		</span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">sensor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="k">struct</span><span class="w"> </span><span class="nc">sensor_read_config</span><span class="w"> </span><span class="o">*</span><span class="p">)</span>
+<span class="w">					 </span><span class="p">((</span><span class="k">struct</span><span class="w"> </span><span class="nc">rtio_iodev</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">cqe</span><span class="o">-&gt;</span><span class="n">userdata</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">sensor</span><span class="p">;</span>
+
+<span class="w">		</span><span class="n">rtio_cqe_release</span><span class="p">(</span><span class="o">&amp;</span><span class="n">accel_ctx</span><span class="p">,</span><span class="w"> </span><span class="n">cqe</span><span class="p">);</span>
+
+<span class="w">		</span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sensor_get_decoder</span><span class="p">(</span><span class="n">sensor</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">decoder</span><span class="p">);</span>
+
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rc</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="n">printk</span><span class="p">(</span><span class="s">&quot;sensor_get_decoder failed %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rc</span><span class="p">);</span>
+<span class="w">			</span><span class="k">return</span><span class="p">;</span>
+<span class="w">		</span><span class="p">}</span>
+
+<span class="w">		</span><span class="cm">/* Frame iterator values when data comes from a FIFO */</span>
+<span class="w">		</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">accel_fit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">		</span><span class="cm">/* Number of accelerometer data frames */</span>
+<span class="w">		</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">frame_count</span><span class="p">;</span>
+
+<span class="w">		</span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">decoder</span><span class="o">-&gt;</span><span class="n">get_frame_count</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">SENSOR_CHAN_ACCEL_XYZ</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">},</span>
+<span class="w">					      </span><span class="o">&amp;</span><span class="n">frame_count</span><span class="p">);</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rc</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="n">printk</span><span class="p">(</span><span class="s">&quot;sensor_get_decoder failed %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rc</span><span class="p">);</span>
+<span class="w">			</span><span class="k">return</span><span class="p">;</span>
+<span class="w">		</span><span class="p">}</span>
+
+<span class="w">		</span><span class="cm">/* If a tap has occurred lets print it out */</span>
+<span class="w">		</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">decoder</span><span class="o">-&gt;</span><span class="n">has_trigger</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">SENSOR_TRIG_TAP</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="n">printk</span><span class="p">(</span><span class="s">&quot;Tap! Sensor %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+<span class="w">		</span><span class="p">}</span>
+
+<span class="w">		</span><span class="cm">/* Decode all available accelerometer sample frames */</span>
+<span class="w">		</span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">frame_count</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">			</span><span class="n">decoder</span><span class="o">-&gt;</span><span class="n">decode</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">SENSOR_CHAN_ACCEL_XYZ</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">},</span>
+<span class="w">					</span><span class="n">accel_fit</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">accel_data</span><span class="p">);</span>
+<span class="w">			</span><span class="n">printk</span><span class="p">(</span><span class="s">&quot;Accel data for %s &quot;</span><span class="w"> </span><span class="n">PRIsensor_three_axis_data</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+<span class="w">			       </span><span class="n">dev</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span>
+<span class="w">			       </span><span class="n">PRIsensor_three_axis_data_arg</span><span class="p">(</span><span class="n">accel_data</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">));</span>
+<span class="w">		</span><span class="p">}</span>
+
+<span class="w">		</span><span class="n">rtio_release_buffer</span><span class="p">(</span><span class="o">&amp;</span><span class="n">accel_ctx</span><span class="p">,</span><span class="w"> </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">buf_len</span><span class="p">);</span>
+<span class="w">	</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

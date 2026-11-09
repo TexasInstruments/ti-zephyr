@@ -1,0 +1,787 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Development Environment and Tools &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/project/dev_env_and_tools.html" />
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Bug Reporting" href="issues.html" />
+    <link rel="prev" title="Code Flow and Branches" href="code_flow.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Project and Governance</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tsc.html">Technical Steering Committee (TSC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_roles.html">TSC Project Roles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="working_groups.html">TSC Working Groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="release_process.html">Release Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="proposals.html">Feature Tracking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code_flow.html">Code Flow and Branches</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Development Environment and Tools</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#code-review">Code Review</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#give-reviewers-time-to-review-before-code-merge">Give reviewers time to review before code merge</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#workflow">Workflow</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#categories-labels">Categories/Labels</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#a-pull-request-should-have-an-assignee">A Pull-Request should have an Assignee</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pull-request-should-not-be-merged-by-author-without-review">Pull Request should not be merged by author without review</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reviewers-shall-not-request-changes-without-comments-or-justification">Reviewers shall not ‘Request Changes’ without comments or justification</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pull-requests-should-have-at-least-2-approvals-before-they-are-merged">Pull Requests should have at least 2 approvals before they are merged</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reviewers-should-keep-track-of-pull-requests-they-have-provided-feedback-to">Reviewers should keep track of pull requests they have provided feedback to</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#closing-stale-issues-and-pull-requests">Closing Stale Issues and Pull Requests</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#continuous-integration">Continuous Integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#labeling-issues-and-pull-requests-in-github">Labeling issues and pull requests in GitHub</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#labels-applicable-to-issues-only">Labels applicable to issues only</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#labels-applicable-to-pull-requests-only">Labels applicable to pull requests only</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#labels-applicable-to-both-pull-requests-and-issues">Labels applicable to both pull requests and issues</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="issues.html">Bug Reporting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="communication.html">Communication and Collaboration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documentation.html">Code Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#terminology">Terminology</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="index.html">Project and Governance</a> &raquo;</li>
+  
+  <li>Development Environment and Tools</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/project/dev_env_and_tools.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27project%2Fdev_env_and_tools%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Documentation&env=-+Page%3A+project%2Fdev_env_and_tools%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="development-environment-and-tools">
+<span id="dev-environment-and-tools"></span><h1>Development Environment and Tools<a class="headerlink" href="#development-environment-and-tools" title="Link to this heading"></a></h1>
+<section id="code-review">
+<h2>Code Review<a class="headerlink" href="#code-review" title="Link to this heading"></a></h2>
+<p>GitHub is intended to provide a framework for reviewing every commit before it
+is accepted into the code base. Changes, in the form of Pull Requests (PR) are
+uploaded to GitHub but don’t actually become a part of the project until they’ve
+been reviewed, passed a series of checks (CI), and are approved by maintainers.
+GitHub is used to support the standard open source practice of submitting
+patches, which are then reviewed by the project members before being applied to
+the code base.</p>
+<p>Pull requests should be appropriately <a class="reference internal" href="#gh-labels"><span class="std std-ref">labeled</span></a>,
+and linked to any relevant <a class="reference internal" href="issues.html#bug-reporting"><span class="std std-ref">bug or feature tracking issues</span></a>
+.</p>
+<p>The Zephyr project uses GitHub for code reviews and Git tree management. When
+submitting a change or an enhancement to any Zephyr component, a developer
+should use GitHub. GitHub Actions automatically assigns a responsible reviewer
+on a component basis, as defined in the <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/MAINTAINERS.yml">MAINTAINERS.yml</a> file
+stored with the code tree in the Zephyr project repository. A limited set of
+release managers are allowed to merge a pull request into the main branch once
+reviews are complete.</p>
+<section id="give-reviewers-time-to-review-before-code-merge">
+<span id="review-time"></span><h3>Give reviewers time to review before code merge<a class="headerlink" href="#give-reviewers-time-to-review-before-code-merge" title="Link to this heading"></a></h3>
+<p>The Zephyr project is a global project that is not tied to a certain geography
+or timezone. We have developers and contributors from across the globe. When
+changes are proposed using pull request, we need to allow for a minimal review
+time to give developers and contributors the opportunity to review and comment
+on changes. There are different categories of changes and we know that some
+changes do require reviews by subject matter experts and owners of the subsystem
+being changed. Many changes fall under the “trivial” category that can be
+addressed with general reviews and do not need to be queued for a maintainer or
+code-owner review. Additionally, some changes might require further discussions
+and a decision by the TSC or the Security working group. To summarize the above,
+the diagram below proposes minimal review times for each category:</p>
+<figure class="align-center" id="id1">
+<img alt="Pull request classes" src="../_images/pull_request_classes.png" />
+<figcaption>
+<p><span class="caption-text">Pull request classes</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<section id="workflow">
+<h4>Workflow<a class="headerlink" href="#workflow" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>An author of a change can suggest in his pull-request which category a change
+should belong to. A project maintainers or TSC member monitoring the inflow of
+changes can change the label of a pull request by adding a comment justifying
+why a change should belong to another category.</p></li>
+<li><p>The project will use the label system to categorize the pull requests.</p></li>
+<li><p>Changes should not be merged before the minimal time has expired.</p></li>
+</ul>
+</section>
+<section id="categories-labels">
+<h4>Categories/Labels<a class="headerlink" href="#categories-labels" title="Link to this heading"></a></h4>
+<dl>
+<dt>Hotfix</dt><dd><p>Any change that is a fix to an issue that blocks developers from doing their
+daily work, for example CI breakage, Test breakage, Minor documentation fixes
+that impact the user experience.</p>
+<p>Such fixes can be merged at any time after they have passed CI checks. Depending
+on the fix, severity, and availability of someone to review them (other than the
+author) they can be merged with justification without review by one of the
+project owners.</p>
+</dd>
+<dt>Trivial</dt><dd><p>Trivial changes are those that appear obvious enough and do not require maintainer or code-owner
+involvement. Such changes should not change the logic or the design of a
+subsystem or component. For example a trivial change can be:</p>
+<ul class="simple">
+<li><p>Documentation changes</p></li>
+<li><p>Configuration changes</p></li>
+<li><p>Minor Build System tweaks</p></li>
+<li><p>Minor optimization to code logic without changing the logic</p></li>
+<li><p>Test changes and fixes</p></li>
+<li><p>Sample modifications to support additional configuration or boards etc.</p></li>
+</ul>
+</dd>
+<dt>Maintainer</dt><dd><p>Any changes that touch the logic or the original design of a subsystem or
+component will need to be reviewed by the code owner or the designated subsystem
+maintainer. If the code changes is initiated by a contributor or developer other
+than the owner the pull request needs to be assigned to the code owner who will
+have to drive the pull request to a mergeable state by giving feedback to the
+author and asking for more reviews from other developers.</p>
+</dd>
+<dt>Security</dt><dd><p>Changes that appear to have an impact to the overall security of the system need
+to be reviewed by a security expert from the security working group.</p>
+</dd>
+<dt>TSC and Working Groups</dt><dd><p>Changes that introduce new features or functionality or change the way the
+overall system works need to be reviewed by the TSC or the responsible Working
+Group. For example for <a class="reference internal" href="../develop/api/api_lifecycle.html#breaking-api-changes"><span class="std std-ref">breaking API changes</span></a>, the
+proposal needs to be presented in the Architecture meeting so that the relevant
+stakeholders are made aware of the change.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="a-pull-request-should-have-an-assignee">
+<h3>A Pull-Request should have an Assignee<a class="headerlink" href="#a-pull-request-should-have-an-assignee" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>An assignee to a pull request should not be the same as the
+author of the pull-request</p></li>
+<li><p>An assignee to a pull request is responsible for driving the
+pull request to a mergeable state</p></li>
+<li><p>An assignee is responsible for dismissing stale reviews and seeking reviews
+from additional developers and contributors</p></li>
+<li><p>Pull requests should not be merged without an approval by the assignee.</p></li>
+</ul>
+</section>
+<section id="pull-request-should-not-be-merged-by-author-without-review">
+<h3>Pull Request should not be merged by author without review<a class="headerlink" href="#pull-request-should-not-be-merged-by-author-without-review" title="Link to this heading"></a></h3>
+<p>All pull requests need to be reviewed and should not be merged by the author
+without a review. The following exceptions apply:</p>
+<ul class="simple">
+<li><p>Hot fixes: Fixing CI issues, reverts, and system breakage</p></li>
+<li><p>Release related changes: Changing version file, applying tags and release
+related activities without any code changes.</p></li>
+</ul>
+<p>Developers and contributors should always seek review, however there are cases
+when reviewers are not available and there is a need to get a code change into
+the tree as soon as possible.</p>
+</section>
+<section id="reviewers-shall-not-request-changes-without-comments-or-justification">
+<h3>Reviewers shall not ‘Request Changes’ without comments or justification<a class="headerlink" href="#reviewers-shall-not-request-changes-without-comments-or-justification" title="Link to this heading"></a></h3>
+<p>Any change requests (-1) on a pull request have to be justified. A reviewer
+should avoid blocking a pull-request with no justification. If a reviewer feels
+that a change should not be merged without their review, then: Request change
+of the category: for example:</p>
+<ul class="simple">
+<li><p>Trivial -&gt; Maintainer</p></li>
+<li><p>Assign Pull Request to yourself, this will mean that a pull request should
+not be merged without your approval.</p></li>
+</ul>
+</section>
+<section id="pull-requests-should-have-at-least-2-approvals-before-they-are-merged">
+<h3>Pull Requests should have at least 2 approvals before they are merged<a class="headerlink" href="#pull-requests-should-have-at-least-2-approvals-before-they-are-merged" title="Link to this heading"></a></h3>
+<p>A pull-request shall be merged only with two positive reviews (approval). Beside
+the person merging the pull-request (merging != approval), two additional
+approvals are required to be able to merge a pull request. The person merging
+the request can merge without approving or approve and merge to get to the 2
+approvals required.</p>
+</section>
+<section id="reviewers-should-keep-track-of-pull-requests-they-have-provided-feedback-to">
+<h3>Reviewers should keep track of pull requests they have provided feedback to<a class="headerlink" href="#reviewers-should-keep-track-of-pull-requests-they-have-provided-feedback-to" title="Link to this heading"></a></h3>
+<p>If a reviewer has requested changes in a pull request, he or she should monitor
+the state of the pull request and/or respond to mention requests to see if his
+feedback has been addressed. Failing to do so, negative reviews shall be
+dismissed by the assignee or an owner of the repository. Reviews will be
+dismissed following the criteria below:</p>
+<ul class="simple">
+<li><p>The feedback or concerns were visibly addressed by the author</p></li>
+<li><p>The reviewer did not revisit the pull request after 2 week and multiple pings
+by the author</p></li>
+<li><p>The review is unrelated to the code change or asking for unjustified
+structural changes such as:</p>
+<ul>
+<li><p>Split the PR</p></li>
+<li><p>Can you fix this unrelated code that happens to appear in the diff</p></li>
+<li><p>Can you fix unrelated issues</p></li>
+<li><p>Etc.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="closing-stale-issues-and-pull-requests">
+<h3>Closing Stale Issues and Pull Requests<a class="headerlink" href="#closing-stale-issues-and-pull-requests" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>The Pull requests and issues sections on Github are NOT discussion forums.
+They are items that we need to execute and drive to closure.
+Use the mailing lists for discussions.</p></li>
+<li><p>In case of both issues and pull-requests the original poster needs to respond
+to questions and provide clarifications regarding the issue or the change.
+After one week without a response to a request, a second attempt to elicit
+a response from the contributor will be made. After one more week without a
+response the item may be closed (draft and DNM tagged pull requests are
+excluded).</p></li>
+</ul>
+</section>
+</section>
+<section id="continuous-integration">
+<h2>Continuous Integration<a class="headerlink" href="#continuous-integration" title="Link to this heading"></a></h2>
+<p>All changes submitted to GitHub are subject to tests that are run on
+emulated platforms and architectures to identify breakage and regressions that
+can be immediately identified. Testing using Twister additionally performs build tests
+of all boards and platforms. Documentation changes are also verified
+through review and build testing to verify doc generation will be successful.</p>
+<p>Any failures found during the CI test run will result in a negative review
+assigned automatically by the CI system.
+Developers are expected to fix issues and rework their patches and submit again.</p>
+<p>The CI infrastructure currently runs the following tests:</p>
+<ul class="simple">
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">checkpatch</span></code> for code style issues (can vote -1 on errors; see note)</p></li>
+<li><p>Gitlint: Git commit style based on project requirements</p></li>
+<li><p>License Check: Check for conflicting licenses</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">twister</span></code> script</p>
+<ul>
+<li><p>Run kernel tests in QEMU (can vote -1 on errors)</p></li>
+<li><p>Build various samples for different boards (can vote -1 on errors)</p></li>
+</ul>
+</li>
+<li><p>Verify documentation builds correctly.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">checkpatch</span></code> is a Perl script that uses regular expressions to
+extract information that requires a C language parser to process
+accurately.  As such it sometimes issues false positives.  Known
+cases include constructs like:</p>
+<blockquote>
+<div><div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="nf">__aligned</span><span class="p">(</span><span class="n">PAGE_SIZE</span><span class="p">)</span><span class="w"> </span><span class="n">page_pool</span><span class="p">[</span><span class="n">PAGE_SIZE</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">POOL_PAGES</span><span class="p">];</span>
+<span class="n">IOPCTL_Type</span><span class="w"> </span><span class="o">*</span><span class="n">base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="o">-&gt;</span><span class="n">base</span><span class="p">;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Both lines produce a diagnostic regarding spaces around the <code class="docutils literal notranslate"><span class="pre">*</span></code>
+operator: the first is misidentified as a pointer type declaration
+that would be correct as <code class="docutils literal notranslate"><span class="pre">PAGE_SIZE</span> <span class="pre">*POOL_PAGES</span></code> while the second
+is misidentified as a multiplication expression that would be correct
+as <code class="docutils literal notranslate"><span class="pre">IOPCTL_Type</span> <span class="pre">*</span> <span class="pre">base</span></code>.</p>
+<p>Maintainers can override the -1 in cases where the CI infrastructure
+gets the wrong answer.</p>
+</div>
+</section>
+<section id="labeling-issues-and-pull-requests-in-github">
+<span id="gh-labels"></span><h2>Labeling issues and pull requests in GitHub<a class="headerlink" href="#labeling-issues-and-pull-requests-in-github" title="Link to this heading"></a></h2>
+<p>The project uses GitHub issues and pull requests (PRs) to track and manage
+daily and long-term work and contributions to the Zephyr project. We use
+GitHub <strong>labels</strong> to classify and organize these issues and PRs by area, type,
+priority, and more, making it easier to find and report on relevant items.</p>
+<p>All GitHub issues or pull requests must be appropriately labeled.
+Issues and PRs often have multiple labels assigned,
+to help classify them in the different available categories.
+When reviewing a PR, if it has missing or incorrect labels, maintainers shall
+fix it.</p>
+<p>This saves us all time when searching, reduces the chances of the PR or issue
+being forgotten, speeds up reviewing, avoids duplicate issue reports, etc.</p>
+<p>These are the labels we currently have, grouped by applicability:</p>
+<section id="labels-applicable-to-issues-only">
+<h3>Labels applicable to issues only<a class="headerlink" href="#labels-applicable-to-issues-only" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Label</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="guilabel">priority: {high|medium|low}</span></p></td>
+<td><p>To classify the impact and importance of a bug or
+<a class="reference internal" href="proposals.html#feature-tracking"><span class="std std-ref">feature</span></a>.</p>
+<p>Note: Issue priorities are generally set or changed during the bug-triage or TSC
+meetings.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><span class="guilabel">Regression</span></p></td>
+<td><p>Something, which was working, but does not anymore (bug subtype).</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="guilabel">Enhancement</span></p></td>
+<td><p>Changes/Updates/Additions to existing <a class="reference internal" href="proposals.html#feature-tracking"><span class="std std-ref">features</span></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="guilabel">Feature request</span></p></td>
+<td><p>A request for a new <a class="reference internal" href="proposals.html#feature-tracking"><span class="std std-ref">feature</span></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="guilabel">Feature</span></p></td>
+<td><p>A <a class="reference internal" href="proposals.html#feature-tracking"><span class="std std-ref">planned feature</span></a> with a milestone.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="guilabel">Hardware Support</span></p></td>
+<td><p>Covers porting an existing feature (including Zephyr itself) to new hardware.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="guilabel">Duplicate</span></p></td>
+<td><p>This issue is a duplicate of another issue (please specify).</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="guilabel">Good first issue</span></p></td>
+<td><p>Good for a first time contributor to take.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="guilabel">Release Notes</span></p></td>
+<td><p>Issues that need to be mentioned in release notes as known issues with
+additional information.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Any issue must be classified and labeled as either <em>Bug</em>, <em>Enhancement</em>, <em>RFC</em>,
+<em>Feature</em>, <em>Feature Request</em> or <em>Hardware Support</em>. More information on how
+feature requests are handled and become features can be found in <a class="reference internal" href="proposals.html#feature-tracking"><span class="std std-ref">Feature
+Tracking</span></a>.</p>
+</section>
+<section id="labels-applicable-to-pull-requests-only">
+<h3>Labels applicable to pull requests only<a class="headerlink" href="#labels-applicable-to-pull-requests-only" title="Link to this heading"></a></h3>
+<p>The issue or PR describes a change to a stable API.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Label</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="guilabel">Hotfix</span></p></td>
+<td><p>Fix for an issue blocking development.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="guilabel">Trivial</span></p></td>
+<td><p>Simple changes that can have shorter review time and be reviewed by anyone, i.e. typos,
+straightforward one-liner bug fixes, etc.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="guilabel">Maintainer</span></p></td>
+<td><p>Maintainer review required.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="guilabel">Security Review</span></p></td>
+<td><p>To be reviewed by a security expert.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="guilabel">DNM</span></p></td>
+<td><p>This PR should not be merged (Do Not Merge). For work in progress, GitHub
+“draft” PRs are preferred.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="guilabel">Needs review</span></p></td>
+<td><p>The PR needs attention from the maintainers.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="guilabel">Backport</span></p></td>
+<td><p>The PR is a backport or should be backported.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="guilabel">Licensing</span></p></td>
+<td><p>The PR has licensing issues which require a licensing expert to review it.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For all labels applicable to PRs: Please note that the label, together with
+PR complexity, affects how long a merge should be held to ensure proper
+review. See <a class="reference internal" href="#review-time"><span class="std std-ref">review process</span></a> for details.</p>
+</div>
+</section>
+<section id="labels-applicable-to-both-pull-requests-and-issues">
+<h3>Labels applicable to both pull requests and issues<a class="headerlink" href="#labels-applicable-to-both-pull-requests-and-issues" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Label</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="guilabel">area: {area-name}</span></p></td>
+<td><p>Indicates Zephyr subsystems (e.g, <span class="guilabel">area: Kernel</span>, <span class="guilabel">area: I2C</span>,
+<span class="guilabel">area: Memory Management</span>), project functions (e.g., <span class="guilabel">area: Debugging</span>,
+<span class="guilabel">area: Documentation</span>, <span class="guilabel">area: Process</span>), or other categories (e.g.,
+<span class="guilabel">area: Coding Style</span>, <span class="guilabel">area: MISRA-C</span>) affected by the bug or the pull request.</p>
+<p>An area maintainer should be able to filter by an area label and find all issues
+and PRs which relate to that area.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><span class="guilabel">platform: {platform-name}</span></p></td>
+<td><p>An issue or PR which affects only a particular platform.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="guilabel">dev-review</span></p></td>
+<td><p>The issue is to be discussed in the following <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/wiki/Zephyr-Committee-and-Working-Groups#zephyr-dev-meeting">dev-review</a> if time
+permits.</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p><span class="guilabel">TSC</span></p></td>
+<td><p>TSC stands for Technical Steering Committee. The issue is to be discussed in the
+following <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/wiki/Technical-Steering-Committee-(TSC)">TSC meeting</a> if time permits.</p>
+</td>
+</tr>
+<tr class="row-even"><td><p><span class="guilabel">Breaking API Change</span></p></td>
+<td><p>The issue or PR describes a breaking change to a stable API. See additional information
+in <a class="reference internal" href="../develop/api/api_lifecycle.html#breaking-api-changes"><span class="std std-ref">Introducing breaking API changes</span></a>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="guilabel">bug</span></p></td>
+<td><p>The issue is a bug, or the PR is fixing a bug.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="guilabel">Coverity</span></p></td>
+<td><p>A Coverity detected issue or its fix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="guilabel">Waiting for response</span></p></td>
+<td><p>The Zephyr developers are waiting for the submitter to respond to a question, or
+address an issue.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="guilabel">Blocked</span></p></td>
+<td><p>Blocked by another PR or issue.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="guilabel">Stale</span></p></td>
+<td><p>An issue or a PR which seems abandoned, and requires attention by the author.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="guilabel">In progress</span></p></td>
+<td><p>For PRs: is work in progress and should not be merged yet. For issues: Is being
+worked on.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="guilabel">RFC</span></p></td>
+<td><p>The author would like input from the community. For a PR it should be considered
+a draft.</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="guilabel">LTS</span></p></td>
+<td><p>Long term release branch related.</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="guilabel">EXT</span></p></td>
+<td><p>Related to an external component.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+var cache_8h =
+[
+    [ "sys_cache_cached_ptr_get", "group__cache__interface.html#ga773d9fef6f1a2d76927957e73e245ef5", null ],
+    [ "sys_cache_data_disable", "group__cache__interface.html#ga7952019e9231e250a37a3226908102ee", null ],
+    [ "sys_cache_data_enable", "group__cache__interface.html#ga8e065404f0d13a33f7b04096165b8776", null ],
+    [ "sys_cache_data_flush_all", "group__cache__interface.html#ga3992ceae117dbd8bd11a5392e8ab2aa3", null ],
+    [ "sys_cache_data_flush_and_invd_all", "group__cache__interface.html#gaa38ce02275c001f4c542c6d967be25ac", null ],
+    [ "sys_cache_data_flush_and_invd_range", "group__cache__interface.html#ga51d2bfa0ed0d139d1d299d14e8269eac", null ],
+    [ "sys_cache_data_flush_range", "group__cache__interface.html#ga6b61424f0aa81e2893c915b096de0cdb", null ],
+    [ "sys_cache_data_invd_all", "group__cache__interface.html#ga9c7f8f6783196fc226e58d2da1b7781d", null ],
+    [ "sys_cache_data_invd_range", "group__cache__interface.html#ga578f2f926cbf5ad196765881c8c1265e", null ],
+    [ "sys_cache_data_line_size_get", "group__cache__interface.html#ga6b25a6076791c4a559aa20633b49b07e", null ],
+    [ "sys_cache_instr_disable", "group__cache__interface.html#ga502377e711c5399926992e530456af60", null ],
+    [ "sys_cache_instr_enable", "group__cache__interface.html#ga98bd00d87195cbf5f99cea4b68765a7f", null ],
+    [ "sys_cache_instr_flush_all", "group__cache__interface.html#ga6846744d9cdfe5d164679f12abe31e48", null ],
+    [ "sys_cache_instr_flush_and_invd_all", "group__cache__interface.html#ga3ac77afb61ae32cc0af7bd61e07cf765", null ],
+    [ "sys_cache_instr_flush_and_invd_range", "group__cache__interface.html#ga768ada6618e2b9ddc5ba3bb54ba48773", null ],
+    [ "sys_cache_instr_flush_range", "group__cache__interface.html#ga628ee038060351a9958067dfc2e3192c", null ],
+    [ "sys_cache_instr_invd_all", "group__cache__interface.html#gadc460f782f2642203e1bd4797dd46308", null ],
+    [ "sys_cache_instr_invd_range", "group__cache__interface.html#ga7cc3e53a18492b871b69af8b2d1d0db9", null ],
+    [ "sys_cache_instr_line_size_get", "group__cache__interface.html#ga4d130b1ef9a3ecfcd08c0eb2f474e5f1", null ],
+    [ "sys_cache_is_mem_coherent", "group__cache__interface.html#ga17071b17b61be7a8c00064a69d107b19", null ],
+    [ "sys_cache_is_ptr_cached", "group__cache__interface.html#ga0d21da511beb423a64d9bb23e6b5dacf", null ],
+    [ "sys_cache_is_ptr_uncached", "group__cache__interface.html#gaa02f0bac4addff95dda539dca2b1d4d1", null ],
+    [ "sys_cache_uncached_ptr_get", "group__cache__interface.html#ga1410d43a8c6d16e1b54a32868eaecfe3", null ]
+];

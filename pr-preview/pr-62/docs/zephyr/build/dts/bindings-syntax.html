@@ -1,0 +1,1167 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Devicetree bindings syntax &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/build/dts/bindings-syntax.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Rules for upstream bindings" href="bindings-upstream.html" />
+    <link rel="prev" title="Introduction to Devicetree Bindings" href="bindings-intro.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">Kernel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Build and Configuration Systems</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../cmake/index.html">Build System (CMake)</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Devicetree</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#devicetree-guide">Devicetree Guide</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="intro.html">Introduction to devicetree</a></li>
+<li class="toctree-l4"><a class="reference internal" href="design.html">Design goals</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="bindings.html">Devicetree bindings</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="bindings-intro.html">Introduction to Devicetree Bindings</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">Devicetree bindings syntax</a></li>
+<li class="toctree-l5"><a class="reference internal" href="bindings-upstream.html">Rules for upstream bindings</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api-usage.html">Devicetree access from C/C++</a></li>
+<li class="toctree-l4"><a class="reference internal" href="phandles.html">Phandles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="zephyr-user-node.html">The <code class="docutils literal notranslate"><span class="pre">/zephyr,user</span></code> node</a></li>
+<li class="toctree-l4"><a class="reference internal" href="howtos.html">Devicetree HOWTOs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="troubleshooting.html">Troubleshooting devicetree</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dt-vs-kconfig.html">Devicetree versus Kconfig</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#devicetree-reference">Devicetree Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../kconfig/index.html">Configuration System (Kconfig)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../snippets/index.html">Snippets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../zephyr_cmake_package.html">Zephyr CMake Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sysbuild/index.html">Sysbuild (System build)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../version/index.html">Application version management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flashing/index.html">Flashing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signing/index.html">Signing Binaries</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Build and Configuration Systems</a> &raquo;</li>
+  
+     <li><a href="index.html">Devicetree</a> &raquo;</li>
+  
+     <li><a href="bindings.html">Devicetree bindings</a> &raquo;</li>
+  
+  <li>Devicetree bindings syntax</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/build/dts/bindings-syntax.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27build%2Fdts%2Fbindings-syntax%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Devicetree&env=-+Page%3A+build%2Fdts%2Fbindings-syntax%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="devicetree-bindings-syntax">
+<span id="dt-bindings-file-syntax"></span><h1>Devicetree bindings syntax<a class="headerlink" href="#devicetree-bindings-syntax" title="Link to this heading"></a></h1>
+<p>This page documents the syntax of Zephyr’s bindings format. Zephyr bindings
+files are YAML files. A <a class="reference internal" href="bindings-intro.html#dt-bindings-simple-example"><span class="std std-ref">simple example</span></a> was
+given in the introduction page.</p>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#top-level-keys" id="id1">Top level keys</a></p></li>
+<li><p><a class="reference internal" href="#title" id="id2">Title</a></p></li>
+<li><p><a class="reference internal" href="#description" id="id3">Description</a></p></li>
+<li><p><a class="reference internal" href="#compatible" id="id4">Compatible</a></p></li>
+<li><p><a class="reference internal" href="#properties" id="id5">Properties</a></p>
+<ul>
+<li><p><a class="reference internal" href="#property-entry-syntax" id="id6">Property entry syntax</a></p></li>
+<li><p><a class="reference internal" href="#example-property-definitions" id="id7">Example property definitions</a></p></li>
+<li><p><a class="reference internal" href="#required" id="id8">required</a></p></li>
+<li><p><a class="reference internal" href="#type" id="id9">type</a></p></li>
+<li><p><a class="reference internal" href="#deprecated" id="id10">deprecated</a></p></li>
+<li><p><a class="reference internal" href="#default" id="id11">default</a></p></li>
+<li><p><a class="reference internal" href="#enum" id="id12">enum</a></p></li>
+<li><p><a class="reference internal" href="#const" id="id13">const</a></p></li>
+<li><p><a class="reference internal" href="#specifier-space" id="id14">specifier-space</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#child-binding" id="id15">Child-binding</a></p></li>
+<li><p><a class="reference internal" href="#bus" id="id16">Bus</a></p></li>
+<li><p><a class="reference internal" href="#on-bus" id="id17">On-bus</a></p></li>
+<li><p><a class="reference internal" href="#examples" id="id18">Examples</a></p></li>
+<li><p><a class="reference internal" href="#specifier-cell-names-cells" id="id19">Specifier cell names (*-cells)</a></p></li>
+<li><p><a class="reference internal" href="#include" id="id20">Include</a></p></li>
+<li><p><a class="reference internal" href="#nexus-nodes-and-maps" id="id21">Nexus nodes and maps</a></p></li>
+</ul>
+</nav>
+<section id="top-level-keys">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Top level keys</a><a class="headerlink" href="#top-level-keys" title="Link to this heading"></a></h2>
+<p>The top level of a bindings file maps keys to values. The top-level keys look
+like this:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># When the description text is too long, this field can</span>
+<span class="c1"># be used to improve readability, e.g.:</span>
+<span class="c1">#</span>
+<span class="c1"># title: Binding the device&#39;s hardware model.</span>
+<span class="c1">#</span>
+<span class="c1"># description |</span>
+<span class="c1">#   A piece of content with 20 lines.</span>
+<span class="c1">#   ...</span>
+<span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Concise title for the long description [optional]</span>
+
+<span class="c1"># A high level description of the device the binding applies to:</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">   </span><span class="no">This is the Vendomatic company&#39;s foo-device.</span>
+
+<span class="w">   </span><span class="no">Descriptions which span multiple lines (like this) are OK,</span>
+<span class="w">   </span><span class="no">and are encouraged for complex bindings.</span>
+
+<span class="w">   </span><span class="no">See https://yaml-multiline.info/ for formatting help.</span>
+
+<span class="c1"># You can include definitions from other bindings using this syntax:</span>
+<span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">other.yaml</span>
+
+<span class="c1"># Used to match nodes to this binding:</span>
+<span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;manufacturer,foo-device&quot;</span>
+
+<span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Requirements for and descriptions of the properties that this</span>
+<span class="w">  </span><span class="c1"># binding&#39;s nodes need to satisfy go here.</span>
+
+<span class="nt">child-binding</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># You can constrain the children of the nodes matching this binding</span>
+<span class="w">  </span><span class="c1"># using this key.</span>
+
+<span class="c1"># If the node describes bus hardware, like an SPI bus controller</span>
+<span class="c1"># on an SoC, use &#39;bus:&#39; to say which one, like this:</span>
+<span class="nt">bus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spi</span>
+
+<span class="c1"># If the node instead appears as a device on a bus, like an external</span>
+<span class="c1"># SPI memory chip, use &#39;on-bus:&#39; to say what type of bus, like this.</span>
+<span class="c1"># Like &#39;compatible&#39;, this key also influences the way nodes match</span>
+<span class="c1"># bindings.</span>
+<span class="nt">on-bus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spi</span>
+
+<span class="nt">examples</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># You can put a sample node here showing how to use the binding.</span>
+<span class="w">  </span><span class="c1"># - |</span>
+<span class="w">  </span><span class="c1">#  ...</span>
+<span class="w">  </span><span class="c1"># or</span>
+<span class="w">  </span><span class="c1"># - ...</span>
+
+<span class="nt">foo-cells</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># &quot;Specifier&quot; cell names for the &#39;foo&#39; domain go here; example &#39;foo&#39;</span>
+<span class="w">  </span><span class="c1"># values are &#39;gpio&#39;, &#39;pwm&#39;, and &#39;dma&#39;. See below for more information.</span>
+</pre></div>
+</div>
+<p>These keys are explained in the following sections.</p>
+</section>
+<section id="title">
+<span id="dt-bindings-title"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">Title</a><a class="headerlink" href="#title" title="Link to this heading"></a></h2>
+<p>An <em>optional</em>, short description of the bound device, typically the hardware model.
+It should typically be of the format “Vendor Family Model”. If acronyms are used,
+they should be spelled out in parentheses. The naming should stay as close to the
+vendor datasheet as possible.</p>
+<p>Titles should not exceed 100 characters. The description field should be used
+for longer descriptions. The words “binding”, “schema” or “driver” should not
+be used in the title, everything is a binding.</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Acme Foo UART (Universal Asynchronous Receiver/Transmitter)</span>
+</pre></div>
+</div>
+</section>
+<section id="description">
+<span id="dt-bindings-description"></span><h2><a class="toc-backref" href="#id3" role="doc-backlink">Description</a><a class="headerlink" href="#description" title="Link to this heading"></a></h2>
+<p>A free-form description of node hardware goes here. You can put links to
+datasheets or example nodes or properties as well.</p>
+</section>
+<section id="compatible">
+<span id="dt-bindings-compatible"></span><h2><a class="toc-backref" href="#id4" role="doc-backlink">Compatible</a><a class="headerlink" href="#compatible" title="Link to this heading"></a></h2>
+<p>This key is used to match nodes to this binding as described in
+<a class="reference internal" href="bindings-intro.html#dt-binding-compat"><span class="std std-ref">Introduction to Devicetree Bindings</span></a>. It should look like this in a binding file:</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note the comma-separated vendor prefix and device name</span>
+<span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;manufacturer,device&quot;</span>
+</pre></div>
+</div>
+<p>This devicetree node would match the above binding:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">device</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;manufacturer,device&quot;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Assuming no binding has <code class="docutils literal notranslate"><span class="pre">compatible:</span> <span class="pre">&quot;manufacturer,device-v2&quot;</span></code>, it would also
+match this node:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">device-2</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;manufacturer,device-v2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;manufacturer,device&quot;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Each node’s <code class="docutils literal notranslate"><span class="pre">compatible</span></code> property is tried in order. The
+<a class="reference internal" href="bindings-intro.html#dt-binding-compat"><span class="std std-ref">bindings</span></a> are uniquely identified by a pair of
+(<a class="reference internal" href="#dt-bindings-compatible"><span class="std std-ref">compatible</span></a>,
+<a class="reference internal" href="#dt-bindings-on-bus"><span class="std std-ref">on-bus</span></a>), where the
+<a class="reference internal" href="#dt-bindings-on-bus"><span class="std std-ref">on-bus</span></a> may be unspecified. A specified
+<a class="reference internal" href="#dt-bindings-on-bus"><span class="std std-ref">on-bus</span></a> takes precedence over unspecified. The
+first matching binding is used.</p>
+<p>For the following device:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">spi-bus</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nf">device-3</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;manufacturer,device&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The following two bindings can coexist and would match in the following order:</p>
+<p><code class="docutils literal notranslate"><span class="pre">manufacturer,device-spi.yaml</span></code></p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;manufacturer,device&quot;</span>
+<span class="nt">on-bus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spi</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">manufacturer,device.yaml</span></code></p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;manufacturer,device&quot;</span>
+</pre></div>
+</div>
+<p>The following binding can coexist but would not match.</p>
+<p><code class="docutils literal notranslate"><span class="pre">manufacturer,device-i2c.yaml</span></code></p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;manufacturer,device&quot;</span>
+<span class="nt">on-bus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i2c</span>
+</pre></div>
+</div>
+<p>If more than one matching binding for a compatible is found, an error is raised.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">manufacturer</span></code> prefix identifies the device vendor. See
+<a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/dts/bindings/vendor-prefixes.txt">dts/bindings/vendor-prefixes.txt</a> for a list of accepted vendor
+prefixes. The <code class="docutils literal notranslate"><span class="pre">device</span></code> part is usually from the datasheet.</p>
+<p>Some bindings apply to a generic class of devices which do not have a specific
+vendor. In these cases, there is no vendor prefix. One example is the
+<a class="reference internal" href="api/bindings/led/gpio-leds.html#std-dtcompatible-gpio-leds"><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">gpio-leds</span></code></a> compatible which is commonly used to describe board
+LEDs connected to GPIOs.</p>
+</section>
+<section id="properties">
+<span id="dt-bindings-properties"></span><h2><a class="toc-backref" href="#id5" role="doc-backlink">Properties</a><a class="headerlink" href="#properties" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">properties:</span></code> key describes properties that nodes which match the binding
+contain. For example, a binding for a UART peripheral might look something like
+this:</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;manufacturer,serial&quot;</span>
+
+<span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">reg</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UART peripheral MMIO register space</span>
+<span class="w">    </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">current-speed</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current baud rate</span>
+<span class="w">    </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+<p>In this example, a node with compatible <code class="docutils literal notranslate"><span class="pre">&quot;manufacturer,serial&quot;</span></code> must contain
+a property named <code class="docutils literal notranslate"><span class="pre">current-speed</span></code>. The property’s value must be a single
+integer. Similarly, the node must contain a <code class="docutils literal notranslate"><span class="pre">reg</span></code> property.</p>
+<p>The build system uses bindings to generate C macros for devicetree properties
+that appear in DTS files. You can read more about how to get property values in
+source code from these macros in <a class="reference internal" href="api-usage.html#dt-from-c"><span class="std std-ref">Devicetree access from C/C++</span></a>. Generally speaking, the
+build system only generates macros for properties listed in the <code class="docutils literal notranslate"><span class="pre">properties:</span></code>
+key for the matching binding. Properties not mentioned in the binding are
+generally ignored by the build system.</p>
+<p>The one exception is that the build system will always generate macros for
+standard properties, like <a class="reference internal" href="intro-syntax-structure.html#dt-important-props"><span class="std std-ref">reg</span></a>, whose meaning is
+defined by the devicetree specification. This happens regardless of whether the
+node has a matching binding or not.</p>
+<section id="property-entry-syntax">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">Property entry syntax</a><a class="headerlink" href="#property-entry-syntax" title="Link to this heading"></a></h3>
+<p>Property entries in <code class="docutils literal notranslate"><span class="pre">properties:</span></code> are written in this syntax:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;property name&gt;:
+  required: &lt;true | false&gt;
+  type: &lt;string | int | boolean | array | uint8-array | string-array |
+         phandle | phandles | phandle-array | path | compound&gt;
+  deprecated: &lt;true | false&gt;
+  default: &lt;default&gt;
+  description: &lt;description of the property&gt;
+  enum:
+    - &lt;item1&gt;
+    - &lt;item2&gt;
+    ...
+    - &lt;itemN&gt;
+  const: &lt;string | int | array | uint8-array | string-array&gt;
+  specifier-space: &lt;space-name&gt;
+</pre></div>
+</div>
+</section>
+<section id="example-property-definitions">
+<span id="dt-bindings-example-properties"></span><h3><a class="toc-backref" href="#id7" role="doc-backlink">Example property definitions</a><a class="headerlink" href="#example-property-definitions" title="Link to this heading"></a></h3>
+<p>Here are some more examples.</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Describes a property like &#39;current-speed = &lt;115200&gt;;&#39;. We pretend that</span>
+<span class="w">    </span><span class="c1"># it&#39;s obligatory for the example node and set &#39;required: true&#39;.</span>
+<span class="w">    </span><span class="nt">current-speed</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">        </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Initial baud rate for bar-device</span>
+
+<span class="w">    </span><span class="c1"># Describes an optional property like &#39;keys = &quot;foo&quot;, &quot;bar&quot;;&#39;</span>
+<span class="w">    </span><span class="nt">keys</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string-array</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Keys for bar-device</span>
+
+<span class="w">    </span><span class="c1"># Describes an optional property like &#39;maximum-speed = &quot;full-speed&quot;;&#39;</span>
+<span class="w">    </span><span class="c1"># the enum specifies known values that the string property may take</span>
+<span class="w">    </span><span class="nt">maximum-speed</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configures USB controllers to work up to a specific speed.</span>
+<span class="w">        </span><span class="nt">enum</span><span class="p">:</span>
+<span class="w">           </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;low-speed&quot;</span>
+<span class="w">           </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;full-speed&quot;</span>
+<span class="w">           </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;high-speed&quot;</span>
+<span class="w">           </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;super-speed&quot;</span>
+
+<span class="w">    </span><span class="c1"># Describes an optional property like &#39;resolution = &lt;16&gt;;&#39;</span>
+<span class="w">    </span><span class="c1"># the enum specifies known values that the int property may take</span>
+<span class="w">    </span><span class="nt">resolution</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">      </span><span class="nt">enum</span><span class="p">:</span>
+<span class="w">       </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
+<span class="w">       </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span>
+<span class="w">       </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">24</span>
+<span class="w">       </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">32</span>
+
+<span class="w">    </span><span class="c1"># Describes a required property &#39;#address-cells = &lt;1&gt;&#39;;  the const</span>
+<span class="w">    </span><span class="c1"># specifies that the value for the property is expected to be the value 1</span>
+<span class="w">    </span><span class="s">&quot;#address-cells&quot;</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">        </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+
+<span class="w">    </span><span class="nt">int-with-default</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">123</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Value for int register, default is power-up configuration.</span>
+
+<span class="w">    </span><span class="nt">array-with-default</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="c1"># Same as &#39;array-with-default = &lt;1 2 3&gt;&#39;</span>
+
+<span class="w">    </span><span class="nt">string-with-default</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;foo&quot;</span>
+
+<span class="w">    </span><span class="nt">string-array-with-default</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string-array</span>
+<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;foo&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;bar&quot;</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="c1"># Same as &#39;string-array-with-default = &quot;foo&quot;, &quot;bar&quot;&#39;</span>
+
+<span class="w">    </span><span class="nt">uint8-array-with-default</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint8-array</span>
+<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0x12</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0x34</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="c1"># Same as &#39;uint8-array-with-default = [12 34]&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="required">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">required</a><a class="headerlink" href="#required" title="Link to this heading"></a></h3>
+<p>Adding <code class="docutils literal notranslate"><span class="pre">required:</span> <span class="pre">true</span></code> to a property definition will fail the build if a
+node matches the binding, but does not contain the property.</p>
+<p>The default setting is <code class="docutils literal notranslate"><span class="pre">required:</span> <span class="pre">false</span></code>; that is, properties are optional by
+default. Using <code class="docutils literal notranslate"><span class="pre">required:</span> <span class="pre">false</span></code> is therefore redundant and strongly
+discouraged.</p>
+</section>
+<section id="type">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">type</a><a class="headerlink" href="#type" title="Link to this heading"></a></h3>
+<p>The type of a property constrains its values. The following types are
+available. See <a class="reference internal" href="intro-syntax-structure.html#dt-writing-property-values"><span class="std std-ref">Writing property values</span></a> for more details about writing
+values of each type in a DTS file. See <a class="reference internal" href="phandles.html#dt-phandles"><span class="std std-ref">Phandles</span></a> for more information
+about the <code class="docutils literal notranslate"><span class="pre">phandle*</span></code> type properties.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 16.7%" />
+<col style="width: 50.0%" />
+<col style="width: 33.3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Example in DTS</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<td><p>exactly one string</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">status</span> <span class="pre">=</span> <span class="pre">&quot;disabled&quot;;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p>exactly one 32-bit value (cell)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">current-speed</span> <span class="pre">=</span> <span class="pre">&lt;115200&gt;;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">boolean</span></code></p></td>
+<td><p>flags that don’t take a value when true, and are absent if false</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">hw-flow-control;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">array</span></code></p></td>
+<td><p>zero or more 32-bit values (cells)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">offsets</span> <span class="pre">=</span> <span class="pre">&lt;0x100</span> <span class="pre">0x200</span> <span class="pre">0x300&gt;;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">uint8-array</span></code></p></td>
+<td><p>zero or more bytes, in hex (‘bytestring’ in the Devicetree specification)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">local-mac-address</span> <span class="pre">=</span> <span class="pre">[de</span> <span class="pre">ad</span> <span class="pre">be</span> <span class="pre">ef</span> <span class="pre">12</span> <span class="pre">34];</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">string-array</span></code></p></td>
+<td><p>zero or more strings</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dma-names</span> <span class="pre">=</span> <span class="pre">&quot;tx&quot;,</span> <span class="pre">&quot;rx&quot;;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">phandle</span></code></p></td>
+<td><p>exactly one phandle</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">interrupt-parent</span> <span class="pre">=</span> <span class="pre">&lt;&amp;gic&gt;;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">phandles</span></code></p></td>
+<td><p>zero or more phandles</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pinctrl-0</span> <span class="pre">=</span> <span class="pre">&lt;&amp;usart2_tx_pd5</span> <span class="pre">&amp;usart2_rx_pd6&gt;;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">phandle-array</span></code></p></td>
+<td><p>a list of phandles and 32-bit cells (usually specifiers)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dmas</span> <span class="pre">=</span> <span class="pre">&lt;&amp;dma0</span> <span class="pre">2&gt;,</span> <span class="pre">&lt;&amp;dma0</span> <span class="pre">3&gt;;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">path</span></code></p></td>
+<td><p>a path to a node as a phandle path reference or path string</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">zephyr,bt-c2h-uart</span> <span class="pre">=</span> <span class="pre">&amp;uart0;</span></code> or
+<code class="docutils literal notranslate"><span class="pre">foo</span> <span class="pre">=</span> <span class="pre">&quot;/path/to/some/node&quot;;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">compound</span></code></p></td>
+<td><p>a catch-all for more complex types (no macros will be generated)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">foo</span> <span class="pre">=</span> <span class="pre">&lt;&amp;label&gt;,</span> <span class="pre">[01</span> <span class="pre">02];</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="deprecated">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">deprecated</a><a class="headerlink" href="#deprecated" title="Link to this heading"></a></h3>
+<p>A property with <code class="docutils literal notranslate"><span class="pre">deprecated:</span> <span class="pre">true</span></code> indicates to both the user and the tooling
+that the property is meant to be phased out.</p>
+<p>The tooling will report a warning if the devicetree includes the property that
+is flagged as deprecated. (This warning is upgraded to an error in the
+<a class="reference internal" href="../../develop/test/twister.html#twister-script"><span class="std std-ref">Test Runner (Twister)</span></a> for upstream pull requests.)</p>
+<p>The default setting is <code class="docutils literal notranslate"><span class="pre">deprecated:</span> <span class="pre">false</span></code>. Using <code class="docutils literal notranslate"><span class="pre">deprecated:</span> <span class="pre">false</span></code> is
+therefore redundant and strongly discouraged.</p>
+</section>
+<section id="default">
+<span id="dt-bindings-default"></span><h3><a class="toc-backref" href="#id11" role="doc-backlink">default</a><a class="headerlink" href="#default" title="Link to this heading"></a></h3>
+<p>The optional <code class="docutils literal notranslate"><span class="pre">default:</span></code> setting gives a value that will be used if the
+property is missing from the devicetree node.</p>
+<p>For example, with this binding fragment:</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">foo</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+</pre></div>
+</div>
+<p>If property <code class="docutils literal notranslate"><span class="pre">foo</span></code> is missing in a matching node, then the output will be as
+if <code class="docutils literal notranslate"><span class="pre">foo</span> <span class="pre">=</span> <span class="pre">&lt;3&gt;;</span></code> had appeared in the DTS (except YAML data types are used for
+the default value).</p>
+<p>Note that combining <code class="docutils literal notranslate"><span class="pre">default:</span></code> with <code class="docutils literal notranslate"><span class="pre">required:</span> <span class="pre">true</span></code> will raise an error.</p>
+<p>For rules related to <code class="docutils literal notranslate"><span class="pre">default</span></code> in upstream Zephyr bindings, see
+<a class="reference internal" href="bindings-upstream.html#dt-bindings-default-rules"><span class="std std-ref">Rules for default values</span></a>.</p>
+<p>See <a class="reference internal" href="#dt-bindings-example-properties"><span class="std std-ref">Example property definitions</span></a> for examples. Putting <code class="docutils literal notranslate"><span class="pre">default:</span></code> on
+any property type besides those used in <a class="reference internal" href="#dt-bindings-example-properties"><span class="std std-ref">Example property definitions</span></a>
+will raise an error.</p>
+</section>
+<section id="enum">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">enum</a><a class="headerlink" href="#enum" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">enum:</span></code> line is followed by a list of values the property may contain. If
+a property value in DTS is not in the <code class="docutils literal notranslate"><span class="pre">enum:</span></code> list in the binding, an error
+is raised. See <a class="reference internal" href="#dt-bindings-example-properties"><span class="std std-ref">Example property definitions</span></a> for examples.</p>
+</section>
+<section id="const">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">const</a><a class="headerlink" href="#const" title="Link to this heading"></a></h3>
+<p>This specifies a constant value the property must take. It is mainly useful for
+constraining the values of common properties for a particular piece of
+hardware.</p>
+</section>
+<section id="specifier-space">
+<span id="dt-bindings-specifier-space"></span><h3><a class="toc-backref" href="#id14" role="doc-backlink">specifier-space</a><a class="headerlink" href="#specifier-space" title="Link to this heading"></a></h3>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It is an abuse of this feature to use it to name properties in
+unconventional ways.</p>
+<p>For example, this feature is not meant for cases like naming a property
+<code class="docutils literal notranslate"><span class="pre">my-pin</span></code>, then assigning it to the “gpio” specifier space using this
+feature. Properties which refer to GPIOs should use conventional names, i.e.
+end in <code class="docutils literal notranslate"><span class="pre">-gpios</span></code> or <code class="docutils literal notranslate"><span class="pre">-gpio</span></code>.</p>
+</div>
+<p>This property, if present, manually sets the specifier space associated with a
+property with type <code class="docutils literal notranslate"><span class="pre">phandle-array</span></code>.</p>
+<p>Normally, the specifier space is encoded implicitly in the property name. A
+property named <code class="docutils literal notranslate"><span class="pre">foos</span></code> with type <code class="docutils literal notranslate"><span class="pre">phandle-array</span></code> implicitly has specifier
+space <code class="docutils literal notranslate"><span class="pre">foo</span></code>. As a special case, <code class="docutils literal notranslate"><span class="pre">*-gpios</span></code> properties have specifier space
+“gpio”, so that <code class="docutils literal notranslate"><span class="pre">foo-gpios</span></code> will have specifier space “gpio” rather than
+“foo-gpio”.</p>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">specifier-space</span></code> to manually provide a space if
+using this convention would result in an awkward or unconventional name.</p>
+<p>For example:</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">bar</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">phandle-array</span>
+<span class="w">    </span><span class="nt">specifier-space</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-custom-space</span>
+</pre></div>
+</div>
+<p>Above, the <code class="docutils literal notranslate"><span class="pre">bar</span></code> property’s specifier space is set to “my-custom-space”.</p>
+<p>You could then use the property in a devicetree like this:</p>
+<div class="highlight-DTS notranslate"><div class="highlight"><pre><span></span><span class="nl">controller1</span><span class="p">:</span><span class="w"> </span><span class="nf">custom-controller</span><span class="o">@</span><span class="mi">1000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">#</span><span class="n">my-custom-space-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nl">controller2</span><span class="p">:</span><span class="w"> </span><span class="nf">custom-controller</span><span class="o">@</span><span class="mi">2000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">#</span><span class="n">my-custom-space-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nf">my-node</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">bar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">controller1</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">20</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">controller2</span><span class="w"> </span><span class="mi">30</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Generally speaking, you should reserve this feature for cases where the
+implicit specifier space naming convention doesn’t work. One appropriate
+example is an <code class="docutils literal notranslate"><span class="pre">mboxes</span></code> property with specifier space “mbox”, not “mboxe”. You
+can write this property as follows:</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">mboxes</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">phandle-array</span>
+<span class="w">    </span><span class="nt">specifier-space</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mbox</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="child-binding">
+<span id="dt-bindings-child"></span><h2><a class="toc-backref" href="#id15" role="doc-backlink">Child-binding</a><a class="headerlink" href="#child-binding" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">child-binding</span></code> can be used when a node has children that all share the same
+properties. Each child gets the contents of <code class="docutils literal notranslate"><span class="pre">child-binding</span></code> as its binding,
+though an explicit <code class="docutils literal notranslate"><span class="pre">compatible</span> <span class="pre">=</span> <span class="pre">...</span></code> on the child node takes precedence, if
+a binding is found for it.</p>
+<p>Consider a binding for a PWM LED node like this one, where the child nodes are
+required to have a <code class="docutils literal notranslate"><span class="pre">pwms</span></code> property:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">pwmleds</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;pwm-leds&quot;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="nf">red_pwm_led</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">pwms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">pwm3</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">15625000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">        </span><span class="nf">green_pwm_led</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">pwms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">pwm3</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">15625000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">        </span><span class="cm">/* ... */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The binding would look like this:</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;pwm-leds&quot;</span>
+
+<span class="nt">child-binding</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LED that uses PWM</span>
+
+<span class="w">  </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">pwms</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">phandle-array</span>
+<span class="w">      </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">child-binding</span></code> also works recursively. For example, this binding:</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+
+<span class="nt">child-binding</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">child-binding</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">my-property</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">        </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+<p>will apply to the <code class="docutils literal notranslate"><span class="pre">grandchild</span></code> node in this DTS:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">parent</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;foo&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="nf">child</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nf">grandchild</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">my-property</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">123</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                </span><span class="p">};</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="bus">
+<span id="dt-bindings-bus"></span><h2><a class="toc-backref" href="#id16" role="doc-backlink">Bus</a><a class="headerlink" href="#bus" title="Link to this heading"></a></h2>
+<p>If the node is a bus controller, use <code class="docutils literal notranslate"><span class="pre">bus:</span></code> in the binding to say what type
+of bus. For example, a binding for a SPI peripheral on an SoC would look like
+this:</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;manufacturer,spi-peripheral&quot;</span>
+<span class="nt">bus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spi</span>
+<span class="c1"># ...</span>
+</pre></div>
+</div>
+<p>The presence of this key in the binding informs the build system that the
+children of any node matching this binding appear on this type of bus.</p>
+<p>This in turn influences the way <code class="docutils literal notranslate"><span class="pre">on-bus:</span></code> is used to match bindings for the
+child nodes.</p>
+<p>For a single bus supporting multiple protocols, e.g. I3C and I2C, the <code class="docutils literal notranslate"><span class="pre">bus:</span></code>
+in the binding can have a list as value:</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;manufacturer,i3c-controller&quot;</span>
+<span class="nt">bus</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">i3c</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">i2c</span><span class="p p-Indicator">]</span>
+<span class="c1"># ...</span>
+</pre></div>
+</div>
+</section>
+<section id="on-bus">
+<span id="dt-bindings-on-bus"></span><h2><a class="toc-backref" href="#id17" role="doc-backlink">On-bus</a><a class="headerlink" href="#on-bus" title="Link to this heading"></a></h2>
+<p>If the node appears as a device on a bus, use <code class="docutils literal notranslate"><span class="pre">on-bus:</span></code> in the binding to say
+what type of bus.</p>
+<p>For example, a binding for an external SPI memory chip should include this line:</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">on-bus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spi</span>
+</pre></div>
+</div>
+<p>And a binding for an I2C based temperature sensor should include this line:</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">on-bus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i2c</span>
+</pre></div>
+</div>
+<p>When looking for a binding for a node, the build system checks if the binding
+for the parent node contains <code class="docutils literal notranslate"><span class="pre">bus:</span> <span class="pre">&lt;bus</span> <span class="pre">type&gt;</span></code>. If it does, then only
+bindings with a matching <code class="docutils literal notranslate"><span class="pre">on-bus:</span> <span class="pre">&lt;bus</span> <span class="pre">type&gt;</span></code> and bindings without an
+explicit <code class="docutils literal notranslate"><span class="pre">on-bus</span></code> are considered. Bindings with an explicit <code class="docutils literal notranslate"><span class="pre">on-bus:</span> <span class="pre">&lt;bus</span>
+<span class="pre">type&gt;</span></code> are searched for first, before bindings without an explicit <code class="docutils literal notranslate"><span class="pre">on-bus</span></code>.
+The search repeats for each item in the node’s <code class="docutils literal notranslate"><span class="pre">compatible</span></code> property, in
+order.</p>
+<p>This feature allows the same device to have different bindings depending on
+what bus it appears on. For example, consider a sensor device with compatible
+<code class="docutils literal notranslate"><span class="pre">manufacturer,sensor</span></code> which can be used via either I2C or SPI.</p>
+<p>The sensor node may therefore appear in the devicetree as a child node of
+either an SPI or an I2C controller, like this:</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">spi-bus</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">   </span><span class="cm">/* ... some compatible with &#39;bus: spi&#39;, etc. ... */</span>
+
+<span class="w">   </span><span class="nf">sensor</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">       </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;manufacturer,sensor&quot;</span><span class="p">;</span>
+<span class="w">       </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">       </span><span class="cm">/* ... */</span>
+<span class="w">   </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="nf">i2c-bus</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">   </span><span class="cm">/* ... some compatible with &#39;bus: i2c&#39;, etc. ... */</span>
+
+<span class="w">   </span><span class="nf">sensor</span><span class="o">@</span><span class="mi">79</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">       </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;manufacturer,sensor&quot;</span><span class="p">;</span>
+<span class="w">       </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">79</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">       </span><span class="cm">/* ... */</span>
+<span class="w">   </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>You can write two separate binding files which match these individual sensor
+nodes, even though they have the same compatible:</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="c1"># manufacturer,sensor-spi.yaml, which matches sensor@0 on the SPI bus:</span>
+<span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;manufacturer,sensor&quot;</span>
+<span class="nt">on-bus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spi</span>
+
+<span class="c1"># manufacturer,sensor-i2c.yaml, which matches sensor@79 on the I2C bus:</span>
+<span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;manufacturer,sensor&quot;</span>
+<span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">uses-clock-stretching</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean</span>
+<span class="nt">on-bus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i2c</span>
+</pre></div>
+</div>
+<p>Only <code class="docutils literal notranslate"><span class="pre">sensor&#64;79</span></code> can have a <code class="docutils literal notranslate"><span class="pre">use-clock-stretching</span></code> property. The
+bus-sensitive logic ignores <code class="file docutils literal notranslate"><span class="pre">manufacturer,sensor-i2c.yaml</span></code> when searching
+for a binding for <code class="docutils literal notranslate"><span class="pre">sensor&#64;0</span></code>.</p>
+</section>
+<section id="examples">
+<span id="dt-bindings-examples"></span><h2><a class="toc-backref" href="#id18" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<p>If you feel you want to provide a minimal example for your binding, you can use
+it like this:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+
+<span class="nt">properties</span><span class="p">:</span>
+<span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+
+<span class="nt">examples</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">leds {</span>
+<span class="w">      </span><span class="no">compatible = &quot;gpio-leds&quot;;</span>
+
+<span class="w">      </span><span class="no">uled: led {</span>
+<span class="w">      </span><span class="no">gpios = &lt;&amp;gpioe 12 GPIO_ACTIVE_HIGH&gt;;</span>
+<span class="w">      </span><span class="no">};</span>
+<span class="w">    </span><span class="no">};</span>
+</pre></div>
+</div>
+</section>
+<section id="specifier-cell-names-cells">
+<span id="dt-bindings-cells"></span><h2><a class="toc-backref" href="#id19" role="doc-backlink">Specifier cell names (*-cells)</a><a class="headerlink" href="#specifier-cell-names-cells" title="Link to this heading"></a></h2>
+<p>This section documents how to name the cells in a specifier within a binding.
+These concepts are discussed in detail later in this guide in
+<a class="reference internal" href="phandles.html#dt-phandle-arrays"><span class="std std-ref">phandle-array properties</span></a>.</p>
+<p>Consider a binding for a node whose phandle may appear in a <code class="docutils literal notranslate"><span class="pre">phandle-array</span></code>
+property, like the PWM controllers <code class="docutils literal notranslate"><span class="pre">pwm1</span></code> and <code class="docutils literal notranslate"><span class="pre">pwm2</span></code> in this example:</p>
+<div class="highlight-DTS notranslate"><div class="highlight"><pre><span></span><span class="nl">pwm1</span><span class="p">:</span><span class="w"> </span><span class="nf">pwm</span><span class="o">@</span><span class="mi">deadbeef</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;foo,pwm&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="o">#</span><span class="n">pwm-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nl">pwm2</span><span class="p">:</span><span class="w"> </span><span class="nf">pwm</span><span class="o">@</span><span class="mi">deadbeef</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;bar,pwm&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="o">#</span><span class="n">pwm-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nf">my-node</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">pwms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">pwm1</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2000</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">pwm2</span><span class="w"> </span><span class="mi">3000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>The bindings for compatible <code class="docutils literal notranslate"><span class="pre">&quot;foo,pwm&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;bar,pwm&quot;</span></code> must give a name to
+the cells that appear in a PWM specifier using <code class="docutils literal notranslate"><span class="pre">pwm-cells:</span></code>, like this:</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="c1"># foo,pwm.yaml</span>
+<span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;foo,pwm&quot;</span>
+<span class="nn">...</span>
+<span class="nt">pwm-cells</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">channel</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">period</span>
+
+<span class="c1"># bar,pwm.yaml</span>
+<span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;bar,pwm&quot;</span>
+<span class="nn">...</span>
+<span class="nt">pwm-cells</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">period</span>
+</pre></div>
+</div>
+<p>A <code class="docutils literal notranslate"><span class="pre">*-names</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">pwm-names</span></code>) property can appear on the node as well,
+giving a name to each entry.</p>
+<p>This allows the cells in the specifiers to be accessed by name, e.g. using APIs
+like <a class="reference internal" href="../../doxygen/html/group__devicetree-pwms.html#ga59a4b9884e9620eac04c3808a3a6d164" title=""><code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_PWMS_CHANNEL_BY_NAME</span></code></a>.</p>
+<p>If the specifier is empty (e.g. <code class="docutils literal notranslate"><span class="pre">#clock-cells</span> <span class="pre">=</span> <span class="pre">&lt;0&gt;</span></code>), then <code class="docutils literal notranslate"><span class="pre">*-cells</span></code> can
+either be omitted (recommended) or set to an empty array. Note that an empty
+array is specified as e.g. <code class="docutils literal notranslate"><span class="pre">clock-cells:</span> <span class="pre">[]</span></code> in YAML.</p>
+</section>
+<section id="include">
+<span id="dt-bindings-include"></span><h2><a class="toc-backref" href="#id20" role="doc-backlink">Include</a><a class="headerlink" href="#include" title="Link to this heading"></a></h2>
+<p>Bindings can include other files, which can be used to share common property
+definitions between bindings. Use the <code class="docutils literal notranslate"><span class="pre">include:</span></code> key for this. Its value is
+either a string or a list.</p>
+<p>In the simplest case, you can include another file by giving its name as a
+string, like this:</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.yaml</span>
+</pre></div>
+</div>
+<p>If any file named <code class="file docutils literal notranslate"><span class="pre">foo.yaml</span></code> is found (see
+<a class="reference internal" href="bindings-intro.html#dt-where-bindings-are-located"><span class="std std-ref">Where bindings are located</span></a> for the search process), it will be
+included into this binding.</p>
+<p>Included files are merged into bindings with a simple recursive dictionary
+merge. The build system will check that the resulting merged binding is
+well-formed. It is allowed to include at any level, including <code class="docutils literal notranslate"><span class="pre">child-binding</span></code>,
+like this:</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="c1"># foo.yaml will be merged with content at this level</span>
+<span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.yaml</span>
+
+<span class="nt">child-binding</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># bar.yaml will be merged with content at this level</span>
+<span class="w">  </span><span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar.yaml</span>
+</pre></div>
+</div>
+<p>It is an error if a key appears with a different value in a binding and in a
+file it includes, with one exception: a binding can have <code class="docutils literal notranslate"><span class="pre">required:</span> <span class="pre">true</span></code> for
+a <a class="reference internal" href="#dt-bindings-properties"><span class="std std-ref">property definition</span></a> for which the included
+file has <code class="docutils literal notranslate"><span class="pre">required:</span> <span class="pre">false</span></code>. The <code class="docutils literal notranslate"><span class="pre">required:</span> <span class="pre">true</span></code> takes precedence, allowing
+bindings to strengthen requirements from included files.</p>
+<p>Note that weakening requirements by having <code class="docutils literal notranslate"><span class="pre">required:</span> <span class="pre">false</span></code> where the
+included file has <code class="docutils literal notranslate"><span class="pre">required:</span> <span class="pre">true</span></code> is an error. This is meant to keep the
+organization clean.</p>
+<p>The file <a class="reference external" href="https://github.com/TexasInstruments/zephyr/blob/v4.4.0-ti-next/dts/bindings/base/base.yaml">base.yaml</a> contains
+definitions for many common properties. When writing a new binding, it is a
+good idea to check if <code class="file docutils literal notranslate"><span class="pre">base.yaml</span></code> already defines some of the needed
+properties, and include it if it does.</p>
+<p>Note that you can make a property defined in base.yaml obligatory like this,
+taking <a class="reference internal" href="intro-syntax-structure.html#dt-important-props"><span class="std std-ref">reg</span></a> as an example:</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">reg</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+<p>This relies on the dictionary merge to fill in the other keys for <code class="docutils literal notranslate"><span class="pre">reg</span></code>, like
+<code class="docutils literal notranslate"><span class="pre">type</span></code>.</p>
+<p>To include multiple files, you can use a list of strings:</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">include</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.yaml</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar.yaml</span>
+</pre></div>
+</div>
+<p>This includes the files <code class="file docutils literal notranslate"><span class="pre">foo.yaml</span></code> and <code class="file docutils literal notranslate"><span class="pre">bar.yaml</span></code>. (You can
+write this list in a single line of YAML as <code class="docutils literal notranslate"><span class="pre">include:</span> <span class="pre">[foo.yaml,</span> <span class="pre">bar.yaml]</span></code>.)</p>
+<p>When including multiple files, any overlapping <code class="docutils literal notranslate"><span class="pre">required</span></code> keys on properties
+in the included files are ORed together. This makes sure that a <code class="docutils literal notranslate"><span class="pre">required:</span>
+<span class="pre">true</span></code> is always respected.</p>
+<p>In some cases, you may want to include some property definitions from a file,
+but not all of them. In this case, <code class="docutils literal notranslate"><span class="pre">include:</span></code> should be a list, and you can
+filter out just the definitions you want by putting a mapping in the list, like
+this:</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">include</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.yaml</span>
+<span class="w">    </span><span class="nt">property-allowlist</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i-want-this-one</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">and-this-one</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar.yaml</span>
+<span class="w">    </span><span class="nt">property-blocklist</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">do-not-include-this-one</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">or-this-one</span>
+</pre></div>
+</div>
+<p>Each map element must have a <code class="docutils literal notranslate"><span class="pre">name</span></code> key which is the filename to include, and
+may have <code class="docutils literal notranslate"><span class="pre">property-allowlist</span></code> and <code class="docutils literal notranslate"><span class="pre">property-blocklist</span></code> keys that filter
+which properties are included.</p>
+<p>You cannot have a single map element with both <code class="docutils literal notranslate"><span class="pre">property-allowlist</span></code> and
+<code class="docutils literal notranslate"><span class="pre">property-blocklist</span></code> keys. A map element with neither <code class="docutils literal notranslate"><span class="pre">property-allowlist</span></code>
+nor <code class="docutils literal notranslate"><span class="pre">property-blocklist</span></code> is valid; no additional filtering is done.</p>
+<p>You can freely intermix strings and mappings in a single <code class="docutils literal notranslate"><span class="pre">include:</span></code> list:</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">include</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.yaml</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar.yaml</span>
+<span class="w">    </span><span class="nt">property-blocklist</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">do-not-include-this-one</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">or-this-one</span>
+</pre></div>
+</div>
+<p>Finally, you can filter from a child binding like this:</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">include</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar.yaml</span>
+<span class="w">    </span><span class="nt">child-binding</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">property-allowlist</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">child-prop-to-allow</span>
+</pre></div>
+</div>
+</section>
+<section id="nexus-nodes-and-maps">
+<h2><a class="toc-backref" href="#id21" role="doc-backlink">Nexus nodes and maps</a><a class="headerlink" href="#nexus-nodes-and-maps" title="Link to this heading"></a></h2>
+<p>All <code class="docutils literal notranslate"><span class="pre">phandle-array</span></code> type properties support mapping through <code class="docutils literal notranslate"><span class="pre">*-map</span></code>
+properties, e.g. <code class="docutils literal notranslate"><span class="pre">gpio-map</span></code>, as defined by the Devicetree specification.</p>
+<p>This is used, for example, to define connector nodes for common breakout
+headers, such as the <code class="docutils literal notranslate"><span class="pre">arduino_header</span></code> nodes that are conventionally defined
+in the devicetrees for boards with Arduino compatible expansion headers.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

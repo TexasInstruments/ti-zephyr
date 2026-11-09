@@ -1,0 +1,28 @@
+var intc__mchp__xec__ecia_8h =
+[
+    [ "mchp_xec_ecia_callback_t", "intc__mchp__xec__ecia_8h.html#a946f876915453dd27eccc24d3e39210a", null ],
+    [ "mchp_ecia_unset_callback", "intc__mchp__xec__ecia_8h.html#a636a559083647193d154076c8d901bb5", null ],
+    [ "mchp_ecia_unset_callback_by_dev", "intc__mchp__xec__ecia_8h.html#a756f04d2ad6680d4324326244f0b84b0", null ],
+    [ "mchp_xec_ecia_disable", "intc__mchp__xec__ecia_8h.html#a6432ee01ae43598bc7ee8387f38ce5de", null ],
+    [ "mchp_xec_ecia_enable", "intc__mchp__xec__ecia_8h.html#a91e7ab27d1b62f72a392ebbb5c38a4d8", null ],
+    [ "mchp_xec_ecia_girq_aggr_en", "intc__mchp__xec__ecia_8h.html#aa0acc2a2f6fe2c21e385aeb650d4e195", null ],
+    [ "mchp_xec_ecia_girq_result", "intc__mchp__xec__ecia_8h.html#a96a9db2c2a7e650c87457a1f5b1b395a", null ],
+    [ "mchp_xec_ecia_girq_src_clr", "intc__mchp__xec__ecia_8h.html#a042b0afeb07493d13b068b26bc20c4f3", null ],
+    [ "mchp_xec_ecia_girq_src_clr_bitmap", "intc__mchp__xec__ecia_8h.html#a61c65d98a3781449fcb2363029fa0856", null ],
+    [ "mchp_xec_ecia_girq_src_dis", "intc__mchp__xec__ecia_8h.html#a4335e0f409723ffef63198b4ec026fe7", null ],
+    [ "mchp_xec_ecia_girq_src_dis_bitmap", "intc__mchp__xec__ecia_8h.html#a44d6bffbe40f09fc063580f9bb936cd8", null ],
+    [ "mchp_xec_ecia_girq_src_en", "intc__mchp__xec__ecia_8h.html#afce3bbeeb977efc4349d58e676c17fbe", null ],
+    [ "mchp_xec_ecia_girq_src_en_bitmap", "intc__mchp__xec__ecia_8h.html#ab6d12794d0c1762efc2fdeb1a337580b", null ],
+    [ "mchp_xec_ecia_info_disable", "intc__mchp__xec__ecia_8h.html#a363949f5b133f05b94dd8f17d572bbac", null ],
+    [ "mchp_xec_ecia_info_enable", "intc__mchp__xec__ecia_8h.html#a9026ff2f7a60f8e244537cbab4a0e891", null ],
+    [ "mchp_xec_ecia_info_girq_aggr_en", "intc__mchp__xec__ecia_8h.html#a4dab0aa1c6f77906ecd618d4269cf764", null ],
+    [ "mchp_xec_ecia_info_girq_result", "intc__mchp__xec__ecia_8h.html#a38ce7498c75d5f8c44facc3a625edbe9", null ],
+    [ "mchp_xec_ecia_info_girq_src_clr", "intc__mchp__xec__ecia_8h.html#a73c19286d1f406aef34a4bda562d933b", null ],
+    [ "mchp_xec_ecia_info_girq_src_dis", "intc__mchp__xec__ecia_8h.html#af90b2ce499b8109bae272d5bac444f51", null ],
+    [ "mchp_xec_ecia_info_girq_src_en", "intc__mchp__xec__ecia_8h.html#a5a4b9d83a396438e22f1c694b7e7c82a", null ],
+    [ "mchp_xec_ecia_info_nvic_clr_pend", "intc__mchp__xec__ecia_8h.html#a94b5aa34aaacb1e59ba2dffd625b200c", null ],
+    [ "mchp_xec_ecia_info_set_callback", "intc__mchp__xec__ecia_8h.html#a1b75b3213eace2931bfee965bb2bc1b9", null ],
+    [ "mchp_xec_ecia_nvic_clr_pend", "intc__mchp__xec__ecia_8h.html#ac563ac5fcc47e2b3b375ce4d3ade897b", null ],
+    [ "mchp_xec_ecia_set_callback", "intc__mchp__xec__ecia_8h.html#a980dfa5d5751cdefd5c911e6cac6075d", null ],
+    [ "mchp_xec_ecia_set_callback_by_dev", "intc__mchp__xec__ecia_8h.html#a65d91d241885c1b8ff7bdc7bd92e2a13", null ]
+];

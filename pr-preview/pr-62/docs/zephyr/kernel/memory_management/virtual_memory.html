@@ -1,0 +1,573 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Virtual Memory &mdash; Zephyr Project Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=b2ece5be" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://docs.zephyrproject.org/latest/kernel/memory_management/virtual_memory.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2f20d6c1"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=1603dd89"></script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Data Structures" href="../data_structures/index.html" />
+    <link rel="prev" title="Demand Paging" href="demand_paging.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="Search docs"
+           aria-label="Search docs" />
+    <span id="search-se-settings-icon" class="fa fa-gear" role="button" tabindex="0"
+          title="Search settings" aria-label="Search settings"
+          aria-haspopup="menu" aria-controls="search-se-menu" aria-expanded="false"
+          onclick="toggleSearchEngineSettingsMenu()">
+    </span>
+    <div id="search-se-menu" role="menu" aria-labelledby="search-se-settings-icon">
+      <ul>
+        <li id="search-se-menuitem-sphinx" role="menuitemradio" tabindex="-1"
+            aria-label="Built-in search" onclick="switchSearchEngine('sphinx')">
+          Built-in search <span class="fa fa-check"></span>
+        </li>
+        <li id="search-se-menuitem-google" role="menuitemradio" tabindex="-1"
+            aria-label="Google search" onclick="switchSearchEngine('google')">
+          Google search <span class="fa fa-check"></span>
+        </li>
+      </ul>
+    </div>
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+<script>
+(function () {
+  var form = document.getElementById("rtd-search-form");
+  var searchMenu = document.getElementById("search-se-menu");
+  var isBrowsingLatest = window.location.pathname.startsWith("/latest");
+  var preferenceKey = "search-se-" + (isBrowsingLatest ? "latest" : "default");
+  var query = new URLSearchParams(window.location.search).get("q");
+
+  if (query !== null) {
+    form.q.value = query;
+    form.q.focus();
+  }
+
+  // Load the saved search preference. Defaults to Google when browsing "/latest" documentation,
+  // built-in Sphinx search otherwise.
+  var engine = localStorage.getItem(preferenceKey);
+  if (engine === null) {
+    engine = isBrowsingLatest ? "google" : "sphinx";
+  }
+  setActiveSearchEngine(engine);
+
+  setSearchEngineSettingsMenuVisibility = function (visible) {
+    searchMenu.style.display = visible ? "block" : "none";
+    document
+      .getElementById("search-se-settings-icon")
+      .setAttribute("aria-expanded", visible ? "true" : "false");
+  };
+  setSearchEngineSettingsMenuVisibility(false);
+
+  window.toggleSearchEngineSettingsMenu = function () {
+    isVisible = searchMenu.style.display === "block";
+    setSearchEngineSettingsMenuVisibility(!isVisible);
+  };
+
+  function setActiveSearchEngine(engine) {
+    if(engine === "sphinx") {
+      form.action = "../../search.html";
+      form.q.placeholder = "Search docs (built-in search)";
+    } else {
+      form.action = "../../gsearch.html";
+      form.q.placeholder = "Search docs (powered by Google)";
+    }
+
+    var selectedElement = document.getElementById("search-se-menuitem-" + engine);
+    var otherElement = document.getElementById(
+      "search-se-menuitem-" + (engine === "sphinx" ? "google" : "sphinx")
+    );
+
+    selectedElement.classList.add("selected");
+    selectedElement.setAttribute("aria-checked", "true");
+    otherElement.classList.remove("selected");
+    otherElement.setAttribute("aria-checked", "false");
+  }
+
+  window.switchSearchEngine = function (engine) {
+    setActiveSearchEngine(engine);
+    localStorage.setItem(preferenceKey, engine);
+    setSearchEngineSettingsMenuVisibility(false);
+    form.q.focus();
+    if (form.q.value !== "") {
+      form.submit();
+    }
+  };
+
+  // Close the dropdown if the user clicks outside of it
+  window.onclick = function (event) {
+    if (!event.target.matches("#search-se-settings-icon")) {
+      if (searchMenu.style.display === "block") {
+        setSearchEngineSettingsMenuVisibility(false);
+      }
+    }
+  };
+
+  document.addEventListener("keydown", function (event) {
+    if(searchMenu.style.display === "none") return;
+
+    let menuItems = document.querySelectorAll('[role="menuitemradio"]');
+    let currentIndex = Array.from(menuItems).findIndex((item) => item === document.activeElement);
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      let nextIndex = event.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1;
+
+      if (nextIndex >= menuItems.length) nextIndex = 0;
+      if (nextIndex < 0) nextIndex = menuItems.length - 1;
+
+      menuItems[nextIndex].focus();
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let activeItem = document.activeElement;
+      if (activeItem && activeItem.getAttribute("role") === "menuitemradio") {
+        activeItem.click();
+        event.preventDefault();
+      }
+    }
+  });
+})();
+</script>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+          <dd><a href="/">latest</a></dd>
+        
+          <dd><a href="/4.4.0/">4.4.0</a></dd>
+        
+          <dd><a href="/4.3.0/">4.3.0</a></dd>
+        
+          <dd><a href="/3.7.0/">3.7.0 (LTS)</a></dd>
+        
+      </dl>
+      <dl>
+        <dt>Downloads</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">Developing with Zephyr</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Kernel</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../services/index.html">Kernel Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drivers/index.html">Device Driver Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usermode/index.html">User Mode</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Memory Management</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="heap.html">Memory Heaps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_multi_heap.html">Shared Multi Heap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slabs.html">Memory Slabs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sys_mem_blocks.html">Memory Blocks Allocator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demand_paging.html">Demand Paging</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Virtual Memory</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#kconfigs">Kconfigs</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#required">Required</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#optional">Optional</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#memory-map-overview">Memory Map Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#virtual-memory-mappings">Virtual Memory Mappings</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#setting-up-mappings-at-boot">Setting up Mappings at Boot</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#mapping-anonymous-memory">Mapping Anonymous Memory</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API Reference</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../data_structures/index.html">Data Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timing_functions/index.html">Executing Time Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../object_cores/index.html">Object Cores</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timeutil.html">Time Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../util/index.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iterable_sections/index.html">Iterable Sections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../code-relocation.html">Code And Data Relocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanup.html">Scope-based Cleanup Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">OS Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">Build and Configuration Systems</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../connectivity/index.html">Connectivity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">Hardware Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">Contributing to Zephyr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">Project and Governance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">Security</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">Safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">Supported Boards and Shields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">Releases</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">Kernel</a> &raquo;</li>
+  
+     <li><a href="index.html">Memory Management</a> &raquo;</li>
+  
+  <li>Virtual Memory</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+      
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/blob/main/doc/kernel/memory_management/virtual_memory.rst" class="fa fa-github"> Open on GitHub</a>
+      
+        <a href="https://github.com/zephyrproject-rtos/zephyr/issues/new?template=001_bug_report.yml&title=doc%3A+Documentation+issue+in+%27kernel%2Fmemory_management%2Fvirtual_memory%27&labels=bug%2Carea%3A+Documentation%2Carea%3A+Kernel&env=-+Page%3A+kernel%2Fmemory_management%2Fvirtual_memory%0A-+Version%3A+main%0A-+SHA-1%3A+560e5f87670c05b07c8c2e88e652ed94740ea033&context=This+issue+was+reported+from+the+online+documentation+page+using+the+%27Report+an+issue%27+button." class="fa fa-bug">
+          Report an issue with this page
+        </a>
+      
+    
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="virtual-memory">
+<span id="memory-management-api-virtual-memory"></span><h1>Virtual Memory<a class="headerlink" href="#virtual-memory" title="Link to this heading"></a></h1>
+<p>Virtual memory (VM) in Zephyr provides developers with the ability to fine tune
+access to memory. To utilize virtual memory, the platform must support
+Memory Management Unit (MMU) and it must be enabled in the build. Due to
+the target of Zephyr mainly being embedded systems, virtual memory
+support in Zephyr differs a bit from that in traditional operating
+systems:</p>
+<dl class="simple">
+<dt>Mapping of Kernel Image</dt><dd><p>Default is to do 1:1 mapping for the kernel image (including code and data)
+between physical and virtual memory address spaces, if demand paging
+is not enabled. Deviation from this requires careful manipulation of
+linker script.</p>
+</dd>
+<dt>Secondary Storage</dt><dd><p>Basic virtual memory support does not utilize secondary storage to
+extend usable memory. The maximum usable memory is the same as
+the physical memory.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="demand_paging.html#memory-management-api-demand-paging"><span class="std std-ref">Demand Paging</span></a> enables utilizing
+secondary storage as a backing store for virtual memory, thus
+allowing larger usable memory than the available physical memory.
+Note that demand paging needs to be explicitly enabled.</p></li>
+<li><p>Although the virtual memory space can be larger than physical
+memory space, without enabling demand paging, all virtually
+mapped memory must be backed by physical memory.</p></li>
+</ul>
+</dd>
+</dl>
+<section id="kconfigs">
+<h2>Kconfigs<a class="headerlink" href="#kconfigs" title="Link to this heading"></a></h2>
+<section id="required">
+<h3>Required<a class="headerlink" href="#required" title="Link to this heading"></a></h3>
+<p>These are the Kconfigs that need to be enabled or defined for kernel to support
+virtual memory.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MMU" title="CONFIG_MMU"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MMU</span></code></a>: must be enabled for virtual memory support in
+kernel.</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MMU_PAGE_SIZE" title="CONFIG_MMU_PAGE_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MMU_PAGE_SIZE</span></code></a>: size of a memory page. Default is 4KB.</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_KERNEL_VM_BASE" title="CONFIG_KERNEL_VM_BASE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_KERNEL_VM_BASE</span></code></a>: base address of virtual address space.</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_KERNEL_VM_SIZE" title="CONFIG_KERNEL_VM_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_KERNEL_VM_SIZE</span></code></a>: size of virtual address space.
+Default is 8MB.</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_KERNEL_VM_OFFSET" title="CONFIG_KERNEL_VM_OFFSET"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_KERNEL_VM_OFFSET</span></code></a>: kernel image starts at this offset
+from <a class="reference internal" href="../../kconfig.html#CONFIG_KERNEL_VM_BASE" title="CONFIG_KERNEL_VM_BASE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_KERNEL_VM_BASE</span></code></a>.</p></li>
+</ul>
+</section>
+<section id="optional">
+<h3>Optional<a class="headerlink" href="#optional" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_KERNEL_DIRECT_MAP" title="CONFIG_KERNEL_DIRECT_MAP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_KERNEL_DIRECT_MAP</span></code></a>: permits 1:1 mappings between
+virtual and physical addresses, instead of kernel choosing addresses within
+the virtual address space. This is useful for mapping device MMIO regions for
+more precise access control.</p></li>
+</ul>
+</section>
+</section>
+<section id="memory-map-overview">
+<h2>Memory Map Overview<a class="headerlink" href="#memory-map-overview" title="Link to this heading"></a></h2>
+<p>This is an overview of the memory map of the virtual memory address space.
+Note that the <code class="docutils literal notranslate"><span class="pre">Z_*</span></code> macros, which are used in code, may have different
+meanings depending on architecture and Kconfigs, which will be explained
+below.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll">+--------------+ &lt;- K_MEM_VIRT_RAM_START
+</span>| Undefined VM | &lt;- architecture specific reserved area
+<span class="hll">+--------------+ &lt;- K_MEM_KERNEL_VIRT_START
+</span>| Mapping for  |
+| main kernel  |
+| image        |
+|              |
+|              |
+<span class="hll">+--------------+ &lt;- K_MEM_VM_FREE_START
+</span>|              |
+| Unused,      |
+| Available VM |
+|              |
+|..............| &lt;- grows downward as more mappings are made
+| Mapping      |
++--------------+
+| Mapping      |
++--------------+
+| ...          |
++--------------+
+| Mapping      |
+<span class="hll">+--------------+ &lt;- memory mappings start here
+</span>| Reserved     | &lt;- special purpose virtual page(s) of size K_MEM_VM_RESERVED
+<span class="hll">+--------------+ &lt;- K_MEM_VIRT_RAM_END
+</span></pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_VIRT_RAM_START</span></code> is the beginning of the virtual memory address space.
+This needs to be page aligned. Currently, it is the same as
+<a class="reference internal" href="../../kconfig.html#CONFIG_KERNEL_VM_BASE" title="CONFIG_KERNEL_VM_BASE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_KERNEL_VM_BASE</span></code></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_VIRT_RAM_SIZE</span></code> is the size of the virtual memory address space.
+This needs to be page aligned. Currently, it is the same as
+<a class="reference internal" href="../../kconfig.html#CONFIG_KERNEL_VM_SIZE" title="CONFIG_KERNEL_VM_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_KERNEL_VM_SIZE</span></code></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_VIRT_RAM_END</span></code> is simply (<code class="docutils literal notranslate"><span class="pre">K_MEM_VIRT_RAM_START</span></code> + <code class="docutils literal notranslate"><span class="pre">K_MEM_VIRT_RAM_SIZE</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_KERNEL_VIRT_START</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">z_mapped_start</span></code> specified in the linker
+script. This is the virtual address of the beginning of the kernel image at
+boot time.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_KERNEL_VIRT_END</span></code> is the same as <code class="docutils literal notranslate"><span class="pre">z_mapped_end</span></code> specified in the linker
+script. This is the virtual address of the end of the kernel image at boot time.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_VM_FREE_START</span></code> is the beginning of the virtual address space where addresses
+can be allocated for memory mapping. This depends on whether
+<a class="reference internal" href="../../kconfig.html#CONFIG_ARCH_MAPS_ALL_RAM" title="CONFIG_ARCH_MAPS_ALL_RAM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARCH_MAPS_ALL_RAM</span></code></a> is enabled.</p>
+<ul>
+<li><p>If it is enabled, which means all physical memory are mapped in virtual
+memory address space, and it is the same as
+(<a class="reference internal" href="../../kconfig.html#CONFIG_SRAM_BASE_ADDRESS" title="CONFIG_SRAM_BASE_ADDRESS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SRAM_BASE_ADDRESS</span></code></a> + <a class="reference internal" href="../../kconfig.html#CONFIG_SRAM_SIZE" title="CONFIG_SRAM_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SRAM_SIZE</span></code></a>).</p></li>
+<li><p>If it is disabled, <code class="docutils literal notranslate"><span class="pre">K_MEM_VM_FREE_START</span></code> is the same <code class="docutils literal notranslate"><span class="pre">K_MEM_KERNEL_VIRT_END</span></code> which
+is the end of the kernel image.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_VM_RESERVED</span></code> is an area reserved to support kernel functions. For example,
+some addresses are reserved to support demand paging.</p></li>
+</ul>
+</section>
+<section id="virtual-memory-mappings">
+<h2>Virtual Memory Mappings<a class="headerlink" href="#virtual-memory-mappings" title="Link to this heading"></a></h2>
+<section id="setting-up-mappings-at-boot">
+<h3>Setting up Mappings at Boot<a class="headerlink" href="#setting-up-mappings-at-boot" title="Link to this heading"></a></h3>
+<p>In general, most supported architectures set up the memory mappings at boot as
+following:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">.text</span></code> section is read-only and executable. It is accessible in
+both kernel and user modes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.rodata</span></code> section is read-only and non-executable. It is accessible
+in both kernel and user modes.</p></li>
+<li><p>Other kernel sections, such as <code class="docutils literal notranslate"><span class="pre">.data</span></code>, <code class="docutils literal notranslate"><span class="pre">.bss</span></code> and <code class="docutils literal notranslate"><span class="pre">.noinit</span></code>, are
+read-write and non-executable. They are only accessible in kernel mode.</p>
+<ul>
+<li><p>Stacks for user mode threads are automatically granted read-write access
+to their corresponding user mode threads during thread creation.</p></li>
+<li><p>Global variables, by default, are not accessible to user mode threads.
+Refer to <a class="reference internal" href="../usermode/memory_domain.html#memory-domain"><span class="std std-ref">Memory Domains and Partitions</span></a> on how to
+use global variables in user mode threads, and on how to share data
+between user mode threads.</p></li>
+</ul>
+</li>
+</ul>
+<p>Caching modes for these mappings are architecture specific. They can be
+none, write-back, or write-through.</p>
+<p>Note that SoCs have their own additional mappings required to boot where
+these mappings are defined under their own SoC configurations. These mappings
+usually include device MMIO regions needed to setup the hardware.</p>
+</section>
+<section id="mapping-anonymous-memory">
+<h3>Mapping Anonymous Memory<a class="headerlink" href="#mapping-anonymous-memory" title="Link to this heading"></a></h3>
+<p>The unused physical memory can be mapped in virtual address space on demand.
+This is conceptually similar to memory allocation from heap, but these
+mappings must be aligned on page size and have finer access control.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../doxygen/html/group__kernel__memory__management.html#gacf5f9c43ac2c31c376fed4a19f607feb" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_map()</span></code></a> can be used to map unused physical memory:</p>
+<ul>
+<li><p>The requested size must be multiple of page size.</p></li>
+<li><p>The address returned is inside the virtual address space between
+<code class="docutils literal notranslate"><span class="pre">K_MEM_VM_FREE_START</span></code> and <code class="docutils literal notranslate"><span class="pre">K_MEM_VIRT_RAM_END</span></code>.</p></li>
+<li><p>The mapped region is not guaranteed to be physically contiguous in memory.</p></li>
+<li><p>Guard pages immediately before and after the mapped virtual region are
+automatically allocated to catch access issue due to buffer underrun
+or overrun.</p></li>
+</ul>
+</li>
+<li><p>The mapped region can be unmapped (i.e. freed) via <a class="reference internal" href="../../doxygen/html/group__kernel__memory__management.html#ga1867ea13671daae6a5f38929ea9fd64a" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_unmap()</span></code></a>:</p>
+<ul>
+<li><p>Caution must be exercised to give the pass the same region size to
+both <a class="reference internal" href="../../doxygen/html/group__kernel__memory__management.html#gacf5f9c43ac2c31c376fed4a19f607feb" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_map()</span></code></a> and <a class="reference internal" href="../../doxygen/html/group__kernel__memory__management.html#ga1867ea13671daae6a5f38929ea9fd64a" title=""><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_unmap()</span></code></a>. The unmapping
+function does not check if it is a valid mapped region before unmapping.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<a class="doxygroup reference internal" href="../../doxygen/html/group__kernel__memory__management.html" title=""><span class="pre">Kernel</span> <span class="pre">Memory</span> <span class="pre">Management</span></a></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: Nov 09, 2026.
+    Last source update: Oct 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
