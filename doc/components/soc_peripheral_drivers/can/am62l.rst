@@ -170,4 +170,3 @@ Devicetree Bindings
 ===================
 
 - :ws-doc:`ti,k3-mcan <zephyr/build/dts/api/bindings/can/ti,k3-mcan.html>`
-- :ws-doc:`bosch,m_can-base <zephyr/build/dts/api/bindings/can/bosch,m_can-base.html>`

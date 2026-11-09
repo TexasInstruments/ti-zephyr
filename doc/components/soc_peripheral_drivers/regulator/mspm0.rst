@@ -215,7 +215,7 @@ standalone use, see below.
 Samples
 -------
 
-- :ws-doc:`Regulator Shell <zephyr/samples/regulator/regulator_shell>`
+- :ws-doc:`Regulator Shell <zephyr/samples/regulator/regulator_shell/README.html>`
 
 Devicetree Bindings
 ===================

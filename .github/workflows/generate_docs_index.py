@@ -3,7 +3,7 @@
 
 """Generate a landing index.html for the GitHub Pages docs site.
 
-Scans the given site directory for per-SoC subdirectories (each a Sphinx
+Scans <site_dir>/docs/ti-zephyr for per-SoC subdirectories (each a Sphinx
 build from ``make -C doc html SOC=<soc>``) and writes a top-level
 index.html linking to each one. Only the landing page of the published
 site; it is not part of the Sphinx build.
@@ -33,7 +33,7 @@ def main():
 
     socs = [
         soc for soc in soc_info
-        if (site_dir / soc / "introduction/index.html").is_file()
+        if (site_dir / "docs" / "ti-zephyr" / soc / "introduction/index.html").is_file()
     ]
     if not socs:
         sys.exit(f"No SoC builds found in {site_dir}")
@@ -43,7 +43,7 @@ def main():
     cards = []
     for soc in socs:
         name, devices = soc_info[soc]["name"], soc_info[soc]["devices"]
-        cards.append(f"""      <a class="card" href="{soc}/introduction/index.html">
+        cards.append(f"""      <a class="card" href="docs/ti-zephyr/{soc}/introduction/index.html">
         <h2>{html.escape(name)}</h2>
         <p>{html.escape(devices)}</p>
         <span class="card-link">View documentation &rarr;</span>
