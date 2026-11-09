@@ -2,7 +2,7 @@ var structbt__bap__scan__delegator__cb =
 [
     [ "add_source", "structbt__bap__scan__delegator__cb.html#a1ca1642de4bcf3f6552d09761168b1fc", null ],
     [ "bis_sync_req", "structbt__bap__scan__delegator__cb.html#a9702317028e29e8bb2c19a48749816e8", null ],
-    [ "broadcast_code", "structbt__bap__scan__delegator__cb.html#a78d011c817e60725a0ef14c68bd655cd", null ],
+    [ "broadcast_code", "structbt__bap__scan__delegator__cb.html#a92da6e5c59d7944cc6e910425337de80", null ],
     [ "modify_source", "structbt__bap__scan__delegator__cb.html#af862ad2d51d60e57cc50e20c256fde35", null ],
     [ "pa_sync_req", "structbt__bap__scan__delegator__cb.html#a0ea55963f92361f35e68eadcf10306b1", null ],
     [ "pa_sync_term_req", "structbt__bap__scan__delegator__cb.html#a5b918538cfe0edaa69155f891981eeae", null ],

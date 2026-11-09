@@ -10,5 +10,5 @@ var group__bt__bap__broadcast__sink =
     [ "bt_bap_broadcast_sink_delete", "group__bt__bap__broadcast__sink.html#ga8b9d6cb409a3671654e053475ada3fda", null ],
     [ "bt_bap_broadcast_sink_register_cb", "group__bt__bap__broadcast__sink.html#ga1b83ead634d990e954f233d0208c5a85", null ],
     [ "bt_bap_broadcast_sink_stop", "group__bt__bap__broadcast__sink.html#ga1020b21bfb4195aeb5823197145b1fe9", null ],
-    [ "bt_bap_broadcast_sink_sync", "group__bt__bap__broadcast__sink.html#gacadebb5ce8aab5f5b8f1ff7e0fa57805", null ]
+    [ "bt_bap_broadcast_sink_sync", "group__bt__bap__broadcast__sink.html#gaaf18a6f7d2897f85b8012c1fa0513c09", null ]
 ];

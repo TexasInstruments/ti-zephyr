@@ -32631,8 +32631,8 @@
       <type>int</type>
       <name>bt_bap_broadcast_sink_sync</name>
       <anchorfile>group__bt__bap__broadcast__sink.html</anchorfile>
-      <anchor>gacadebb5ce8aab5f5b8f1ff7e0fa57805</anchor>
-      <arglist>(struct bt_bap_broadcast_sink *sink, uint32_t indexes_bitfield, struct bt_bap_stream *streams[], const uint8_t broadcast_code[BT_ISO_BROADCAST_CODE_SIZE])</arglist>
+      <anchor>gaaf18a6f7d2897f85b8012c1fa0513c09</anchor>
+      <arglist>(struct bt_bap_broadcast_sink *sink, uint32_t indexes_bitfield, struct bt_bap_stream *streams[], const uint8_t broadcast_code[0x10])</arglist>
     </member>
     <member kind="function">
       <type>int</type>
@@ -32764,8 +32764,8 @@
       <type>int</type>
       <name>bt_bap_broadcast_assistant_set_broadcast_code</name>
       <anchorfile>group__bt__bap.html</anchorfile>
-      <anchor>gabcec07689c13a996bcb9d2d417347dbb</anchor>
-      <arglist>(struct bt_conn *conn, uint8_t src_id, const uint8_t broadcast_code[BT_ISO_BROADCAST_CODE_SIZE])</arglist>
+      <anchor>gabfbe52e8d1daa9411fb43781a199cac4</anchor>
+      <arglist>(struct bt_conn *conn, uint8_t src_id, const uint8_t broadcast_code[0x10])</arglist>
     </member>
     <member kind="function">
       <type>int</type>
@@ -150377,6 +150377,13 @@
     <path>zephyr/drivers/sensor/</path>
     <filename>veml6046_8h.html</filename>
     <includes id="veml60xx-common_8h" name="veml60xx-common.h" local="no" import="no" module="no" objc="no">zephyr/drivers/sensor/veml60xx-common.h</includes>
+    <member kind="define">
+      <type>#define</type>
+      <name>ZEPHYR_INCLUDE_DRIVERS_SENSOR_VEML6046_H_</name>
+      <anchorfile>veml6046_8h.html</anchorfile>
+      <anchor>a8b1aa2eefaeeaf17b6e4b5f1dcf72429</anchor>
+      <arglist></arglist>
+    </member>
     <member kind="enumeration">
       <type></type>
       <name>veml6046_pdd</name>
@@ -570606,24 +570613,24 @@
       <arglist>(name, num_bits)</arglist>
     </member>
     <member kind="function" static="yes">
-      <type>static bool</type>
+      <type>static _Bool</type>
       <name>atomic_test_bit</name>
       <anchorfile>group__atomic__apis.html</anchorfile>
-      <anchor>ga190ddc108f45e7649689753c08658eae</anchor>
+      <anchor>ga153c7d3a124e95ddf29e6f65bd124e44</anchor>
       <arglist>(const atomic_t *target, int bit)</arglist>
     </member>
     <member kind="function" static="yes">
-      <type>static bool</type>
+      <type>static _Bool</type>
       <name>atomic_test_and_clear_bit</name>
       <anchorfile>group__atomic__apis.html</anchorfile>
-      <anchor>ga53159437721084da0ec8ee70ec212472</anchor>
+      <anchor>ga4878e529d511f7e11db63fa5728bd352</anchor>
       <arglist>(atomic_t *target, int bit)</arglist>
     </member>
     <member kind="function" static="yes">
-      <type>static bool</type>
+      <type>static _Bool</type>
       <name>atomic_test_and_set_bit</name>
       <anchorfile>group__atomic__apis.html</anchorfile>
-      <anchor>ga7ff45e13aa5f8be5d7a550e49f5c720b</anchor>
+      <anchor>ga042174774d12e52519be91ee6aeaf2ec</anchor>
       <arglist>(atomic_t *target, int bit)</arglist>
     </member>
     <member kind="function" static="yes">
@@ -570644,21 +570651,21 @@
       <type>static void</type>
       <name>atomic_set_bit_to</name>
       <anchorfile>group__atomic__apis.html</anchorfile>
-      <anchor>gad749f16ca51ffc26e7303988de1b8dbf</anchor>
-      <arglist>(atomic_t *target, int bit, bool val)</arglist>
+      <anchor>ga694d6953cc75e92a4d8e387256c0a2ed</anchor>
+      <arglist>(atomic_t *target, int bit, _Bool val)</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>_Bool</type>
       <name>atomic_cas</name>
       <anchorfile>group__atomic__apis.html</anchorfile>
-      <anchor>gab879da5aa1ffcc317adc664c016586f7</anchor>
+      <anchor>gaef275bd78e093e5b5177ef725d0f570a</anchor>
       <arglist>(atomic_t *target, atomic_val_t old_value, atomic_val_t new_value)</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>_Bool</type>
       <name>atomic_ptr_cas</name>
       <anchorfile>group__atomic__apis.html</anchorfile>
-      <anchor>ga98f03db5ef2b36ff3412506a7f6d9558</anchor>
+      <anchor>gac83bb88616b79ffcfff140377bea983d</anchor>
       <arglist>(atomic_ptr_t *target, atomic_ptr_val_t old_value, atomic_ptr_val_t new_value)</arglist>
     </member>
     <member kind="function">
@@ -572313,7 +572320,7 @@
     <member kind="define">
       <type>#define</type>
       <name>NSEC_PER_USEC</name>
-      <anchorfile>group__clock__apis.html</anchorfile>
+      <anchorfile>grlock__apis.html</anchorfile>
       <anchor>ga2180f263d149841a7c1fde663edb84c5</anchor>
       <arglist></arglist>
     </member>
@@ -572440,7 +572447,7 @@
       <type>k_timepoint_t</type>
       <name>sys_timepoint_calc</name>
       <anchorfile>group__clock__apis.html</anchorfile>
-      <anchor>ga509cf4599c1f162c97540743e8c21d33</anchor>
+      <anchor>ga509cf4599c1f162c97540797540743e8c21d33</anchor>
       <arglist>(k_timeout_t timeout)</arglist>
     </member>
     <member kind="function">
@@ -574686,7 +574693,7 @@
       <type>void *</type>
       <name>k_object_alloc</name>
       <anchorfile>group__usermode__apis.html</anchorfile>
-      <anchor>ga5bba3a354fbc63673c76c9815db40812</anchor>
+      <anchor>ga5bba3a354fbc63673c76c40812</anchor>
       <arglist>(enum k_objects otype)</arglist>
     </member>
     <member kind="function">
@@ -575594,7 +575601,7 @@
     </member>
     <member kind="function">
       <type>void</type>
-      <name>sys_multi_heap_init</name>
+      <name>sys_multi_heap_iheap_init</name>
       <anchorfile>group__multi__heap__wrapper.html</anchorfile>
       <anchor>ga50ded513b50c7aed7d89386bb8f425cc</anchor>
       <arglist>(struct sys_multi_heap *heap, sys_multi_heap_fn_t choice_fn)</arglist>
@@ -577864,7 +577871,7 @@
       <type>#define</type>
       <name>k_cyc_to_sec_ceil64</name>
       <anchorfile>group__timeutil__unit__apis.html</anchorfile>
-      <anchor>ga2c64ffb238dd5047413d394b39900d61</anchor>
+      <anchor>ga2c64ffb238dd5047413d394b61</anchor>
       <arglist>(t)</arglist>
     </member>
     <member kind="define">
@@ -578789,7 +578796,7 @@
       <type>#define</type>
       <name>CONTAINER_OF</name>
       <anchorfile>group__sys-util.html</anchorfile>
-      <anchor>gac5bc561d1bfd1bf68877fe577779bd2f</anchor>
+      <anchor>gac5bc561d1bfd1bf68d1bf68877fe577779bd2f</anchor>
       <arglist>(ptr, type, field)</arglist>
     </member>
     <member kind="define">
@@ -580961,7 +580968,7 @@
       <type>#define</type>
       <name>BT_UUID_GATT_CAF</name>
       <anchorfile>group__bt__uuid.html</anchorfile>
-      <anchor>gadc590b4039c9f47965e88e57b5589a93</anchor>
+      <anchor>gadc590b403965e88e57b5589a93</anchor>
       <arglist></arglist>
     </member>
     <member kind="define">
@@ -614865,8 +614872,8 @@
       <type>char</type>
       <name>fxsave</name>
       <anchorfile>structarch__esf.html</anchorfile>
-      <anchor>ad8800ab57271ecbd74b382b47400fe4a</anchor>
-      <arglist>[512]</arglist>
+      <anchor>af27c45a02ae939f203f260e21c5efdb5</anchor>
+      <arglist>[X86_FXSAVE_SIZE]</arglist>
     </member>
     <member kind="variable">
       <type>unsigned long</type>
@@ -619122,8 +619129,8 @@
       <type>uint8_t</type>
       <name>broadcast_code</name>
       <anchorfile>structbt__bap__broadcast__source__param.html</anchorfile>
-      <anchor>a6a05b6448f55cf5f52f90e44d83146dc</anchor>
-      <arglist>[BT_ISO_BROADCAST_CODE_SIZE]</arglist>
+      <anchor>a4fa06bcfe0f01d093dc855ede503e6c7</anchor>
+      <arglist>[0x10]</arglist>
     </member>
     <member kind="variable">
       <type>uint8_t</type>
@@ -619494,8 +619501,8 @@
       <type>void(*</type>
       <name>broadcast_code</name>
       <anchorfile>structbt__bap__scan__delegator__cb.html</anchorfile>
-      <anchor>a78d011c817e60725a0ef14c68bd655cd</anchor>
-      <arglist>)(struct bt_conn *conn, const struct bt_bap_scan_delegator_recv_state *recv_state, const uint8_t broadcast_code[BT_ISO_BROADCAST_CODE_SIZE])</arglist>
+      <anchor>a92da6e5c59d7944cc6e910425337de80</anchor>
+      <arglist>)(struct bt_conn *conn, const struct bt_bap_scan_delegator_recv_state *recv_state, const uint8_t broadcast_code[0x10])</arglist>
     </member>
     <member kind="variable">
       <type>int(*</type>
@@ -619621,8 +619628,8 @@
       <type>uint8_t</type>
       <name>bad_code</name>
       <anchorfile>structbt__bap__scan__delegator__recv__state.html</anchorfile>
-      <anchor>a1c268bb7b340c874935f186c0ba2a253</anchor>
-      <arglist>[BT_ISO_BROADCAST_CODE_SIZE]</arglist>
+      <anchor>acc044fafc882b449ee6fcd0c6c995b36</anchor>
+      <arglist>[0x10]</arglist>
     </member>
     <member kind="variable">
       <type>uint8_t</type>
@@ -620654,8 +620661,8 @@
       <type>struct bt_bap_bass_subgroup</type>
       <name>subgroups</name>
       <anchorfile>structbt__cap__commander__broadcast__reception__start__member__param.html</anchorfile>
-      <anchor>a2222f8ae46afed4760db56079779532d</anchor>
-      <arglist>[BT_BAP_BASS_MAX_SUBGROUPS]</arglist>
+      <anchor>a35c452d019f90988fe19402c6495cecc</anchor>
+      <arglist>[COND_CODE_1(CONFIG_BT_AUDIO,(CONFIG_BT_BAP_BASS_MAX_SUBGROUPS),(0))]</arglist>
     </member>
     <member kind="variable">
       <type>size_t</type>
@@ -621035,8 +621042,8 @@
       <type>uint8_t</type>
       <name>broadcast_code</name>
       <anchorfile>structbt__cap__commander__distribute__broadcast__code__param.html</anchorfile>
-      <anchor>ac7d426c975c1e2324f52486abf9298b9</anchor>
-      <arglist>[BT_ISO_BROADCAST_CODE_SIZE]</arglist>
+      <anchor>af03798684691d9c43bbf7881397d1922</anchor>
+      <arglist>[0x10]</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -621205,8 +621212,8 @@
       <type>uint8_t</type>
       <name>broadcast_code</name>
       <anchorfile>structbt__cap__initiator__broadcast__create__param.html</anchorfile>
-      <anchor>aa4d6fbd5bd13963004e381b987bbeb4d</anchor>
-      <arglist>[BT_ISO_BROADCAST_CODE_SIZE]</arglist>
+      <anchor>a580737b0df95f866a016efa0ba3c0891</anchor>
+      <arglist>[0x10]</arglist>
     </member>
     <member kind="variable">
       <type>uint8_t</type>
@@ -708984,8 +708991,8 @@
       <type>char</type>
       <name>fxsave</name>
       <anchorfile>structx86__ssf.html</anchorfile>
-      <anchor>ac00879a99d2369b2832ab41febe08ced</anchor>
-      <arglist>[512]</arglist>
+      <anchor>a50e764f5066662238d2b3b117d199db2</anchor>
+      <arglist>[X86_FXSAVE_SIZE]</arglist>
     </member>
     <member kind="variable">
       <type>unsigned long</type>
@@ -723842,8 +723849,8 @@
       <type>int</type>
       <name>bt_bap_broadcast_sink_sync</name>
       <anchorfile>group__bt__bap__broadcast__sink.html</anchorfile>
-      <anchor>gacadebb5ce8aab5f5b8f1ff7e0fa57805</anchor>
-      <arglist>(struct bt_bap_broadcast_sink *sink, uint32_t indexes_bitfield, struct bt_bap_stream *streams[], const uint8_t broadcast_code[BT_ISO_BROADCAST_CODE_SIZE])</arglist>
+      <anchor>gaaf18a6f7d2897f85b8012c1fa0513c09</anchor>
+      <arglist>(struct bt_bap_broadcast_sink *sink, uint32_t indexes_bitfield, struct bt_bap_stream *streams[], const uint8_t broadcast_code[0x10])</arglist>
     </member>
     <member kind="function">
       <type>int</type>
@@ -730371,8 +730378,8 @@
       <type>int</type>
       <name>bt_bap_broadcast_assistant_set_broadcast_code</name>
       <anchorfile>group__bt__bap.html</anchorfile>
-      <anchor>gabcec07689c13a996bcb9d2d417347dbb</anchor>
-      <arglist>(struct bt_conn *conn, uint8_t src_id, const uint8_t broadcast_code[BT_ISO_BROADCAST_CODE_SIZE])</arglist>
+      <anchor>gabfbe52e8d1daa9411fb43781a199cac4</anchor>
+      <arglist>(struct bt_conn *conn, uint8_t src_id, const uint8_t broadcast_code[0x10])</arglist>
     </member>
     <member kind="function">
       <type>int</type>
@@ -786058,7 +786065,7 @@
     <member kind="define">
       <type>#define</type>
       <name>DT_INST_PROP_LEN</name>
-      <anchorfile>group__devicetree-inst.html</anchorfile>
+      <anchorfile>group__devictml</anchorfile>
       <anchor>ga9471df75ff3c4f8d2298bb69c581b365</anchor>
       <arglist>(inst, prop)</arglist>
     </member>
@@ -786904,7 +786911,7 @@
       <type>int(*</type>
       <name>ivshmem_register_handler_f</name>
       <anchorfile>group__ivshmem.html</anchorfile>
-      <anchor>ga842bee3ff990f166665593c384c6bb21</anchor>
+      <anchor>ga842bee3ff990f166665593c384c6b65593c384c6bb21</anchor>
       <arglist>)(const struct device *dev, struct k_poll_signal *signal, uint16_t vector)</arglist>
     </member>
     <member kind="function">
@@ -795734,7 +795741,7 @@
       <type></type>
       <name>max2221x_ch_freq_div</name>
       <anchorfile>group__max2221x__interface.html</anchorfile>
-      <anchor>ga2e92402dac3bd8036d0f1eff3e546c62</anchor>
+      <anchor>ga2e92400f1eff3e546c62</anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
@@ -796108,7 +796115,7 @@
       <name>max2221x_get_slew_rate</name>
       <anchorfile>group__max2221x__interface.html</anchorfile>
       <anchor>ga573d3cfca5ba3267a36c5817996d4f46</anchor>
-      <arglist>(const struct device *dev, uint8_t channel)</arglist>
+      <arglist>(const struct devi struct device *dev, uint8_t channel)</arglist>
     </member>
     <member kind="function">
       <type>int</type>
@@ -799743,7 +799750,7 @@
     <member kind="define">
       <type>#define</type>
       <name>MIPI_DCS_READ_MEMORY_START</name>
-      <anchorfile>group__mipi__interface.html</anchorfile>
+      <anchorfile>group_face.html</anchorfile>
       <anchor>ga860180f5477caadae3857b4c93f04281</anchor>
       <arglist></arglist>
     </member>
@@ -799961,7 +799968,7 @@
       <type>#define</type>
       <name>MIPI_DCS_PIXEL_FORMAT_12BIT</name>
       <anchorfile>group__mipi__interface.html</anchorfile>
-      <anchor>ga77944b2fd7f59be6698bd414cbeedcac</anchor>
+      <anchor>ga77944b2fd7f59be6692fd7f59be6698bd414cbeedcac</anchor>
       <arglist></arglist>
     </member>
     <member kind="define">
@@ -800837,7 +800844,7 @@
     </member>
     <member kind="typedef">
       <type>int(*</type>
-      <name>modbus_raw_cb_t</name>
+      <name>m_t</name>
       <anchorfile>group__modbus.html</anchorfile>
       <anchor>ga6d74be1fffb9d5697fe5708827aa7ef1</anchor>
       <arglist>)(const int iface, const struct modbus_adu *adu, void *user_data)</arglist>
@@ -801380,7 +801387,7 @@
     </member>
     <member kind="enumvalue">
       <name>MQTT_EVT_PUBACK</name>
-      <anchorfile>group__mqtt__socket.html</anchorfile>
+      <anchorfile>group__mqtt__socket.html</ancet.html</anchorfile>
       <anchor>gga0071fe013b9920711456ef51cc3e6d91a2f25d5d4ca704ab63439d4706d3587de</anchor>
       <arglist></arglist>
     </member>
@@ -802906,7 +802913,7 @@
     <member kind="enumvalue">
       <name>MSPI_DEVICE_CONFIG_BREAK_TIME</name>
       <anchorfile>group__mspi__interface.html</anchorfile>
-      <anchor>gga71c447d059acf7a8055c380243f3a647acdea4576df8e6d7d48cc289305237120</anchor>
+      <anchor>gga71c447d059acf7a8055c380243f3a647acdea4576df8e6d7d48cc2/anchor>
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
@@ -802923,7 +802930,7 @@
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
-      <name>MSPI_MEMMAP_READ_WRITE</name>
+      <name>MSPI_MEMMAP_READ_WRITE</name>WRITE</name>
       <anchorfile>group__mspi__interface.html</anchorfile>
       <anchor>ggac127ef78c7b66c7eebe03782abf08c40a5e34cb52b8e8475f9457a9cab7a424ed</anchor>
       <arglist></arglist>
@@ -806215,7 +806222,7 @@
       <name>MEDIA_PROXY_OP_SUP_STOP</name>
       <anchorfile>group__bt__media__proxy.html</anchorfile>
       <anchor>ga060ff676a0b2f249a26aaf61147b68e8</anchor>
-      <arglist></arglist>
+  ></arglist>
     </member>
     <member kind="define">
       <type>#define</type>
@@ -806305,7 +806312,7 @@
       <type>#define</type>
       <name>MEDIA_PROXY_OP_SUP_NEXT_GROUP</name>
       <anchorfile>group__bt__media__proxy.html</anchorfile>
-      <anchor>ga324dae538f28e818eea79c83aaa0b22c</anchor>
+      <anchor>ga324dae538f28e818eea79c83aaa0b22c</ancha0b22c</anchor>
       <arglist></arglist>
     </member>
     <member kind="define">
@@ -807430,8 +807437,7 @@
       <anchorfile>group__subsys__tracing__apis__msgq.html</anchorfile>
       <anchor>ga448baf7df9ec1abc4ec3a12609400b68</anchor>
       <arglist>(msgq, timeout)</arglist>
-    </member>
-    <member kind="define">
+    </<member kind="define">
       <type>#define</type>
       <name>sys_port_trace_k_msgq_get_exit</name>
       <anchorfile>group__subsys__tracing__apis__msgq.html</anchorfile>
@@ -807848,6 +807854,7 @@
     <subgroup>modem_pipelink</subgroup>
     <subgroup>modem_ppp</subgroup>
     <subgroup>modem_ubx</subgroup>
+  </coroup>
   </compound>
   <compound kind="group">
     <name>modem_cmux</name>
@@ -808628,8 +808635,7 @@
       <type></type>
       <name>cfb_display_param</name>
       <anchorfile>group__monochrome__character__framebuffer.html</anchorfile>
-      <anchor>ga32e8edb517093dbc1b612a1bef24c7af</anchor>
-      <arglist></arglist>
+      <anchor>ga32e8edb517093dbc1b612a1bef24c7af</anchoglist></arglist>
     </member>
     <member kind="enumvalue">
       <name>CFB_DISPLAY_HEIGHT</name>
@@ -812483,7 +812489,7 @@
       <type>void</type>
       <name>net_if_router_rm</name>
       <anchorfile>group__net__if.html</anchorfile>
-      <anchor>gadc87242eb7205362a308b3c4437bf76d</anchor>
+      <anchor>gadc87242eb7205362a42eb7205362a308b3c4437bf76d</anchor>
       <arglist>(struct net_if_router *router)</arglist>
     </member>
     <member kind="function">
@@ -813415,7 +813421,7 @@
     <name>net_l2</name>
     <title>Network L2 Abstraction Layer</title>
     <filename>group__net__l2.html</filename>
-    <class kind="struct">net_l2</class>
+    <class kind="struct">n>
     <member kind="enumeration">
       <type></type>
       <name>net_l2_flags</name>
@@ -815655,7 +815661,7 @@
       <type>#define</type>
       <name>DT_COMPAT_GET_ANY_STATUS_OKAY</name>
       <anchorfile>group__devicetree-generic-id.html</anchorfile>
-      <anchor>ga4858c378b098dcb7c35de1db25442acc</anchor>
+      <anchor>ga4858c378b098dcb7c35de1db25442acc</anchor>acc</anchor>
       <arglist>(compat)</arglist>
     </member>
     <member kind="define">
@@ -816430,7 +816436,7 @@
       <type>#define</type>
       <name>OS_MGMT_ID_DATETIME_STR</name>
       <anchorfile>group__mcumgr__os__mgmt.html</anchorfile>
-      <anchor>gaf4370119858111637ee80af735b0e50c</anchor>
+      <anchor>gaf4370119858115b0e50c</anchor>
       <arglist></arglist>
     </member>
     <member kind="define">
@@ -818719,7 +818725,7 @@
       <name>paw32xx_force_awake</name>
       <anchorfile>group__paw32xx__interface.html</anchorfile>
       <anchor>ga03c6aa7e9e7b370791c16292055b9fff</anchor>
-      <arglist>(const struct device *dev, bool enable)</arglist>
+      <arglist>(const struct device *dev, bool enable)bool enable)</arglist>
     </member>
   </compound>
   <compound kind="group">
@@ -819699,7 +819705,7 @@
       <type>#define</type>
       <name>PCIE_BUS_SECONDARY_NUMBER</name>
       <anchorfile>group__pcie__host__interface.html</anchorfile>
-      <anchor>ga61cd874c47de3545ca2ffa1eecd7eb42</anchor>
+      <an74c47de3545ca2ffa1eecd7eb42</anchor>
       <arglist>(w)</arglist>
     </member>
     <member kind="define">
@@ -822021,6 +822027,7 @@
       <arglist></arglist>
     </member>
     <member kind="define">
+   define">
       <type>#define</type>
       <name>PWM_EVENT_TYPE_PERIOD</name>
       <anchorfile>group__pwm__interface.html</anchorfile>
@@ -822856,7 +822863,7 @@
       <type>#define</type>
       <name>DT_INST_NUM_PINCTRLS_BY_NAME</name>
       <anchorfile>group__devicetree-pinctrl.html</anchorfile>
-      <anchor>gae253489146c61cb075f06192948275ff</anchor>
+      <anchor>gae253489146c6948275ff</anchor>
       <arglist>(inst, name)</arglist>
     </member>
     <member kind="define">
@@ -824964,6 +824971,7 @@
       <arglist></arglist>
     </member>
     <member kind="enumvalue">
+enumvalue">
       <name>BT_RFCOMM_RPN_BAUD_RATE_4800</name>
       <anchorfile>group__bt__rfcomm.html</anchorfile>
       <anchor>gga61637d261987529c219dcd1179ed1711a59c1506cbc6c7fdd5a36788d8ef39c60</anchor>
@@ -825749,7 +825757,7 @@
       <type>static void</type>
       <name>rtio_access_grant</name>
       <anchorfile>group__rtio.html</anchorfile>
-      <anchor>ga9da42c98546930575525f0f92710f9e4</anchor>
+      <anchor>ga9da42c9854f92710f9e4</anchor>
       <arglist>(struct rtio *r, struct k_thread *t)</arglist>
     </member>
     <member kind="function" static="yes">
@@ -828055,7 +828063,7 @@
       <type>static int</type>
       <name>reset_line_toggle_dt</name>
       <anchorfile>group__reset__controller__interface.html</anchorfile>
-      <anchor>gaf3db170375c24999ea1b1954fb3ae184</anchor>
+      <anchor>gaf3db170375c24999ea1b1954fb3ae184</anch3ae184</anchor>
       <arglist>(const struct reset_dt_spec *spec)</arglist>
     </member>
   </compound>
@@ -877906,7 +877914,3 @@
     <docanchor file="index.html" title="Introduction">md__2home_2runner_2work_2ti-zephyr_2ti-zephyr_2zephyr_2doc_2__doxygen_2mainpage</docanchor>
   </compound>
 </tagfile>
-_2ti-zephyr_2ti-zephyr_2zephyr_2doc_2__doxygen_2mainpage</docanchor>
-  </compound>
-</tagfile>
-/tagfile>

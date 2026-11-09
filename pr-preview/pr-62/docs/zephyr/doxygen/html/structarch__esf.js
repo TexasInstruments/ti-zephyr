@@ -40,7 +40,7 @@ var structarch__esf =
     [ "esr", "structarch__esf.html#a8ec8c28ff4a1374cf07d5d50c0fbe879", null ],
     [ "fpu", "structarch__esf.html#a89304485b8d99aa30facbddf22465170", null ],
     [ "fs", "structarch__esf.html#a1f127199573607f22a4c0e95d3b5ce74", null ],
-    [ "fxsave", "structarch__esf.html#ad8800ab57271ecbd74b382b47400fe4a", null ],
+    [ "fxsave", "structarch__esf.html#af27c45a02ae939f203f260e21c5efdb5", null ],
     [ "global", "structarch__esf.html#a29a4fe6ed5b2f8c892f0378be0babd78", null ],
     [ "gp", "structarch__esf.html#a0256d0bf331458b345ea25e1862e1bf1", null ],
     [ "gs", "structarch__esf.html#a353cd21036946b829a01ab9e247bf72d", null ],

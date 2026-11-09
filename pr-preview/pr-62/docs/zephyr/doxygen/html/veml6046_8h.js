@@ -1,5 +1,6 @@
 var veml6046_8h =
 [
+    [ "ZEPHYR_INCLUDE_DRIVERS_SENSOR_VEML6046_H_", "veml6046_8h.html#a8b1aa2eefaeeaf17b6e4b5f1dcf72429", null ],
     [ "sensor_attribute_veml6046", "group__veml6046__interface.html#gaa2daffcfea5560747a19e84e42c6c335", [
       [ "SENSOR_ATTR_VEML6046_IT", "group__veml6046__interface.html#ggaa2daffcfea5560747a19e84e42c6c335a6b7ba7f1343d8310b836b21eaeea7c25", null ],
       [ "SENSOR_ATTR_VEML6046_PDD", "group__veml6046__interface.html#ggaa2daffcfea5560747a19e84e42c6c335a3d4b03ea2659b6f4b1c6a69c86c09d92", null ],

@@ -40,7 +40,7 @@ var group__bt__bap =
     [ "bt_bap_scan_delegator_recv_state", "structbt__bap__scan__delegator__recv__state.html", [
       [ "addr", "structbt__bap__scan__delegator__recv__state.html#a6153ea6bbfe7057c39f6b652a4e6e34e", null ],
       [ "adv_sid", "structbt__bap__scan__delegator__recv__state.html#aa03e02a1832950e4a53ff2fe803c14a6", null ],
-      [ "bad_code", "structbt__bap__scan__delegator__recv__state.html#a1c268bb7b340c874935f186c0ba2a253", null ],
+      [ "bad_code", "structbt__bap__scan__delegator__recv__state.html#acc044fafc882b449ee6fcd0c6c995b36", null ],
       [ "broadcast_id", "structbt__bap__scan__delegator__recv__state.html#abaa80f30cf2e84ee873d18eaedd4159d", null ],
       [ "encrypt_state", "structbt__bap__scan__delegator__recv__state.html#ac770a5ad001f73d3acaf2b36827f9343", null ],
       [ "num_subgroups", "structbt__bap__scan__delegator__recv__state.html#aa97765bdbaa43a280645eb62c0035b82", null ],
@@ -51,7 +51,7 @@ var group__bt__bap =
     [ "bt_bap_scan_delegator_cb", "structbt__bap__scan__delegator__cb.html", [
       [ "add_source", "structbt__bap__scan__delegator__cb.html#a1ca1642de4bcf3f6552d09761168b1fc", null ],
       [ "bis_sync_req", "structbt__bap__scan__delegator__cb.html#a9702317028e29e8bb2c19a48749816e8", null ],
-      [ "broadcast_code", "structbt__bap__scan__delegator__cb.html#a78d011c817e60725a0ef14c68bd655cd", null ],
+      [ "broadcast_code", "structbt__bap__scan__delegator__cb.html#a92da6e5c59d7944cc6e910425337de80", null ],
       [ "modify_source", "structbt__bap__scan__delegator__cb.html#af862ad2d51d60e57cc50e20c256fde35", null ],
       [ "pa_sync_req", "structbt__bap__scan__delegator__cb.html#a0ea55963f92361f35e68eadcf10306b1", null ],
       [ "pa_sync_term_req", "structbt__bap__scan__delegator__cb.html#a5b918538cfe0edaa69155f891981eeae", null ],
@@ -241,7 +241,7 @@ var group__bt__bap =
     [ "bt_bap_broadcast_assistant_rem_src", "group__bt__bap.html#ga09785690db551677a043fcaa2fdb7f29", null ],
     [ "bt_bap_broadcast_assistant_scan_start", "group__bt__bap.html#ga98ac067e66d263aa41fc6f8df6bb9126", null ],
     [ "bt_bap_broadcast_assistant_scan_stop", "group__bt__bap.html#ga76cae35df980b78a10551811050b2760", null ],
-    [ "bt_bap_broadcast_assistant_set_broadcast_code", "group__bt__bap.html#gabcec07689c13a996bcb9d2d417347dbb", null ],
+    [ "bt_bap_broadcast_assistant_set_broadcast_code", "group__bt__bap.html#gabfbe52e8d1daa9411fb43781a199cac4", null ],
     [ "bt_bap_broadcast_assistant_unregister_cb", "group__bt__bap.html#ga679cdeb6e555bfc9ce20f38e493000ee", null ],
     [ "bt_bap_ep_get_conn", "group__bt__bap.html#ga575a109efb0fd1644634ce6e0288499b", null ],
     [ "bt_bap_ep_get_info", "group__bt__bap.html#gaf15e5ec5bca364f6a3e7a43b1f27da68", null ],

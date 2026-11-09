@@ -71,7 +71,7 @@ var group__bt__cap =
       [ "stream_params", "structbt__cap__initiator__broadcast__subgroup__param.html#a32e99898ee97a56105497c3ae480692a", null ]
     ] ],
     [ "bt_cap_initiator_broadcast_create_param", "structbt__cap__initiator__broadcast__create__param.html", [
-      [ "broadcast_code", "structbt__cap__initiator__broadcast__create__param.html#aa4d6fbd5bd13963004e381b987bbeb4d", null ],
+      [ "broadcast_code", "structbt__cap__initiator__broadcast__create__param.html#a580737b0df95f866a016efa0ba3c0891", null ],
       [ "encryption", "structbt__cap__initiator__broadcast__create__param.html#a4432bee0e365c189996b9f70c7226542", null ],
       [ "irc", "structbt__cap__initiator__broadcast__create__param.html#a6f562b7a696472b7784ca2e1ced4997a", null ],
       [ "iso_interval", "structbt__cap__initiator__broadcast__create__param.html#a8eedd8f9a896931f75642576ca37c7d5", null ],
@@ -121,7 +121,7 @@ var group__bt__cap =
       [ "member", "structbt__cap__commander__broadcast__reception__start__member__param.html#abf47aafab0b076da675182308d89bff7", null ],
       [ "num_subgroups", "structbt__cap__commander__broadcast__reception__start__member__param.html#a184f2623ab759832a3ec9770b14c9c63", null ],
       [ "pa_interval", "structbt__cap__commander__broadcast__reception__start__member__param.html#a1ba6b20f822f38dd4a0ce1f8b2f2671c", null ],
-      [ "subgroups", "structbt__cap__commander__broadcast__reception__start__member__param.html#a2222f8ae46afed4760db56079779532d", null ]
+      [ "subgroups", "structbt__cap__commander__broadcast__reception__start__member__param.html#a35c452d019f90988fe19402c6495cecc", null ]
     ] ],
     [ "bt_cap_commander_broadcast_reception_start_param", "structbt__cap__commander__broadcast__reception__start__param.html", [
       [ "count", "structbt__cap__commander__broadcast__reception__start__param.html#ab0fe6fe27946a349ac33f11526ca13b7", null ],
@@ -143,7 +143,7 @@ var group__bt__cap =
       [ "src_id", "structbt__cap__commander__distribute__broadcast__code__member__param.html#ad240bb7e1e9ad5c40eb1a031a6fbc2fe", null ]
     ] ],
     [ "bt_cap_commander_distribute_broadcast_code_param", "structbt__cap__commander__distribute__broadcast__code__param.html", [
-      [ "broadcast_code", "structbt__cap__commander__distribute__broadcast__code__param.html#ac7d426c975c1e2324f52486abf9298b9", null ],
+      [ "broadcast_code", "structbt__cap__commander__distribute__broadcast__code__param.html#af03798684691d9c43bbf7881397d1922", null ],
       [ "count", "structbt__cap__commander__distribute__broadcast__code__param.html#a86316e3bf53edca67e0743072f0f2ee3", null ],
       [ "param", "structbt__cap__commander__distribute__broadcast__code__param.html#a03be4b2fac7803de233c8a1024640cc2", null ],
       [ "type", "structbt__cap__commander__distribute__broadcast__code__param.html#a9605ad1590ff0279b46d639d38278933", null ]
