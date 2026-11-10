@@ -13,4 +13,5 @@ target_sources(app PRIVATE
   src/test_controllers.c
   src/test_datalog.c
   src/test_mtpa.c
+  src/test_motorvision.c
 )

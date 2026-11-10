@@ -63,3 +63,14 @@ zephyr_library_compile_definitions_ifdef(CONFIG_TI_REALTIMELIB_DATALOG DATALOG_E
 # datalog.c keeps the TI "#pragma DATA_SECTION" lines, which GCC does not know
 set_source_files_properties(utilities/datalog/source/datalog.c
   PROPERTIES COMPILE_OPTIONS -Wno-unknown-pragmas)
+
+if(CONFIG_TI_REALTIMELIB_MOTORVISION)
+  zephyr_include_directories(utilities/motorvision/include)
+  zephyr_library_sources(
+    utilities/motorvision/source/export.c
+    utilities/motorvision/source/export_package.c
+    utilities/motorvision/source/motorvision.c
+    utilities/motorvision/source/motorvision_sine_generator.c
+  )
+  zephyr_library_include_directories(utilities/motorvision/source)
+endif()
