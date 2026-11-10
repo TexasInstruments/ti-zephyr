@@ -4,3 +4,4 @@
 
 add_subdirectory_ifdef(CONFIG_GUI_COMPOSER gui_composer)
 add_subdirectory_ifdef(CONFIG_TI_MATHLIB_FASTRTS mathlib)
+add_subdirectory_ifdef(CONFIG_TI_REALTIMELIB realtimelib)
