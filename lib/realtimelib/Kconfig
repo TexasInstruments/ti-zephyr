@@ -11,8 +11,9 @@ config TI_REALTIMELIB
 	  Motor control building blocks ported from the AM13 SDK realtimelib:
 	  Clarke, Park, inverse Park and space vector transforms, voltage
 	  reconstruction, filters, PI, PID and PR controllers, field weakening,
-	  vibration compensation, DC link single shunt current reconstruction and
-	  utilities such as angle generation, trajectory, data logging and CPU time.
+	  vibration compensation, DC link single shunt current reconstruction,
+	  variable switching frequency, observers and utilities such as angle
+	  generation, trajectory, data logging and CPU time.
 
 	  The modules are used by including their headers, for example
 	  <pi.h> or <park.h>. The sine, cosine, square root, arc tangent,
@@ -56,3 +57,43 @@ config TI_REALTIMELIB_MOTORVISION
 	  <motorvision_hash.h>), calls MOTORVISION_init() with the UART device,
 	  and calls MOTORVISION_capturePlotData() from its control loop and
 	  MOTORVISION_sendPlotData() from a background task.
+
+config TI_REALTIMELIB_VSF_PWM_FREQ_KHZ
+	int "VSF initial PWM frequency (kHz)"
+	default 50
+	depends on TI_REALTIMELIB
+	help
+	  PWM frequency that VSF_initParams() starts from. The default is the
+	  frequency of the SDK motor control solutions. The allowed range of the
+	  module is 5 to 25 kHz (VSF_NUM_MIN_FREQ_HZ and VSF_NUM_MAX_FREQ_HZ), the
+	  value is only the starting point.
+
+config TI_REALTIMELIB_FAST
+	bool "FAST estimator (prebuilt library)"
+	depends on TI_REALTIMELIB
+	help
+	  Link the prebuilt FAST sensorless estimator (est.h) for the Cortex-M33
+	  built with GCC. The library is delivered as an archive without source.
+	  It is not needed for the esmo, speedfr and vsf modules, which only use
+	  the USER_Params structure of <userParams.h>. The application fills
+	  USER_Params with its motor and system data.
+
+config TI_REALTIMELIB_FLUX_OBS
+	bool "Flux observer (prebuilt library)"
+	depends on TI_REALTIMELIB
+	help
+	  Link the prebuilt flux observer library (flux_obs.h). The parameter and
+	  state functions are in source; the run function is in the archive.
+
+config TI_REALTIMELIB_TI_TUNE
+	bool "Motor tuning (prebuilt library)"
+	depends on TI_REALTIMELIB
+	help
+	  Link the prebuilt motor tuning library: resistance, d/q inductance,
+	  open loop and inertia (coast) tuning.
+
+config TI_REALTIMELIB_DEAD_TIME_COMP
+	bool "Dead time compensation (prebuilt library)"
+	depends on TI_REALTIMELIB
+	help
+	  Link the prebuilt dead time compensation library (dead_time_comp.h).
