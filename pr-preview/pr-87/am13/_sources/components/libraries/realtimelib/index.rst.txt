@@ -39,6 +39,22 @@ Compared with the original, ``mtpa.h`` returns the q-axis table from
 ``MTPA_LUT_DELTA_CURRENT_LQ_A`` (it was defined twice as ``..._LD_A``), and
 compares floats with ``0.0f`` instead of ``0.0``.
 
+``motorvision`` exchanges application variables with the MotorVision PC tool
+over a serial link. Enable ``CONFIG_TI_REALTIMELIB_MOTORVISION`` (it selects
+``CONFIG_UART_INTERRUPT_DRIVEN``). The Zephyr UART driver replaces the register
+level UART layer of the SDK solution: ``export.c`` sends with ``uart_poll_out()``
+and collects received bytes in the UART interrupt. The application:
+
+* defines the variable table of ``motorvision_hash.h`` (``MVHASH_hash_table``
+  and the ``MVHASH_*_startIndex`` values),
+* calls ``MOTORVISION_init()`` with the UART device,
+* calls ``MOTORVISION_capturePlotData()`` from its control loop and
+  ``MOTORVISION_sendPlotData()`` or ``MOTORVISION_captureAndSendPollingData()``
+  from a background task.
+
+Sending blocks until each byte is out, so do not call the send functions from the
+control interrupt.
+
 Each module has an ``_Obj`` structure that the caller owns, and an ``_init()``
 function that takes a pointer to it and its size. ``_init()`` returns ``NULL``
 if the buffer is too small.
@@ -66,7 +82,8 @@ Modules
    * - Utilities
      - ``angle_gen``, ``rampgen``, ``traj`` (trajectory), ``cpu_time``,
        ``datalog`` (``datalog``, ``dlog_2ch_f``, ``dlog_4ch_f``,
-       ``dlog_6ch_f``), ``types``
+       ``dlog_6ch_f``), ``motorvision`` (variable streaming over a UART),
+       ``types``
    * - Math
      - ``math_types.h``: shared types, constants and helper macros
 
@@ -102,8 +119,6 @@ The SDK ``realtimelib`` has 33 modules. These are not ported yet:
      - Need ``USER_Params``, which is defined with the FAST estimator.
    * - ``vsf``
      - Needs motor constants from the application configuration.
-   * - ``motorvision``
-     - Needs an application hardware layer (a UART).
    * - ``datalogIF``
      - Alternative to ``datalog`` selected by ``DATALOGF2_EN``, ``DATALOGF4_EN``
        or ``DATALOGI4_EN``, and it redefines the same types.
@@ -111,9 +126,11 @@ The SDK ``realtimelib`` has 33 modules. These are not ported yet:
 Samples and tests
 *****************
 
-* ``tests/lib/realtimelib`` is a ztest suite with 51 tests. It checks the
+* ``tests/lib/realtimelib`` is a ztest suite with 58 tests. It checks the
   transforms, the PI, PID and PR controllers, the filters, the volts per
-  frequency profile, MTPA, the data logger and the utilities against exact expected values. For
+  frequency profile, MTPA, the data logger and the utilities against exact expected values.
+  The MotorVision tests run the protocol over an emulated UART: packets in, the
+  acknowledges, polling, variable writes and the stream bytes out. For
   ``fwc``, ``vib_comp`` and ``dclink_ss`` it only checks initialisation and
   parameter storage. It runs on hardware because the sine, cosine and square
   root calls use the TMU.

@@ -190,6 +190,21 @@ used by <code class="docutils literal notranslate"><span class="pre">MTPA_update
 <code class="docutils literal notranslate"><span class="pre">MTPA_updateLs_q_withLUT()</span></code> (it returned the d-axis table), defines
 <code class="docutils literal notranslate"><span class="pre">MTPA_LUT_DELTA_CURRENT_LQ_A</span></code> (it was defined twice as <code class="docutils literal notranslate"><span class="pre">..._LD_A</span></code>), and
 compares floats with <code class="docutils literal notranslate"><span class="pre">0.0f</span></code> instead of <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">motorvision</span></code> exchanges application variables with the MotorVision PC tool
+over a serial link. Enable <code class="docutils literal notranslate"><span class="pre">CONFIG_TI_REALTIMELIB_MOTORVISION</span></code> (it selects
+<code class="docutils literal notranslate"><span class="pre">CONFIG_UART_INTERRUPT_DRIVEN</span></code>). The Zephyr UART driver replaces the register
+level UART layer of the SDK solution: <code class="docutils literal notranslate"><span class="pre">export.c</span></code> sends with <code class="docutils literal notranslate"><span class="pre">uart_poll_out()</span></code>
+and collects received bytes in the UART interrupt. The application:</p>
+<ul class="simple">
+<li><p>defines the variable table of <code class="docutils literal notranslate"><span class="pre">motorvision_hash.h</span></code> (<code class="docutils literal notranslate"><span class="pre">MVHASH_hash_table</span></code>
+and the <code class="docutils literal notranslate"><span class="pre">MVHASH_*_startIndex</span></code> values),</p></li>
+<li><p>calls <code class="docutils literal notranslate"><span class="pre">MOTORVISION_init()</span></code> with the UART device,</p></li>
+<li><p>calls <code class="docutils literal notranslate"><span class="pre">MOTORVISION_capturePlotData()</span></code> from its control loop and
+<code class="docutils literal notranslate"><span class="pre">MOTORVISION_sendPlotData()</span></code> or <code class="docutils literal notranslate"><span class="pre">MOTORVISION_captureAndSendPollingData()</span></code>
+from a background task.</p></li>
+</ul>
+<p>Sending blocks until each byte is out, so do not call the send functions from the
+control interrupt.</p>
 <p>Each module has an <code class="docutils literal notranslate"><span class="pre">_Obj</span></code> structure that the caller owns, and an <code class="docutils literal notranslate"><span class="pre">_init()</span></code>
 function that takes a pointer to it and its size. <code class="docutils literal notranslate"><span class="pre">_init()</span></code> returns <code class="docutils literal notranslate"><span class="pre">NULL</span></code>
 if the buffer is too small.</p>
@@ -224,7 +239,8 @@ compensation), <code class="docutils literal notranslate"><span class="pre">dcli
 <tr class="row-odd"><td><p>Utilities</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">angle_gen</span></code>, <code class="docutils literal notranslate"><span class="pre">rampgen</span></code>, <code class="docutils literal notranslate"><span class="pre">traj</span></code> (trajectory), <code class="docutils literal notranslate"><span class="pre">cpu_time</span></code>,
 <code class="docutils literal notranslate"><span class="pre">datalog</span></code> (<code class="docutils literal notranslate"><span class="pre">datalog</span></code>, <code class="docutils literal notranslate"><span class="pre">dlog_2ch_f</span></code>, <code class="docutils literal notranslate"><span class="pre">dlog_4ch_f</span></code>,
-<code class="docutils literal notranslate"><span class="pre">dlog_6ch_f</span></code>), <code class="docutils literal notranslate"><span class="pre">types</span></code></p></td>
+<code class="docutils literal notranslate"><span class="pre">dlog_6ch_f</span></code>), <code class="docutils literal notranslate"><span class="pre">motorvision</span></code> (variable streaming over a UART),
+<code class="docutils literal notranslate"><span class="pre">types</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p>Math</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">math_types.h</span></code>: shared types, constants and helper macros</p></td>
@@ -268,10 +284,7 @@ includes these headers and calls them gets the TMU versions.</p>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">vsf</span></code></p></td>
 <td><p>Needs motor constants from the application configuration.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">motorvision</span></code></p></td>
-<td><p>Needs an application hardware layer (a UART).</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">datalogIF</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">datalogIF</span></code></p></td>
 <td><p>Alternative to <code class="docutils literal notranslate"><span class="pre">datalog</span></code> selected by <code class="docutils literal notranslate"><span class="pre">DATALOGF2_EN</span></code>, <code class="docutils literal notranslate"><span class="pre">DATALOGF4_EN</span></code>
 or <code class="docutils literal notranslate"><span class="pre">DATALOGI4_EN</span></code>, and it redefines the same types.</p></td>
 </tr>
@@ -281,9 +294,11 @@ or <code class="docutils literal notranslate"><span class="pre">DATALOGI4_EN</sp
 <section id="samples-and-tests">
 <h2>Samples and tests<a class="headerlink" href="#samples-and-tests" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">tests/lib/realtimelib</span></code> is a ztest suite with 51 tests. It checks the
+<li><p><code class="docutils literal notranslate"><span class="pre">tests/lib/realtimelib</span></code> is a ztest suite with 58 tests. It checks the
 transforms, the PI, PID and PR controllers, the filters, the volts per
-frequency profile, MTPA, the data logger and the utilities against exact expected values. For
+frequency profile, MTPA, the data logger and the utilities against exact expected values.
+The MotorVision tests run the protocol over an emulated UART: packets in, the
+acknowledges, polling, variable writes and the stream bytes out. For
 <code class="docutils literal notranslate"><span class="pre">fwc</span></code>, <code class="docutils literal notranslate"><span class="pre">vib_comp</span></code> and <code class="docutils literal notranslate"><span class="pre">dclink_ss</span></code> it only checks initialisation and
 parameter storage. It runs on hardware because the sine, cosine and square
 root calls use the TMU.</p></li>
