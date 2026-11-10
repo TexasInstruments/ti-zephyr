@@ -205,6 +205,46 @@ from a background task.</p></li>
 </ul>
 <p>Sending blocks until each byte is out, so do not call the send functions from the
 control interrupt.</p>
+<p><code class="docutils literal notranslate"><span class="pre">vsf</span></code>, <code class="docutils literal notranslate"><span class="pre">esmo</span></code> and <code class="docutils literal notranslate"><span class="pre">speedfr</span></code> take their system and motor data from the
+<code class="docutils literal notranslate"><span class="pre">USER_Params</span></code> structure of <code class="docutils literal notranslate"><span class="pre">&lt;userParams.h&gt;</span></code>, which the application fills in.
+<code class="docutils literal notranslate"><span class="pre">vsf</span></code> also starts from <code class="docutils literal notranslate"><span class="pre">CONFIG_TI_REALTIMELIB_VSF_PWM_FREQ_KHZ</span></code> (default 50).
+The header <code class="docutils literal notranslate"><span class="pre">config/mtr_config.h</span></code> of the library maps these Kconfig values to
+the names that the SDK sources expect.</p>
+</section>
+<section id="prebuilt-libraries">
+<h2>Prebuilt libraries<a class="headerlink" href="#prebuilt-libraries" title="Link to this heading"></a></h2>
+<p>Four modules are delivered as GCC archives for the Cortex-M33 without source.
+They are linked unchanged, only when their option is enabled:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 40.0%" />
+<col style="width: 60.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Library</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CONFIG_TI_REALTIMELIB_FAST</span></code></p></td>
+<td><p>FAST sensorless estimator (<code class="docutils literal notranslate"><span class="pre">&lt;est.h&gt;</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CONFIG_TI_REALTIMELIB_FLUX_OBS</span></code></p></td>
+<td><p>Flux observer (<code class="docutils literal notranslate"><span class="pre">&lt;flux_obs.h&gt;</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CONFIG_TI_REALTIMELIB_TI_TUNE</span></code></p></td>
+<td><p>Motor tuning (<code class="docutils literal notranslate"><span class="pre">&lt;ti_tune_rs.h&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;ti_tune_ldq.h&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;ti_tune_ol.h&gt;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&lt;ti_tune_j_coast.h&gt;</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CONFIG_TI_REALTIMELIB_DEAD_TIME_COMP</span></code></p></td>
+<td><p>Dead time compensation (<code class="docutils literal notranslate"><span class="pre">&lt;dead_time_comp.h&gt;</span></code>)</p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">CONFIG_TI_REALTIMELIB_FAST</span></code> also defines <code class="docutils literal notranslate"><span class="pre">_FULL_FAST_LIB</span></code>, which selects the
+variant of <code class="docutils literal notranslate"><span class="pre">&lt;est.h&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">USER_Params</span></code> that matches the archive. The
+archives use the TMU. The flux observer needs <code class="docutils literal notranslate"><span class="pre">FLUX_OBS_setTuning()</span></code> before
+<code class="docutils literal notranslate"><span class="pre">FLUX_OBS_setParams()</span></code>.</p>
 <p>Each module has an <code class="docutils literal notranslate"><span class="pre">_Obj</span></code> structure that the caller owns, and an <code class="docutils literal notranslate"><span class="pre">_init()</span></code>
 function that takes a pointer to it and its size. <code class="docutils literal notranslate"><span class="pre">_init()</span></code> returns <code class="docutils literal notranslate"><span class="pre">NULL</span></code>
 if the buffer is too small.</p>
@@ -234,15 +274,20 @@ calculation and reconstruction)</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">pi</span></code>, <code class="docutils literal notranslate"><span class="pre">pid</span></code>, <code class="docutils literal notranslate"><span class="pre">pr</span></code> (proportional resonant), <code class="docutils literal notranslate"><span class="pre">fwc</span></code> (field
 weakening), <code class="docutils literal notranslate"><span class="pre">vs_freq</span></code> (volts per frequency), <code class="docutils literal notranslate"><span class="pre">vib_comp</span></code> (vibration
 compensation), <code class="docutils literal notranslate"><span class="pre">dclink_ss</span></code> (DC link single shunt current reconstruction), <code class="docutils literal notranslate"><span class="pre">mtpa</span></code>
-(maximum torque per ampere)</p></td>
+(maximum torque per ampere), <code class="docutils literal notranslate"><span class="pre">vsf</span></code> (variable switching frequency),
+<code class="docutils literal notranslate"><span class="pre">dead_time_comp</span></code> and <code class="docutils literal notranslate"><span class="pre">ti_tune</span></code> (prebuilt)</p></td>
 </tr>
-<tr class="row-odd"><td><p>Utilities</p></td>
+<tr class="row-odd"><td><p>Observers</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">esmo</span></code> (sliding mode observer), <code class="docutils literal notranslate"><span class="pre">speedfr</span></code> (speed from angle),
+<code class="docutils literal notranslate"><span class="pre">flux_obs</span></code> and <code class="docutils literal notranslate"><span class="pre">est_lib</span></code> (FAST, prebuilt)</p></td>
+</tr>
+<tr class="row-even"><td><p>Utilities</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">angle_gen</span></code>, <code class="docutils literal notranslate"><span class="pre">rampgen</span></code>, <code class="docutils literal notranslate"><span class="pre">traj</span></code> (trajectory), <code class="docutils literal notranslate"><span class="pre">cpu_time</span></code>,
 <code class="docutils literal notranslate"><span class="pre">datalog</span></code> (<code class="docutils literal notranslate"><span class="pre">datalog</span></code>, <code class="docutils literal notranslate"><span class="pre">dlog_2ch_f</span></code>, <code class="docutils literal notranslate"><span class="pre">dlog_4ch_f</span></code>,
 <code class="docutils literal notranslate"><span class="pre">dlog_6ch_f</span></code>), <code class="docutils literal notranslate"><span class="pre">motorvision</span></code> (variable streaming over a UART),
 <code class="docutils literal notranslate"><span class="pre">types</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p>Math</p></td>
+<tr class="row-odd"><td><p>Math</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">math_types.h</span></code>: shared types, constants and helper macros</p></td>
 </tr>
 </tbody>
@@ -262,7 +307,7 @@ includes these headers and calls them gets the TMU versions.</p>
 </section>
 <section id="not-included">
 <h2>Not included<a class="headerlink" href="#not-included" title="Link to this heading"></a></h2>
-<p>The SDK <code class="docutils literal notranslate"><span class="pre">realtimelib</span></code> has 33 modules. These are not ported yet:</p>
+<p>The SDK <code class="docutils literal notranslate"><span class="pre">realtimelib</span></code> has 33 modules. These are not ported:</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 30.0%" />
@@ -274,15 +319,9 @@ includes these headers and calls them gets the TMU versions.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dead_time_comp</span></code>, <code class="docutils literal notranslate"><span class="pre">ipd</span></code>, <code class="docutils literal notranslate"><span class="pre">ti_tune</span></code>, <code class="docutils literal notranslate"><span class="pre">est_lib</span></code> (FAST),
-<code class="docutils literal notranslate"><span class="pre">flux_obs</span></code></p></td>
-<td><p>Delivered as prebuilt libraries only.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">esmo</span></code>, <code class="docutils literal notranslate"><span class="pre">speedfr</span></code>, <code class="docutils literal notranslate"><span class="pre">vsf</span></code></p></td>
-<td><p>Need <code class="docutils literal notranslate"><span class="pre">USER_Params</span></code>, which is defined with the FAST estimator.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">vsf</span></code></p></td>
-<td><p>Needs motor constants from the application configuration.</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ipd</span></code> (initial position detection)</p></td>
+<td><p>Drives the PWM outputs and reads an eCAP pulse time through the HAL of the
+motor control solution. AM13 has no PWM or capture driver in Zephyr yet.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">datalogIF</span></code></p></td>
 <td><p>Alternative to <code class="docutils literal notranslate"><span class="pre">datalog</span></code> selected by <code class="docutils literal notranslate"><span class="pre">DATALOGF2_EN</span></code>, <code class="docutils literal notranslate"><span class="pre">DATALOGF4_EN</span></code>
@@ -294,13 +333,15 @@ or <code class="docutils literal notranslate"><span class="pre">DATALOGI4_EN</sp
 <section id="samples-and-tests">
 <h2>Samples and tests<a class="headerlink" href="#samples-and-tests" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">tests/lib/realtimelib</span></code> is a ztest suite with 58 tests. It checks the
+<li><p><code class="docutils literal notranslate"><span class="pre">tests/lib/realtimelib</span></code> is a ztest suite with 66 tests. It checks the
 transforms, the PI, PID and PR controllers, the filters, the volts per
 frequency profile, MTPA, the data logger and the utilities against exact expected values.
 The MotorVision tests run the protocol over an emulated UART: packets in, the
 acknowledges, polling, variable writes and the stream bytes out. For
 <code class="docutils literal notranslate"><span class="pre">fwc</span></code>, <code class="docutils literal notranslate"><span class="pre">vib_comp</span></code> and <code class="docutils literal notranslate"><span class="pre">dclink_ss</span></code> it only checks initialisation and
-parameter storage. It runs on hardware because the sine, cosine and square
+parameter storage. The prebuilt libraries are checked through their public
+functions (dead time output, flux observer parameter checks, estimator
+parameters). It runs on hardware because the sine, cosine and square
 root calls use the TMU.</p></li>
 </ul>
 <p>There is no example for this library.</p>

@@ -55,6 +55,39 @@ and collects received bytes in the UART interrupt. The application:
 Sending blocks until each byte is out, so do not call the send functions from the
 control interrupt.
 
+``vsf``, ``esmo`` and ``speedfr`` take their system and motor data from the
+``USER_Params`` structure of ``<userParams.h>``, which the application fills in.
+``vsf`` also starts from ``CONFIG_TI_REALTIMELIB_VSF_PWM_FREQ_KHZ`` (default 50).
+The header ``config/mtr_config.h`` of the library maps these Kconfig values to
+the names that the SDK sources expect.
+
+Prebuilt libraries
+******************
+
+Four modules are delivered as GCC archives for the Cortex-M33 without source.
+They are linked unchanged, only when their option is enabled:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 40 60
+
+   * - Option
+     - Library
+   * - ``CONFIG_TI_REALTIMELIB_FAST``
+     - FAST sensorless estimator (``<est.h>``)
+   * - ``CONFIG_TI_REALTIMELIB_FLUX_OBS``
+     - Flux observer (``<flux_obs.h>``)
+   * - ``CONFIG_TI_REALTIMELIB_TI_TUNE``
+     - Motor tuning (``<ti_tune_rs.h>``, ``<ti_tune_ldq.h>``, ``<ti_tune_ol.h>``,
+       ``<ti_tune_j_coast.h>``)
+   * - ``CONFIG_TI_REALTIMELIB_DEAD_TIME_COMP``
+     - Dead time compensation (``<dead_time_comp.h>``)
+
+``CONFIG_TI_REALTIMELIB_FAST`` also defines ``_FULL_FAST_LIB``, which selects the
+variant of ``<est.h>`` and ``USER_Params`` that matches the archive. The
+archives use the TMU. The flux observer needs ``FLUX_OBS_setTuning()`` before
+``FLUX_OBS_setParams()``.
+
 Each module has an ``_Obj`` structure that the caller owns, and an ``_init()``
 function that takes a pointer to it and its size. ``_init()`` returns ``NULL``
 if the buffer is too small.
@@ -78,7 +111,11 @@ Modules
      - ``pi``, ``pid``, ``pr`` (proportional resonant), ``fwc`` (field
        weakening), ``vs_freq`` (volts per frequency), ``vib_comp`` (vibration
        compensation), ``dclink_ss`` (DC link single shunt current reconstruction), ``mtpa``
-       (maximum torque per ampere)
+       (maximum torque per ampere), ``vsf`` (variable switching frequency),
+       ``dead_time_comp`` and ``ti_tune`` (prebuilt)
+   * - Observers
+     - ``esmo`` (sliding mode observer), ``speedfr`` (speed from angle),
+       ``flux_obs`` and ``est_lib`` (FAST, prebuilt)
    * - Utilities
      - ``angle_gen``, ``rampgen``, ``traj`` (trajectory), ``cpu_time``,
        ``datalog`` (``datalog``, ``dlog_2ch_f``, ``dlog_4ch_f``,
@@ -104,7 +141,7 @@ includes these headers and calls them gets the TMU versions.
 Not included
 ************
 
-The SDK ``realtimelib`` has 33 modules. These are not ported yet:
+The SDK ``realtimelib`` has 33 modules. These are not ported:
 
 .. list-table::
    :header-rows: 1
@@ -112,13 +149,9 @@ The SDK ``realtimelib`` has 33 modules. These are not ported yet:
 
    * - Modules
      - Reason
-   * - ``dead_time_comp``, ``ipd``, ``ti_tune``, ``est_lib`` (FAST),
-       ``flux_obs``
-     - Delivered as prebuilt libraries only.
-   * - ``esmo``, ``speedfr``, ``vsf``
-     - Need ``USER_Params``, which is defined with the FAST estimator.
-   * - ``vsf``
-     - Needs motor constants from the application configuration.
+   * - ``ipd`` (initial position detection)
+     - Drives the PWM outputs and reads an eCAP pulse time through the HAL of the
+       motor control solution. AM13 has no PWM or capture driver in Zephyr yet.
    * - ``datalogIF``
      - Alternative to ``datalog`` selected by ``DATALOGF2_EN``, ``DATALOGF4_EN``
        or ``DATALOGI4_EN``, and it redefines the same types.
@@ -126,13 +159,15 @@ The SDK ``realtimelib`` has 33 modules. These are not ported yet:
 Samples and tests
 *****************
 
-* ``tests/lib/realtimelib`` is a ztest suite with 58 tests. It checks the
+* ``tests/lib/realtimelib`` is a ztest suite with 66 tests. It checks the
   transforms, the PI, PID and PR controllers, the filters, the volts per
   frequency profile, MTPA, the data logger and the utilities against exact expected values.
   The MotorVision tests run the protocol over an emulated UART: packets in, the
   acknowledges, polling, variable writes and the stream bytes out. For
   ``fwc``, ``vib_comp`` and ``dclink_ss`` it only checks initialisation and
-  parameter storage. It runs on hardware because the sine, cosine and square
+  parameter storage. The prebuilt libraries are checked through their public
+  functions (dead time output, flux observer parameter checks, estimator
+  parameters). It runs on hardware because the sine, cosine and square
   root calls use the TMU.
 
 There is no example for this library.
