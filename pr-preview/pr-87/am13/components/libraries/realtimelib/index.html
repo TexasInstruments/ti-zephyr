@@ -180,6 +180,8 @@ FPU, and selects <code class="docutils literal notranslate"><span class="pre">CO
 <span class="n">PARK_setup</span><span class="p">(</span><span class="n">park</span><span class="p">,</span><span class="w"> </span><span class="n">rotor_angle_rad</span><span class="p">);</span>
 </pre></div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">datalog</span></code> keeps its four capture buffers in the library only when
+<code class="docutils literal notranslate"><span class="pre">CONFIG_TI_REALTIMELIB_DATALOG</span></code> is enabled (about 6.4 KB of RAM).</p>
 <p>Each module has an <code class="docutils literal notranslate"><span class="pre">_Obj</span></code> structure that the caller owns, and an <code class="docutils literal notranslate"><span class="pre">_init()</span></code>
 function that takes a pointer to it and its size. <code class="docutils literal notranslate"><span class="pre">_init()</span></code> returns <code class="docutils literal notranslate"><span class="pre">NULL</span></code>
 if the buffer is too small.</p>
@@ -212,7 +214,8 @@ compensation), <code class="docutils literal notranslate"><span class="pre">dcli
 </tr>
 <tr class="row-odd"><td><p>Utilities</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">angle_gen</span></code>, <code class="docutils literal notranslate"><span class="pre">rampgen</span></code>, <code class="docutils literal notranslate"><span class="pre">traj</span></code> (trajectory), <code class="docutils literal notranslate"><span class="pre">cpu_time</span></code>,
-<code class="docutils literal notranslate"><span class="pre">types</span></code></p></td>
+<code class="docutils literal notranslate"><span class="pre">datalog</span></code> (<code class="docutils literal notranslate"><span class="pre">datalog</span></code>, <code class="docutils literal notranslate"><span class="pre">dlog_2ch_f</span></code>, <code class="docutils literal notranslate"><span class="pre">dlog_4ch_f</span></code>,
+<code class="docutils literal notranslate"><span class="pre">dlog_6ch_f</span></code>), <code class="docutils literal notranslate"><span class="pre">types</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p>Math</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">math_types.h</span></code>: shared types, constants and helper macros</p></td>
@@ -256,8 +259,12 @@ includes these headers and calls them gets the TMU versions.</p>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">vsf</span></code>, <code class="docutils literal notranslate"><span class="pre">mtpa</span></code></p></td>
 <td><p>Need motor constants from the application configuration.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">datalog</span></code>, <code class="docutils literal notranslate"><span class="pre">motorvision</span></code></p></td>
-<td><p>Need an application hardware layer (a device header, a UART).</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">motorvision</span></code></p></td>
+<td><p>Needs an application hardware layer (a UART).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">datalogIF</span></code></p></td>
+<td><p>Alternative to <code class="docutils literal notranslate"><span class="pre">datalog</span></code> selected by <code class="docutils literal notranslate"><span class="pre">DATALOGF2_EN</span></code>, <code class="docutils literal notranslate"><span class="pre">DATALOGF4_EN</span></code>
+or <code class="docutils literal notranslate"><span class="pre">DATALOGI4_EN</span></code>, and it redefines the same types.</p></td>
 </tr>
 </tbody>
 </table>
@@ -265,9 +272,9 @@ includes these headers and calls them gets the TMU versions.</p>
 <section id="samples-and-tests">
 <h2>Samples and tests<a class="headerlink" href="#samples-and-tests" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">tests/lib/realtimelib</span></code> is a ztest suite with 37 tests. It checks the
+<li><p><code class="docutils literal notranslate"><span class="pre">tests/lib/realtimelib</span></code> is a ztest suite with 45 tests. It checks the
 transforms, the PI, PID and PR controllers, the filters, the volts per
-frequency profile and the utilities against exact expected values. For
+frequency profile, the data logger and the utilities against exact expected values. For
 <code class="docutils literal notranslate"><span class="pre">fwc</span></code>, <code class="docutils literal notranslate"><span class="pre">vib_comp</span></code> and <code class="docutils literal notranslate"><span class="pre">dclink_ss</span></code> it only checks initialisation and
 parameter storage. It runs on hardware because the sine, cosine and square
 root calls use the TMU.</p></li>
