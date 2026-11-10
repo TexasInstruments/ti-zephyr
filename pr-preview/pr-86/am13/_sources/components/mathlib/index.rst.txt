@@ -42,6 +42,26 @@ Functions
 The functions are not remapped over the C library names. Call the ``*_tmu``
 variants explicitly.
 
+Accuracy
+********
+
+The TMU trades some accuracy for speed. The ztest suite checks every function
+against the C library, and the values below were measured on ``lp_am13e230``
+with the inputs of the AM13 SDK ``mathlib/fastrts`` example.
+
+* ``logf_tmu()`` matches the C library to within ``1e-5`` absolute error over
+  0.0023 to 6.6e8.
+* ``expf_tmu()`` is accurate to about ``1e-7`` relative error for inputs up to
+  about 2.5 and degrades as the result grows. The relative error against the C
+  library is about ``2e-6`` at 3.2, ``1e-5`` at 6.4 and ``1.2e-5`` at 9.2.
+* ``expf_tmu()`` is not usable for large inputs. At 13.86 the result is about
+  77 % too high (1.85e6 instead of 1.05e6). Keep the input below about 10, or
+  use ``expf()`` from the C library.
+
+The SDK example reports the same four ``expf`` inputs (3.2, 6.4, 9.2 and 13.9)
+as outside its ``1e-5`` absolute tolerance. This is a limit of the TMU
+hardware, not of this library.
+
 Enabling
 ********
 

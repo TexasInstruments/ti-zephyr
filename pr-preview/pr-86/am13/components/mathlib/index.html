@@ -203,6 +203,25 @@ return the flag value <em>before</em> the change.</p></td>
 <p>The functions are not remapped over the C library names. Call the <code class="docutils literal notranslate"><span class="pre">*_tmu</span></code>
 variants explicitly.</p>
 </section>
+<section id="accuracy">
+<h2>Accuracy<a class="headerlink" href="#accuracy" title="Link to this heading"></a></h2>
+<p>The TMU trades some accuracy for speed. The ztest suite checks every function
+against the C library, and the values below were measured on <code class="docutils literal notranslate"><span class="pre">lp_am13e230</span></code>
+with the inputs of the AM13 SDK <code class="docutils literal notranslate"><span class="pre">mathlib/fastrts</span></code> example.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">logf_tmu()</span></code> matches the C library to within <code class="docutils literal notranslate"><span class="pre">1e-5</span></code> absolute error over
+0.0023 to 6.6e8.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">expf_tmu()</span></code> is accurate to about <code class="docutils literal notranslate"><span class="pre">1e-7</span></code> relative error for inputs up to
+about 2.5 and degrades as the result grows. The relative error against the C
+library is about <code class="docutils literal notranslate"><span class="pre">2e-6</span></code> at 3.2, <code class="docutils literal notranslate"><span class="pre">1e-5</span></code> at 6.4 and <code class="docutils literal notranslate"><span class="pre">1.2e-5</span></code> at 9.2.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">expf_tmu()</span></code> is not usable for large inputs. At 13.86 the result is about
+77 % too high (1.85e6 instead of 1.05e6). Keep the input below about 10, or
+use <code class="docutils literal notranslate"><span class="pre">expf()</span></code> from the C library.</p></li>
+</ul>
+<p>The SDK example reports the same four <code class="docutils literal notranslate"><span class="pre">expf</span></code> inputs (3.2, 6.4, 9.2 and 13.9)
+as outside its <code class="docutils literal notranslate"><span class="pre">1e-5</span></code> absolute tolerance. This is a limit of the TMU
+hardware, not of this library.</p>
+</section>
 <section id="enabling">
 <h2>Enabling<a class="headerlink" href="#enabling" title="Link to this heading"></a></h2>
 <p>Enable <code class="docutils literal notranslate"><span class="pre">CONFIG_TI_MATHLIB_FASTRTS</span></code> (it depends on the AM13E SoC
