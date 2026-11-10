@@ -24,6 +24,7 @@ zephyr_include_directories(
   transforms/volts/include
   utilities/angle_gen/include
   utilities/cpu_time/include
+  utilities/datalog/include
   utilities/rampgen/include
   utilities/traj/include
   utilities/types/include
@@ -48,5 +49,15 @@ zephyr_library_sources(
   transforms/volts/source/volt_recons.c
   utilities/angle_gen/source/angle_gen.c
   utilities/cpu_time/source/cpu_time.c
+  utilities/datalog/source/datalog.c
+  utilities/datalog/source/dlog_2ch_f.c
+  utilities/datalog/source/dlog_4ch_f.c
+  utilities/datalog/source/dlog_6ch_f.c
   utilities/traj/source/traj.c
 )
+
+zephyr_library_compile_definitions_ifdef(CONFIG_TI_REALTIMELIB_DATALOG DATALOG_ENABLE)
+
+# datalog.c keeps the TI "#pragma DATA_SECTION" lines, which GCC does not know
+set_source_files_properties(utilities/datalog/source/datalog.c
+  PROPERTIES COMPILE_OPTIONS -Wno-unknown-pragmas)

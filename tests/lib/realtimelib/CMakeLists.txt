@@ -11,4 +11,5 @@ target_sources(app PRIVATE
   src/test_utilities.c
   src/test_filters.c
   src/test_controllers.c
+  src/test_datalog.c
 )

@@ -26,6 +26,9 @@ FPU, and selects ``CONFIG_TI_MATHLIB_FASTRTS``):
 
    PARK_setup(park, rotor_angle_rad);
 
+``datalog`` keeps its four capture buffers in the library only when
+``CONFIG_TI_REALTIMELIB_DATALOG`` is enabled (about 6.4 KB of RAM).
+
 Each module has an ``_Obj`` structure that the caller owns, and an ``_init()``
 function that takes a pointer to it and its size. ``_init()`` returns ``NULL``
 if the buffer is too small.
@@ -51,7 +54,8 @@ Modules
        compensation), ``dclink_ss`` (DC link single shunt current reconstruction)
    * - Utilities
      - ``angle_gen``, ``rampgen``, ``traj`` (trajectory), ``cpu_time``,
-       ``types``
+       ``datalog`` (``datalog``, ``dlog_2ch_f``, ``dlog_4ch_f``,
+       ``dlog_6ch_f``), ``types``
    * - Math
      - ``math_types.h``: shared types, constants and helper macros
 
@@ -87,15 +91,18 @@ The SDK ``realtimelib`` has 33 modules. These are not ported yet:
      - Need ``USER_Params``, which is defined with the FAST estimator.
    * - ``vsf``, ``mtpa``
      - Need motor constants from the application configuration.
-   * - ``datalog``, ``motorvision``
-     - Need an application hardware layer (a device header, a UART).
+   * - ``motorvision``
+     - Needs an application hardware layer (a UART).
+   * - ``datalogIF``
+     - Alternative to ``datalog`` selected by ``DATALOGF2_EN``, ``DATALOGF4_EN``
+       or ``DATALOGI4_EN``, and it redefines the same types.
 
 Samples and tests
 *****************
 
-* ``tests/lib/realtimelib`` is a ztest suite with 37 tests. It checks the
+* ``tests/lib/realtimelib`` is a ztest suite with 45 tests. It checks the
   transforms, the PI, PID and PR controllers, the filters, the volts per
-  frequency profile and the utilities against exact expected values. For
+  frequency profile, the data logger and the utilities against exact expected values. For
   ``fwc``, ``vib_comp`` and ``dclink_ss`` it only checks initialisation and
   parameter storage. It runs on hardware because the sine, cosine and square
   root calls use the TMU.
