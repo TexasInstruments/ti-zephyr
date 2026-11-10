@@ -166,22 +166,32 @@
 <span id="realtimelib-test"></span><h1>Real-Time Control Library Test<a class="headerlink" href="#real-time-control-library-test" title="Link to this heading"></a></h1>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
-<p>A ztest suite for the motor control building blocks in <code class="docutils literal notranslate"><span class="pre">lib/realtimelib</span></code>. It
-checks:</p>
+<p>A ztest suite for the motor control building blocks in <code class="docutils literal notranslate"><span class="pre">lib/realtimelib</span></code>. The
+tests are grouped in four files.</p>
+<p>Transforms, PI and first-order filter (<code class="docutils literal notranslate"><span class="pre">test_transforms_pi_filter.c</span></code>):</p>
 <ul class="simple">
-<li><p>the Clarke transform for balanced three-phase currents, and that the
-two-input form matches the three-input form,</p></li>
-<li><p>the Park and inverse Park transforms: a round trip returns the input, a
-vector on the rotor angle is purely d-axis, and <code class="docutils literal notranslate"><span class="pre">PARK_init()</span></code> rejects a
-buffer that is too small,</p></li>
-<li><p>space vector generation: the line-to-line voltages are unchanged, the
-outputs are centered, and the bus voltage scale factor works,</p></li>
-<li><p>the PI controller: the proportional term, the output limits, and the
-integrator with its anti-windup clamp,</p></li>
-<li><p>the first-order filter step response.</p></li>
+<li><p>Clarke transform for balanced three-phase currents, and the two-input form
+against the three-input form,</p></li>
+<li><p>Park and inverse Park: a round trip returns the input, a vector on the rotor
+angle is purely d-axis, and <code class="docutils literal notranslate"><span class="pre">PARK_init()</span></code> rejects a buffer that is too small,</p></li>
+<li><p>space vector generation: the line-to-line voltages are unchanged, the outputs
+are centered, and the bus voltage scale factor works,</p></li>
+<li><p>PI controller: proportional term, output limits, integrator and its clamp,</p></li>
+<li><p>first-order filter step response.</p></li>
 </ul>
-<p>The sine, cosine and square root calls run on the TMU, so the suite must run
-on hardware.</p>
+<p>Filters and voltage (<code class="docutils literal notranslate"><span class="pre">test_filters.c</span></code>): the second-order filter (including a
+non-zero <code class="docutils literal notranslate"><span class="pre">a2</span></code>), the notch filter coefficients and difference equation, the
+offset low-pass, phase voltage calculation, and the voltage reconstruction
+setup.</p>
+<p>Controllers (<code class="docutils literal notranslate"><span class="pre">test_controllers.c</span></code>): the PID and PR controllers against their
+difference equations and output limits, and the volts per frequency profile.
+The <code class="docutils literal notranslate"><span class="pre">fwc</span></code>, <code class="docutils literal notranslate"><span class="pre">vib_comp</span></code> and <code class="docutils literal notranslate"><span class="pre">dclink_ss</span></code> modules are only checked for
+initialisation and parameter storage; their algorithms are not verified.
+<code class="docutils literal notranslate"><span class="pre">fwc</span></code> has no run function.</p>
+<p>Utilities (<code class="docutils literal notranslate"><span class="pre">test_utilities.c</span></code>): trajectory rate limiting and clamping, angle
+generation and wrap, the ramp generator, and the CPU time counters.</p>
+<p>The sine, cosine and square root calls run on the TMU, so the suite must run on
+hardware.</p>
 </section>
 <section id="running">
 <h2>Running<a class="headerlink" href="#running" title="Link to this heading"></a></h2>
