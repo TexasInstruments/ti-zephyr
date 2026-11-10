@@ -7,6 +7,7 @@ zephyr_library()
 zephyr_include_directories(
   control/dclink_ss/include
   control/fwc/include
+  control/mtpa/include
   control/pi/include
   control/pid/include
   control/pr/include
@@ -33,6 +34,7 @@ zephyr_include_directories(
 zephyr_library_sources(
   control/dclink_ss/source/dclink_ss.c
   control/fwc/source/fwc.c
+  control/mtpa/source/mtpa.c
   control/pi/source/pi.c
   control/pid/source/pid.c
   control/pr/source/pr.c
