@@ -1,0 +1,210 @@
+.. _ti-zephyr-introduction:
+
+Introduction
+############
+
+The TI Zephyr SDK provides a unified, comprehensive software platform designed to simplify development and accelerate time to market across TI's embedded processor portfolio.
+The SDK brings together everything developers need to get started, including:
+
+* **Zephyr RTOS v4.4.0 Support**: Integrated Zephyr source code with support for TI SoCs.
+* **Drivers & Samples**: A comprehensive collection of device drivers, standard samples, and extended TI-specific examples.
+* **Demos & Reference Designs**: Ready-to-use demo applications showcasing key device capabilities and reference implementations to accelerate product development.
+* **Development & Debug Tools**: Ready to use, integrated support for programming, flashing, and debugging TI devices using OpenOCD fork.
+
+While the specific SDK content may vary depending on individual device capabilities, all TI Zephyr SDK releases follow a consistent structure and development experience across TI's broad embedded processor portfolio.
+
+Block Diagram
+**************
+Given below is a block diagram of the SW modules in this SDK,
+
+.. image:: ../images/zephyr_sdk_block_diagram.webp
+
+Software Components
+*******************
+
+The main software components in the block diagram are described below. Except
+for the toolchain, they are part of the Zephyr workspace, whose contents are
+defined by the west manifest (``west.yml``) in ``ti-zephyr``.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 25 55
+   :class: force-wrap
+
+   * - Software Component
+     - Documentation Page
+     - Description
+   * - Toolchain (Zephyr SDK bundle)
+     - `Zephyr SDK <https://docs.zephyrproject.org/latest/develop/toolchains/zephyr_sdk.html>`__
+     - Cross-compilation toolchain and host tools from the Zephyr SDK bundle,
+       used to build the SDK and applications. It is installed by the SDK
+       installer; see :ref:`Getting Started <ti-zephyr-getting-started>`.
+   * - Bootloader (MCUboot)
+     - `MCUboot <https://docs.mcuboot.com/>`__
+     - MCUboot secure bootloader, imported from TI's MCUboot fork into
+       ``bootloader/mcuboot`` of the workspace.
+   * - Tools
+     - :ti-ref:`Tools and Utilities <ti-zephyr-tools>`
+     - Host tools used while developing with the SDK, such as
+       `west <https://docs.zephyrproject.org/latest/develop/west/index.html>`__
+       for workspace management, building, flashing and debugging, and the
+       flashing tools for the target SoC.
+   * - Modules (Middleware, stacks, HALs)
+     - `Zephyr Modules <https://docs.zephyrproject.org/latest/develop/modules.html>`__
+     - Hardware abstraction layers (such as ``hal_ti``), middleware and
+       protocol stacks (such as LVGL, mbed TLS, littlefs and OpenThread),
+       imported as west projects under ``modules/``.
+   * - Vanilla Zephyr
+     - `Zephyr Documentation <https://docs.zephyrproject.org/latest/>`__
+     - The Zephyr RTOS (kernel, subsystems, device drivers, devicetree, board
+       and SoC support) from TI's Zephyr repository (``TexasInstruments/zephyr``),
+       at the revision pinned by the west manifest.
+   * - ti-zephyr
+     - :ref:`Samples, Tests and Applications <ti-zephyr-samples-tests-and-applications>`
+     - The SDK's own Zephyr module and west manifest repository. It provides
+       the TI-specific samples, tests, applications, devicetree bindings and
+       out-of-tree drivers.
+
+Directory Structure
+*******************
+
+The SDK is a west workspace. ``<sdk-install-dir>`` is the directory the SDK
+installer installs it to, as used in :ref:`Getting Started
+<ti-zephyr-getting-started>`.
+
+.. raw:: html
+
+   <div class="highlight"><pre>
+   <b>&lt;sdk-install-dir&gt;/</b>
+   ├── <b>setup_env.sh</b>
+   ├── <b>zephyr/</b>
+   ├── <b>ti-zephyr/</b>
+   │   ├── drivers/
+   │   ├── samples/
+   │   ├── tests/
+   │   ├── doc/
+   │   └── west.yml
+   ├── <b>modules/</b>
+   │   ├── hal/
+   │   ├── crypto/
+   │   ├── fs/
+   │   ├── lib/
+   │   ├── tee/
+   │   └── debug/
+   ├── <b>bootloader/</b>
+   │   └── mcuboot/
+   ├── <b>tools/</b>
+   │   └── net-tools/
+   ├── <b>toolchain/</b>
+   │   ├── gnu/
+   │   ├── hosttools/
+   │   └── cmake/
+   ├── <b>docs/</b>
+   │   ├── ti-zephyr/
+   │   └── zephyr/
+   ├── <b>licenses/</b>
+   │   ├── host/
+   │   └── target/
+   └── <b>.west/</b>
+   </pre></div>
+
+.. list-table::
+   :header-rows: 1
+   :widths: 25 75
+   :class: force-wrap
+
+   * - Path
+     - Description
+   * - ``setup_env.sh``
+     - Run once after installation; see :ref:`Getting Started
+       <ti-zephyr-getting-started>`.
+   * - ``zephyr/``
+     - Zephyr RTOS.
+   * - ``ti-zephyr/``
+     - TI module and west manifest repository, described below.
+   * - ``modules/``
+     - Zephyr modules: ``hal/`` (including ``hal/ti``), ``crypto/``, ``fs/``,
+       ``lib/``, ``tee/`` and ``debug/``.
+   * - ``bootloader/``
+     - MCUboot (``bootloader/mcuboot``).
+   * - ``tools/``
+     - Helper tools such as ``net-tools``.
+   * - ``toolchain/``
+     - Zephyr SDK toolchain (``ZEPHYR_SDK_INSTALL_DIR``): Arm GNU toolchain in
+       ``gnu/``, CMake package files, and host tools (OpenOCD, ``dtc``) in
+       ``hosttools/``.
+   * - ``docs/``
+     - Offline HTML: ``docs/ti-zephyr/`` (this documentation) and
+       ``docs/zephyr/``.
+   * - ``licenses/``
+     - License texts: ``host/`` (host tools) and ``target/`` (target
+       components).
+   * - ``.west/``
+     - West workspace configuration.
+
+The ``ti-zephyr`` module is organized as follows:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 30 70
+
+   * - ``ti-zephyr/``
+     - Description
+   * - ``west.yml``
+     - West manifest; pins Zephyr and every TI-relevant module.
+   * - ``zephyr/module.yml``
+     - Zephyr module description that registers the devicetree root, samples
+       and tests of this repository with the build system.
+   * - ``drivers/``
+     - Out-of-tree drivers.
+   * - ``samples/``
+     - TI samples; see
+       :ref:`Samples, Tests and Applications <ti-zephyr-samples-tests-and-applications>`.
+   * - ``dts/``, ``include/``, ``lib/``
+     - Devicetree bindings, public headers and libraries.
+   * - ``applications/``
+     - TI reference applications; see
+       :ref:`Samples, Tests and Applications <ti-zephyr-samples-tests-and-applications>`.
+   * - ``cmake/``
+     - Shared CMake extensions.
+   * - ``scripts/``
+     - Development tooling.
+   * - ``doc/``
+     - Sphinx sources of this documentation.
+
+Supported Hardware
+******************
+
+Refer |soc_board_support| for the supported boards.
+
+Licenses
+********
+
+.. only:: mspm0
+
+   The licensing information of this SDK, as well as any third-party components included which are made available under a number of other open-source licenses are enumerated as part of the manifest.
+   A complete manifest along with export control information is detailed here. (`MANIFEST <../../MSPM0-ZEPHYR-SDK_manifest.html>`_)
+
+
+.. only:: mspm33
+
+   The licensing information of this SDK, as well as any third-party components included which are made available under a number of other open-source licenses are enumerated as part of the manifest.
+   A complete manifest along with export control information is detailed here. (`MANIFEST <../../MSPM33-ZEPHYR-SDK_manifest.html>`_)
+
+.. only:: am13
+
+   The licensing information of this SDK, as well as any third-party components included which are made available under a number of other open-source licenses are enumerated as part of the manifest.
+   A complete manifest along with export control information is detailed here. (`MANIFEST <../../AM13E2X-ZEPHYR-SDK_manifest.html>`_)
+
+.. only:: am62l
+
+   The licensing information of this SDK, as well as any third-party components included which are made available under a number of other open-source licenses are enumerated as part of the manifest.
+   A complete manifest along with export control information is detailed here. (`MANIFEST <../../AM62L-ZEPHYR-SDK_manifest.html>`_)
+
+Help and Support
+****************
+
+For additional help and support, see:
+
+* `TI E2E Forum <https://e2e.ti.com/support/processors/f/processors-forum>`__
+* `#ti channel on the Zephyr Discord <https://discord.com/channels/720317445772017664/944602701243744357>`__
