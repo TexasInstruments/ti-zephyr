@@ -182,6 +182,14 @@ FPU, and selects <code class="docutils literal notranslate"><span class="pre">CO
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">datalog</span></code> keeps its four capture buffers in the library only when
 <code class="docutils literal notranslate"><span class="pre">CONFIG_TI_REALTIMELIB_DATALOG</span></code> is enabled (about 6.4 KB of RAM).</p>
+<p><code class="docutils literal notranslate"><span class="pre">mtpa</span></code> builds two inductance tables from <code class="docutils literal notranslate"><span class="pre">CONFIG_TI_REALTIMELIB_MTPA_LS_D_UH</span></code>
+and <code class="docutils literal notranslate"><span class="pre">CONFIG_TI_REALTIMELIB_MTPA_LS_Q_UH</span></code> (in uH, default 1442). They are only
+used by <code class="docutils literal notranslate"><span class="pre">MTPA_updateLs_d_withLUT()</span></code> and <code class="docutils literal notranslate"><span class="pre">MTPA_updateLs_q_withLUT()</span></code>.
+<code class="docutils literal notranslate"><span class="pre">MTPA_computeParameters()</span></code> takes its inductances as arguments.</p>
+<p>Compared with the original, <code class="docutils literal notranslate"><span class="pre">mtpa.h</span></code> returns the q-axis table from
+<code class="docutils literal notranslate"><span class="pre">MTPA_updateLs_q_withLUT()</span></code> (it returned the d-axis table), defines
+<code class="docutils literal notranslate"><span class="pre">MTPA_LUT_DELTA_CURRENT_LQ_A</span></code> (it was defined twice as <code class="docutils literal notranslate"><span class="pre">..._LD_A</span></code>), and
+compares floats with <code class="docutils literal notranslate"><span class="pre">0.0f</span></code> instead of <code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p>
 <p>Each module has an <code class="docutils literal notranslate"><span class="pre">_Obj</span></code> structure that the caller owns, and an <code class="docutils literal notranslate"><span class="pre">_init()</span></code>
 function that takes a pointer to it and its size. <code class="docutils literal notranslate"><span class="pre">_init()</span></code> returns <code class="docutils literal notranslate"><span class="pre">NULL</span></code>
 if the buffer is too small.</p>
@@ -210,7 +218,8 @@ calculation and reconstruction)</p></td>
 <tr class="row-even"><td><p>Control</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">pi</span></code>, <code class="docutils literal notranslate"><span class="pre">pid</span></code>, <code class="docutils literal notranslate"><span class="pre">pr</span></code> (proportional resonant), <code class="docutils literal notranslate"><span class="pre">fwc</span></code> (field
 weakening), <code class="docutils literal notranslate"><span class="pre">vs_freq</span></code> (volts per frequency), <code class="docutils literal notranslate"><span class="pre">vib_comp</span></code> (vibration
-compensation), <code class="docutils literal notranslate"><span class="pre">dclink_ss</span></code> (DC link single shunt current reconstruction)</p></td>
+compensation), <code class="docutils literal notranslate"><span class="pre">dclink_ss</span></code> (DC link single shunt current reconstruction), <code class="docutils literal notranslate"><span class="pre">mtpa</span></code>
+(maximum torque per ampere)</p></td>
 </tr>
 <tr class="row-odd"><td><p>Utilities</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">angle_gen</span></code>, <code class="docutils literal notranslate"><span class="pre">rampgen</span></code>, <code class="docutils literal notranslate"><span class="pre">traj</span></code> (trajectory), <code class="docutils literal notranslate"><span class="pre">cpu_time</span></code>,
@@ -256,8 +265,8 @@ includes these headers and calls them gets the TMU versions.</p>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">esmo</span></code>, <code class="docutils literal notranslate"><span class="pre">speedfr</span></code>, <code class="docutils literal notranslate"><span class="pre">vsf</span></code></p></td>
 <td><p>Need <code class="docutils literal notranslate"><span class="pre">USER_Params</span></code>, which is defined with the FAST estimator.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">vsf</span></code>, <code class="docutils literal notranslate"><span class="pre">mtpa</span></code></p></td>
-<td><p>Need motor constants from the application configuration.</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">vsf</span></code></p></td>
+<td><p>Needs motor constants from the application configuration.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">motorvision</span></code></p></td>
 <td><p>Needs an application hardware layer (a UART).</p></td>
@@ -272,9 +281,9 @@ or <code class="docutils literal notranslate"><span class="pre">DATALOGI4_EN</sp
 <section id="samples-and-tests">
 <h2>Samples and tests<a class="headerlink" href="#samples-and-tests" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">tests/lib/realtimelib</span></code> is a ztest suite with 45 tests. It checks the
+<li><p><code class="docutils literal notranslate"><span class="pre">tests/lib/realtimelib</span></code> is a ztest suite with 51 tests. It checks the
 transforms, the PI, PID and PR controllers, the filters, the volts per
-frequency profile, the data logger and the utilities against exact expected values. For
+frequency profile, MTPA, the data logger and the utilities against exact expected values. For
 <code class="docutils literal notranslate"><span class="pre">fwc</span></code>, <code class="docutils literal notranslate"><span class="pre">vib_comp</span></code> and <code class="docutils literal notranslate"><span class="pre">dclink_ss</span></code> it only checks initialisation and
 parameter storage. It runs on hardware because the sine, cosine and square
 root calls use the TMU.</p></li>

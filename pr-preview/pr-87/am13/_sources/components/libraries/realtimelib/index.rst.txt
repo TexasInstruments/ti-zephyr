@@ -29,6 +29,16 @@ FPU, and selects ``CONFIG_TI_MATHLIB_FASTRTS``):
 ``datalog`` keeps its four capture buffers in the library only when
 ``CONFIG_TI_REALTIMELIB_DATALOG`` is enabled (about 6.4 KB of RAM).
 
+``mtpa`` builds two inductance tables from ``CONFIG_TI_REALTIMELIB_MTPA_LS_D_UH``
+and ``CONFIG_TI_REALTIMELIB_MTPA_LS_Q_UH`` (in uH, default 1442). They are only
+used by ``MTPA_updateLs_d_withLUT()`` and ``MTPA_updateLs_q_withLUT()``.
+``MTPA_computeParameters()`` takes its inductances as arguments.
+
+Compared with the original, ``mtpa.h`` returns the q-axis table from
+``MTPA_updateLs_q_withLUT()`` (it returned the d-axis table), defines
+``MTPA_LUT_DELTA_CURRENT_LQ_A`` (it was defined twice as ``..._LD_A``), and
+compares floats with ``0.0f`` instead of ``0.0``.
+
 Each module has an ``_Obj`` structure that the caller owns, and an ``_init()``
 function that takes a pointer to it and its size. ``_init()`` returns ``NULL``
 if the buffer is too small.
@@ -51,7 +61,8 @@ Modules
    * - Control
      - ``pi``, ``pid``, ``pr`` (proportional resonant), ``fwc`` (field
        weakening), ``vs_freq`` (volts per frequency), ``vib_comp`` (vibration
-       compensation), ``dclink_ss`` (DC link single shunt current reconstruction)
+       compensation), ``dclink_ss`` (DC link single shunt current reconstruction), ``mtpa``
+       (maximum torque per ampere)
    * - Utilities
      - ``angle_gen``, ``rampgen``, ``traj`` (trajectory), ``cpu_time``,
        ``datalog`` (``datalog``, ``dlog_2ch_f``, ``dlog_4ch_f``,
@@ -89,8 +100,8 @@ The SDK ``realtimelib`` has 33 modules. These are not ported yet:
      - Delivered as prebuilt libraries only.
    * - ``esmo``, ``speedfr``, ``vsf``
      - Need ``USER_Params``, which is defined with the FAST estimator.
-   * - ``vsf``, ``mtpa``
-     - Need motor constants from the application configuration.
+   * - ``vsf``
+     - Needs motor constants from the application configuration.
    * - ``motorvision``
      - Needs an application hardware layer (a UART).
    * - ``datalogIF``
@@ -100,9 +111,9 @@ The SDK ``realtimelib`` has 33 modules. These are not ported yet:
 Samples and tests
 *****************
 
-* ``tests/lib/realtimelib`` is a ztest suite with 45 tests. It checks the
+* ``tests/lib/realtimelib`` is a ztest suite with 51 tests. It checks the
   transforms, the PI, PID and PR controllers, the filters, the volts per
-  frequency profile, the data logger and the utilities against exact expected values. For
+  frequency profile, MTPA, the data logger and the utilities against exact expected values. For
   ``fwc``, ``vib_comp`` and ``dclink_ss`` it only checks initialisation and
   parameter storage. It runs on hardware because the sine, cosine and square
   root calls use the TMU.
