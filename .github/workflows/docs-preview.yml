@@ -1,0 +1,175 @@
+name: Documentation preview for fork PRs
+
+# docs.yml builds the docs for every pull request, but it can only deploy a
+# preview for branches in this repository: PRs from forks get a read-only
+# token. This workflow runs after "Documentation" has finished, from the
+# default branch and with a write token, and deploys the docs-site artifact of
+# a fork PR to the same gh-pages location docs.yml uses:
+#   https://<owner>.github.io/<repo>/pr-preview/pr-<N>/
+#
+# It never checks out or runs code from the PR. The artifact is only copied,
+# so the PR can change what is published under its own preview path and
+# nothing else.
+#
+# This has to be a separate file: GitHub rejects a workflow whose workflow_run
+# trigger names the workflow itself ("cannot listen to itself"), which makes
+# every run of the file fail without starting a job.
+
+on:
+  workflow_run:
+    workflows:
+      - Documentation
+    types:
+      - completed
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.workflow_run.head_repository.full_name }}-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    name: Deploy or remove fork PR preview
+    if: >-
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.head_repository.full_name != github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      actions: read
+      contents: write
+      pull-requests: write
+    steps:
+      # The payload has no PR number for fork PRs, so look it up from the head
+      # branch. Everything from the event is passed through env, not
+      # interpolated into the script.
+      - name: Find the pull request
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          HEAD_OWNER: ${{ github.event.workflow_run.head_repository.owner.login }}
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+        run: |
+          info=$(gh api -X GET "repos/${REPO}/pulls" \
+            -f state=all -f head="${HEAD_OWNER}:${HEAD_BRANCH}" -f per_page=1 \
+            --jq '.[0] | "\(.number) \(.state) \(.head.sha)"')
+          read -r number state sha <<< "${info}"
+
+          if ! [[ "${number}" =~ ^[0-9]+$ ]]; then
+            echo "No pull request found for ${HEAD_OWNER}:${HEAD_BRANCH}"
+            echo "action=none" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [ "${state}" = "closed" ]; then
+            action=remove
+          elif [ "${sha}" = "${HEAD_SHA}" ] && [ "${CONCLUSION}" = "success" ]; then
+            action=deploy
+          else
+            # Stale run (newer push) or failed build: leave the preview alone
+            action=none
+          fi
+
+          echo "number=${number}" >> "$GITHUB_OUTPUT"
+          echo "action=${action}" >> "$GITHUB_OUTPUT"
+          echo "PR #${number}: ${state}, action=${action}"
+
+      - name: Checkout
+        if: steps.pr.outputs.action != 'none'
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+
+      - name: Download site
+        if: steps.pr.outputs.action == 'deploy'
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: docs-site
+          path: site
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+
+      # Only static files are published: refuse anything that could point
+      # outside the artifact.
+      - name: Check the artifact
+        if: steps.pr.outputs.action == 'deploy'
+        run: |
+          if [ -n "$(find site -type l)" ]; then
+            echo "::error::The docs-site artifact contains symbolic links"
+            find site -type l
+            exit 1
+          fi
+
+      # Pages runs Jekyll unless .nojekyll is at the branch root, which drops
+      # Sphinx's _static/ and _sources/.
+      - name: Prepare .nojekyll
+        if: steps.pr.outputs.action == 'deploy'
+        run: mkdir nojekyll && touch nojekyll/.nojekyll
+
+      - name: Ensure .nojekyll at gh-pages root
+        if: steps.pr.outputs.action == 'deploy'
+        uses: JamesIves/github-pages-deploy-action@fa24774553152dd7873cd16ebd8d959b010c5445 # v4.9.0
+        with:
+          folder: nojekyll
+          branch: gh-pages
+          clean: false
+          commit-message: "Add .nojekyll"
+
+      # The action's own sticky comment looks the PR up from the event, which
+      # does not carry it here, so it is disabled and posted below. Wait for
+      # the Pages build first, so the link in the comment works when posted.
+      - name: Deploy preview
+        id: preview
+        if: steps.pr.outputs.action == 'deploy'
+        uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1.8.1
+        with:
+          action: deploy
+          pr-number: ${{ steps.pr.outputs.number }}
+          source-dir: site
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          wait-for-pages-deployment: true
+          comment: false
+          qr-code: false
+          deploy-commit-message: "Deploy docs preview for PR #${{ steps.pr.outputs.number }}"
+          remove-commit-message: "Remove docs preview for PR #${{ steps.pr.outputs.number }}"
+
+      - name: Comment on the pull request
+        if: steps.pr.outputs.action == 'deploy'
+        uses: marocchino/sticky-pull-request-comment@67d0dec7b07ed060a405f9b2a64b8ab319fdd7db # v2.9.2
+        with:
+          header: pr-preview
+          number: ${{ steps.pr.outputs.number }}
+          message: |
+            [PR Preview Action](https://github.com/rossjrw/pr-preview-action) v1.8.1
+            Docs preview for this fork PR: ${{ steps.preview.outputs.preview-url }}
+
+            Built from ${{ github.event.workflow_run.head_sha }}.
+
+      - name: Remove preview
+        if: steps.pr.outputs.action == 'remove'
+        uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9 # v1.8.1
+        with:
+          action: remove
+          pr-number: ${{ steps.pr.outputs.number }}
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          comment: false
+          qr-code: false
+          deploy-commit-message: "Deploy docs preview for PR #${{ steps.pr.outputs.number }}"
+          remove-commit-message: "Remove docs preview for PR #${{ steps.pr.outputs.number }}"
+
+      - name: Update the comment after removal
+        if: steps.pr.outputs.action == 'remove'
+        uses: marocchino/sticky-pull-request-comment@67d0dec7b07ed060a405f9b2a64b8ab319fdd7db # v2.9.2
+        with:
+          header: pr-preview
+          number: ${{ steps.pr.outputs.number }}
+          message: |
+            [PR Preview Action](https://github.com/rossjrw/pr-preview-action) v1.8.1
+            Preview removed because the pull request was closed.
