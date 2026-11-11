@@ -44,7 +44,7 @@ Features Added in This Release
      - Peripheral Drivers
    * - CAN-FD and DAC for MSPM0G
      - Peripheral Drivers
-   * - AES-ADV, TRNG
+   * - AES, AES-ADV, TRNG
      - Security / Crypto
    * - System Power Management (RUN, SLEEP)
      - Power
