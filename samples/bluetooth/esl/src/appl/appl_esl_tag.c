@@ -240,6 +240,7 @@ API_RESULT appl_esl_tag_ots_image_written_cb
                 UINT32 rem
            )
 {
+    API_RESULT retval;
 
     APPL_ESL_TRC("[APPL]: OTS Image write callback\n");
 
@@ -255,17 +256,17 @@ API_RESULT appl_esl_tag_ots_image_written_cb
     APPL_ESL_TRC("\tData offset: %d\n", offset);
     APPL_ESL_TRC("\tData remaining: %d\n", rem);
 
+    /* Store every received chunk at its own offset */
+    retval = esl_io_write_img_to_storage(image_index, data, len, offset, NULL);
+    if (BT_ESL_API_SUCCESS != retval)
+    {
+        APPL_ESL_ERR("[APPL]: Image chunk write failed 0x%04X\n", retval);
+        return retval;
+    }
+
     if(0 == rem)
     {
         APPL_ESL_TRC("[APPL]: Image upload complete\n");
-        (BT_ESL_IGNORE_RETURN_VALUE)esl_io_write_img_to_storage
-                                    (
-                                         image_index,
-                                         data,
-                                         offset + len, /* Total length */
-                                         0U,
-                                         NULL
-                                    );
         (BT_ESL_IGNORE_RETURN_VALUE)esl_io_close_image_from_storage(NULL);
     }
 
@@ -787,6 +788,8 @@ API_RESULT appl_esl_tag_factory_reset_cmd_cb
                 {
                     APPL_ESL_ERR (
                     "[APPL]: Failed to start factory reset disconnection timer\n");
+                    /* No disconnect is scheduled, do not block further commands */
+                    appl_esl_factory_reset_in_progress = BT_ESL_FALSE;
                 }
 
             }
@@ -2107,8 +2110,9 @@ API_RESULT appl_esl_led_timed_control_req_handler(UCHAR* data, UINT16 datalen)
                 /* copy latest parameter */
                 appl_esl_update_led_control_params(led_index, data);
             }
-            else if (absolute_time > appl_esl_led_control[led_index].start_absolute_time)
+            else
             {
+                /* A different pending time (earlier or later) cannot be queued */
                 APPL_ESL_INF("[APPL]: Sending Queue Full error response\n");
                 BT_esl_tag_send_esl_error_response(BT_ESL_QUEUE_FULL);
                 return BT_ESL_API_SUCCESS;

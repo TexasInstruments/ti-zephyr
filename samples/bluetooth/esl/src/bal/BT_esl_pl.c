@@ -1385,13 +1385,18 @@ API_RESULT BT_esl_decrypt_data_pl
     ESL_PL_TRC("[ESL PL]: -> BT_esl_decrypt_data_pl");
 
     /* Init */
-    BT_ESL_IGNORE_UNUSED_PARAM (decrypted_payload_len);
     retval = BT_ESL_API_SUCCESS;
 
     /* Check if key material is valid */
     if (key_material == NULL || encrypted_payload == NULL || decrypted_payload == NULL)
     {
         ESL_PL_ERR("[ESL PL]: Invalid parameters for decryption");
+        retval = BT_ESL_API_FAILURE;
+    }
+    else if ((encrypted_payload_datalen <= (BT_EAD_RANDOMIZER_SIZE + BT_EAD_MIC_SIZE)) ||
+             (decrypted_payload_len < BT_EAD_DECRYPTED_PAYLOAD_SIZE(encrypted_payload_datalen)))
+    {
+        ESL_PL_ERR("[ESL PL]: Invalid payload length or output buffer too small");
         retval = BT_ESL_API_FAILURE;
     }
     else
@@ -1632,7 +1637,14 @@ API_RESULT BT_esl_find_ad_element_pl
             /* Extract Length */
             total_length = adv_data[index];
 
-            if((index + 1 < adv_length) && (adv_data[index + 1] == ad_type))
+            /* Zero length terminates the AD data; element must fit in the received data */
+            if ((0U == total_length) || ((UINT16)(index + 1U + total_length) > adv_length))
+            {
+                break;
+            }
+
+            if ((adv_data[index + 1] == ad_type) &&
+                ((UINT16)(total_length - 1U) <= BT_ESL_HCI_MAX_ADVERTISING_DATA_LENGTH))
             {
                 /* Copy the advertising element data into the provided buffer */
                 BT_ESL_mem_copy(ad_element, &adv_data[index + 2], (total_length-1));
@@ -1959,7 +1971,17 @@ static void response_cb
                 struct net_buf_simple *buf
             )
 {
-    if ((NULL != adv) && (NULL != info)&& (NULL != buf))
+    if ((NULL == adv) || (NULL == info))
+    {
+        ESL_PL_ERR("[ESL PL]: Invalid parameters in response callback");
+    }
+    else if (NULL == buf)
+    {
+        /* The host passes no data when the response slot RX failed */
+        ESL_PL_TRC("[ESL PL]: Response RX failed: subevent %d, slot %d",
+                   info->subevent, info->response_slot);
+    }
+    else
     {
         BT_esl_ap_response_event_handler
         (
@@ -1969,10 +1991,6 @@ static void response_cb
             (UCHAR *)buf->data,
             (UINT16)buf->len
         );
-    }
-    else
-    {
-        ESL_PL_ERR("[ESL PL]: Invalid parameters in response callback");
     }
 }
 
@@ -4825,7 +4843,10 @@ void BT_esl_ots_client_init_pl(void)
     for (i = 0; i < CONFIG_BT_MAX_CONN; i++)
     {
         ots_client[i].cb = &ots_client_cbs;
-        bt_ots_client_register(&ots_client[i]);
+        if (0 != bt_ots_client_register(&ots_client[i]))
+        {
+            ESL_PL_ERR("[ESL PL]: OTS client register failed for conn slot %d\n", i);
+        }
     }
 }
 
@@ -5181,6 +5202,7 @@ API_RESULT BT_esl_config_ots_pl(BT_ESL_BD_ADDR * bd_addr)
             {
                 ESL_PL_ERR (
                 "[ESL PL]: Invalid connection index: %d", conn_idx);
+                bt_conn_unref(conn);
                 return BT_ESL_API_FAILURE;
             }
             /* Configure OTS for the specified ESL device */
@@ -5195,6 +5217,7 @@ API_RESULT BT_esl_config_ots_pl(BT_ESL_BD_ADDR * bd_addr)
             if (err != 0)
             {
                 ESL_PL_ERR ("Subscribe OACP failed %d\n", err);
+                bt_conn_unref(conn);
                 return BT_ESL_API_FAILURE;
             }
 
@@ -5209,9 +5232,15 @@ API_RESULT BT_esl_config_ots_pl(BT_ESL_BD_ADDR * bd_addr)
             if (err != 0)
             {
                 ESL_PL_ERR ("Subscribe OLCP failed %d\n", err);
+                bt_conn_unref(conn);
                 return BT_ESL_API_FAILURE;
             }
             bt_conn_unref(conn);
+        }
+        else
+        {
+            ESL_PL_ERR ("[ESL PL]: No connection found for OTS configuration\n");
+            retval = BT_ESL_API_FAILURE;
         }
     }
     else
@@ -5697,6 +5726,10 @@ static ssize_t ots_obj_write
         if (BT_ESL_OTS_NO_MEM == retval)
         {
             return -ENOMEM;
+        }
+        else if (BT_ESL_API_SUCCESS != retval)
+        {
+            return -EIO;
         }
     }
     else
