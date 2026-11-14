@@ -13,8 +13,7 @@ set(ESL_SRC ${ESL_ROOT}/src)
 
 if(KERNEL_VERSION_MAJOR GREATER_EQUAL 4)
     target_compile_definitions(app PRIVATE
-    -DZEPHYR_4_0_0_OR_LATER
-    -DBT_ESL_AP_HAVE_SUBEVENT_ADJUSTMENT)
+    -DZEPHYR_4_0_0_OR_LATER)
 endif()
 
 target_compile_definitions(app PRIVATE
