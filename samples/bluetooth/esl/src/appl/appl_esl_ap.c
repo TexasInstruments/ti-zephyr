@@ -595,7 +595,12 @@ API_RESULT appl_esl_ap_init(void)
     padv_param.num_response_slots                = APPL_ESLP_DEFAULT_RESPONSE_COUNT;
 
     /** Start PAWR */
-    BT_esl_start_periodic_adv_pl(padv_param);
+    retval = BT_esl_start_periodic_adv_pl(padv_param);
+    if (BT_ESL_AP_SUCCESS != retval)
+    {
+        APPL_ESL_ERR("[APPL]: Auto start of periodic advertising failed- retval 0x%04X\n", retval);
+        return retval;
+    }
 #endif /* BT_ESL_AP_AUTO_START_PADV */
 
 #ifdef APPL_ESL_AP_OTS_SUPPORT

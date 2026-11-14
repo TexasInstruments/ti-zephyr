@@ -184,13 +184,19 @@ API_RESULT esl_io_led_control(/* IN */ ESL_IO_LED_PARAMS* esl_io_led_params)
     /* Init */
     retval = BT_ESL_API_SUCCESS;
 
-    /** Check LED index */
-    if (IO_NUM_LEDS <= esl_io_led_params->led_idx)
+    if (NULL == esl_io_led_params)
+    {
+        return BT_ESL_API_FAILURE;
+    }
+
+    /** Check LED index (also bounded by the number of GPIO descriptors) */
+    if ((IO_NUM_LEDS <= esl_io_led_params->led_idx) ||
+        (ARRAY_SIZE(leds) <= esl_io_led_params->led_idx))
     {
         ESL_IO_TRC(
         "[ESL IO]: Error: Invalid LED index (%d), max is %d\n",esl_io_led_params->led_idx, IO_NUM_LEDS - 1);
 
-        retval = BT_ESL_API_FAILURE; /* Invalid index */
+        return BT_ESL_API_FAILURE; /* Invalid index */
     }
 
     /** Check brightness */
@@ -198,7 +204,7 @@ API_RESULT esl_io_led_control(/* IN */ ESL_IO_LED_PARAMS* esl_io_led_params)
     {
         ESL_IO_TRC(
         "[ESL IO]: Error: Invalid brightness (%d), max is 100\n", esl_io_led_params->brightness);
-        retval = BT_ESL_API_FAILURE; /* Invalid value */
+        return BT_ESL_API_FAILURE; /* Invalid value */
     }
 
     /**
@@ -229,12 +235,21 @@ API_RESULT esl_io_led_control(/* IN */ ESL_IO_LED_PARAMS* esl_io_led_params)
     esl_io_led_params->onoff, esl_io_led_params->onoff_period);
 #endif /* 0 */
 
-    /** Turn on/off LED */
+    /**
+     * Turn on/off LED. The LEDs are plain GPIOs, so brightness cannot be rendered:
+     * any non-zero brightness while ON maps to logic level 1.
+     */
     ret = gpio_pin_set_dt
           (
              &leds[esl_io_led_params->led_idx],
-             (esl_io_led_params->onoff != BT_ESL_FALSE) ? esl_io_led_params->brightness : BT_ESL_FALSE
+             ((esl_io_led_params->onoff != BT_ESL_FALSE) && (0U != esl_io_led_params->brightness)) ?
+             1 : 0
           );
+    if (0 != ret)
+    {
+        ESL_IO_TRC("[ESL IO]: Error: GPIO set failed (%d)\n", ret);
+        retval = BT_ESL_API_FAILURE;
+    }
 
     return retval;
 }

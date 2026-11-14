@@ -67,8 +67,9 @@ SHELL_STATIC_SUBCMD_SET_CREATE(cli_esl_ap,
 
 SHELL_CMD_REGISTER(esl_ap, &cli_esl_ap, "ESL AP commands", NULL);
 
-/* Helper function to convert hex string to little-endian byte array */
-static void str_to_array_le
+/* Helper function to convert hex string to little-endian byte array.
+ * Returns 0 on success, -1 if the string is not valid hex or does not fit. */
+static int str_to_array_le
             (
                  const struct shell * shell,
                  const CHAR         * str,
@@ -85,7 +86,7 @@ static void str_to_array_le
     if (str_len % 2 != 0)
     {
         CONSOLE_OUT("Invalid hex string length");
-        return;
+        return -1;
     }
 
     /* Init */
@@ -93,6 +94,11 @@ static void str_to_array_le
 
     /* Convert hex string to bytes using hex2bin */
     converted = hex2bin(str, str_len, array, bytes_to_convert);
+    if (converted != bytes_to_convert)
+    {
+        CONSOLE_OUT("Invalid hex string");
+        return -1;
+    }
 
     /* Reverse the array in-place for little endian */
     for (i = 0; i < converted / 2; i++)
@@ -101,6 +107,8 @@ static void str_to_array_le
         array[i] = array[converted - 1 - i];
         array[converted - 1 - i] = temp;
     }
+
+    return 0;
 }
 
 int cmd_ap_init(const struct shell *shell, size_t argc, char **argv)
@@ -327,14 +335,19 @@ int cmd_eslp_add_esl_dev(const struct shell *shell, size_t argc, char **argv)
     }
 
     peer_addr.type = (UCHAR)strtol(argv[1], NULL, 16);
-    str_to_array_le
-    (
-         shell,
-         argv[2],
-         strlen(argv[2]),
-         peer_addr.addr,
-         sizeof(peer_addr.addr)
-    );
+    if ((2U * sizeof(peer_addr.addr)) != strlen(argv[2]) ||
+        (0 != str_to_array_le
+              (
+                   shell,
+                   argv[2],
+                   strlen(argv[2]),
+                   peer_addr.addr,
+                   sizeof(peer_addr.addr)
+              )))
+    {
+        CONSOLE_OUT("Invalid address, expected 12 hex characters");
+        return -ENOEXEC;
+    }
 
     esl_addr.group_id = (UCHAR)strtol(argv[3], NULL, 16);
     esl_addr.esl_id = (UCHAR)strtol(argv[4], NULL, 16);
@@ -896,14 +909,17 @@ int cmd_eslp_led_control_command(const struct shell *shell, size_t argc, char **
     color_brightness = (UCHAR)strtol(argv[4], NULL, 16);
 
     /* Parse flashing pattern using str_to_array_le */
-    str_to_array_le
-    (
-         shell,
-         argv[5],
-         strlen(argv[5]),
-         flashing_pattern,
-         sizeof(flashing_pattern)
-    );
+    if (0 != str_to_array_le
+             (
+                  shell,
+                  argv[5],
+                  strlen(argv[5]),
+                  flashing_pattern,
+                  sizeof(flashing_pattern)
+             ))
+    {
+        return -ENOEXEC;
+    }
 
     repeat_type = (UINT16)strtol(argv[6], NULL, 16);
 

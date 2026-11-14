@@ -25,10 +25,10 @@
 /* --------------------------------------------- Functions */
 
 SHELL_STATIC_SUBCMD_SET_CREATE(cli_esl_tag,
-    SHELL_CMD_ARG(init, NULL, "Initialize ESL Tag", cmd_tag_init, 0, 0),
+    SHELL_CMD_ARG(init, NULL, "Initialize ESL Tag [single IO flag]", cmd_tag_init, 1, 1),
     SHELL_CMD(start, NULL, "Start Advertisement", cmd_start_adv),
     SHELL_CMD(stop, NULL, "Stop Advertisement", cmd_stop_adv),
-    SHELL_CMD_ARG(config_image, NULL, "config_image <Flag>", cmd_config_image, 0, 0),
+    SHELL_CMD_ARG(config_image, NULL, "config_image <Flag>", cmd_config_image, 2, 0),
     SHELL_CMD(config_bs, NULL, "Configure Service Needed Bit", cmd_config_bs),
     SHELL_CMD(get_time, NULL, "Get Current Time", cmd_get_time),
     SHELL_CMD(reset, NULL, "Reset ESL", cmd_reset),
