@@ -1736,6 +1736,13 @@ API_RESULT BT_esl_start_periodic_adv_pl(BT_ESL_PERIODIC_ADV_PARAMS padv_params)
     retval = BT_ESL_API_SUCCESS;
     err = 0U;
 
+    /* Bluetooth host must be enabled and ready (bt_ready() done) */
+    if (BT_ESL_STACK_INIT_UNDEFINED == esl_pl_init_state)
+    {
+        ESL_PL_ERR ("[ESL PL]: Bluetooth not ready, cannot start periodic advertising");
+        return BT_ESL_API_FAILURE;
+    }
+
     if (NULL == adv_pawr)
     {
         /* Store periodic adv parameters for future use */
@@ -1996,6 +2003,13 @@ API_RESULT BT_esl_set_subevent_data_pl
     sub_data = NULL;
     sub_params = NULL;
 
+    /* Periodic advertising set must exist */
+    if ((NULL == adv_pawr) || (NULL == subevent_data_params) || (0U == num_subevents))
+    {
+        ESL_PL_ERR("[ESL PL]: Cannot set subevent data: PAwR not started or invalid params");
+        return BT_ESL_API_FAILURE;
+    }
+
     /* Allocate subevent parameters for zephyr */
     sub_params = (struct bt_le_per_adv_subevent_data_params *)BT_ESL_alloc_mem(num_subevents * sizeof(struct bt_le_per_adv_subevent_data_params));
     /* Allocate net bufs for number of subevents */
@@ -2022,7 +2036,7 @@ API_RESULT BT_esl_set_subevent_data_pl
         err = bt_le_per_adv_set_subevent_data(adv_pawr, (uint8_t)num_subevents, sub_params);
         if (err)
         {
-            ESL_PL_TRC("[ESL PL]: Failed to set subevent data (err %d)", err);
+            ESL_PL_ERR("[ESL PL]: Failed to set subevent data (err %d)", err);
             retval = BT_ESL_API_FAILURE;
         }
     }

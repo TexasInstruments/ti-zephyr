@@ -567,6 +567,17 @@ API_RESULT appl_esl_ap_init(void)
     BT_esl_init(NULL);
 #endif /* BT_ESL_HAVE_DYNAMIC_GLOBAL_ARRAY */
 
+    /** Initialize ESL AP tag table */
+    appl_es_ap_tag_table_init();
+
+    /** Init ESL AP */
+    retval = BT_esl_ap_init(&appl_esl_callbacks, &appl_esl_tag_table);
+    if (retval != BT_ESL_AP_SUCCESS)
+    {
+        APPL_ESL_ERR("[APPL]: ESL AP initialization failed- retval 0x%04X\n", retval);
+        return retval;
+    }
+
     /**
      * This flag is disabled by default for now.
      * Starting of PADV for AP is from CLI Command.
@@ -586,16 +597,6 @@ API_RESULT appl_esl_ap_init(void)
     /** Start PAWR */
     BT_esl_start_periodic_adv_pl(padv_param);
 #endif /* BT_ESL_AP_AUTO_START_PADV */
-
-    /** Initialize ESL AP tag table */
-    appl_es_ap_tag_table_init();
-
-    /** Init ESL AP */
-    retval = BT_esl_ap_init(&appl_esl_callbacks, &appl_esl_tag_table);
-    if (retval != BT_ESL_AP_SUCCESS)
-    {
-        APPL_ESL_ERR("[APPL]: ESL AP initialization failed- retval 0x%04X\n", retval);
-    }
 
 #ifdef APPL_ESL_AP_OTS_SUPPORT
     /** Init OTS  */
