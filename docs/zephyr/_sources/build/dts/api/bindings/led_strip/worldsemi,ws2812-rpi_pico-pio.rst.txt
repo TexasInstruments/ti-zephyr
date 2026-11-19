@@ -1,0 +1,253 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: worldsemi,ws2812-rpi_pico-pio
+.. _dtbinding_worldsemi_ws2812_rpi_pico_pio:
+
+worldsemi,ws2812-rpi_pico-pio
+#############################
+
+.. sidebar:: Overview
+
+   :Name: ``worldsemi,ws2812-rpi_pico-pio``
+   :Vendor: :ref:`Worldsemi Co., Limited <dt_vendor_worldsemi>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=worldsemi,ws2812-rpi_pico-pio>` using
+               this compatible
+   :Driver: :zephyr_file:`drivers/led_strip/ws2812_rpi_pico_pio.c`
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   The pio node configured for ws2812.
+
+Properties
+**********
+
+Top level properties
+====================
+
+
+These property descriptions apply to "worldsemi,ws2812-rpi_pico-pio"
+nodes themselves. This page also describes child node
+properties in the following sections.
+
+.. tabs::
+
+   .. group-tab:: Node specific properties
+
+      Properties not inherited from the base binding file.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``bit-waveform``
+           - ``array``
+           - .. code-block:: none
+
+                This property defines the waveform for sending 1-bit data.
+                The program uses the first three elements of the array.
+                The T0 is equal to T0H in the datasheet.
+                The T2 is equal to T1L in the datasheet.
+                The T1 is equal to (T1H-T0H) or (T0L-T1L) in the datasheet.
+
+                Code-0
+                   +------+                 +---
+                   |      |                 |
+                   |  T0  |      T1+T2      |
+                   |      |                 |
+                ---+      +-----------------+
+
+                Code-1
+                   +---------------+        +---
+                   |               |        |
+                   |     T0+T1     |   T2   |
+                   |               |        |
+                ---+               +--------+
+
+
+                The frequency determines the wave period.
+                The T0～T2 means ratio in one period.
+
+                For example, T0=3, T1=3, T2=4 and the frequency is 800kHz case,
+                T0H is
+                  (1 / 800kHz) * (3/10) = 375ns
+                T0L is
+                  (1 / 800kHz) * ((4+3)/10) = 875ns
+
+
+
+         * - ``pinctrl-0``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the first state. Content is specific to the
+                selected pin controller driver implementation.
+
+
+
+         * - ``pinctrl-1``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the second state. See pinctrl-0.
+
+
+
+         * - ``pinctrl-2``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the third state. See pinctrl-0.
+
+
+
+         * - ``pinctrl-3``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the fourth state. See pinctrl-0.
+
+
+
+         * - ``pinctrl-4``
+           - ``phandles``
+           - .. code-block:: none
+
+                Pin configuration/s for the fifth state. See pinctrl-0.
+
+
+
+         * - ``pinctrl-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Names for the provided states. The number of names needs to match the
+                number of states.
+
+
+
+
+
+   .. group-tab:: Deprecated node specific properties
+
+      Deprecated properties not inherited from the base binding file.
+
+      (None)
+
+   .. group-tab:: Base properties
+
+      Properties inherited from the base binding file, which defines
+      common properties that may be set on many nodes. Not all of these
+      may apply to the "worldsemi,ws2812-rpi_pico-pio" compatible.
+
+      (None)
+
+
+Child node properties
+=====================
+
+.. list-table::
+   :widths: 1 1 4
+   :header-rows: 1
+
+   * - Name
+     - Type
+     - Details
+
+   * - ``gpios``
+     - ``phandle-array``
+     - .. code-block:: none
+
+          Inherited from ws2812-gpio.yaml.
+
+          Note: This driver does not configure the output pin.
+          You need to configure the pin with pinctrl that is in the parent node configuration
+          for use by PIO. This property only uses the GPIO pin number and ignores flags.
+
+
+
+       This property is **required**.
+
+   * - ``frequency``
+     - ``int``
+     - .. code-block:: none
+
+          Specify the number of times a waveform representing 1 bit is
+          transmitted per second. It is same meaning as bit-per-seconds.
+          WS2812 works with 800000. Set the value 400000 if use with WS2811.
+
+
+
+   * - ``dmas``
+     - ``phandle-array``
+     - .. code-block:: none
+
+          A DMA channel specifier for the tx channel of this LED strip.
+
+
+
+   * - ``dma-names``
+     - ``string-array``
+     - .. code-block:: none
+
+          The name given to the DMA channel specifier, must be `tx` for this LED strip.
+
+
+
+   * - ``reset-delay``
+     - ``int``
+     - .. code-block:: none
+
+          Minimum delay to wait (in microseconds) to make sure that the strip has
+          latched the signal. If omitted, a default value of 8 microseconds is used.
+          This default is good for the WS2812 controllers. Note that despite the
+          WS2812 datasheet states that a 50 microseconds delay is required, it seems
+          6 microseconds is enough. The default is set to 8 microseconds just to be
+          safe.
+
+
+
+       Default value: ``8``
+
+   * - ``chain-length``
+     - ``int``
+     - .. code-block:: none
+
+          The number of devices in the daisy-chain.
+
+
+
+       This property is **required**.
+
+   * - ``color-mapping``
+     - ``array``
+     - .. code-block:: none
+
+          Channel to color mapping (or pixel order).
+
+          For example a GRB channel to color mapping would be
+
+             color-mapping = <LED_COLOR_ID_GREEN
+                              LED_COLOR_ID_RED
+                              LED_COLOR_ID_BLUE>;
+
+
+
+       This property is **required**.
+

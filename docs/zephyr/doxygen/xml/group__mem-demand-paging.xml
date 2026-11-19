@@ -1,0 +1,358 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="group__mem-demand-paging" kind="group">
+    <compoundname>mem-demand-paging</compoundname>
+    <title>Demand Paging APIs</title>
+    <innerclass refid="structk__mem__paging__stats__t" prot="public">k_mem_paging_stats_t</innerclass>
+    <innerclass refid="structk__mem__paging__histogram__t" prot="public">k_mem_paging_histogram_t</innerclass>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="group__mem-demand-paging_1ga0b18037209b4d8b5964bd9a1d760f703" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int k_mem_page_out</definition>
+        <argsstring>(void *addr, size_t size)</argsstring>
+        <name>k_mem_page_out</name>
+        <param>
+          <type>void *</type>
+          <declname>addr</declname>
+        </param>
+        <param>
+          <type><ref refid="retained__mem_8h_1a36713c339c3c5ec6d6bd481480bdb6f9" kindref="member">size_t</ref></type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+<para>Evict a page-aligned virtual memory region to the backing store. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Useful if it is known that a memory region will not be used for some time. All the data pages within the specified region will be evicted to the backing store if they weren&apos;t already, with their associated page frames marked as available for mappings or page-ins.</para>
+<para>None of the associated page frames mapped to the provided region should be pinned.</para>
+<para>Note that there are no guarantees how long these pages will be evicted, they could take page faults immediately.</para>
+<para>If CONFIG_DEMAND_PAGING_ALLOW_IRQ is enabled, this function may not be called by ISRs as the backing store may be in-use.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>addr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Base page-aligned virtual address </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Page-aligned data region size </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>0</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Success </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-ENOMEM</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Insufficient space in backing store to satisfy request. The region may be partially paged out. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/kernel/mm/demand_paging.h" line="107" column="5" declfile="zephyr/kernel/mm/demand_paging.h" declline="107" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__mem-demand-paging_1gab36c36a4e230677d2090514f7a34b408" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void k_mem_page_in</definition>
+        <argsstring>(void *addr, size_t size)</argsstring>
+        <name>k_mem_page_in</name>
+        <param>
+          <type>void *</type>
+          <declname>addr</declname>
+        </param>
+        <param>
+          <type><ref refid="retained__mem_8h_1a36713c339c3c5ec6d6bd481480bdb6f9" kindref="member">size_t</ref></type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+<para>Load a virtual data region into memory. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>After the function completes, all the page frames associated with this function will be paged in. However, they are not guaranteed to stay there. This is useful if the region is known to be used soon.</para>
+<para>If CONFIG_DEMAND_PAGING_ALLOW_IRQ is enabled, this function may not be called by ISRs as the backing store may be in-use.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>addr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Base page-aligned virtual address </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Page-aligned data region size </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/kernel/mm/demand_paging.h" line="122" column="6" declfile="zephyr/kernel/mm/demand_paging.h" declline="122" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group__mem-demand-paging_1ga5f2d422edde7d366e81a870ce057589f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void k_mem_pin</definition>
+        <argsstring>(void *addr, size_t size)</argsstring>
+        <name>k_mem_pin</name>
+        <param>
+          <type>void *</type>
+          <declname>addr</declname>
+        </param>
+        <param>
+          <type><ref refid="retained__mem_8h_1a36713c339c3c5ec6d6bd481480bdb6f9" kindref="member">size_t</ref></type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+<para>Pin an aligned virtual data region, paging in as necessary. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>After the function completes, all the page frames associated with this region will be resident in memory and pinned such that they stay that way. This is a stronger version of z_mem_page_in().</para>
+<para>If CONFIG_DEMAND_PAGING_ALLOW_IRQ is enabled, this function may not be called by ISRs as the backing store may be in-use.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>addr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Base page-aligned virtual address </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Page-aligned data region size </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/kernel/mm/demand_paging.h" line="137" column="6" declfile="zephyr/kernel/mm/demand_paging.h" declline="137" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group__mem-demand-paging_1ga3278aae5e24733c722b7d83c4b17dab3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void k_mem_unpin</definition>
+        <argsstring>(void *addr, size_t size)</argsstring>
+        <name>k_mem_unpin</name>
+        <param>
+          <type>void *</type>
+          <declname>addr</declname>
+        </param>
+        <param>
+          <type><ref refid="retained__mem_8h_1a36713c339c3c5ec6d6bd481480bdb6f9" kindref="member">size_t</ref></type>
+          <declname>size</declname>
+        </param>
+        <briefdescription>
+<para>Un-pin an aligned virtual data region. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>After the function completes, all the page frames associated with this region will be no longer marked as pinned. This does not evict the region, follow this with z_mem_page_out() if you need that.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>addr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Base page-aligned virtual address </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Page-aligned data region size </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/kernel/mm/demand_paging.h" line="149" column="6" declfile="zephyr/kernel/mm/demand_paging.h" declline="149" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group__mem-demand-paging_1ga52ad88e0c0eed2aa27331bfd4707b7ec" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void k_mem_paging_stats_get</definition>
+        <argsstring>(struct k_mem_paging_stats_t *stats)</argsstring>
+        <name>k_mem_paging_stats_get</name>
+        <param>
+          <type>struct <ref refid="structk__mem__paging__stats__t" kindref="compound">k_mem_paging_stats_t</ref> *</type>
+          <declname>stats</declname>
+        </param>
+        <briefdescription>
+<para>Get the paging statistics since system startup. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This populates the paging statistics struct being passed in as argument.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="inout">stats</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Paging statistics struct to be filled. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/kernel/mm/demand_paging.h" line="159" column="7" declfile="zephyr/kernel/mm/demand_paging.h" declline="159" declcolumn="7"/>
+      </memberdef>
+      <memberdef kind="function" id="group__mem-demand-paging_1gafad6b39cb2faf3bb416cd4d3faaa8d8c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void k_mem_paging_thread_stats_get</definition>
+        <argsstring>(struct k_thread *thread, struct k_mem_paging_stats_t *stats)</argsstring>
+        <name>k_mem_paging_thread_stats_get</name>
+        <param>
+          <type>struct <ref refid="structk__thread" kindref="compound">k_thread</ref> *</type>
+          <declname>thread</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structk__mem__paging__stats__t" kindref="compound">k_mem_paging_stats_t</ref> *</type>
+          <declname>stats</declname>
+        </param>
+        <briefdescription>
+<para>Get the paging statistics since system startup for a thread. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This populates the paging statistics struct being passed in as argument for a particular thread.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">thread</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Thread </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="inout">stats</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Paging statistics struct to be filled. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/kernel/mm/demand_paging.h" line="172" column="6" declfile="zephyr/kernel/mm/demand_paging.h" declline="172" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group__mem-demand-paging_1gaec64d019d819b00c7bc3804aac269199" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void k_mem_paging_histogram_eviction_get</definition>
+        <argsstring>(struct k_mem_paging_histogram_t *hist)</argsstring>
+        <name>k_mem_paging_histogram_eviction_get</name>
+        <param>
+          <type>struct <ref refid="structk__mem__paging__histogram__t" kindref="compound">k_mem_paging_histogram_t</ref> *</type>
+          <declname>hist</declname>
+        </param>
+        <briefdescription>
+<para>Get the eviction timing histogram. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This populates the timing histogram struct being passed in as argument.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="inout">hist</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Timing histogram struct to be filled. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/kernel/mm/demand_paging.h" line="183" column="7" declfile="zephyr/kernel/mm/demand_paging.h" declline="183" declcolumn="7"/>
+      </memberdef>
+      <memberdef kind="function" id="group__mem-demand-paging_1ga1da0a643e8f85f98e29288e441a37dfa" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void k_mem_paging_histogram_backing_store_page_in_get</definition>
+        <argsstring>(struct k_mem_paging_histogram_t *hist)</argsstring>
+        <name>k_mem_paging_histogram_backing_store_page_in_get</name>
+        <param>
+          <type>struct <ref refid="structk__mem__paging__histogram__t" kindref="compound">k_mem_paging_histogram_t</ref> *</type>
+          <declname>hist</declname>
+        </param>
+        <briefdescription>
+<para>Get the backing store page-in timing histogram. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This populates the timing histogram struct being passed in as argument.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="inout">hist</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Timing histogram struct to be filled. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/kernel/mm/demand_paging.h" line="194" column="7" declfile="zephyr/kernel/mm/demand_paging.h" declline="194" declcolumn="7"/>
+      </memberdef>
+      <memberdef kind="function" id="group__mem-demand-paging_1gae4f80d14f88a46ddb9aeb7afba861864" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void k_mem_paging_histogram_backing_store_page_out_get</definition>
+        <argsstring>(struct k_mem_paging_histogram_t *hist)</argsstring>
+        <name>k_mem_paging_histogram_backing_store_page_out_get</name>
+        <param>
+          <type>struct <ref refid="structk__mem__paging__histogram__t" kindref="compound">k_mem_paging_histogram_t</ref> *</type>
+          <declname>hist</declname>
+        </param>
+        <briefdescription>
+<para>Get the backing store page-out timing histogram. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This populates the timing histogram struct being passed in as argument.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="inout">hist</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Timing histogram struct to be filled. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/kernel/mm/demand_paging.h" line="205" column="7" declfile="zephyr/kernel/mm/demand_paging.h" declline="205" declcolumn="7"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

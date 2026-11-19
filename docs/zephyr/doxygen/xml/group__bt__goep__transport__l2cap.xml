@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="group__bt__goep__transport__l2cap" kind="group">
+    <compoundname>bt_goep_transport_l2cap</compoundname>
+    <title>GOEP transport L2CAP</title>
+    <innerclass refid="structbt__goep__transport__l2cap__server" prot="public">bt_goep_transport_l2cap_server</innerclass>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="group__bt__goep__transport__l2cap_1ga5f7a699eb8c857c6b6b99c506953f176" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int bt_goep_transport_l2cap_server_register</definition>
+        <argsstring>(struct bt_goep_transport_l2cap_server *server)</argsstring>
+        <name>bt_goep_transport_l2cap_server_register</name>
+        <param>
+          <type>struct <ref refid="structbt__goep__transport__l2cap__server" kindref="compound">bt_goep_transport_l2cap_server</ref> *</type>
+          <declname>server</declname>
+        </param>
+        <briefdescription>
+<para>Register GOEP L2CAP server. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Register GOEP server for a L2CAP PSM <ref refid="structbt__l2cap__server_1a07925dda8566ee7518b1809725e1b110" kindref="member">bt_l2cap_server::psm</ref>. each new connection is authorized using the <ref refid="structbt__goep__transport__l2cap__server_1a7441985cb5ce8e2f961dcd5c5175f9c8" kindref="member">bt_goep_transport_l2cap_server::accept</ref> callback which in case of success shall allocate the GOEP structure <ref refid="group__bt__goep" kindref="compound">Generic Object Exchange Profile (GOEP)</ref> to be used by the new GOEP connection.</para>
+<para>For L2CAP PSM, for fixed, SIG-assigned PSMs (in the range 0x0001-0x0eff) the PSM should not be used. For dynamic PSMs (in the range 0x1000-0xffff), <ref refid="structbt__l2cap__server_1a07925dda8566ee7518b1809725e1b110" kindref="member">bt_l2cap_server::psm</ref> may be pre-set to a given value (not recommended however). And it shall have the least significant bit of the most significant octet equal to 0 and the least significant bit of all other octets equal to 1. Or be left as 0, in which case the channel will be auto-allocated by L2CAP.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>server</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Server structure.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 in case of success or negative value in case of error. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/bluetooth/classic/goep.h" line="288" column="5" declfile="zephyr/bluetooth/classic/goep.h" declline="288" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__bt__goep__transport__l2cap_1ga4730911b9e0ddb5c66575d0529128aee" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int bt_goep_transport_l2cap_connect</definition>
+        <argsstring>(struct bt_conn *conn, struct bt_goep *goep, uint16_t psm)</argsstring>
+        <name>bt_goep_transport_l2cap_connect</name>
+        <param>
+          <type>struct <ref refid="structbt__conn" kindref="compound">bt_conn</ref> *</type>
+          <declname>conn</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structbt__goep" kindref="compound">bt_goep</ref> *</type>
+          <declname>goep</declname>
+        </param>
+        <param>
+          <type><ref refid="stdint_8h_1a5debae8b2a1ec20a6694c0c443ee399e" kindref="member">uint16_t</ref></type>
+          <declname>psm</declname>
+        </param>
+        <briefdescription>
+<para>Connect GOEP transport over L2CAP. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Connect GOEP transport by L2CAP, once the connection is completed, the callback <ref refid="structbt__goep__transport__ops_1a46068be01ea341e1b74163bea0003e2e" kindref="member">bt_goep_transport_ops::connected</ref> is called. If the connection is rejected, <ref refid="structbt__goep__transport__ops_1a5f8ce2be1a4c87f4e36d47dcc3aa6f3c" kindref="member">bt_goep_transport_ops::disconnected</ref> callback is called instead. The GOEP object is passed (over an address of it) as second parameter, application should create transport dedicated GOEP object <ref refid="group__bt__goep" kindref="compound">Generic Object Exchange Profile (GOEP)</ref>. Then pass to this API the location (address). Before calling the API, <ref refid="structbt__goep_1abca52709a4b2535eccecb632a1a6f29d" kindref="member">bt_goep::transport_ops</ref> should be initialized with valid address of type <ref refid="structbt__goep__transport__ops" kindref="compound">bt_goep_transport_ops</ref> object. The field <computeroutput>mtu</computeroutput> of <ref refid="structbt__obex_1ae495d004f2567d903616b8a1e1187de8" kindref="member">bt_obex::rx</ref> could be passed with valid value. Or set it to zero, the mtu will be calculated according to <computeroutput>CONFIG_BT_GOEP_L2CAP_MTU</computeroutput>. The L2CAP PSM is passed as third parameter. It is the RFCOMM channel of RFCOMM server of peer device.</para>
+<para><simplesect kind="warning"><para>It is the responsibility of the caller to zero out the parent of the GOEP object.</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>conn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Connection object. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>goep</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>GOEP object. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>psm</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>L2CAP PSM to connect to.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 in case of success or negative value in case of error. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/bluetooth/classic/goep.h" line="313" column="5" declfile="zephyr/bluetooth/classic/goep.h" declline="313" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__bt__goep__transport__l2cap_1ga48b039f1f5fa1a8c15449a061396c668" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int bt_goep_transport_l2cap_disconnect</definition>
+        <argsstring>(struct bt_goep *goep)</argsstring>
+        <name>bt_goep_transport_l2cap_disconnect</name>
+        <param>
+          <type>struct <ref refid="structbt__goep" kindref="compound">bt_goep</ref> *</type>
+          <declname>goep</declname>
+        </param>
+        <briefdescription>
+<para>Disconnect GOEP transport from L2CAP channel. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Disconnect GOEP L2CAP transport.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>goep</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>GOEP object.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 in case of success or negative value in case of error. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/bluetooth/classic/goep.h" line="323" column="5" declfile="zephyr/bluetooth/classic/goep.h" declline="323" declcolumn="5"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

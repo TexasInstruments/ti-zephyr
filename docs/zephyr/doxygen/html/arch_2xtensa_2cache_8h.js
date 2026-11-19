@@ -1,0 +1,25 @@
+var arch_2xtensa_2cache_8h =
+[
+    [ "arch_cache_cached_ptr_get", "arch_2xtensa_2cache_8h.html#afa8a52786bd86cb3305b9a4d37c5f27c", null ],
+    [ "arch_cache_init", "arch_2xtensa_2cache_8h.html#a183fd26e5a8a478562d39c6fbe6a85bc", null ],
+    [ "arch_cache_is_ptr_cached", "arch_2xtensa_2cache_8h.html#a7e8218e05aa541964a0387bbe28a40e5", null ],
+    [ "arch_cache_is_ptr_uncached", "arch_2xtensa_2cache_8h.html#a8098fec4edbd77142b9f94f04bc61e4e", null ],
+    [ "arch_cache_uncached_ptr_get", "arch_2xtensa_2cache_8h.html#adf2d51455bdd6ff36609c6c68fe0fdc7", null ],
+    [ "arch_dcache_disable", "arch_2xtensa_2cache_8h.html#af789498070dadadafd15af00900fae8b", null ],
+    [ "arch_dcache_enable", "arch_2xtensa_2cache_8h.html#a2d311a83cbd78a7d959cc0216d42701b", null ],
+    [ "arch_dcache_flush_all", "arch_2xtensa_2cache_8h.html#a3386effa850b7b46773a7ca082d2f695", null ],
+    [ "arch_dcache_flush_and_invd_all", "arch_2xtensa_2cache_8h.html#a61de91dc463ddc8f53855bbb68776752", null ],
+    [ "arch_dcache_flush_and_invd_range", "arch_2xtensa_2cache_8h.html#a83106c2dd8004a0d308f26265f20a2c3", null ],
+    [ "arch_dcache_flush_range", "arch_2xtensa_2cache_8h.html#a67b31dd2c4be8f94d95a7eb9d5f9b3c9", null ],
+    [ "arch_dcache_invd_all", "arch_2xtensa_2cache_8h.html#a8a5666d8ab2fd898413d1b836c69adc3", null ],
+    [ "arch_dcache_invd_range", "arch_2xtensa_2cache_8h.html#a92b35e4648bac37f0ca709054320c125", null ],
+    [ "arch_icache_disable", "arch_2xtensa_2cache_8h.html#a3529c39dad808265db75036938ea8a61", null ],
+    [ "arch_icache_enable", "arch_2xtensa_2cache_8h.html#a4420e7af2ca86b8da4b3d720d61cbf3b", null ],
+    [ "arch_icache_flush_all", "arch_2xtensa_2cache_8h.html#ae6cb0ef4fbcbffc551daf428bffbb54b", null ],
+    [ "arch_icache_flush_and_invd_all", "arch_2xtensa_2cache_8h.html#a51cab7fde80d6c07621ac721f73d8e1c", null ],
+    [ "arch_icache_flush_and_invd_range", "arch_2xtensa_2cache_8h.html#a731ad4f69a6d52df276d09a662ea5f0a", null ],
+    [ "arch_icache_flush_range", "arch_2xtensa_2cache_8h.html#aa676959f8b53e0860be8a92b2ae0e56f", null ],
+    [ "arch_icache_invd_all", "arch_2xtensa_2cache_8h.html#afbd63018906d9d721eb752340bc111d9", null ],
+    [ "arch_icache_invd_range", "arch_2xtensa_2cache_8h.html#ad1fcc25b06988a18ae2d3ba28d26faea", null ],
+    [ "arch_icache_line_size_get", "arch_2xtensa_2cache_8h.html#aafeb5923d0e811759cee20e5f7dcb40a", null ]
+];

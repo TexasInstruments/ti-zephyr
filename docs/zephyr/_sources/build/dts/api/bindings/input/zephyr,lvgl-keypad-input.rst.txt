@@ -1,0 +1,129 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: zephyr,lvgl-keypad-input
+.. _dtbinding_zephyr_lvgl_keypad_input:
+
+zephyr,lvgl-keypad-input
+########################
+
+.. sidebar:: Overview
+
+   :Name: ``zephyr,lvgl-keypad-input``
+   :Vendor: :ref:`Zephyr Project <dt_vendor_zephyr>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=zephyr,lvgl-keypad-input>` using
+               this compatible
+   :Driver: :zephyr_file:`modules/lvgl/input/lvgl_keypad_input.c`
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   LVGL keypad indev pseudo-device
+
+   Listens for input events and routes the
+   lv_indev_data_t to the underlying keypad lv_indev_t managed by LVGL.
+
+   The property input-codes can be used to setup a mapping of input codes
+   to the lvgl keys. There are lvgl keys that have a special function:
+   https://docs.lvgl.io/master/overview/indev.html#keys.
+
+   The pseudo device can be associated to a specific device to listen only
+   for events from that device.
+
+Examples
+********
+
+.. code-block:: dts
+
+   #include <zephyr/dt-bindings/lvgl/lvgl.h>
+
+   keypad {
+           compatible = "zephyr,lvgl-keypad-input";
+           input = <&buttons>;
+           input-codes = <INPUT_KEY_1 INPUT_KEY_2>;
+           lvgl-codes = <LV_KEY_NEXT LV_KEY_PREV>;
+   };
+
+
+Properties
+**********
+
+.. tabs::
+
+   .. group-tab:: Node specific properties
+
+      Properties not inherited from the base binding file.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``input-codes``
+           - ``array``
+           - .. code-block:: none
+
+                Array of input event key codes (INPUT_KEY_* or INPUT_BTN_*).
+
+
+
+             This property is **required**.
+
+         * - ``lvgl-codes``
+           - ``array``
+           - .. code-block:: none
+
+                Array of mapped lvgl keys.
+
+
+
+             This property is **required**.
+
+         * - ``input``
+           - ``phandle``
+           - .. code-block:: none
+
+                Input device phandle.
+
+
+
+         * - ``display``
+           - ``phandle``
+           - .. code-block:: none
+
+                Phandle of the display device to pass input commands to.
+                Used in multi-display setup.
+
+
+
+
+
+   .. group-tab:: Deprecated node specific properties
+
+      Deprecated properties not inherited from the base binding file.
+
+      (None)
+
+   .. group-tab:: Base properties
+
+      Properties inherited from the base binding file, which defines
+      common properties that may be set on many nodes. Not all of these
+      may apply to the "zephyr,lvgl-keypad-input" compatible.
+
+      (None)
+
+

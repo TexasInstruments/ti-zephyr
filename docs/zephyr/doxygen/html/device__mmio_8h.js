@@ -1,0 +1,28 @@
+var device__mmio_8h =
+[
+    [ "DEVICE_MMIO_GET", "group__device-mmio-single.html#ga8cb49d87ef6dc3b017d5b68860530b63", null ],
+    [ "DEVICE_MMIO_IS_IN_RAM", "group__device-mmio.html#gabdae30483b01d470c357571e088dc51a", null ],
+    [ "DEVICE_MMIO_MAP", "group__device-mmio-single.html#ga8e15770c4ec118edbefc1ef95f1ace80", null ],
+    [ "DEVICE_MMIO_NAMED_GET", "group__device-mmio-named.html#ga5ca4b0cf0637f475b5da3b1ec0a7c995", null ],
+    [ "DEVICE_MMIO_NAMED_MAP", "group__device-mmio-named.html#ga1059bb0020656ce6597e29c7dd6680c1", null ],
+    [ "DEVICE_MMIO_NAMED_RAM", "group__device-mmio-named.html#ga92b6570b0f7bd370bbdfbc4e474151e4", null ],
+    [ "DEVICE_MMIO_NAMED_RAM_PTR", "group__device-mmio-named.html#ga42737f178f205bd90d4e523ae5d67a09", null ],
+    [ "DEVICE_MMIO_NAMED_ROM", "group__device-mmio-named.html#gae3ad012160f657451a3f47487510bffb", null ],
+    [ "DEVICE_MMIO_NAMED_ROM_INIT", "group__device-mmio-named.html#ga727a1946d2a315af720706a9c9e80465", null ],
+    [ "DEVICE_MMIO_NAMED_ROM_INIT_BY_NAME", "group__device-mmio-named.html#gada46ff611e373bdb26a9473ec7cb0380", null ],
+    [ "DEVICE_MMIO_NAMED_ROM_PTR", "group__device-mmio-named.html#ga7f018db0d820b72a782759a4b674de94", null ],
+    [ "DEVICE_MMIO_RAM", "group__device-mmio-single.html#ga47e037f86108c8da12d8a9b9a35e6ad5", null ],
+    [ "DEVICE_MMIO_RAM_PTR", "group__device-mmio-single.html#ga63f871dc2ec4c89839a1782e86e292bf", null ],
+    [ "DEVICE_MMIO_ROM", "group__device-mmio-single.html#ga1dfb620f6b3c7ee9b2bc54044d0bc875", null ],
+    [ "DEVICE_MMIO_ROM_INIT", "group__device-mmio-single.html#ga023516c60725f8c6d62110f74af22549", null ],
+    [ "DEVICE_MMIO_ROM_PTR", "group__device-mmio-single.html#ga6246f4c8bc1542d8960d3bda99a592e5", null ],
+    [ "DEVICE_MMIO_TOPLEVEL", "group__device-mmio-toplevel.html#gad60e6840b8a9c18c19693da0028c2488", null ],
+    [ "DEVICE_MMIO_TOPLEVEL_DECLARE", "group__device-mmio-toplevel.html#ga8a712886defe59972f4cf00bb2266f95", null ],
+    [ "DEVICE_MMIO_TOPLEVEL_GET", "group__device-mmio-toplevel.html#gaad7ad99277cf2be684bd70c46d358338", null ],
+    [ "DEVICE_MMIO_TOPLEVEL_MAP", "group__device-mmio-toplevel.html#ga6533dfab1e1bab2a11654abf4231379b", null ],
+    [ "DEVICE_MMIO_TOPLEVEL_RAM_PTR", "group__device-mmio-toplevel.html#ga746bfe0c817dbd60f1c1f60d47f1560e", null ],
+    [ "DEVICE_MMIO_TOPLEVEL_ROM_PTR", "group__device-mmio-toplevel.html#ga2877cda5f9780ecff45a4abe150e2504", null ],
+    [ "DEVICE_MMIO_TOPLEVEL_STATIC", "group__device-mmio-toplevel.html#ga80456633db67dbb23d32e2ae7cc93512", null ],
+    [ "device_map", "group__device-mmio.html#ga6b4a9841a5176104e1b63f7475d3d2a2", null ],
+    [ "device_unmap", "group__device-mmio.html#ga16070be695cec4ebc01915a3dbc1adf8", null ]
+];

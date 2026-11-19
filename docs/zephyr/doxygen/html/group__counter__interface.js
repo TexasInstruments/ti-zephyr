@@ -1,0 +1,78 @@
+var group__counter__interface =
+[
+    [ "Counter Driver Backend API", "group__counter__interface__backend.html", "group__counter__interface__backend" ],
+    [ "TI AM3352 EQEP counter", "group__ti__am3352__eqep__interface.html", "group__ti__am3352__eqep__interface" ],
+    [ "counter.h", "drivers_2counter_8h.html", null ],
+    [ "counter_alarm_cfg", "structcounter__alarm__cfg.html", [
+      [ "callback", "structcounter__alarm__cfg.html#aeef670ee73dd4d7d65e02a66313b092d", null ],
+      [ "flags", "structcounter__alarm__cfg.html#ab043cd1ea9be54449bb75c4a5affe620", null ],
+      [ "ticks", "structcounter__alarm__cfg.html#a85b6b86d7a82f2e238000dd31ff1f779", null ],
+      [ "user_data", "structcounter__alarm__cfg.html#aeaf2bd9042a28b626e0972aff4ad09e5", null ]
+    ] ],
+    [ "counter_top_cfg", "structcounter__top__cfg.html", [
+      [ "callback", "structcounter__top__cfg.html#adf1cf3a9c67278f5f5f1cba72f6dd934", null ],
+      [ "flags", "structcounter__top__cfg.html#ad5caa9f1c80badf14c2c313e60e3e8e6", null ],
+      [ "ticks", "structcounter__top__cfg.html#abb60a9d468fa6d6802ba56a02a515751", null ],
+      [ "user_data", "structcounter__top__cfg.html#af033941769c710e82cf9dd9f12ff011c", null ]
+    ] ],
+    [ "counter_config_info", "structcounter__config__info.html", [
+      [ "channels", "structcounter__config__info.html#afe2281d1909fa85978077558d6f4b71f", null ],
+      [ "flags", "structcounter__config__info.html#ab38d95647388c700de372882db372d6c", null ],
+      [ "freq", "structcounter__config__info.html#a4cae02b246a92e5d207d5b654d059322", null ],
+      [ "max_top_value", "structcounter__config__info.html#a0465be87680d1a50e1ae7a68c61caaac", null ]
+    ] ],
+    [ "counter_alarm_cfg_64", "structcounter__alarm__cfg__64.html", [
+      [ "callback", "structcounter__alarm__cfg__64.html#ab1de8ba95299a2fa19bec23c78c834c3", null ],
+      [ "flags", "structcounter__alarm__cfg__64.html#a8e97e4c5bd485dfa5f146c57cfb81bef", null ],
+      [ "ticks", "structcounter__alarm__cfg__64.html#ad7c6734da16d45988fb826b6661607bd", null ],
+      [ "user_data", "structcounter__alarm__cfg__64.html#a4fc655a8e5b3e7ad3a813314e729f458", null ]
+    ] ],
+    [ "counter_top_cfg_64", "structcounter__top__cfg__64.html", [
+      [ "callback", "structcounter__top__cfg__64.html#aae6cf487ede96c111ff2782b5cfbbf4d", null ],
+      [ "flags", "structcounter__top__cfg__64.html#ab66e50f8109034a491798a30843c4958", null ],
+      [ "ticks", "structcounter__top__cfg__64.html#ad0eb25abcfbc34ef6f2a2a56ea41ac48", null ],
+      [ "user_data", "structcounter__top__cfg__64.html#a07a73bb0101253620b60c037649e48a9", null ]
+    ] ],
+    [ "COUNTER_ALARM_CFG_ABSOLUTE", "group__counter__interface.html#ga4842d212424f92c5a3b39116ec6c2fd2", null ],
+    [ "COUNTER_ALARM_CFG_EXPIRE_WHEN_LATE", "group__counter__interface.html#ga87dffd2a1cadedfc30e7d39af547c336", null ],
+    [ "COUNTER_CONFIG_INFO_COUNT_UP", "group__counter__interface.html#ga8fa40ff6404936e5b05bb9c67871f70c", null ],
+    [ "COUNTER_GUARD_PERIOD_LATE_TO_SET", "group__counter__interface.html#ga6d955e603067b5c50e0fd9761e2e611d", null ],
+    [ "COUNTER_TOP_CFG_DONT_RESET", "group__counter__interface.html#ga9a30c647361912c2ce8e0566cf53dea7", null ],
+    [ "COUNTER_TOP_CFG_RESET_WHEN_LATE", "group__counter__interface.html#ga45562a4ddd743f74213a03d83a774b11", null ],
+    [ "counter_alarm_callback_64_t", "group__counter__interface.html#ga4d5325d400fe4bb481ba054aca6da5e8", null ],
+    [ "counter_alarm_callback_t", "group__counter__interface.html#ga36c570c3e57e635753d163400e437b77", null ],
+    [ "counter_top_callback_t", "group__counter__interface.html#ga3686fe1f86a53469659f79897e4e1baf", null ],
+    [ "counter_cancel_channel_alarm", "group__counter__interface.html#gade0bb97c0dfa03676d11ee47601d4cee", null ],
+    [ "counter_get_frequency", "group__counter__interface.html#ga8d3d6f856eef27a80cc2697931341af2", null ],
+    [ "counter_get_frequency_64", "group__counter__interface.html#ga402307a7616fba985e95992483784e51", null ],
+    [ "counter_get_guard_period", "group__counter__interface.html#ga55a101d237c8472ad5cacf65363c536f", null ],
+    [ "counter_get_guard_period_64", "group__counter__interface.html#ga3ec16fa41064cd34742fa602ce85e791", null ],
+    [ "counter_get_max_top_value", "group__counter__interface.html#gafab2a55048349e33c821a7f826615ea3", null ],
+    [ "counter_get_max_top_value_64", "group__counter__interface.html#ga3b91bffb67d4e593279d2f1a5013988d", null ],
+    [ "counter_get_num_of_channels", "group__counter__interface.html#ga0c9801b13275de0e1b93650bb1ca6a9d", null ],
+    [ "counter_get_pending_int", "group__counter__interface.html#ga1d33072b8e9732fcf6e8a917f98d6db8", null ],
+    [ "counter_get_top_value", "group__counter__interface.html#ga13d14903a03ab10062002a81b8302424", null ],
+    [ "counter_get_top_value_64", "group__counter__interface.html#ga9a6b36153ba778556d00ec83426d8f91", null ],
+    [ "counter_get_value", "group__counter__interface.html#ga8f6b1b4ee7dc20e6230a22bfcb0e6f9d", null ],
+    [ "counter_get_value_64", "group__counter__interface.html#ga2dcd0eb10d49c4e5e5024ed75a8e3e86", null ],
+    [ "counter_is_counting_up", "group__counter__interface.html#gab95ae0e8d89e35e477cbf7d67e18016d", null ],
+    [ "counter_ns_to_ticks", "group__counter__interface.html#gae93c004c2969c657a95560ab237fdeb2", null ],
+    [ "counter_ns_to_ticks_64", "group__counter__interface.html#ga27dcc764d0768e55b63773283896eaef", null ],
+    [ "counter_reset", "group__counter__interface.html#ga225705f1f6f3bef127de8ef84dcfba4e", null ],
+    [ "counter_set_channel_alarm", "group__counter__interface.html#ga00a2857d993a84a56e8e222727f3d85e", null ],
+    [ "counter_set_channel_alarm_64", "group__counter__interface.html#ga1b67964234ddff44c624179f39a31130", null ],
+    [ "counter_set_guard_period", "group__counter__interface.html#gab6851411dabf191d3391715d632111b0", null ],
+    [ "counter_set_guard_period_64", "group__counter__interface.html#gab9a87f652d89d09109997a9fc897199e", null ],
+    [ "counter_set_top_value", "group__counter__interface.html#ga2d92f5564cdd1ecc56029c3a45e666f0", null ],
+    [ "counter_set_top_value_64", "group__counter__interface.html#ga31cf9011d4432ca71475d49aefb4cc1e", null ],
+    [ "counter_set_value", "group__counter__interface.html#ga673902787840e37bc23182dd4cb85fa9", null ],
+    [ "counter_set_value_64", "group__counter__interface.html#ga943292a4c762db0bf29b4ce04f6e1eb3", null ],
+    [ "counter_start", "group__counter__interface.html#ga103e0673e31475adcd173601058c72cd", null ],
+    [ "counter_stop", "group__counter__interface.html#gafaa8198ccff5ffc0491a1424d090c82d", null ],
+    [ "counter_ticks_to_ns", "group__counter__interface.html#gadb63f52b261213c4c88c781ef6ddac32", null ],
+    [ "counter_ticks_to_ns_64", "group__counter__interface.html#ga500d3c9cbb542c7203382526f5723701", null ],
+    [ "counter_ticks_to_us", "group__counter__interface.html#ga9fbcb710091084e638c45f62c25d954c", null ],
+    [ "counter_ticks_to_us_64", "group__counter__interface.html#ga2239169a2c914af173d23a846ef69a59", null ],
+    [ "counter_us_to_ticks", "group__counter__interface.html#gab73238b8d52ed763ff7abf91013b601b", null ],
+    [ "counter_us_to_ticks_64", "group__counter__interface.html#ga36553f5daf3291157449f95043c2d698", null ]
+];

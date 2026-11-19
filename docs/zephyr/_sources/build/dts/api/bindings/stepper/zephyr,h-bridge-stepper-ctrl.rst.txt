@@ -1,0 +1,130 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: zephyr,h-bridge-stepper-ctrl
+.. _dtbinding_zephyr_h_bridge_stepper_ctrl:
+
+zephyr,h-bridge-stepper-ctrl
+############################
+
+.. sidebar:: Overview
+
+   :Name: ``zephyr,h-bridge-stepper-ctrl``
+   :Vendor: :ref:`Zephyr Project <dt_vendor_zephyr>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=zephyr,h-bridge-stepper-ctrl>` using
+               this compatible
+   :Driver: :zephyr_file:`drivers/stepper/gpio_stepper/h_bridge_stepper_ctrl.c`
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   GPIO Stepper Controller for darlington transistor arrays or dual H-bridge
+
+Examples
+********
+
+.. code-block:: dts
+
+   /* Lead A is connected Lead C and Lead B is connected to Lead D*/
+   h_bridge_stepper: motion-controller {
+       compatible = "zephyr,h-bridge-stepper-ctrl";
+       gpios = <&gpioa 9 GPIO_ACTIVE_HIGH>,  /* Lead A1/A */
+               <&gpioc 7 GPIO_ACTIVE_HIGH>,  /* Lead B1/B */
+               <&gpiob 0 GPIO_ACTIVE_HIGH>,  /* Lead A2/C */
+               <&gpioa 7 GPIO_ACTIVE_HIGH>;  /* Lead B2/D */
+   };
+
+
+Properties
+**********
+
+.. tabs::
+
+   .. group-tab:: Node specific properties
+
+      Properties not inherited from the base binding file.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``invert-direction``
+           - ``boolean``
+           - .. code-block:: none
+
+                Invert motor direction.
+
+
+
+         * - ``gpios``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                The gpio pin array on which the stepper inputs are to be connected
+
+
+
+             This property is **required**.
+
+         * - ``lut-step-gap``
+           - ``int``
+           - .. code-block:: none
+
+                Step mode selection.
+                1 - Half step mode
+                2 - Full step mode
+
+
+
+             Default value: ``1``
+
+             Legal values: ``1``, ``2``
+
+         * - ``counter``
+           - ``phandle``
+           - .. code-block:: none
+
+                Counter used for generating step-accurate pulse signals.
+                This should be a reference to a counter node in the device tree.
+                When this property is present, the stepper motion controller will use
+                the counter as a timing source instead of the default work queue timing.
+                This enables more precise step timing control.
+
+                Note: The counter needs to support both set_top_value functionalities:
+                      - Setting a new top value
+                      - Attaching an ISR to the turnaround
+
+
+
+
+
+   .. group-tab:: Deprecated node specific properties
+
+      Deprecated properties not inherited from the base binding file.
+
+      (None)
+
+   .. group-tab:: Base properties
+
+      Properties inherited from the base binding file, which defines
+      common properties that may be set on many nodes. Not all of these
+      may apply to the "zephyr,h-bridge-stepper-ctrl" compatible.
+
+      (None)
+
+

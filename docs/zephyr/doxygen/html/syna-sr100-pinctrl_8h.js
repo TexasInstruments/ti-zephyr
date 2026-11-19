@@ -1,0 +1,28 @@
+var syna_sr100_pinctrl_8h =
+[
+    [ "SRXXX_AON_PINMUX", "syna-sr100-pinctrl_8h.html#a4719e1d8797325d722edaf88c89065e0", null ],
+    [ "SRXXX_BIT_MASK", "syna-sr100-pinctrl_8h.html#af681f1c4c9474fd45d297136e03448b5", null ],
+    [ "SRXXX_BIT_SHIFT", "syna-sr100-pinctrl_8h.html#ac760e512f303513b38d26105cd73bdba", null ],
+    [ "SRXXX_CFG_MASK", "syna-sr100-pinctrl_8h.html#ab44db4747fda930cbffd1df30a3e3159", null ],
+    [ "SRXXX_CFG_SHIFT", "syna-sr100-pinctrl_8h.html#a3b88b5b8791bdea8ba11e7def0afef6b", null ],
+    [ "SRXXX_CTRL_MASK", "syna-sr100-pinctrl_8h.html#a96200978617f8bbdb42f80091eb74664", null ],
+    [ "SRXXX_CTRL_SHIFT", "syna-sr100-pinctrl_8h.html#a7b2628d7cb17023b0200bdf053f75eaa", null ],
+    [ "SRXXX_FIXED_PINMUX", "syna-sr100-pinctrl_8h.html#ad051b92984413bec38a55fd02be0b1db", null ],
+    [ "SRXXX_GLOBAL_PINMUX", "syna-sr100-pinctrl_8h.html#ae3c27fcc4a255825d699f93bf195ccf9", null ],
+    [ "SRXXX_LPS_PINMUX", "syna-sr100-pinctrl_8h.html#a0c5a55a86eed5672fc36abc5052386d6", null ],
+    [ "SRXXX_MASK_MASK", "syna-sr100-pinctrl_8h.html#ab8ec283b471be3cc74f936f73a07ef1b", null ],
+    [ "SRXXX_MASK_SHIFT", "syna-sr100-pinctrl_8h.html#a057beb763afece7ae6b4513d89bb0fa5", null ],
+    [ "SRXXX_MODE_MASK", "syna-sr100-pinctrl_8h.html#ab07c9da843d474783e400c73403f2b9f", null ],
+    [ "SRXXX_MODE_SHIFT", "syna-sr100-pinctrl_8h.html#ac9633a8e165a4a4f88b2f5380e52c5c0", null ],
+    [ "SRXXX_PINMUX", "syna-sr100-pinctrl_8h.html#a4bc4377e22ec53033ac7938096aeaa4a", null ],
+    [ "SRXXX_PINMUX_BIT", "syna-sr100-pinctrl_8h.html#a3b7d388975ec27f0b1f23e5f15f50978", null ],
+    [ "SRXXX_PINMUX_CFG", "syna-sr100-pinctrl_8h.html#a2c45e2bb1e68614706cc9eab7a075401", null ],
+    [ "SRXXX_PINMUX_CTRL", "syna-sr100-pinctrl_8h.html#a324b2ea911f6f5ba79b33ecdf7d2a26c", null ],
+    [ "SRXXX_PINMUX_MASK", "syna-sr100-pinctrl_8h.html#a6f061098bc7c6e3d79873c226ebd941e", null ],
+    [ "SRXXX_PINMUX_MODE", "syna-sr100-pinctrl_8h.html#a86eec0530a079db5f113f8f75eb0126f", null ],
+    [ "SRXXX_PINMUX_REG", "syna-sr100-pinctrl_8h.html#aaa85a363747ab2d02065ccbd1fc66ab9", null ],
+    [ "SRXXX_PORT_PINMUX", "syna-sr100-pinctrl_8h.html#a0fb9ee3cd89b303414f62aef4c0f7ad4", null ],
+    [ "SRXXX_REG_MASK", "syna-sr100-pinctrl_8h.html#aef966134bfa32c57925db5a2ff77d524", null ],
+    [ "SRXXX_REG_SHIFT", "syna-sr100-pinctrl_8h.html#a223dd18f4ee640278d9a7a7b8418f8ae", null ],
+    [ "SRXXX_SWIRE_PINMUX", "syna-sr100-pinctrl_8h.html#a9e61841582b0cb34909036aa9f3cc138", null ]
+];

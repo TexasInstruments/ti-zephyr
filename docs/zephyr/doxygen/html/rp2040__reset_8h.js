@@ -1,0 +1,28 @@
+var rp2040__reset_8h =
+[
+    [ "RPI_PICO_RESETS_RESET_ADC", "rp2040__reset_8h.html#abac5947197d81eb0dfb2e4490b191ff1", null ],
+    [ "RPI_PICO_RESETS_RESET_BUSCTRL", "rp2040__reset_8h.html#a8d9aed2655b0d64f8b33bfe49fa41570", null ],
+    [ "RPI_PICO_RESETS_RESET_DMA", "rp2040__reset_8h.html#a99b09965f0053aefad10961d95dac77c", null ],
+    [ "RPI_PICO_RESETS_RESET_I2C0", "rp2040__reset_8h.html#a335daf7797415719654796cd15ccd37b", null ],
+    [ "RPI_PICO_RESETS_RESET_I2C1", "rp2040__reset_8h.html#a30a4199460568314ccbf3cdda6427db0", null ],
+    [ "RPI_PICO_RESETS_RESET_IO_BANK0", "rp2040__reset_8h.html#af8ac1ce17d197cd09f41dab48ca9fec1", null ],
+    [ "RPI_PICO_RESETS_RESET_IO_QSPI", "rp2040__reset_8h.html#a349d905a5e3de42a9626b4d81059992b", null ],
+    [ "RPI_PICO_RESETS_RESET_JTAG", "rp2040__reset_8h.html#aec1f55ee581b899f9325fefb9aacf68e", null ],
+    [ "RPI_PICO_RESETS_RESET_PADS_BANK0", "rp2040__reset_8h.html#a6d45f135f543c9b5168f5244842b6af1", null ],
+    [ "RPI_PICO_RESETS_RESET_PADS_QSPI", "rp2040__reset_8h.html#a6cc676793d5c937a693be6fe8b2862bf", null ],
+    [ "RPI_PICO_RESETS_RESET_PIO0", "rp2040__reset_8h.html#adc3511168398819c01afba241f866fb3", null ],
+    [ "RPI_PICO_RESETS_RESET_PIO1", "rp2040__reset_8h.html#a18fa1392f3eb00a15288460610113671", null ],
+    [ "RPI_PICO_RESETS_RESET_PLL_SYS", "rp2040__reset_8h.html#ad6664574a797fa6a2aeabb63755bcb7e", null ],
+    [ "RPI_PICO_RESETS_RESET_PLL_USB", "rp2040__reset_8h.html#ae791233ea824b3adf783479cdd0f3288", null ],
+    [ "RPI_PICO_RESETS_RESET_PWM", "rp2040__reset_8h.html#a140922f8bd5886b14b7b5ea21ba9d64b", null ],
+    [ "RPI_PICO_RESETS_RESET_RTC", "rp2040__reset_8h.html#a93dd0019f4744adff5718bcfdd3e527c", null ],
+    [ "RPI_PICO_RESETS_RESET_SPI0", "rp2040__reset_8h.html#a3217125ff2d9e231a658a7510caa5b6e", null ],
+    [ "RPI_PICO_RESETS_RESET_SPI1", "rp2040__reset_8h.html#a3f539a0ea496367c61b3deb7bf614fec", null ],
+    [ "RPI_PICO_RESETS_RESET_SYSCFG", "rp2040__reset_8h.html#a6960ebc2988d20452a21e8d2e704494d", null ],
+    [ "RPI_PICO_RESETS_RESET_SYSINFO", "rp2040__reset_8h.html#afe5cf6cc92248efac38cb79a057f4ebe", null ],
+    [ "RPI_PICO_RESETS_RESET_TBMAN", "rp2040__reset_8h.html#a526ba5a9f743922cdcc921ce5f767330", null ],
+    [ "RPI_PICO_RESETS_RESET_TIMER", "rp2040__reset_8h.html#ae4809d44d9f108675be7872a3b52e832", null ],
+    [ "RPI_PICO_RESETS_RESET_UART0", "rp2040__reset_8h.html#a518638c89ac3f52e0c5fdf3bd5cc3612", null ],
+    [ "RPI_PICO_RESETS_RESET_UART1", "rp2040__reset_8h.html#a832e0aabb3bdca804e610e2386c9f835", null ],
+    [ "RPI_PICO_RESETS_RESET_USBCTRL", "rp2040__reset_8h.html#acf3cd72b20163e803165f8950b343fdc", null ]
+];

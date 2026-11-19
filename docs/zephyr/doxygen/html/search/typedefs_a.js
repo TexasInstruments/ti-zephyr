@@ -1,0 +1,21 @@
+var searchData=
+[
+  ['k_5fipi_5ffunc_5ft_0',['k_ipi_func_t',['../kernel_8h.html#abc484ff16f6bef4434de98258189e7d5',1,'kernel.h']]],
+  ['k_5fmem_5fdomain_5ft_1',['k_mem_domain_t',['../group__mem__domain__apis.html#ga2d655d3e875fa0bb8538ceb51f82d148',1,'mem_domain.h']]],
+  ['k_5fmem_5fpartition_5fattr_5ft_2',['k_mem_partition_attr_t',['../group__xtensa__mpu__apis.html#ga58f790e348e5e1c4a3962a134cfb505f',1,'k_mem_partition_attr_t:&#160;arch.h'],['../4_2cortex__r_2arm__mpu_8h.html#a6b3c416482c4d01cc12db5269886bb05',1,'k_mem_partition_attr_t:&#160;arm_mpu.h'],['../mmustructs_8h.html#a2c21ed95c62d70b5abc48fa6d6acb849',1,'k_mem_partition_attr_t:&#160;mmustructs.h'],['../group__xtensa__mmu__apis.html#ga58f790e348e5e1c4a3962a134cfb505f',1,'k_mem_partition_attr_t:&#160;xtensa_mmu.h']]],
+  ['k_5fp4wq_5fdone_5fhandler_5ft_3',['k_p4wq_done_handler_t',['../p4wq_8h.html#afa5f86d1b4679a2f07a9a7c7af71f12a',1,'p4wq.h']]],
+  ['k_5fp4wq_5fhandler_5ft_4',['k_p4wq_handler_t',['../p4wq_8h.html#aa164250d00319b0d71670e95201e45b0',1,'p4wq.h']]],
+  ['k_5fspinlock_5fkey_5ft_5',['k_spinlock_key_t',['../group__spinlock__apis.html#gacacd3d3bbd31416dbbf6a0239be82ef0',1,'spinlock.h']]],
+  ['k_5fthread_5fentry_5ft_6',['k_thread_entry_t',['../arch__interface_8h.html#a3707e886593b0a8b4995309e4230b717',1,'arch_interface.h']]],
+  ['k_5fthread_5fruntime_5fstats_5ft_7',['k_thread_runtime_stats_t',['../kernel_2thread_8h.html#a887f70695cd229ea8f30ea3e1faf45cf',1,'thread.h']]],
+  ['k_5fthread_5fstack_5ft_8',['k_thread_stack_t',['../arch__interface_8h.html#a9fc2dce533bd7b8cb1fdd4bdbb2b62b1',1,'arch_interface.h']]],
+  ['k_5fthread_5ftimeslice_5ffn_5ft_9',['k_thread_timeslice_fn_t',['../kernel__structs_8h.html#a44c6f88a879877ad8da28706e274064f',1,'kernel_structs.h']]],
+  ['k_5fthread_5fuser_5fcb_5ft_10',['k_thread_user_cb_t',['../group__thread__apis.html#gaf9f23a6ff9dae76af56f25b373e74c75',1,'kernel.h']]],
+  ['k_5fticks_5ft_11',['k_ticks_t',['../group__clock__apis.html#ga9832cb0adc2d1866420e5c370a0863e2',1,'clock.h']]],
+  ['k_5ftid_5ft_12',['k_tid_t',['../kernel_2thread_8h.html#a6379f5a1f19ffbc262a6877c4f6e3647',1,'thread.h']]],
+  ['k_5ftimer_5fexpiry_5ft_13',['k_timer_expiry_t',['../group__timer__apis.html#ga2915762e70454d98c73c179a45cafbde',1,'kernel.h']]],
+  ['k_5ftimer_5fstop_5ft_14',['k_timer_stop_t',['../group__timer__apis.html#ga106733712fc4e62b59bbe6a480bb988c',1,'kernel.h']]],
+  ['k_5fwork_5fhandler_5ft_15',['k_work_handler_t',['../group__workqueue__apis.html#ga5add9ef0dce306a08413c4140fc0bdda',1,'kernel.h']]],
+  ['k_5fwork_5fuser_5fhandler_5ft_16',['k_work_user_handler_t',['../group__workqueue__apis.html#gaafa4dfac323cab570da1ee31c07d11bc',1,'kernel.h']]],
+  ['kbd_5frow_5ft_17',['kbd_row_t',['../group__input__kbd__matrix.html#gac7d5c811da0c9ab2660be3c3f2fcfe86',1,'input_kbd_matrix.h']]]
+];

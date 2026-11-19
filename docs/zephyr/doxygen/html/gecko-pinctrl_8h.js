@@ -1,0 +1,26 @@
+var gecko_pinctrl_8h =
+[
+    [ "GECKO_FUN_I2C_SCL", "gecko-pinctrl_8h.html#a455a393df63ad05434c993ff18b9d3b5", null ],
+    [ "GECKO_FUN_I2C_SCL_LOC", "gecko-pinctrl_8h.html#a3216f884cccdd06204765849deec56b0", null ],
+    [ "GECKO_FUN_I2C_SDA", "gecko-pinctrl_8h.html#a3c29c6046d30a743df9aaae55c2b0803", null ],
+    [ "GECKO_FUN_I2C_SDA_LOC", "gecko-pinctrl_8h.html#a405973ead4fd3aa22f2d976257929185", null ],
+    [ "GECKO_FUN_MSK", "gecko-pinctrl_8h.html#a87d929d0a1bc9808a854ce582a0c8251", null ],
+    [ "GECKO_FUN_POS", "gecko-pinctrl_8h.html#af582c317ab79a3961ea00645514fc3f6", null ],
+    [ "GECKO_FUN_SPI_CSN", "gecko-pinctrl_8h.html#a3a5f06615a2add43e56c58a8b497f14b", null ],
+    [ "GECKO_FUN_SPI_MISO", "gecko-pinctrl_8h.html#a469abb3acc66dfe55f73918b8b2bf5ec", null ],
+    [ "GECKO_FUN_SPI_MOSI", "gecko-pinctrl_8h.html#ac694f5ec91bde5c9e3de7af7fed94b6b", null ],
+    [ "GECKO_FUN_SPI_SCK", "gecko-pinctrl_8h.html#a71471924b76182052cbad22824d5992e", null ],
+    [ "GECKO_FUN_UART_CTS", "gecko-pinctrl_8h.html#ad4dc9908bb86aea93aaa896ea7755a29", null ],
+    [ "GECKO_FUN_UART_LOC", "gecko-pinctrl_8h.html#a3cf2407ef84050edc079bd0e372b514b", null ],
+    [ "GECKO_FUN_UART_RTS", "gecko-pinctrl_8h.html#a65f270929aae6f65e659f1f6393d34fa", null ],
+    [ "GECKO_FUN_UART_RX", "gecko-pinctrl_8h.html#a68699f16723f6a99594f068dd0c95b2a", null ],
+    [ "GECKO_FUN_UART_TX", "gecko-pinctrl_8h.html#a2b19bb5a846aab3b44a3628c586df77b", null ],
+    [ "GECKO_LOC", "gecko-pinctrl_8h.html#a0c4e8fbbb218ce88bd4059bda8170e6d", null ],
+    [ "GECKO_LOC_MSK", "gecko-pinctrl_8h.html#adef6df5f1daf2e87dbed89b433ef7d84", null ],
+    [ "GECKO_LOC_POS", "gecko-pinctrl_8h.html#a12208aabccc02edd6c64a857f14455f7", null ],
+    [ "GECKO_PIN_MSK", "gecko-pinctrl_8h.html#a9e62aad832626ee3f12e55b8e0102b68", null ],
+    [ "GECKO_PIN_POS", "gecko-pinctrl_8h.html#af4fc3615fcff891841b6226b363f9f4c", null ],
+    [ "GECKO_PORT_MSK", "gecko-pinctrl_8h.html#a750badf0aada694862e9cc8135ef435c", null ],
+    [ "GECKO_PORT_POS", "gecko-pinctrl_8h.html#aafabc892e5cc1298ff87a10afdd203ca", null ],
+    [ "GECKO_PSEL", "gecko-pinctrl_8h.html#ac1af8b10c541907308332856fa9affe7", null ]
+];

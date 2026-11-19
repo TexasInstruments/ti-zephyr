@@ -1,0 +1,153 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: leds-group-multicolor
+.. _dtbinding_leds_group_multicolor:
+
+leds-group-multicolor
+#####################
+
+.. sidebar:: Overview
+
+   :Name: ``leds-group-multicolor``
+   :Vendor: :ref:`Generic or vendor-independent <dt_no_vendor>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=leds-group-multicolor>` using
+               this compatible
+   :Driver: :zephyr_file:`drivers/led/leds_group_multicolor.c`
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   Combines several monochromatic LEDs into one multi-color LED.
+
+   Defines an RGB LED with a group of monochromatic PWM LEDs. Note that the
+   pwms property definition handle depends on the PWM controller model.
+
+Examples
+********
+
+.. code-block:: dts
+
+   /* Example where PWM controller is STM32 */
+   #include <zephyr/dt-bindings/led/led.h>
+
+   / {
+           monochromatic-leds {
+                   compatible = "pwm-leds";
+
+                   red_pwm_led: led-0 {
+                           pwms = <&pwm1 1 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
+                   };
+
+                   green_pwm_led: led-1 {
+                           pwms = <&pwm2 1 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
+                   };
+
+                   blue_pwm_led: led-2 {
+                           pwms = <&pwm3 1 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
+                   };
+           };
+
+           rgb-led {
+                   compatible = "leds-group-multicolor";
+
+                   leds = <&red_pwm_led>, <&green_pwm_led>, <&blue_pwm_led>;
+                   color-mapping = <LED_COLOR_ID_RED>,
+                                   <LED_COLOR_ID_GREEN>,
+                                   <LED_COLOR_ID_BLUE>;
+           };
+   };
+
+
+Properties
+**********
+
+.. tabs::
+
+   .. group-tab:: Node specific properties
+
+      Properties not inherited from the base binding file.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``leds``
+           - ``phandles``
+           - .. code-block:: none
+
+                References to monochromatic LED nodes.
+
+
+
+             This property is **required**.
+
+         * - ``color-mapping``
+           - ``array``
+           - .. code-block:: none
+
+                Channel to color mapping of a multicolor LED. If a LED supports
+                several colors, then the color-mapping property can be used to
+                describe how the hardware channels and the colors are mapped.
+
+                For example the channel to color mapping of RGB LEDs would be
+
+                   color-mapping =
+                        <LED_COLOR_ID_RED>,
+                        <LED_COLOR_ID_GREEN>,
+                        <LED_COLOR_ID_BLUE>;
+
+
+
+
+
+   .. group-tab:: Deprecated node specific properties
+
+      Deprecated properties not inherited from the base binding file.
+
+      (None)
+
+   .. group-tab:: Base properties
+
+      Properties inherited from the base binding file, which defines
+      common properties that may be set on many nodes. Not all of these
+      may apply to the "leds-group-multicolor" compatible.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``label``
+           - ``string``
+           - .. code-block:: none
+
+                Human readable string describing the LED. It can be used by an
+                application to identify this LED or to retrieve its number/index
+                (i.e. child node number) on the parent device.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+
+
+

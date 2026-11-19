@@ -1,0 +1,104 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: gpio-leds
+.. _dtbinding_gpio_leds:
+
+gpio-leds
+#########
+
+.. sidebar:: Overview
+
+   :Name: ``gpio-leds``
+   :Vendor: :ref:`Generic or vendor-independent <dt_no_vendor>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=gpio-leds>` using
+               this compatible
+   :Driver: :zephyr_file:`drivers/led/led_gpio.c`
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   Group of GPIO-controlled LEDs.
+
+   Each LED is defined in a child node of the gpio-leds node.
+
+Examples
+********
+
+.. code-block:: dts
+
+   / {
+     leds {
+       compatible = "gpio-leds";
+       /*
+        * led_0 is pin 1 on gpio0.
+        * The LED is on when the pin is low, and off when the pin is high.
+        */
+       led_0 {
+         gpios = <&gpio0 1 GPIO_ACTIVE_LOW>;
+       };
+       /*
+        * led_1 is pin 2 on gpio0.
+        * The LED is on when the pin is high, and off when it is low.
+        */
+       led_1 {
+         gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
+       };
+       /*
+        * led_2 is pin 15 on gpio1.
+        * The LED is on when the pin is low, and the pin's internal pull-up resistor should be
+        * enabled.
+        */
+       led_2 {
+         gpios = <&gpio1 15 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+       };
+     };
+   };
+
+
+Properties
+**********
+
+Top level properties
+====================
+
+No top-level properties.
+
+Child node properties
+=====================
+
+.. list-table::
+   :widths: 1 1 4
+   :header-rows: 1
+
+   * - Name
+     - Type
+     - Details
+
+   * - ``gpios``
+     - ``phandle-array``
+     - This property is **required**.
+
+   * - ``label``
+     - ``string``
+     - .. code-block:: none
+
+          Human readable string describing the LED. It can be used by an
+          application to identify this LED or to retrieve its number/index
+          (i.e. child node number) on the parent device.
+
+
+
+       See :ref:`dt-important-props` for more information.
+

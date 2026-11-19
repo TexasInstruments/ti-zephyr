@@ -1,0 +1,575 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: nxp,lpc11u6x-pinctrl
+.. _dtbinding_nxp_lpc11u6x_pinctrl:
+
+nxp,lpc11u6x-pinctrl
+####################
+
+.. sidebar:: Overview
+
+   :Name: ``nxp,lpc11u6x-pinctrl``
+   :Vendor: :ref:`NXP Semiconductors <dt_vendor_nxp>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=nxp,lpc11u6x-pinctrl>` using
+               this compatible
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   LPC pinctrl node. This node defines pin configurations in pin groups, and has
+   the 'pinctrl' node identifier in the SOC's devicetree. Each group within the
+   pin configuration defines a peripheral's pin configuration. Each numbered
+   subgroup represents pins with shared configuration for that peripheral. The
+   'pinmux' property of each group selects the pins to be configured with these
+   properties. For example, here is a configuration for FLEXCOMM0 pins:
+
+   pinmux_flexcomm0_usart: pinmux_flexcomm0_usart {
+     group0 {
+       pinmux = <FC0_TXD_SCL_MISO_WS_PIO0_30>,
+               <FC0_RXD_SDA_MOSI_DATA_PIO0_29>;
+       slew-rate = "standard";
+     };
+   };
+
+   If only the required properties are supplied, the ICON_PIO register will
+   be assigned the following values:
+   IOCON_FUNC=<pin mux selection>,
+   IOCON_MODE=0,
+   IOCON_SLEW=<slew-rate selection>,
+   IOCON_INVERT=0,
+   IOCON_DIGIMODE=1,
+   IOCON_OD=0,
+
+   Values for I2C type and analog type pins have the following defaults:
+   IOCON_ASW=0
+   IOCON_SSEL=0
+   IOCON_FILTEROFF=1
+   IOCON_ECS=0
+   IOCON_EGP=1
+   IOCON_I2CFILTER=1
+
+   Note the inherited pinctrl properties defined below have the following effects:
+   drive-open-drain: IOCON_OD=1
+   bias-pull-up: IOCON_MODE=2
+   bias-pull-down: IOCON_MODE=1
+   drive-push-pull: IOCON_MODE=3
+
+   Note: for the LPC11u6x, the following fields are also supported:
+   IOCON_HYS- set by input-schmitt-enable
+   IOCON_S_MODE- set by nxp,digital-filter
+   IOCON_CLKDIV- set by nxp,filter-clock-div
+   IOCON_FILTR- set by nxp,analog-filter
+
+Properties
+**********
+
+Top level properties
+====================
+
+
+These property descriptions apply to "nxp,lpc11u6x-pinctrl"
+nodes themselves. This page also describes child node
+properties in the following sections.
+
+.. tabs::
+
+   .. group-tab:: Node specific properties
+
+      Properties not inherited from the base binding file.
+
+      (None)
+
+   .. group-tab:: Deprecated node specific properties
+
+      Deprecated properties not inherited from the base binding file.
+
+      (None)
+
+   .. group-tab:: Base properties
+
+      Properties inherited from the base binding file, which defines
+      common properties that may be set on many nodes. Not all of these
+      may apply to the "nxp,lpc11u6x-pinctrl" compatible.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``status``
+           - ``string``
+           - .. code-block:: none
+
+                Indicates the operational status of the hardware or other
+                resource that the node represents. In particular:
+
+                  - "okay" means the resource is operational and, for example,
+                    can be used by device drivers
+                  - "disabled" means the resource is not operational and the system
+                    should treat it as if it is not present
+
+                For details, see "2.3.4 status" in Devicetree Specification v0.4.
+
+
+
+             Legal values: ``okay``, ``disabled``, ``reserved``, ``fail``, ``fail-sss``
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``compatible``
+           - ``string-array``
+           - .. code-block:: none
+
+                This property is a list of strings that essentially define what
+                type of hardware or other resource this devicetree node
+                represents. Each device driver checks for specific compatible
+                property values to find the devicetree nodes that represent
+                resources that the driver should manage.
+
+                The recommended format is "vendor,device", The "vendor" part is
+                an abbreviated name of the vendor. The "device" is usually from
+                the datasheet.
+
+                The compatible property can have multiple values, ordered from
+                most- to least-specific. Having additional values is useful when the
+                device is a specific instance of a more general family, to allow the
+                system to match the most specific driver available.
+
+                For details, see "2.3.1 compatible" in Devicetree Specification v0.4.
+
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``reg``
+           - ``array``
+           - .. code-block:: none
+
+                Information used to address the device. The value is specific to
+                the device (i.e. is different depending on the compatible
+                property).
+
+                The "reg" property is typically a sequence of (address, length) pairs.
+                Each pair is called a "register block". Values are
+                conventionally written in hex.
+
+                For details, see "2.3.6 reg" in Devicetree Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``reg-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each register block in the "reg" property.
+                For example:
+
+                  / {
+                       soc {
+                           #address-cells = <1>;
+                           #size-cells = <1>;
+
+                           uart@1000 {
+                               reg = <0x1000 0x2000>, <0x3000 0x4000>;
+                               reg-names = "foo", "bar";
+                           };
+                       };
+                  };
+
+                The uart@1000 node has two register blocks:
+
+                  - one with base address 0x1000, size 0x2000, and name "foo"
+                  - another with base address 0x3000, size 0x4000, and name "bar"
+
+
+
+         * - ``interrupts``
+           - ``array``
+           - .. code-block:: none
+
+                Information about interrupts generated by the device, encoded as an array
+                of one or more interrupt specifiers. The format of the data in this property
+                varies by where the device appears in the interrupt tree. Devices with the same
+                "interrupt-parent" will use the same format in their interrupts properties.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``interrupts-extended``
+           - ``compound``
+           - .. code-block:: none
+
+                Extended interrupt specifier for device, used as an alternative to
+                the "interrupts" property.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each interrupt generated by a device.
+                The interrupts themselves are defined in either "interrupts" or
+                "interrupts-extended" properties.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-parent``
+           - ``phandle``
+           - .. code-block:: none
+
+                If present, this refers to the node which handles interrupts generated
+                by this device.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``label``
+           - ``string``
+           - .. code-block:: none
+
+                Human readable string describing the device. Use of this property is
+                deprecated except as needed on a case-by-case basis.
+
+                For details, see "4.1.2 Miscellaneous Properties" in Devicetree
+                Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``clocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Information about the device's clock providers. In general, this property
+                should follow conventions established in the dt-schema binding:
+
+                  https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/clock/clock.yaml
+
+
+
+         * - ``clock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each clock provider in the "clocks" property.
+
+
+
+         * - ``#address-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by address fields
+                in "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+         * - ``#size-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by size fields in
+                "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+         * - ``dmas``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                DMA channel specifiers relevant to the device.
+
+
+
+         * - ``dma-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the DMA channel specifiers in the "dmas" property.
+
+
+
+         * - ``io-channels``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                IO channel specifiers relevant to the device.
+
+
+
+         * - ``io-channel-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the IO channel specifiers in the "io-channels" property.
+
+
+
+         * - ``mboxes``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Mailbox / IPM channel specifiers relevant to the device.
+
+
+
+         * - ``mbox-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the mbox specifiers in the "mboxes" property.
+
+
+
+         * - ``power-domains``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Power domain specifiers relevant to the device.
+
+
+
+         * - ``power-domain-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the power domain specifiers in the "power-domains" property.
+
+
+
+         * - ``#power-domain-cells``
+           - ``int``
+           - .. code-block:: none
+
+                Number of cells in power-domains property
+
+
+
+         * - ``hwlocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                HW spinlock id relevant to the device.
+
+
+
+         * - ``hwlock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the hwlock specifiers in the "hwlocks" property.
+
+
+
+         * - ``zephyr,deferred-init``
+           - ``boolean``
+           - .. code-block:: none
+
+                Do not initialize device automatically on boot. Device should be manually
+                initialized using device_init().
+
+
+
+         * - ``wakeup-source``
+           - ``boolean``
+           - .. code-block:: none
+
+                Property to identify that a device can be used as wake up source.
+
+                When this property is provided a specific flag is set into the
+                device that tells the system that the device is capable of
+                wake up the system.
+
+                Wake up capable devices are disabled (interruptions will not wake up
+                the system) by default but they can be enabled at runtime if necessary.
+
+
+
+         * - ``zephyr,pm-device-runtime-auto``
+           - ``boolean``
+           - .. code-block:: none
+
+                Automatically configure the device for runtime power management after the
+                init function runs.
+
+
+
+         * - ``zephyr,disabling-power-states``
+           - ``phandles``
+           - .. code-block:: none
+
+                List of power states that will disable this device power.
+
+
+
+
+
+
+Grandchild node properties
+==========================
+
+.. list-table::
+   :widths: 1 1 4
+   :header-rows: 1
+
+   * - Name
+     - Type
+     - Details
+
+   * - ``nxp,digital-filter``
+     - ``int``
+     - .. code-block:: none
+
+          Enable digital filter. Set number of clock cycles to use as rejection
+          threshold for input pulses. 0 disables the filter. Only valid for
+          lpc11u6x SOC. Filter defaults to disabled, as this is default reset
+          value for SOC
+
+
+
+       Legal values: ``0``, ``1``, ``2``, ``3``
+
+   * - ``nxp,filter-clock-div``
+     - ``int``
+     - .. code-block:: none
+
+          set peripheral clock divider for input filter sampling clock
+          IOCONCLKDIV. Only valid for lpc11u6x SOC. Default to 0, as this
+          is the default reset value for the SOC.
+
+
+
+       Legal values: ``0``, ``1``, ``2``, ``3``, ``4``, ``5``, ``6``
+
+   * - ``nxp,disable-analog-filter``
+     - ``boolean``
+     - .. code-block:: none
+
+          Disable fixed 10 ns input glitch analog filter. Only valid for lpc11u6x
+          SOC, on analog pins. Note that this filter is enabled on reset, hence
+          the choice to make disabling the filter opt-in
+
+
+
+   * - ``pinmux``
+     - ``array``
+     - .. code-block:: none
+
+          Pin mux selection for this group. See the SOC level pinctrl header
+          file in NXP's HAL for a defined list of these options.
+
+
+
+       This property is **required**.
+
+   * - ``nxp,invert``
+     - ``boolean``
+     - .. code-block:: none
+
+          Invert the pin input logic level
+
+
+
+   * - ``nxp,analog-mode``
+     - ``boolean``
+     - .. code-block:: none
+
+          Set the pin to analog mode. Sets DIGIMODE=0, and ASW=1. Only valid for
+          analog type pins. Selects ASW0 on LPC55s3x family
+
+
+
+   * - ``nxp,i2c-filter``
+     - ``string``
+     - .. code-block:: none
+
+          I2C glitch filter speed. Only valid for I2C mode pins. Fast mode
+          typically only required for High speed I2C.
+
+
+
+       Legal values: ``slow``, ``fast``
+
+   * - ``nxp,i2c-mode``
+     - ``boolean``
+     - .. code-block:: none
+
+          Enable I2C mode for a pin. If not present, pin is in GPIO mode. Only
+          valid for I2C mode pins
+
+
+
+   * - ``bias-pull-up``
+     - ``boolean``
+     - .. code-block:: none
+
+          enable pull-up resistor
+
+
+   * - ``bias-pull-down``
+     - ``boolean``
+     - .. code-block:: none
+
+          enable pull-down resistor
+
+
+   * - ``drive-push-pull``
+     - ``boolean``
+     - .. code-block:: none
+
+          drive actively high and low
+
+
+   * - ``drive-open-drain``
+     - ``boolean``
+     - .. code-block:: none
+
+          drive with open drain (hardware AND)
+
+
+   * - ``input-schmitt-enable``
+     - ``boolean``
+     - .. code-block:: none
+
+          enable schmitt-trigger mode
+
+

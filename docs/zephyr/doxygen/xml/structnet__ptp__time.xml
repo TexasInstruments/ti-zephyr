@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="structnet__ptp__time" kind="struct" language="C++" prot="public">
+    <compoundname>net_ptp_time</compoundname>
+    <includes refid="ptp__time_8h" local="no">zephyr/net/ptp_time.h</includes>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structnet__ptp__time_1a8d61359ca53147d2da761edeb9e1ab04" prot="public" static="no" mutable="no">
+        <type><ref refid="stdint_8h_1a2095b9bffea4b2656950c6c0419edbf1" kindref="member">uint64_t</ref></type>
+        <definition>uint64_t net_ptp_time::second</definition>
+        <argsstring></argsstring>
+        <name>second</name>
+        <qualifiedname>net_ptp_time::second</qualifiedname>
+        <briefdescription>
+<para>Second value. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/net/ptp_time.h" line="130" column="10" bodyfile="zephyr/net/ptp_time.h" bodystart="130" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structnet__ptp__time_1a9ef6ab971069f9ea8fb55a27d7dacd99" prot="public" static="no" mutable="no">
+        <type>union <ref refid="structnet__ptp__time" kindref="compound">net_ptp_time</ref></type>
+        <definition>union net_ptp_time net_ptp_time</definition>
+        <argsstring></argsstring>
+        <name></name>
+        <qualifiedname>net_ptp_time</qualifiedname>
+        <briefdescription>
+<para>Seconds encoded on 48 bits. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/net/ptp_time.h" line="131" column="1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structnet__ptp__time_1a31af3f0b8f924336c17585ee1b15ee0e" prot="public" static="no" mutable="no">
+        <type><ref refid="stdint_8h_1a0a8582351ac627ee8bde2973c825e47f" kindref="member">uint32_t</ref></type>
+        <definition>uint32_t net_ptp_time::nanosecond</definition>
+        <argsstring></argsstring>
+        <name>nanosecond</name>
+        <qualifiedname>net_ptp_time::nanosecond</qualifiedname>
+        <briefdescription>
+<para>Nanoseconds. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/net/ptp_time.h" line="134" column="10" bodyfile="zephyr/net/ptp_time.h" bodystart="134" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>(Generalized) Precision Time Protocol Timestamp format. </para>
+    </briefdescription>
+    <detaileddescription>
+<para>This structure represents a timestamp according to the Precision Time Protocol standard (&quot;PTP&quot;, IEEE 1588, section 5.3.3), the Generalized Precision Time Protocol standard (&quot;gPTP&quot;, IEEE 802.1AS, section 6.4.3.4), or any other well-defined context in which precision structured timestamps are required on network messages in Zephyr.</para>
+<para>Seconds are encoded as a 48 bits unsigned integer. Nanoseconds are encoded as a 32 bits unsigned integer.</para>
+<para>In the context of (g)PTP, <emphasis>timestamps</emphasis> designate the time, relative to a local clock (&quot;LocalClock&quot;) at which the message timestamp point passes a reference plane marking the boundary between the PTP Instance and the network medium (IEEE 1855, section 7.3.4.2; IEEE 802.1AS, section 8.4.3).</para>
+<para>The exact definitions of the <emphasis>message timestamp point</emphasis> and <emphasis>reference plane</emphasis> depends on the network medium and use case.</para>
+<para>For (g)PTP the media-specific message timestamp points and reference planes are defined in the standard. In non-PTP contexts specific to Zephyr, timestamps are measured relative to the same local clock but with a context-specific message timestamp point and reference plane, defined below per use case.</para>
+<para>A <emphasis>&quot;LocalClock&quot;</emphasis> is a freerunning clock, embedded into a well-defined entity (e.g. a PTP Instance) and provides a common time to that entity relative to an arbitrary epoch (IEEE 1855, section 3.1.26, IEEE 802.1AS, section 3.16).</para>
+<para>In Zephyr, the local clock is usually any instance of a kernel system clock driver, counter driver, RTC API driver or low-level counter/timer peripheral (e.g. an ethernet peripheral with hardware timestamp support or a radio timer) with sufficient precision for the context in which it is used.</para>
+<para>See IEEE 802.1AS, Annex B for specific performance requirements regarding conformance of local clocks in the gPTP context. See IEEE 1588, Annex A, section A5.4 for general performance requirements regarding PTP local clocks. See IEEE 802.15.4-2020, section 15.7 for requirements in the context of ranging applications and ibid., section 6.7.6 for the relation between guard times and clock accuracy which again influence the precision required for subprotocols like CSL, TSCH, RIT, etc.</para>
+<para>Applications that use timestamps across different subsystems or media must ensure that they understand the definition of the respective reference planes and interpret timestamps accordingly. Applications must further ensure that timestamps are either all referenced to the same local clock or convert between clocks based on sufficiently precise conversion algorithms.</para>
+<para>Timestamps may be measured on ingress (RX timestamps) or egress (TX timestamps) of network messages. Timestamps can also be used to schedule a network message to a well-defined point in time in the future at which it is to be sent over the medium (timed TX). A future timestamp and a duration, both referenced to the local clock, may be given to specify a time window at which a network device should expect incoming messages (RX window).</para>
+<para>In Zephyr this timestamp structure is currently used in the following contexts:<itemizedlist>
+<listitem><para>gPTP for Full Duplex Point-to-Point IEEE 802.3 links (IEEE 802.1AS, section 11): the reference plane and message timestamp points are as defined in the standard.</para>
+</listitem><listitem><para>IEEE 802.15.4 timed TX and RX: Timestamps designate the point in time at which the end of the last symbol of the start-of-frame delimiter (SFD) (or equivalently, the start of the first symbol of the PHY header) is at the local antenna. The standard also refers to this as the &quot;RMARKER&quot; (IEEE 802.15.4-2020, section 6.9.1) or &quot;symbol boundary&quot; (ibid., section 6.5.2), depending on the context. In the context of beacon timestamps, the difference between the timestamp measurement plane and the reference plane is defined by the MAC PIB attribute &quot;macSyncSymbolOffset&quot;, ibid., section 8.4.3.1, table 8-94.</para>
+</listitem></itemizedlist>
+</para>
+<para>If further use cases are added to Zephyr using this timestamp structure, their clock performance requirements, message timestamp points and reference plane definition SHALL be added to the above list. </para>
+    </detaileddescription>
+    <location file="zephyr/net/ptp_time.h" line="111" column="1" bodyfile="zephyr/net/ptp_time.h" bodystart="111" bodyend="135"/>
+    <listofallmembers>
+      <member refid="structnet__ptp__time_1a31af3f0b8f924336c17585ee1b15ee0e" prot="public" virt="non-virtual"><scope>net_ptp_time</scope><name>nanosecond</name></member>
+      <member refid="structnet__ptp__time_1a8d61359ca53147d2da761edeb9e1ab04" prot="public" virt="non-virtual"><scope>net_ptp_time</scope><name>second</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

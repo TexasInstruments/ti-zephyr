@@ -1,0 +1,994 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="group__resource__mgmt__onoff__apis" kind="group">
+    <compoundname>resource_mgmt_onoff_apis</compoundname>
+    <title>On-Off Service APIs</title>
+    <innerclass refid="structonoff__transitions" prot="public">onoff_transitions</innerclass>
+    <innerclass refid="structonoff__manager" prot="public">onoff_manager</innerclass>
+    <innerclass refid="structonoff__client" prot="public">onoff_client</innerclass>
+    <innerclass refid="structonoff__monitor" prot="public">onoff_monitor</innerclass>
+    <innerclass refid="structonoff__sync__service" prot="public">onoff_sync_service</innerclass>
+    <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="group__resource__mgmt__onoff__apis_1gac05f7946a14fa23ef67212eba30c98ac" prot="public" static="no">
+        <type>void(*</type>
+        <definition>typedef void(* onoff_notify_fn) (struct onoff_manager *mgr, int res)</definition>
+        <argsstring>)(struct onoff_manager *mgr, int res)</argsstring>
+        <name>onoff_notify_fn</name>
+        <briefdescription>
+<para>Signature used to notify an on-off manager that a transition has completed. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Functions of this type are passed to service-specific transition functions to be used to report the completion of the operation. The functions may be invoked from any context.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mgr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the manager for which transition was requested.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>res</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the result of the transition. This shall be non-negative on success, or a negative error code. If an error is indicated the service shall enter an error state. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="101" column="9" bodyfile="zephyr/sys/onoff.h" bodystart="101" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="group__resource__mgmt__onoff__apis_1ga51fdf83642c5fa16112ce143382ec5d1" prot="public" static="no">
+        <type>void(*</type>
+        <definition>typedef void(* onoff_transition_fn) (struct onoff_manager *mgr, onoff_notify_fn notify)</definition>
+        <argsstring>)(struct onoff_manager *mgr, onoff_notify_fn notify)</argsstring>
+        <name>onoff_transition_fn</name>
+        <briefdescription>
+<para>Signature used by service implementations to effect a transition. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Service definitions use two required function pointers of this type to be notified that a transition is required, and a third optional one to reset the service when it is in an error state.</para>
+<para>The start function will be called only from the off state.</para>
+<para>The stop function will be called only from the on state.</para>
+<para>The reset function (where supported) will be called only when <ref refid="group__resource__mgmt__onoff__apis_1ga347efda0aa0305c134224c59677fa6cb" kindref="member">onoff_has_error()</ref> returns true.</para>
+<para><simplesect kind="note"><para>All transitions functions must be isr-ok.</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mgr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the manager for which transition was requested.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>notify</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the function to be invoked when the transition has completed. If the transition is synchronous, notify shall be invoked by the implementation before the transition function returns. Otherwise the implementation shall capture this parameter and invoke it when the transition completes. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="129" column="9" bodyfile="zephyr/sys/onoff.h" bodystart="129" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="group__resource__mgmt__onoff__apis_1ga41b94526182c5772d7adebb1d1745068" prot="public" static="no">
+        <type>void(*</type>
+        <definition>typedef void(* onoff_client_callback) (struct onoff_manager *mgr, struct onoff_client *cli, uint32_t state, int res)</definition>
+        <argsstring>)(struct onoff_manager *mgr, struct onoff_client *cli, uint32_t state, int res)</argsstring>
+        <name>onoff_client_callback</name>
+        <briefdescription>
+<para>Signature used to notify an on-off service client of the completion of an operation. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>These functions may be invoked from any context including pre-kernel, ISR, or cooperative or pre-emptible threads. Compatible functions must be isr-ok and not sleep.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mgr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the manager for which the operation was initiated. This may be null if the on-off service uses synchronous transitions.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cli</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the client structure passed to the function that initiated the operation.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>state</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the state of the machine at the time of completion, restricted by ONOFF_STATE_MASK. ONOFF_FLAG_ERROR must be checked independently of whether res is negative as a machine error may indicate that all future operations except <ref refid="group__resource__mgmt__onoff__apis_1gaf7b46a5f2e43d1bab193c18b8f6c8ba8" kindref="member">onoff_reset()</ref> will fail.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>res</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the result of the operation. Expected values are service-specific, but the value shall be non-negative if the operation succeeded, and negative if the operation failed. If res is negative ONOFF_FLAG_ERROR will be set in state, but if res is non-negative ONOFF_FLAG_ERROR may still be set in state. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="252" column="9" bodyfile="zephyr/sys/onoff.h" bodystart="252" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="group__resource__mgmt__onoff__apis_1gaee41b38d408cf5f5efc9cd007f377545" prot="public" static="no">
+        <type>void(*</type>
+        <definition>typedef void(* onoff_monitor_callback) (struct onoff_manager *mgr, struct onoff_monitor *mon, uint32_t state, int res)</definition>
+        <argsstring>)(struct onoff_manager *mgr, struct onoff_monitor *mon, uint32_t state, int res)</argsstring>
+        <name>onoff_monitor_callback</name>
+        <briefdescription>
+<para>Signature used to notify a monitor of an onoff service of errors or completion of a state transition. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is similar to <ref refid="group__resource__mgmt__onoff__apis_1ga41b94526182c5772d7adebb1d1745068" kindref="member">onoff_client_callback</ref> but provides information about all transitions, not just ones associated with a specific client. Monitor callbacks are invoked before any completion notifications associated with the state change are made.</para>
+<para>These functions may be invoked from any context including pre-kernel, ISR, or cooperative or pre-emptible threads. Compatible functions must be isr-ok and not sleep.</para>
+<para>The callback is permitted to unregister itself from the manager, but must not register or unregister any other monitors.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mgr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the manager for which a transition has completed.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>mon</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the monitor instance through which this notification arrived.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>state</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the state of the machine at the time of completion, restricted by ONOFF_STATE_MASK. All valid states may be observed.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>res</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the result of the operation. Expected values are service- and state-specific, but the value shall be non-negative if the operation succeeded, and negative if the operation failed. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="512" column="9" bodyfile="zephyr/sys/onoff.h" bodystart="512" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="group__resource__mgmt__onoff__apis_1ga73d52272baab03d1df2f267429390978" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int onoff_manager_init</definition>
+        <argsstring>(struct onoff_manager *mgr, const struct onoff_transitions *transitions)</argsstring>
+        <name>onoff_manager_init</name>
+        <param>
+          <type>struct <ref refid="structonoff__manager" kindref="compound">onoff_manager</ref> *</type>
+          <declname>mgr</declname>
+        </param>
+        <param>
+          <type>const struct <ref refid="structonoff__transitions" kindref="compound">onoff_transitions</ref> *</type>
+          <declname>transitions</declname>
+        </param>
+        <briefdescription>
+<para>Initialize an on-off service to off state. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function must be invoked exactly once per service instance, by the infrastructure that provides the service, and before any other on-off service API is invoked on the service.</para>
+<para>This function should never be invoked by clients of an on-off service.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mgr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the manager definition object to be initialized.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>transitions</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>pointer to a structure providing transition functions. The referenced object must persist as long as the manager can be referenced.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>0</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>on success </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EINVAL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if start, stop, or flags are invalid </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="221" column="5" declfile="zephyr/sys/onoff.h" declline="221" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__resource__mgmt__onoff__apis_1ga347efda0aa0305c134224c59677fa6cb" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type><ref refid="stdbool_8h_1abb452686968e48b67397da5f97445f5b" kindref="member">bool</ref></type>
+        <definition>static bool onoff_has_error</definition>
+        <argsstring>(const struct onoff_manager *mgr)</argsstring>
+        <name>onoff_has_error</name>
+        <param>
+          <type>const struct <ref refid="structonoff__manager" kindref="compound">onoff_manager</ref> *</type>
+          <declname>mgr</declname>
+        </param>
+        <briefdescription>
+<para>Test whether an on-off service has recorded an error. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function can be used to determine whether the service has recorded an error. Errors may be cleared by invoking <ref refid="group__resource__mgmt__onoff__apis_1gaf7b46a5f2e43d1bab193c18b8f6c8ba8" kindref="member">onoff_reset()</ref>.</para>
+<para>This is an unlocked convenience function suitable for use only when it is known that no other process might invoke an operation that transitions the service between an error and non-error state.</para>
+<para><simplesect kind="return"><para>true if and only if the service has an uncleared error. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="315" column="20" bodyfile="zephyr/sys/onoff.h" bodystart="315" bodyend="318"/>
+      </memberdef>
+      <memberdef kind="function" id="group__resource__mgmt__onoff__apis_1ga20dcb358e405deb87b7fbb7846ef9d68" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int onoff_request</definition>
+        <argsstring>(struct onoff_manager *mgr, struct onoff_client *cli)</argsstring>
+        <name>onoff_request</name>
+        <param>
+          <type>struct <ref refid="structonoff__manager" kindref="compound">onoff_manager</ref> *</type>
+          <declname>mgr</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structonoff__client" kindref="compound">onoff_client</ref> *</type>
+          <declname>cli</declname>
+        </param>
+        <briefdescription>
+<para>Request a reservation to use an on-off service. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>The return value indicates the success or failure of an attempt to initiate an operation to request the resource be made available. If initiation of the operation succeeds the result of the request operation is provided through the configured client notification method, possibly before this call returns.</para>
+<para>Note that the call to this function may succeed in a case where the actual request fails. Always check the operation completion result.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mgr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the manager that will be used.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cli</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a non-null pointer to client state providing instructions on synchronous expectations and how to notify the client when the request completes. Behavior is undefined if client passes a pointer object associated with an incomplete service operation.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>&gt;=0</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the observed state of the machine at the time the request was processed, if successful. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EIO</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if service has recorded an error. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EINVAL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if the parameters are invalid. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EAGAIN</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if the reference count would overflow. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="347" column="5" declfile="zephyr/sys/onoff.h" declline="347" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__resource__mgmt__onoff__apis_1ga19da5359f10fa2e2eb034d1e72235ea6" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int onoff_release</definition>
+        <argsstring>(struct onoff_manager *mgr)</argsstring>
+        <name>onoff_release</name>
+        <param>
+          <type>struct <ref refid="structonoff__manager" kindref="compound">onoff_manager</ref> *</type>
+          <declname>mgr</declname>
+        </param>
+        <briefdescription>
+<para>Release a reserved use of an on-off service. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This synchronously releases the caller&apos;s previous request. If the last request is released the manager will initiate a transition to off, which can be observed by registering an <ref refid="structonoff__monitor" kindref="compound">onoff_monitor</ref>.</para>
+<para><simplesect kind="note"><para>Behavior is undefined if this is not paired with a preceding <ref refid="group__resource__mgmt__onoff__apis_1ga20dcb358e405deb87b7fbb7846ef9d68" kindref="member">onoff_request()</ref> call that completed successfully.</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mgr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the manager for which a request was successful.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>&gt;=0</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the observed state (ONOFF_STATE_ON) of the machine at the time of the release, if the release succeeds. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EIO</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if service has recorded an error. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-ENOTSUP</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if the machine is not in a state that permits release. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="368" column="5" declfile="zephyr/sys/onoff.h" declline="368" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__resource__mgmt__onoff__apis_1gad05d32f1548e56b508628e84ba101554" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int onoff_cancel</definition>
+        <argsstring>(struct onoff_manager *mgr, struct onoff_client *cli)</argsstring>
+        <name>onoff_cancel</name>
+        <param>
+          <type>struct <ref refid="structonoff__manager" kindref="compound">onoff_manager</ref> *</type>
+          <declname>mgr</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structonoff__client" kindref="compound">onoff_client</ref> *</type>
+          <declname>cli</declname>
+        </param>
+        <briefdescription>
+<para>Attempt to cancel an in-progress client operation. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>It may be that a client has initiated an operation but needs to shut down before the operation has completed. For example, when a request was made and the need is no longer present.</para>
+<para>Cancelling is supported only for <ref refid="group__resource__mgmt__onoff__apis_1ga20dcb358e405deb87b7fbb7846ef9d68" kindref="member">onoff_request()</ref> and <ref refid="group__resource__mgmt__onoff__apis_1gaf7b46a5f2e43d1bab193c18b8f6c8ba8" kindref="member">onoff_reset()</ref> operations, and is a synchronous operation. Be aware that any transition that was initiated on behalf of the client will continue to progress to completion: it is only notification of transition completion that may be eliminated. If there are no active requests when a transition to on completes the manager will initiate a transition to off.</para>
+<para>Client notification does not occur for cancelled operations.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mgr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the manager for which an operation is to be cancelled.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cli</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a pointer to the same client state that was provided when the operation to be cancelled was issued.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>&gt;=0</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the observed state of the machine at the time of the cancellation, if the cancellation succeeds. On successful cancellation ownership of <computeroutput>*cli</computeroutput> reverts to the client. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EINVAL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if the parameters are invalid. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EALREADY</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if cli was not a record of an uncompleted notification at the time the cancellation was processed. This likely indicates that the operation and client notification had already completed. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="401" column="5" declfile="zephyr/sys/onoff.h" declline="401" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__resource__mgmt__onoff__apis_1ga7aac2aeb66907ec920557f0ef67d6795" prot="public" static="yes" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>int</type>
+        <definition>static int onoff_cancel_or_release</definition>
+        <argsstring>(struct onoff_manager *mgr, struct onoff_client *cli)</argsstring>
+        <name>onoff_cancel_or_release</name>
+        <param>
+          <type>struct <ref refid="structonoff__manager" kindref="compound">onoff_manager</ref> *</type>
+          <declname>mgr</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structonoff__client" kindref="compound">onoff_client</ref> *</type>
+          <declname>cli</declname>
+        </param>
+        <briefdescription>
+<para>Helper function to safely cancel a request. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Some applications may want to issue requests on an asynchronous event (such as connection to a USB bus) and to release on a paired event (such as loss of connection to a USB bus). Applications cannot precisely determine that an in-progress request is still pending without using <ref refid="structonoff__monitor" kindref="compound">onoff_monitor</ref> and carefully avoiding race conditions.</para>
+<para>This function is a helper that attempts to cancel the operation and issues a release if cancellation fails because the request was completed. This synchronously ensures that ownership of the client data reverts to the client so is available for a future request.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mgr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the manager for which an operation is to be cancelled.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cli</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a pointer to the same client state that was provided when <ref refid="group__resource__mgmt__onoff__apis_1ga20dcb358e405deb87b7fbb7846ef9d68" kindref="member">onoff_request()</ref> was invoked. Behavior is undefined if this is a pointer to client data associated with an <ref refid="group__resource__mgmt__onoff__apis_1gaf7b46a5f2e43d1bab193c18b8f6c8ba8" kindref="member">onoff_reset()</ref> request.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>ONOFF_STATE_TO_ON</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if the cancellation occurred before the transition completed.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>ONOFF_STATE_ON</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if the cancellation occurred after the transition completed.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EINVAL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if the parameters are invalid.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>&lt;0</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>other errors produced by <ref refid="group__resource__mgmt__onoff__apis_1ga19da5359f10fa2e2eb034d1e72235ea6" kindref="member">onoff_release()</ref>. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="435" column="19" bodyfile="zephyr/sys/onoff.h" bodystart="435" bodyend="444"/>
+      </memberdef>
+      <memberdef kind="function" id="group__resource__mgmt__onoff__apis_1gaf7b46a5f2e43d1bab193c18b8f6c8ba8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int onoff_reset</definition>
+        <argsstring>(struct onoff_manager *mgr, struct onoff_client *cli)</argsstring>
+        <name>onoff_reset</name>
+        <param>
+          <type>struct <ref refid="structonoff__manager" kindref="compound">onoff_manager</ref> *</type>
+          <declname>mgr</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structonoff__client" kindref="compound">onoff_client</ref> *</type>
+          <declname>cli</declname>
+        </param>
+        <briefdescription>
+<para>Clear errors on an on-off service and reset it to its off state. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>A service can only be reset when it is in an error state as indicated by <ref refid="group__resource__mgmt__onoff__apis_1ga347efda0aa0305c134224c59677fa6cb" kindref="member">onoff_has_error()</ref>.</para>
+<para>The return value indicates the success or failure of an attempt to initiate an operation to reset the resource. If initiation of the operation succeeds the result of the reset operation itself is provided through the configured client notification method, possibly before this call returns. Multiple clients may request a reset; all are notified when it is complete.</para>
+<para>Note that the call to this function may succeed in a case where the actual reset fails. Always check the operation completion result.</para>
+<para><simplesect kind="note"><para>Due to the conditions on state transition all incomplete asynchronous operations will have been informed of the error when it occurred. There need be no concern about dangling requests left after a reset completes.</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mgr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the manager to be reset.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cli</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>pointer to client state, including instructions on how to notify the client when reset completes. Behavior is undefined if cli references an object associated with an incomplete service operation.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>&gt;=0</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the observed state of the machine at the time of the reset, if the reset succeeds. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-ENOTSUP</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if reset is not supported by the service. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EINVAL</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if the parameters are invalid. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EALREADY</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>if the service does not have a recorded error. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="481" column="5" declfile="zephyr/sys/onoff.h" declline="481" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__resource__mgmt__onoff__apis_1ga9897d93359fe58359c0204da46b4c01e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int onoff_monitor_register</definition>
+        <argsstring>(struct onoff_manager *mgr, struct onoff_monitor *mon)</argsstring>
+        <name>onoff_monitor_register</name>
+        <param>
+          <type>struct <ref refid="structonoff__manager" kindref="compound">onoff_manager</ref> *</type>
+          <declname>mgr</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structonoff__monitor" kindref="compound">onoff_monitor</ref> *</type>
+          <declname>mon</declname>
+        </param>
+        <briefdescription>
+<para>Add a monitor of state changes for a manager. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mgr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the manager for which a state changes are to be monitored.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>mon</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a linkable node providing a non-null callback to be invoked on state changes.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>non-negative on successful addition, or a negative error code. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="549" column="5" declfile="zephyr/sys/onoff.h" declline="549" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__resource__mgmt__onoff__apis_1ga50a51da8e701a3f19f242af5183d807a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int onoff_monitor_unregister</definition>
+        <argsstring>(struct onoff_manager *mgr, struct onoff_monitor *mon)</argsstring>
+        <name>onoff_monitor_unregister</name>
+        <param>
+          <type>struct <ref refid="structonoff__manager" kindref="compound">onoff_manager</ref> *</type>
+          <declname>mgr</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structonoff__monitor" kindref="compound">onoff_monitor</ref> *</type>
+          <declname>mon</declname>
+        </param>
+        <briefdescription>
+<para>Remove a monitor of state changes from a manager. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mgr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the manager for which a state changes are to be monitored.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>mon</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a linkable node providing the callback to be invoked on state changes.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>non-negative on successful removal, or a negative error code. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="563" column="5" declfile="zephyr/sys/onoff.h" declline="563" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__resource__mgmt__onoff__apis_1ga174cadf7dfa5d3c4dc5c8185994f3825" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int onoff_sync_lock</definition>
+        <argsstring>(struct onoff_sync_service *srv, k_spinlock_key_t *keyp)</argsstring>
+        <name>onoff_sync_lock</name>
+        <param>
+          <type>struct <ref refid="structonoff__sync__service" kindref="compound">onoff_sync_service</ref> *</type>
+          <declname>srv</declname>
+        </param>
+        <param>
+          <type><ref refid="group__spinlock__apis_1gacacd3d3bbd31416dbbf6a0239be82ef0" kindref="member">k_spinlock_key_t</ref> *</type>
+          <declname>keyp</declname>
+        </param>
+        <briefdescription>
+<para>Lock a synchronous onoff service and provide its state. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>If an error state is returned it is the caller&apos;s responsibility to decide whether to preserve it (finalize with the same error state) or clear the error (finalize with a non-error result).</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>srv</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>pointer to the synchronous service state.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>keyp</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>pointer to where the lock key should be stored</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>negative if the service is in an error state, otherwise the number of active requests at the time the lock was taken. The lock is held on return regardless of whether a negative state is returned. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="600" column="5" declfile="zephyr/sys/onoff.h" declline="600" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__resource__mgmt__onoff__apis_1gae3331bdad9d03309ee78e86c487b7f26" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int onoff_sync_finalize</definition>
+        <argsstring>(struct onoff_sync_service *srv, k_spinlock_key_t key, struct onoff_client *cli, int res, bool on)</argsstring>
+        <name>onoff_sync_finalize</name>
+        <param>
+          <type>struct <ref refid="structonoff__sync__service" kindref="compound">onoff_sync_service</ref> *</type>
+          <declname>srv</declname>
+        </param>
+        <param>
+          <type><ref refid="group__spinlock__apis_1gacacd3d3bbd31416dbbf6a0239be82ef0" kindref="member">k_spinlock_key_t</ref></type>
+          <declname>key</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structonoff__client" kindref="compound">onoff_client</ref> *</type>
+          <declname>cli</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>res</declname>
+        </param>
+        <param>
+          <type><ref refid="stdbool_8h_1abb452686968e48b67397da5f97445f5b" kindref="member">bool</ref></type>
+          <declname>on</declname>
+        </param>
+        <briefdescription>
+<para>Process the completion of a transition in a synchronous service and release lock. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function updates the service state on the <computeroutput>res</computeroutput> and <computeroutput>on</computeroutput> parameters then releases the lock. If <computeroutput>cli</computeroutput> is not null it finalizes the client notification using <computeroutput>res</computeroutput>.</para>
+<para>If the service was in an error state when locked, and <computeroutput>res</computeroutput> is non-negative when finalized, the count is reset to zero before completing finalization.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>srv</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>pointer to the synchronous service state</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>key</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the key returned by the preceding invocation of <ref refid="group__resource__mgmt__onoff__apis_1ga174cadf7dfa5d3c4dc5c8185994f3825" kindref="member">onoff_sync_lock()</ref>.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cli</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>pointer to the onoff client through which completion information is returned. If a null pointer is passed only the state of the service is updated. For compatibility with the behavior of callbacks used with the manager API <computeroutput>cli</computeroutput> must be null when <computeroutput>on</computeroutput> is false (the manager does not support callbacks when turning off devices).</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>res</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the result of the transition. A negative value places the service into an error state. A non-negative value increments or decrements the reference count as specified by <computeroutput>on</computeroutput>.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>on</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Only when <computeroutput>res</computeroutput> is non-negative, the service reference count will be incremented if<computeroutput>on</computeroutput> is <computeroutput>true</computeroutput>, and decremented if <computeroutput>on</computeroutput> is <computeroutput>false</computeroutput>.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>negative if the service is left or put into an error state, otherwise the number of active requests at the time the lock was released. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="635" column="5" declfile="zephyr/sys/onoff.h" declline="635" declcolumn="5"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="group__resource__mgmt__onoff__apis_1ga9ae0c3528254b10f5e1a9743aea234dd" prot="public" static="no">
+        <name>ONOFF_FLAG_ERROR</name>
+        <initializer><ref refid="group__sys-util_1ga3a8ea58898cb58fc96013383d39f482c" kindref="member">BIT</ref>(0)</initializer>
+        <briefdescription>
+<para>Flag indicating an error state. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Error states are cleared using <ref refid="group__resource__mgmt__onoff__apis_1gaf7b46a5f2e43d1bab193c18b8f6c8ba8" kindref="member">onoff_reset()</ref>. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="30" column="9" bodyfile="zephyr/sys/onoff.h" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__resource__mgmt__onoff__apis_1ga0e06eafdf5021ce970027f20fc001acc" prot="public" static="no">
+        <name>ONOFF_STATE_MASK</name>
+        <initializer>                          (<ref refid="group__resource__mgmt__onoff__apis_1ga9ae0c3528254b10f5e1a9743aea234dd" kindref="member">ONOFF_FLAG_ERROR</ref>   \
+                          | ONOFF_FLAG_ONOFF \
+                          | ONOFF_FLAG_TRANSITION)</initializer>
+        <briefdescription>
+<para>Mask used to isolate bits defining the service state. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Mask a value with this then test for ONOFF_FLAG_ERROR to determine whether the machine has an unfixed error, or compare against ONOFF_STATE_ON, ONOFF_STATE_OFF, ONOFF_STATE_TO_ON, ONOFF_STATE_TO_OFF, or ONOFF_STATE_RESETTING. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="45" column="9" bodyfile="zephyr/sys/onoff.h" bodystart="45" bodyend="47"/>
+      </memberdef>
+      <memberdef kind="define" id="group__resource__mgmt__onoff__apis_1gab9e5380dce026a5dfea770f999400484" prot="public" static="no">
+        <name>ONOFF_STATE_OFF</name>
+        <initializer>0U</initializer>
+        <briefdescription>
+<para>Value exposed by ONOFF_STATE_MASK when service is off. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="52" column="9" bodyfile="zephyr/sys/onoff.h" bodystart="52" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__resource__mgmt__onoff__apis_1ga7cd0fba52afba2e337ab7c830d3058d7" prot="public" static="no">
+        <name>ONOFF_STATE_ON</name>
+        <initializer>ONOFF_FLAG_ONOFF</initializer>
+        <briefdescription>
+<para>Value exposed by ONOFF_STATE_MASK when service is on. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="57" column="9" bodyfile="zephyr/sys/onoff.h" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__resource__mgmt__onoff__apis_1gac005a25d149568208a6fbaa2ceaa1ac6" prot="public" static="no">
+        <name>ONOFF_STATE_ERROR</name>
+        <initializer><ref refid="group__resource__mgmt__onoff__apis_1ga9ae0c3528254b10f5e1a9743aea234dd" kindref="member">ONOFF_FLAG_ERROR</ref></initializer>
+        <briefdescription>
+<para>Value exposed by ONOFF_STATE_MASK when the service is in an error state (and not in the process of resetting its state). </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="63" column="9" bodyfile="zephyr/sys/onoff.h" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__resource__mgmt__onoff__apis_1gac4a0d8a7b501adb011aa1c4c4da3f2a3" prot="public" static="no">
+        <name>ONOFF_STATE_TO_ON</name>
+        <initializer>(ONOFF_FLAG_TRANSITION | <ref refid="group__resource__mgmt__onoff__apis_1ga7cd0fba52afba2e337ab7c830d3058d7" kindref="member">ONOFF_STATE_ON</ref>)</initializer>
+        <briefdescription>
+<para>Value exposed by ONOFF_STATE_MASK when service is transitioning to on. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="69" column="9" bodyfile="zephyr/sys/onoff.h" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__resource__mgmt__onoff__apis_1ga235a04122763f1a2cbb849c56df65d26" prot="public" static="no">
+        <name>ONOFF_STATE_TO_OFF</name>
+        <initializer>(ONOFF_FLAG_TRANSITION | <ref refid="group__resource__mgmt__onoff__apis_1gab9e5380dce026a5dfea770f999400484" kindref="member">ONOFF_STATE_OFF</ref>)</initializer>
+        <briefdescription>
+<para>Value exposed by ONOFF_STATE_MASK when service is transitioning to off. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="75" column="9" bodyfile="zephyr/sys/onoff.h" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__resource__mgmt__onoff__apis_1gacc0438b5c81c639e0035ada5caec940b" prot="public" static="no">
+        <name>ONOFF_STATE_RESETTING</name>
+        <initializer>(ONOFF_FLAG_TRANSITION | <ref refid="group__resource__mgmt__onoff__apis_1gac005a25d149568208a6fbaa2ceaa1ac6" kindref="member">ONOFF_STATE_ERROR</ref>)</initializer>
+        <briefdescription>
+<para>Value exposed by ONOFF_STATE_MASK when service is in the process of resetting. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="81" column="9" bodyfile="zephyr/sys/onoff.h" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="group__resource__mgmt__onoff__apis_1ga8c1171a844ef1d9d6541d342124492ff" prot="public" static="no">
+        <name>ONOFF_TRANSITIONS_INITIALIZER</name>
+        <param><defname>_start</defname></param>
+        <param><defname>_stop</defname></param>
+        <param><defname>_reset</defname></param>
+        <initializer>                { \
+                .start = (_start),                             \
+                .stop = (_stop),                               \
+                .reset = (_reset),                             \
+}</initializer>
+        <briefdescription>
+<para>Initializer for a <ref refid="structonoff__transitions" kindref="compound">onoff_transitions</ref> object. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>_start</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a function used to transition from off to on state.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>_stop</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a function used to transition from on to off state.</para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>_reset</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>a function used to clear errors and force the service to an off state. Can be null. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="190" column="9" bodyfile="zephyr/sys/onoff.h" bodystart="190" bodyend="194"/>
+      </memberdef>
+      <memberdef kind="define" id="group__resource__mgmt__onoff__apis_1gad61d053ae4e9ee12efe8d37372a16c63" prot="public" static="no">
+        <name>ONOFF_CLIENT_EXTENSION_POS</name>
+        <initializer><ref refid="notify_8h_1aa22143622004e478668cdd98a2e04357" kindref="member">SYS_NOTIFY_EXTENSION_POS</ref></initializer>
+        <briefdescription>
+<para>Identify region of <ref refid="structsys__notify" kindref="compound">sys_notify</ref> flags available for containing services. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Bits of the flags field of the <ref refid="structsys__notify" kindref="compound">sys_notify</ref> structure contained within the queued_operation structure at and above this position may be used by extensions to the <ref refid="structonoff__client" kindref="compound">onoff_client</ref> structure.</para>
+<para>These bits are intended for use by containing service implementations to record client-specific information and are subject to other conditions of use specified on the <ref refid="structsys__notify" kindref="compound">sys_notify</ref> API. </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/onoff.h" line="300" column="9" bodyfile="zephyr/sys/onoff.h" bodystart="300" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

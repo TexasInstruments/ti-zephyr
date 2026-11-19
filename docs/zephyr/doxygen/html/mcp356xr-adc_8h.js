@@ -1,0 +1,27 @@
+var mcp356xr_adc_8h =
+[
+    [ "MCP356XR_ANALOG_CLOCK_DIV_2", "mcp356xr-adc_8h.html#ac5a87179d2a5a3b0de6d48a8482d2eaf", null ],
+    [ "MCP356XR_ANALOG_CLOCK_DIV_4", "mcp356xr-adc_8h.html#acb8dabbf6201a9cf7c85f1a62f696fc2", null ],
+    [ "MCP356XR_ANALOG_CLOCK_DIV_8", "mcp356xr-adc_8h.html#abe24ab80baec525ccfef4cb1498dc04e", null ],
+    [ "MCP356XR_ANALOG_CLOCK_NO_DIV", "mcp356xr-adc_8h.html#a7ee20df7e89fb87fdf7c2d8570ba5946", null ],
+    [ "MCP356XR_BOOST_CURRENT_BIAS_DIV_2", "mcp356xr-adc_8h.html#a961331f5f30ea9ecf3b382b21a7dabba", null ],
+    [ "MCP356XR_BOOST_CURRENT_BIAS_MUL_0_66", "mcp356xr-adc_8h.html#a9dcfadb3ec9107feae72bfe2652278fc", null ],
+    [ "MCP356XR_BOOST_CURRENT_BIAS_MUL_1", "mcp356xr-adc_8h.html#a08692ebc1a69dfd99cdbda3aee1073bf", null ],
+    [ "MCP356XR_BOOST_CURRENT_BIAS_MUL_2", "mcp356xr-adc_8h.html#a6f9bd4da07db025e5b4c3ed40b92dbdc", null ],
+    [ "MCP356XR_INPUT_AGND", "mcp356xr-adc_8h.html#ad9a068c06c9b56f7b0116fb07f94834c", null ],
+    [ "MCP356XR_INPUT_AVDD", "mcp356xr-adc_8h.html#a940d3afad7129a802c88c285d47193d7", null ],
+    [ "MCP356XR_INPUT_CH0", "mcp356xr-adc_8h.html#af1a8739665e0e6526de46d9152b3d110", null ],
+    [ "MCP356XR_INPUT_CH1", "mcp356xr-adc_8h.html#a7f9376ceef42f6cd2840d37749d4da8e", null ],
+    [ "MCP356XR_INPUT_CH2", "mcp356xr-adc_8h.html#a20ac9313a9bc70dbff9b856996a2816d", null ],
+    [ "MCP356XR_INPUT_CH3", "mcp356xr-adc_8h.html#a1799772688b65ed09bd6c02aa4e115dd", null ],
+    [ "MCP356XR_INPUT_CH4", "mcp356xr-adc_8h.html#a3a6331b37edde2ae896cd1d46b71fed7", null ],
+    [ "MCP356XR_INPUT_CH5", "mcp356xr-adc_8h.html#abc4bdd2dc5643c2d5c6d3dcd827be2e7", null ],
+    [ "MCP356XR_INPUT_CH6", "mcp356xr-adc_8h.html#aab981b1678c5b75de1edaad9bd884afc", null ],
+    [ "MCP356XR_INPUT_CH7", "mcp356xr-adc_8h.html#ac6f8ca4d6a39560e2da5be2b5fd3b6cd", null ],
+    [ "MCP356XR_INPUT_INTERNAL_TEMPERATURE_SENSOR_DIODE_M", "mcp356xr-adc_8h.html#a4f6bd8f7228c541b17cf9b521a29d0e1", null ],
+    [ "MCP356XR_INPUT_INTERNAL_TEMPERATURE_SENSOR_DIODE_P", "mcp356xr-adc_8h.html#a39d249b2ad6f4577e16761ff4bf45dec", null ],
+    [ "MCP356XR_INPUT_INTERNAL_VCM", "mcp356xr-adc_8h.html#a6a5d6d4051a27377326c11d01196f1a8", null ],
+    [ "MCP356XR_INPUT_REFIN_NEGATIVE", "mcp356xr-adc_8h.html#a8604cb5d9fbc49741796656f785e88d9", null ],
+    [ "MCP356XR_INPUT_REFIN_POSITIVE", "mcp356xr-adc_8h.html#ae0ab226eb2ad790e7d9a9d8a24104d87", null ],
+    [ "MCP356XR_INPUT_RESERVED_DO_NOT_USE", "mcp356xr-adc_8h.html#a28de6a0a2c7ad855ed0ea27749633657", null ]
+];
