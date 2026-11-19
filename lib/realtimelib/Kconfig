@@ -1,0 +1,99 @@
+# SPDX-FileCopyrightText: 2026 Texas Instruments Incorporated
+#
+# SPDX-License-Identifier: LicenseRef-TI-TFL
+
+config TI_REALTIMELIB
+	bool "TI real-time control library"
+	depends on SOC_SERIES_AM13E
+	depends on FPU
+	select TI_MATHLIB_FASTRTS
+	help
+	  Motor control building blocks ported from the AM13 SDK realtimelib:
+	  Clarke, Park, inverse Park and space vector transforms, voltage
+	  reconstruction, filters, PI, PID and PR controllers, field weakening,
+	  vibration compensation, DC link single shunt current reconstruction,
+	  variable switching frequency, observers and utilities such as angle
+	  generation, trajectory, data logging and CPU time.
+
+	  The modules are used by including their headers, for example
+	  <pi.h> or <park.h>. The sine, cosine, square root, arc tangent,
+	  exponential and logarithm functions run on the TMU through
+	  CONFIG_TI_MATHLIB_FASTRTS.
+
+config TI_REALTIMELIB_DATALOG
+	bool "Allocate the DATALOG capture buffers"
+	depends on TI_REALTIMELIB
+	help
+	  Define the DATALOG object and its four 402 entry float capture buffers
+	  (about 6.4 KB of RAM). Without this option <datalog.h> can still be
+	  included, but the application must provide the buffers.
+
+config TI_REALTIMELIB_MTPA_LS_D_UH
+	int "MTPA table d-axis inductance (uH)"
+	default 1442
+	depends on TI_REALTIMELIB
+	help
+	  Stator d-axis inductance that the MTPA inductance table is scaled
+	  from. The default is a small blower motor. MTPA_computeParameters()
+	  takes its inductances as arguments and does not use this value.
+
+config TI_REALTIMELIB_MTPA_LS_Q_UH
+	int "MTPA table q-axis inductance (uH)"
+	default 1442
+	depends on TI_REALTIMELIB
+	help
+	  Stator q-axis inductance that the MTPA inductance table is scaled
+	  from. See TI_REALTIMELIB_MTPA_LS_D_UH.
+
+config TI_REALTIMELIB_MOTORVISION
+	bool "MotorVision data exchange"
+	depends on TI_REALTIMELIB
+	depends on SERIAL
+	select UART_INTERRUPT_DRIVEN
+	help
+	  Streaming and polling of application variables to the MotorVision
+	  PC tool over a serial link. The application provides the variable
+	  table (MVHASH_hash_table and the MVHASH_*_startIndex values, see
+	  <motorvision_hash.h>), calls MOTORVISION_init() with the UART device,
+	  and calls MOTORVISION_capturePlotData() from its control loop and
+	  MOTORVISION_sendPlotData() from a background task.
+
+config TI_REALTIMELIB_VSF_PWM_FREQ_KHZ
+	int "VSF initial PWM frequency (kHz)"
+	default 50
+	depends on TI_REALTIMELIB
+	help
+	  PWM frequency that VSF_initParams() starts from. The default is the
+	  frequency of the SDK motor control solutions. The allowed range of the
+	  module is 5 to 25 kHz (VSF_NUM_MIN_FREQ_HZ and VSF_NUM_MAX_FREQ_HZ), the
+	  value is only the starting point.
+
+config TI_REALTIMELIB_FAST
+	bool "FAST estimator (prebuilt library)"
+	depends on TI_REALTIMELIB
+	help
+	  Link the prebuilt FAST sensorless estimator (est.h) for the Cortex-M33
+	  built with GCC. The library is delivered as an archive without source.
+	  It is not needed for the esmo, speedfr and vsf modules, which only use
+	  the USER_Params structure of <userParams.h>. The application fills
+	  USER_Params with its motor and system data.
+
+config TI_REALTIMELIB_FLUX_OBS
+	bool "Flux observer (prebuilt library)"
+	depends on TI_REALTIMELIB
+	help
+	  Link the prebuilt flux observer library (flux_obs.h). The parameter and
+	  state functions are in source; the run function is in the archive.
+
+config TI_REALTIMELIB_TI_TUNE
+	bool "Motor tuning (prebuilt library)"
+	depends on TI_REALTIMELIB
+	help
+	  Link the prebuilt motor tuning library: resistance, d/q inductance,
+	  open loop and inertia (coast) tuning.
+
+config TI_REALTIMELIB_DEAD_TIME_COMP
+	bool "Dead time compensation (prebuilt library)"
+	depends on TI_REALTIMELIB
+	help
+	  Link the prebuilt dead time compensation library (dead_time_comp.h).
