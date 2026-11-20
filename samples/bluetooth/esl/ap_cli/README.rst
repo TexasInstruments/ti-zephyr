@@ -1,8 +1,9 @@
-.. zephyr:code-sample:: bt_esl_ap_cli
-   :name: Bluetooth LE Electronic Shelf Label (ESL) Access Point CLI
-   :relevant-api: bt_gap bluetooth bt_gatt
+.. _ti-zephyr-sample-esl-ap-cli:
 
-   Demonstrate Bluetooth LE Electronic Shelf Label Access Point functionality with CLI interface.
+Bluetooth LE Electronic Shelf Label (ESL) Access Point CLI
+############################################################
+
+Demonstrate Bluetooth LE Electronic Shelf Label Access Point functionality with CLI interface.
 
 Overview
 ********
@@ -54,23 +55,22 @@ Requirements
   - Encrypted Advertising Data (EAD)
   - Multiple connections (up to 5)
 
-* One or more ESL tags (use the corresponding :zephyr:code-sample:`bt_esl_tag_cli` sample)
+* One or more ESL tags (use the corresponding
+  :ti-ref:`ESL Tag CLI <ti-zephyr-sample-esl-tag-cli>` sample)
 
 Building and Running
 ********************
 
-This sample can be found under :file:`esl/platforms/nrf52/zephyr/ap_cli` in the
-ESL source tree.
+Build the sample for one of ``lp_em_cc2745r10_q1/cc2745r10_q1``,
+``lp_em_cc2745r10_q1/cc2755r10``, ``lp_em_cc2755p10`` or ``lp_em_cc2755p20``:
 
-Build the sample:
+.. code-block:: console
 
-.. zephyr-app-commands::
-   :zephyr-app: esl/platforms/nrf52/zephyr/ap_cli
-   :board: nrf52840dk_nrf52840
-   :goals: build flash
-   :compact:
+   west build -p always -b <board> samples/bluetooth/esl/ap_cli
+   west flash
 
-Use with the corresponding :zephyr:code-sample:`bt_esl_tag_cli` sample that will
+Use with the corresponding
+:ti-ref:`ESL Tag CLI <ti-zephyr-sample-esl-tag-cli>` sample that will
 act as ESL tags responding to this Access Point.
 
 Sample Output
