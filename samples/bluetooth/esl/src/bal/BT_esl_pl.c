@@ -1564,7 +1564,7 @@ static UCHAR find_uuid_in_adv_data(UCHAR ad_type, UCHAR * adv_data, UINT8 adv_le
 {
     API_RESULT retval;
     UINT32 i;
-    UCHAR ad_element[BT_ESL_HCI_MAX_ADVERTISING_DATA_LENGTH];
+    UCHAR ad_element[BT_ESL_ENCRTYPTED_DATA_MAX_LEN];
     UINT16 ad_element_data_len;
     UINT16 uuid;
 
@@ -1644,7 +1644,7 @@ API_RESULT BT_esl_find_ad_element_pl
             }
 
             if ((adv_data[index + 1] == ad_type) &&
-                ((UINT16)(total_length - 1U) <= BT_ESL_HCI_MAX_ADVERTISING_DATA_LENGTH))
+                ((UINT16)(total_length - 1U) <= BT_ESL_ENCRTYPTED_DATA_MAX_LEN))
             {
                 /* Copy the advertising element data into the provided buffer */
                 BT_ESL_mem_copy(ad_element, &adv_data[index + 2], (total_length-1));
