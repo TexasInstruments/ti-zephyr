@@ -4843,10 +4843,7 @@ void BT_esl_ots_client_init_pl(void)
     for (i = 0; i < CONFIG_BT_MAX_CONN; i++)
     {
         ots_client[i].cb = &ots_client_cbs;
-        if (0 != bt_ots_client_register(&ots_client[i]))
-        {
-            ESL_PL_ERR("[ESL PL]: OTS client register failed for conn slot %d\n", i);
-        }
+        (void)bt_ots_client_register(&ots_client[i]);
     }
 }
 
