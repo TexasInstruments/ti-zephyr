@@ -1,0 +1,38 @@
+var drivers_2firmware_2scmi_2nxp_2cpu_8h =
+[
+    [ "scmi_nxp_cpu_sleep_mode_config", "structscmi__nxp__cpu__sleep__mode__config.html", "structscmi__nxp__cpu__sleep__mode__config" ],
+    [ "scmi_pd_lpm_settings", "structscmi__pd__lpm__settings.html", "structscmi__pd__lpm__settings" ],
+    [ "scmi_nxp_cpu_pd_lpm_config", "structscmi__nxp__cpu__pd__lpm__config.html", "structscmi__nxp__cpu__pd__lpm__config" ],
+    [ "scmi_nxp_cpu_irq_mask_config", "structscmi__nxp__cpu__irq__mask__config.html", "structscmi__nxp__cpu__irq__mask__config" ],
+    [ "scmi_nxp_cpu_vector_config", "structscmi__nxp__cpu__vector__config.html", "structscmi__nxp__cpu__vector__config" ],
+    [ "scmi_nxp_cpu_info", "structscmi__nxp__cpu__info.html", "structscmi__nxp__cpu__info" ],
+    [ "SCMI_NXP_CPU_IRQ_WAKE_NUM", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a49704cb9c07b198c7609f2f87628dfc0", null ],
+    [ "SCMI_NXP_CPU_MAX_PDCONFIGS_T", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a73ecf2457ad66f98f96b9eb654915c83", null ],
+    [ "SCMI_NXP_CPU_PROTOCOL_SUPPORTED_VERSION", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#ae9829ba24709ab2f91cd5d3f32d35ddc", null ],
+    [ "SCMI_NXP_CPU_SLEEP_FLAG_IRQ_MUX", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a6633f6dde14c1d1836afe3f13d22d9c0", null ],
+    [ "SCMI_NXP_CPU_VEC_FLAGS_BOOT", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a7508afb7c58540b8479de566fb7d758d", null ],
+    [ "SCMI_NXP_CPU_VEC_FLAGS_RESUME", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#aa4890d55ca37230c5ac03bd191e6ac9f", null ],
+    [ "SCMI_NXP_CPU_VEC_FLAGS_START", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a43ff18baef22c48e8d5b0ae1f3423819", null ],
+    [ "SCMI_PROTOCOL_NXP_CPU_DOMAIN", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#af5dccdbe0be392e7f6250ea2fdf7d59f", null ],
+    [ "scmi_nxp_cpu_domain_message", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a46c971530c897f7a118211e1747a660c", [
+      [ "SCMI_NXP_CPU_DOMAIN_MSG_PROTOCOL_VERSION", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a46c971530c897f7a118211e1747a660ca88346ec727b09e7dc4c4590baff1b3b4", null ],
+      [ "SCMI_NXP_CPU_DOMAIN_MSG_PROTOCOL_ATTRIBUTES", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a46c971530c897f7a118211e1747a660ca3b1122fcbce7a1672e214cf68669d99b", null ],
+      [ "SCMI_NXP_CPU_DOMAIN_MSG_PROTOCOL_MESSAGE_ATTRIBUTES", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a46c971530c897f7a118211e1747a660cac0b9b01d14e8aeec4c0387c2fe502dda", null ],
+      [ "SCMI_NXP_CPU_DOMAIN_MSG_CPU_DOMAIN_ATTRIBUTES", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a46c971530c897f7a118211e1747a660ca3846af82e260336a11319bc85c92ae9d", null ],
+      [ "SCMI_NXP_CPU_DOMAIN_MSG_CPU_START", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a46c971530c897f7a118211e1747a660cacafed8a0b5caff607916735979026f05", null ],
+      [ "SCMI_NXP_CPU_DOMAIN_MSG_CPU_STOP", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a46c971530c897f7a118211e1747a660ca07c997004da424d1eaf3c4fe500940f8", null ],
+      [ "SCMI_NXP_CPU_DOMAIN_MSG_CPU_RESET_VECTOR_SET", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a46c971530c897f7a118211e1747a660cabc8550609117b86c4af30e97141ae28b", null ],
+      [ "SCMI_NXP_CPU_DOMAIN_MSG_CPU_SLEEP_MODE_SET", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a46c971530c897f7a118211e1747a660cab8458eefd0a103199f7071ab19ba5909", null ],
+      [ "SCMI_NXP_CPU_DOMAIN_MSG_CPU_IRQ_WAKE_SET", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a46c971530c897f7a118211e1747a660ca62ac13d7c82271fc8a3d4e5063b5276d", null ],
+      [ "SCMI_NXP_CPU_DOMAIN_MSG_CPU_NON_IRQ_WAKE_SET", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a46c971530c897f7a118211e1747a660cab2d90f95cf5e51ed01658595a009095f", null ],
+      [ "SCMI_NXP_CPU_DOMAIN_MSG_CPU_PD_LPM_CONFIG_SET", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a46c971530c897f7a118211e1747a660ca9c0dd76b03c86d5121d04019e6aaa40d", null ],
+      [ "SCMI_NXP_CPU_DOMAIN_MSG_CPU_PER_LPM_CONFIG_SET", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a46c971530c897f7a118211e1747a660ca4dd12400ddab470305cf8e098769d6e0", null ],
+      [ "SCMI_NXP_CPU_DOMAIN_MSG_CPU_INFO_GET", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a46c971530c897f7a118211e1747a660cae14156d30b137aa0675767421011b3b5", null ],
+      [ "SCMI_NXP_CPU_DOMAIN_MSG_NEGOTIATE_PROTOCOL_VERSION", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a46c971530c897f7a118211e1747a660cab435c352ef5b1083fcca04afa3cb8396", null ]
+    ] ],
+    [ "scmi_nxp_cpu_info_get", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a3f3524711a4dacadbb2fcfeae9d5e008", null ],
+    [ "scmi_nxp_cpu_pd_lpm_set", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a346872d9b23f24a5f9d2636c6c31b9d8", null ],
+    [ "scmi_nxp_cpu_reset_vector", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#a493e417adeb9b63b48613e7ca1f625e8", null ],
+    [ "scmi_nxp_cpu_set_irq_mask", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#ae8e104786d96b8c5a03fc54d201e09ed", null ],
+    [ "scmi_nxp_cpu_sleep_mode_set", "drivers_2firmware_2scmi_2nxp_2cpu_8h.html#ab8211fd0eb9f9be04b441b5488fe8d93", null ]
+];

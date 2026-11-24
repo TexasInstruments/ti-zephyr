@@ -1,0 +1,138 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="zephyr__stdint_8h" kind="file" language="C++">
+    <compoundname>zephyr_stdint.h</compoundname>
+    <includes refid="limits_8h" local="no">limits.h</includes>
+    <incdepgraph>
+      <node id="3">
+        <label>zephyr/posix/posix_limits.h</label>
+        <link refid="posix__limits_8h"/>
+      </node>
+      <node id="1">
+        <label>zephyr/toolchain/zephyr_stdint.h</label>
+        <link refid="zephyr__stdint_8h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>limits.h</label>
+        <link refid="limits_8h"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="2"><highlight class="comment"><sp/>*<sp/>Copyright<sp/>(c)<sp/>2019<sp/>BayLibre<sp/>SAS</highlight></codeline>
+<codeline lineno="3"><highlight class="comment"><sp/>*</highlight></codeline>
+<codeline lineno="4"><highlight class="comment"><sp/>*<sp/>SPDX-License-Identifier:<sp/>Apache-2.0</highlight></codeline>
+<codeline lineno="5"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#ifndef<sp/>ZEPHYR_INCLUDE_TOOLCHAIN_STDINT_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ZEPHYR_INCLUDE_TOOLCHAIN_STDINT_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="11"><highlight class="comment"><sp/>*<sp/>Some<sp/>gcc<sp/>versions<sp/>and/or<sp/>configurations<sp/>as<sp/>found<sp/>in<sp/>the<sp/>Zephyr<sp/>SDK</highlight></codeline>
+<codeline lineno="12"><highlight class="comment"><sp/>*<sp/>(questionably)<sp/>define<sp/>__INT32_TYPE__<sp/>and<sp/>derivatives<sp/>as<sp/>a<sp/>long<sp/>int</highlight></codeline>
+<codeline lineno="13"><highlight class="comment"><sp/>*<sp/>which<sp/>makes<sp/>the<sp/>printf<sp/>format<sp/>checker<sp/>to<sp/>complain<sp/>about<sp/>long<sp/>vs<sp/>int</highlight></codeline>
+<codeline lineno="14"><highlight class="comment"><sp/>*<sp/>mismatch<sp/>when<sp/>%u<sp/>is<sp/>given<sp/>a<sp/>uint32_t<sp/>argument,<sp/>and<sp/>uint32_t<sp/>pointers<sp/>not</highlight></codeline>
+<codeline lineno="15"><highlight class="comment"><sp/>*<sp/>being<sp/>compatible<sp/>with<sp/>int<sp/>pointers.<sp/>Let&apos;s<sp/>redefine<sp/>them<sp/>to<sp/>follow</highlight></codeline>
+<codeline lineno="16"><highlight class="comment"><sp/>*<sp/>common<sp/>expectations<sp/>and<sp/>usage.</highlight></codeline>
+<codeline lineno="17"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="20"><highlight class="comment"><sp/>*<sp/>If<sp/>the<sp/>compiler<sp/>does<sp/>not<sp/>define<sp/>__SIZEOF_INT__<sp/>deduce<sp/>it<sp/>from<sp/>__INT_MAX__</highlight></codeline>
+<codeline lineno="21"><highlight class="comment"><sp/>*<sp/>or<sp/>INT_MAX.</highlight></codeline>
+<codeline lineno="22"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>!defined(__SIZEOF_INT__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>defined(__INT_MAX__)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>GCC<sp/>&gt;=<sp/>3.3.0<sp/>has<sp/>__&lt;val&gt;__<sp/>implicitly<sp/>defined.<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__Z_INT_MAX<sp/>__INT_MAX__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#else</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="comment">/*<sp/>Fall<sp/>back<sp/>to<sp/>POSIX<sp/>versions<sp/>from<sp/>&lt;limits.h&gt;<sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__Z_INT_MAX<sp/>INT_MAX</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;<ref refid="limits_8h" kindref="compound">limits.h</ref>&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>__Z_INT_MAX<sp/>==<sp/>0x7fff</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__SIZEOF_INT__<sp/>2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="preprocessor">#elif<sp/>__Z_INT_MAX<sp/>==<sp/>0x7fffffffL</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__SIZEOF_INT__<sp/>4</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="preprocessor">#elif<sp/>__Z_INT_MAX<sp/>&gt;<sp/>0x7fffffffL</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__SIZEOF_INT__<sp/>8</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>__Z_INT_MAX</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>__SIZEOF_INT__<sp/>!=<sp/>4</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight><highlight class="preprocessor">#error<sp/>&quot;unexpected<sp/>int<sp/>width&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>__INT32_TYPE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>__UINT32_TYPE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>__INT_FAST32_TYPE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>__UINT_FAST32_TYPE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>__INT_LEAST32_TYPE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>__UINT_LEAST32_TYPE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>__INT64_TYPE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>__UINT64_TYPE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>__INT_FAST64_TYPE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>__UINT_FAST64_TYPE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>__INT_LEAST64_TYPE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>__UINT_LEAST64_TYPE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__INT32_TYPE__<sp/>int</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__UINT32_TYPE__<sp/>unsigned<sp/>int</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__INT_FAST32_TYPE__<sp/>__INT32_TYPE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__UINT_FAST32_TYPE__<sp/>__UINT32_TYPE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__INT_LEAST32_TYPE__<sp/>__INT32_TYPE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="68"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__UINT_LEAST32_TYPE__<sp/>__UINT32_TYPE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="69"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__INT64_TYPE__<sp/>long<sp/>long<sp/>int</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__UINT64_TYPE__<sp/>unsigned<sp/>long<sp/>long<sp/>int</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__INT_FAST64_TYPE__<sp/>__INT64_TYPE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="72"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__UINT_FAST64_TYPE__<sp/>__UINT64_TYPE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="73"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__INT_LEAST64_TYPE__<sp/>__INT64_TYPE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="74"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__UINT_LEAST64_TYPE__<sp/>__UINT64_TYPE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="75"><highlight class="normal"></highlight></codeline>
+<codeline lineno="76"><highlight class="normal"></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="77"><highlight class="comment"><sp/>*<sp/>The<sp/>confusion<sp/>also<sp/>exists<sp/>with<sp/>__INTPTR_TYPE__<sp/>which<sp/>is<sp/>either<sp/>an<sp/>int</highlight></codeline>
+<codeline lineno="78"><highlight class="comment"><sp/>*<sp/>(even<sp/>when<sp/>__INT32_TYPE__<sp/>is<sp/>a<sp/>long<sp/>int)<sp/>or<sp/>a<sp/>long<sp/>int.<sp/>Let&apos;s<sp/>redefine</highlight></codeline>
+<codeline lineno="79"><highlight class="comment"><sp/>*<sp/>it<sp/>to<sp/>a<sp/>long<sp/>int<sp/>to<sp/>get<sp/>some<sp/>uniformity.<sp/>Doing<sp/>so<sp/>also<sp/>makes<sp/>it<sp/>compatible</highlight></codeline>
+<codeline lineno="80"><highlight class="comment"><sp/>*<sp/>with<sp/>LP64<sp/>(64-bit)<sp/>targets<sp/>where<sp/>a<sp/>long<sp/>is<sp/>always<sp/>64-bit<sp/>wide.</highlight></codeline>
+<codeline lineno="81"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"></highlight></codeline>
+<codeline lineno="83"><highlight class="normal"></highlight><highlight class="preprocessor">#if<sp/>__SIZEOF_POINTER__<sp/>!=<sp/>__SIZEOF_LONG__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="84"><highlight class="normal"></highlight><highlight class="preprocessor">#error<sp/>&quot;unexpected<sp/>size<sp/>difference<sp/>between<sp/>pointers<sp/>and<sp/>long<sp/>ints&quot;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"></highlight></codeline>
+<codeline lineno="87"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>__INTPTR_TYPE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="88"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>__UINTPTR_TYPE__</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="89"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__INTPTR_TYPE__<sp/>long<sp/>int</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="90"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__UINTPTR_TYPE__<sp/>long<sp/>unsigned<sp/>int</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="91"><highlight class="normal"></highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight><highlight class="comment">/*</highlight></codeline>
+<codeline lineno="93"><highlight class="comment"><sp/>*<sp/>Re-define<sp/>the<sp/>INTN_C(value)<sp/>integer<sp/>constant<sp/>expression<sp/>macros<sp/>to<sp/>match<sp/>the</highlight></codeline>
+<codeline lineno="94"><highlight class="comment"><sp/>*<sp/>integer<sp/>types<sp/>re-defined<sp/>above.</highlight></codeline>
+<codeline lineno="95"><highlight class="comment"><sp/>*/</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="96"><highlight class="normal"></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>__INT32_C</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="98"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>__UINT32_C</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="99"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>__INT64_C</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="100"><highlight class="normal"></highlight><highlight class="preprocessor">#undef<sp/>__UINT64_C</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="101"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__INT32_C(c)<sp/>c</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="102"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__UINT32_C(c)<sp/>c<sp/>##<sp/>U</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="103"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__INT64_C(c)<sp/>c<sp/>##<sp/>LL</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="104"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>__UINT64_C(c)<sp/>c<sp/>##<sp/>ULL</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="105"><highlight class="normal"></highlight></codeline>
+<codeline lineno="106"><highlight class="normal"></highlight><highlight class="preprocessor">#endif<sp/></highlight><highlight class="comment">/*<sp/>ZEPHYR_INCLUDE_TOOLCHAIN_STDINT_H_<sp/>*/</highlight><highlight class="preprocessor"></highlight></codeline>
+    </programlisting>
+    <location file="zephyr/toolchain/zephyr_stdint.h"/>
+  </compounddef>
+</doxygen>

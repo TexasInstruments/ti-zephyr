@@ -1,0 +1,468 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="group__multi__heap__wrapper" kind="group">
+    <compoundname>multi_heap_wrapper</compoundname>
+    <title>Multi-Heap Wrapper</title>
+    <innerclass refid="structsys__multi__heap__rec" prot="public">sys_multi_heap_rec</innerclass>
+    <innerclass refid="structsys__multi__heap" prot="public">sys_multi_heap</innerclass>
+    <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="group__multi__heap__wrapper_1ga2d8ac07e590ef36ba6f35ae88235564e" prot="public" static="no">
+        <type>void *(*</type>
+        <definition>typedef void *(* sys_multi_heap_fn_t) (struct sys_multi_heap *mheap, void *cfg, size_t align, size_t size)</definition>
+        <argsstring>)(struct sys_multi_heap *mheap, void *cfg, size_t align, size_t size)</argsstring>
+        <name>sys_multi_heap_fn_t</name>
+        <briefdescription>
+<para>Multi-heap choice function. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is a user-provided functions whose responsibility is selecting a specific <ref refid="structsys__heap" kindref="compound">sys_heap</ref> backend based on the opaque cfg value, which is specified by the user as an argument to <ref refid="group__multi__heap__wrapper_1ga050d7499b982ed62f85d5fc15f79548b" kindref="member">sys_multi_heap_alloc()</ref>, and performing the allocation on behalf of the caller. The callback is free to choose any registered heap backend to perform the allocation, and may choose to pad the user-provided values as needed, and to use an aligned allocation where required by the specified configuration.</para>
+<para>NULL may be returned, which will cause the allocation to fail and a NULL reported to the calling code.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mheap</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Multi-heap structure. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cfg</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>An opaque user-provided value. It may be interpreted in any way by the application </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>align</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Alignment of requested memory (or zero for no alignment) </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>size</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The user-specified allocation size in bytes </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>A pointer to the allocated memory </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/multi_heap.h" line="57" column="9" bodyfile="zephyr/sys/multi_heap.h" bodystart="57" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="group__multi__heap__wrapper_1ga50ded513b50c7aed7d89386bb8f425cc" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void sys_multi_heap_init</definition>
+        <argsstring>(struct sys_multi_heap *heap, sys_multi_heap_fn_t choice_fn)</argsstring>
+        <name>sys_multi_heap_init</name>
+        <param>
+          <type>struct <ref refid="structsys__multi__heap" kindref="compound">sys_multi_heap</ref> *</type>
+          <declname>heap</declname>
+        </param>
+        <param>
+          <type><ref refid="group__multi__heap__wrapper_1ga2d8ac07e590ef36ba6f35ae88235564e" kindref="member">sys_multi_heap_fn_t</ref></type>
+          <declname>choice_fn</declname>
+        </param>
+        <briefdescription>
+<para>Initialize multi-heap. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Initialize a <ref refid="structsys__multi__heap" kindref="compound">sys_multi_heap</ref> struct with the specified choice function. Note that individual heaps must be added later with sys_multi_heap_add_heap so that the heap bounds can be tracked by the multi heap code.</para>
+<para><simplesect kind="note"><para>In general a multiheap is likely to be instantiated semi-statically from system configuration (for example, via linker-provided bounds on available memory in different regions, or from devicetree definitions of hardware-provided addressable memory, etc...). The general expectation is that a soc- or board-level platform device will be initialized at system boot from these upstream configuration sources and not that an application will assemble a multi-heap on its own.</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>heap</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A <ref refid="structsys__multi__heap" kindref="compound">sys_multi_heap</ref> to initialize </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>choice_fn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A <ref refid="group__multi__heap__wrapper_1ga2d8ac07e590ef36ba6f35ae88235564e" kindref="member">sys_multi_heap_fn_t</ref> callback used to select heaps at allocation time </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/multi_heap.h" line="93" column="6" declfile="zephyr/sys/multi_heap.h" declline="93" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group__multi__heap__wrapper_1gacd6b92e8090a56e1eb59a18166d659d1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void sys_multi_heap_add_heap</definition>
+        <argsstring>(struct sys_multi_heap *mheap, struct sys_heap *heap, void *user_data)</argsstring>
+        <name>sys_multi_heap_add_heap</name>
+        <param>
+          <type>struct <ref refid="structsys__multi__heap" kindref="compound">sys_multi_heap</ref> *</type>
+          <declname>mheap</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structsys__heap" kindref="compound">sys_heap</ref> *</type>
+          <declname>heap</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>user_data</declname>
+        </param>
+        <briefdescription>
+<para>Add <ref refid="structsys__heap" kindref="compound">sys_heap</ref> to multi heap. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This adds a known <ref refid="structsys__heap" kindref="compound">sys_heap</ref> backend to an existing multi heap, allowing the multi heap internals to track the bounds of the heap and determine which heap (if any) from which a freed block was allocated.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mheap</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A <ref refid="structsys__multi__heap" kindref="compound">sys_multi_heap</ref> to which to add a heap </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>heap</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The heap to add </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>user_data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>pointer to any data for the heap </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/multi_heap.h" line="108" column="6" declfile="zephyr/sys/multi_heap.h" declline="108" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group__multi__heap__wrapper_1ga050d7499b982ed62f85d5fc15f79548b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void *</type>
+        <definition>void * sys_multi_heap_alloc</definition>
+        <argsstring>(struct sys_multi_heap *mheap, void *cfg, size_t bytes)</argsstring>
+        <name>sys_multi_heap_alloc</name>
+        <param>
+          <type>struct <ref refid="structsys__multi__heap" kindref="compound">sys_multi_heap</ref> *</type>
+          <declname>mheap</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>cfg</declname>
+        </param>
+        <param>
+          <type><ref refid="retained__mem_8h_1a36713c339c3c5ec6d6bd481480bdb6f9" kindref="member">size_t</ref></type>
+          <declname>bytes</declname>
+        </param>
+        <briefdescription>
+<para>Allocate memory from multi heap. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Just as for <ref refid="group__low__level__heap__allocator_1ga6b8bdf02c9be5576fddbe711904a3aad" kindref="member">sys_heap_alloc()</ref>, allocates a block of memory of the specified size in bytes. Takes an opaque configuration pointer passed to the multi heap choice function, which is used by integration code to choose a heap backend.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mheap</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Multi heap pointer </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cfg</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Opaque configuration parameter, as for <ref refid="group__multi__heap__wrapper_1ga2d8ac07e590ef36ba6f35ae88235564e" kindref="member">sys_multi_heap_fn_t</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>bytes</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Requested size of the allocation, in bytes </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>A valid pointer to heap memory, or NULL if no memory is available </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/multi_heap.h" line="123" column="6" declfile="zephyr/sys/multi_heap.h" declline="123" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group__multi__heap__wrapper_1ga9f958dbfa86e12236b8e356375b8d04c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void *</type>
+        <definition>void * sys_multi_heap_aligned_alloc</definition>
+        <argsstring>(struct sys_multi_heap *mheap, void *cfg, size_t align, size_t bytes)</argsstring>
+        <name>sys_multi_heap_aligned_alloc</name>
+        <param>
+          <type>struct <ref refid="structsys__multi__heap" kindref="compound">sys_multi_heap</ref> *</type>
+          <declname>mheap</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>cfg</declname>
+        </param>
+        <param>
+          <type><ref refid="retained__mem_8h_1a36713c339c3c5ec6d6bd481480bdb6f9" kindref="member">size_t</ref></type>
+          <declname>align</declname>
+        </param>
+        <param>
+          <type><ref refid="retained__mem_8h_1a36713c339c3c5ec6d6bd481480bdb6f9" kindref="member">size_t</ref></type>
+          <declname>bytes</declname>
+        </param>
+        <briefdescription>
+<para>Allocate aligned memory from multi heap. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Just as for <ref refid="group__multi__heap__wrapper_1ga050d7499b982ed62f85d5fc15f79548b" kindref="member">sys_multi_heap_alloc()</ref>, allocates a block of memory of the specified size in bytes. Takes an additional parameter specifying a power of two alignment, in bytes.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mheap</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Multi heap pointer </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cfg</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Opaque configuration parameter, as for <ref refid="group__multi__heap__wrapper_1ga2d8ac07e590ef36ba6f35ae88235564e" kindref="member">sys_multi_heap_fn_t</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>align</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Power of two alignment for the returned pointer, in bytes </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>bytes</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Requested size of the allocation, in bytes </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>A valid pointer to heap memory, or NULL if no memory is available </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/multi_heap.h" line="138" column="6" declfile="zephyr/sys/multi_heap.h" declline="138" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group__multi__heap__wrapper_1gad98b78be5c0ed50e1e0715a15c289b3a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>const struct <ref refid="structsys__multi__heap__rec" kindref="compound">sys_multi_heap_rec</ref> *</type>
+        <definition>const struct sys_multi_heap_rec * sys_multi_heap_get_heap</definition>
+        <argsstring>(const struct sys_multi_heap *mheap, void *addr)</argsstring>
+        <name>sys_multi_heap_get_heap</name>
+        <param>
+          <type>const struct <ref refid="structsys__multi__heap" kindref="compound">sys_multi_heap</ref> *</type>
+          <declname>mheap</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>addr</declname>
+        </param>
+        <briefdescription>
+<para>Get a specific heap for provided address. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Finds a single system heap (with user_data) controlling the provided pointer</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mheap</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Multi heap pointer </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>addr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>address to be found, must be a pointer to a block allocated by sys_multi_heap_alloc </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>0 multi_heap_rec pointer to a structure to be filled with return data or NULL if the heap has not been found </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/multi_heap.h" line="152" column="31" declfile="zephyr/sys/multi_heap.h" declline="152" declcolumn="31"/>
+      </memberdef>
+      <memberdef kind="function" id="group__multi__heap__wrapper_1gac6f913a3bbf247807ba80408a242db73" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void sys_multi_heap_free</definition>
+        <argsstring>(struct sys_multi_heap *mheap, void *block)</argsstring>
+        <name>sys_multi_heap_free</name>
+        <param>
+          <type>struct <ref refid="structsys__multi__heap" kindref="compound">sys_multi_heap</ref> *</type>
+          <declname>mheap</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>block</declname>
+        </param>
+        <briefdescription>
+<para>Free memory allocated from multi heap. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Returns the specified block, which must be the return value of a previously successful <ref refid="group__multi__heap__wrapper_1ga050d7499b982ed62f85d5fc15f79548b" kindref="member">sys_multi_heap_alloc()</ref> or <ref refid="group__multi__heap__wrapper_1ga9f958dbfa86e12236b8e356375b8d04c" kindref="member">sys_multi_heap_aligned_alloc()</ref> call, to the heap backend from which it was allocated.</para>
+<para>Accepts NULL as a block parameter, which is specified to have no effect.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mheap</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Multi heap pointer </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>block</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Block to free, must be a pointer to a block allocated by sys_multi_heap_alloc </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/multi_heap.h" line="169" column="6" declfile="zephyr/sys/multi_heap.h" declline="169" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group__multi__heap__wrapper_1ga603800e6e2ae8c6e058fff18c891c3f0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void *</type>
+        <definition>void * sys_multi_heap_aligned_realloc</definition>
+        <argsstring>(struct sys_multi_heap *mheap, void *cfg, void *ptr, size_t align, size_t bytes)</argsstring>
+        <name>sys_multi_heap_aligned_realloc</name>
+        <param>
+          <type>struct <ref refid="structsys__multi__heap" kindref="compound">sys_multi_heap</ref> *</type>
+          <declname>mheap</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>cfg</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>ptr</declname>
+        </param>
+        <param>
+          <type><ref refid="retained__mem_8h_1a36713c339c3c5ec6d6bd481480bdb6f9" kindref="member">size_t</ref></type>
+          <declname>align</declname>
+        </param>
+        <param>
+          <type><ref refid="retained__mem_8h_1a36713c339c3c5ec6d6bd481480bdb6f9" kindref="member">size_t</ref></type>
+          <declname>bytes</declname>
+        </param>
+        <briefdescription>
+<para>Expand the size of an existing allocation on the multi heap. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Returns a pointer to a new memory region with the same contents, but a different allocated size. If the new allocation can be expanded in place, the pointer returned will be identical. Otherwise the data will be copies to a new block and the old one will be freed as per <ref refid="group__low__level__heap__allocator_1gab654da64adf74e67ae12f263eb420560" kindref="member">sys_heap_free()</ref>. If the specified size is smaller than the original, the block will be truncated in place and the remaining memory returned to the heap. If the allocation of a new block fails, then NULL will be returned and the old block will not be freed or modified. If a new allocation is needed, the choice for the heap used will be bases on the cfg parameter (same as in sys_multi_heap_aligned_alloc).</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>mheap</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Multi heap pointer </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>cfg</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Opaque configuration parameter, as for <ref refid="group__multi__heap__wrapper_1ga2d8ac07e590ef36ba6f35ae88235564e" kindref="member">sys_multi_heap_fn_t</ref> </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>ptr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Original pointer returned from a previous allocation </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>align</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Alignment in bytes, must be a power of two </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>bytes</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Number of bytes requested for the new block </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Pointer to memory the caller can now use, or NULL </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/multi_heap.h" line="191" column="6" declfile="zephyr/sys/multi_heap.h" declline="191" declcolumn="6"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="group__multi__heap__wrapper_1ga68c2739931487c6b1235c187d563f5f8" prot="public" static="no">
+        <name>sys_multi_heap_realloc</name>
+        <param><defname>mheap</defname></param>
+        <param><defname>cfg</defname></param>
+        <param><defname>ptr</defname></param>
+        <param><defname>bytes</defname></param>
+        <initializer>        <ref refid="group__multi__heap__wrapper_1ga603800e6e2ae8c6e058fff18c891c3f0" kindref="member">sys_multi_heap_aligned_realloc</ref>(mheap, cfg, ptr, 0, bytes)</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/sys/multi_heap.h" line="194" column="9" bodyfile="zephyr/sys/multi_heap.h" bodystart="194" bodyend="195"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,26 @@
+var imx95__power_8h =
+[
+    [ "IMX95_PD_A55C0", "imx95__power_8h.html#a87c1d8cfa00c8e090cf5127ae2978cdb", null ],
+    [ "IMX95_PD_A55C1", "imx95__power_8h.html#ab4bdfdfbcb7f6363edf3e733e67fe60c", null ],
+    [ "IMX95_PD_A55C2", "imx95__power_8h.html#aeb06c7928f37e0eca1ff7ac01e035456", null ],
+    [ "IMX95_PD_A55C3", "imx95__power_8h.html#a816c41bd68b7c0bc9709e36521a1c671", null ],
+    [ "IMX95_PD_A55C4", "imx95__power_8h.html#a2b42961f5b412b1a3575fc12027c36f2", null ],
+    [ "IMX95_PD_A55C5", "imx95__power_8h.html#a2c01840a13ca65b03a8bee1a6bb25d1f", null ],
+    [ "IMX95_PD_A55P", "imx95__power_8h.html#a7876c4896b9610f14c82dba26db79a17", null ],
+    [ "IMX95_PD_ANA", "imx95__power_8h.html#aa6ea36a66b45ca02aca73afa134597d4", null ],
+    [ "IMX95_PD_AON", "imx95__power_8h.html#a076aed323032d41c9bd80a5b6acf64fd", null ],
+    [ "IMX95_PD_BBSM", "imx95__power_8h.html#af63e712c087ba6a13ebaed465246a373", null ],
+    [ "IMX95_PD_CAMERA", "imx95__power_8h.html#a167806c7555309a3416323e5b23b9b57", null ],
+    [ "IMX95_PD_CCMSRCGPC", "imx95__power_8h.html#ae1664e7d0d4287bec6ac9c41162cedfe", null ],
+    [ "IMX95_PD_DDR", "imx95__power_8h.html#a92c8b935529c0150702e02ba2d0dec1c", null ],
+    [ "IMX95_PD_DISPLAY", "imx95__power_8h.html#a69a65cdff6b24849a53971780a700472", null ],
+    [ "IMX95_PD_GPU", "imx95__power_8h.html#ada0fcba6d21c96cd91d5525f714d9263", null ],
+    [ "IMX95_PD_HSIO_TOP", "imx95__power_8h.html#a0df7480b2d4d15e4aae35c7838c619fb", null ],
+    [ "IMX95_PD_HSIO_WAON", "imx95__power_8h.html#a5898a8b59834e332d701f83bae28e1c3", null ],
+    [ "IMX95_PD_M7", "imx95__power_8h.html#af5cf465ffaccd99b8ee7929d57c5a622", null ],
+    [ "IMX95_PD_NETC", "imx95__power_8h.html#a71affeeb8ef20cc0c1f65ecf3f0ae633", null ],
+    [ "IMX95_PD_NOC", "imx95__power_8h.html#ad31a0a29b7467c03e42235de1b629db2", null ],
+    [ "IMX95_PD_NPU", "imx95__power_8h.html#a282a8a5bf4e733ba7fba935b90ad3e01", null ],
+    [ "IMX95_PD_VPU", "imx95__power_8h.html#a5ab1fb69eea82e21893c64d84ffc8753", null ],
+    [ "IMX95_PD_WAKEUP", "imx95__power_8h.html#a2a2c66871ba7ddc90c29947d47136d7e", null ]
+];

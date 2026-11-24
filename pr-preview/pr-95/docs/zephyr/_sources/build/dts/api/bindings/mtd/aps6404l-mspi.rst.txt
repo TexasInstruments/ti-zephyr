@@ -1,0 +1,759 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: aps6404l
+.. _dtbinding_aps6404l_mspi:
+
+aps6404l (on mspi bus)
+######################
+
+.. sidebar:: Overview
+
+   :Name: ``aps6404l``
+   :Vendor: :ref:`Generic or vendor-independent <dt_no_vendor>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=aps6404l>` using
+               this compatible
+   :Driver: :zephyr_file:`drivers/memc/memc_mspi_aps6404l.c`
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   AP Memory APS6404L pSRAM on MSPI bus
+
+Properties
+**********
+
+.. tabs::
+
+   .. group-tab:: Node specific properties
+
+      Properties not inherited from the base binding file.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``mspi-max-frequency``
+           - ``int``
+           - .. code-block:: none
+
+                Maximum clock frequency of device to configure in Hz.
+                In device tree, it is normally the target operating
+                frequency after initialization.
+
+
+
+             This property is **required**.
+
+         * - ``mspi-io-mode``
+           - ``string``
+           - .. code-block:: none
+
+                MSPI I/O mode setting.
+                In device tree, it is normally the target io mode
+                after initialization.
+
+
+
+             Legal values: ``MSPI_IO_MODE_SINGLE``, ``MSPI_IO_MODE_DUAL``, ``MSPI_IO_MODE_DUAL_1_1_2``, ``MSPI_IO_MODE_DUAL_1_2_2``, ``MSPI_IO_MODE_QUAD``, ``MSPI_IO_MODE_QUAD_1_1_4``, ``MSPI_IO_MODE_QUAD_1_4_4``, ``MSPI_IO_MODE_OCTAL``, ``MSPI_IO_MODE_OCTAL_1_1_8``, ``MSPI_IO_MODE_OCTAL_1_8_8``, ``MSPI_IO_MODE_HEX``, ``MSPI_IO_MODE_HEX_8_8_16``, ``MSPI_IO_MODE_HEX_8_16_16``
+
+         * - ``mspi-data-rate``
+           - ``string``
+           - .. code-block:: none
+
+                MSPI data rate setting. In device tree, it is normally the target data rate after initialization.
+
+
+             Legal values: ``MSPI_DATA_RATE_SINGLE``, ``MSPI_DATA_RATE_S_S_D``, ``MSPI_DATA_RATE_S_D_D``, ``MSPI_DATA_RATE_DUAL``
+
+         * - ``mspi-hardware-ce-num``
+           - ``int``
+           - .. code-block:: none
+
+                MSPI hardware CE number.
+                MSPI controller may natively support multiple peripheral devices
+                on the same MSPI instance by assigning designated CE numbers.
+
+
+
+         * - ``mspi-cpp-mode``
+           - ``string``
+           - .. code-block:: none
+
+                MSPI clock polarity setting.
+                MSPI_CPP_MODE_0: CPOL=0, CPHA=0
+                MSPI_CPP_MODE_1: CPOL=0, CPHA=1
+                MSPI_CPP_MODE_2: CPOL=1, CPHA=0
+                MSPI_CPP_MODE_3: CPOL=1, CPHA=1
+
+
+
+             Legal values: ``MSPI_CPP_MODE_0``, ``MSPI_CPP_MODE_1``, ``MSPI_CPP_MODE_2``, ``MSPI_CPP_MODE_3``
+
+         * - ``mspi-endian``
+           - ``string``
+           - .. code-block:: none
+
+                MSPI transfer MSB or LSB first.
+
+
+
+             Legal values: ``MSPI_LITTLE_ENDIAN``, ``MSPI_BIG_ENDIAN``
+
+         * - ``mspi-ce-polarity``
+           - ``string``
+           - .. code-block:: none
+
+                MSPI CE polarity. In most cases, it is active low.
+
+
+
+             Legal values: ``MSPI_CE_ACTIVE_LOW``, ``MSPI_CE_ACTIVE_HIGH``
+
+         * - ``mspi-dqs-enable``
+           - ``boolean``
+           - .. code-block:: none
+
+                Enable DQS mode for a device which supports it.
+                This will be checked against dqs-support and configure
+                the MSPI hardware if it supports DQS mode.
+
+
+
+         * - ``mspi-hold-ce``
+           - ``boolean``
+           - .. code-block:: none
+
+                In some cases, it is necessary for the controller to manage
+                MSPI chip enable (under software control), so that multiple
+                mspi transactions can be performed without releasing CE.
+                A typical use case is variable length MSPI packets where
+                the first mspi transaction reads the length and the second
+                mspi transaction reads length bytes.
+
+
+
+         * - ``rx-dummy``
+           - ``int``
+           - .. code-block:: none
+
+                The number of data or clock cycles between addr and data
+                in RX direction.
+                0 means the RX dummy phase is disabled.
+
+
+
+         * - ``tx-dummy``
+           - ``int``
+           - .. code-block:: none
+
+                The number of data or clock cycles between addr and data
+                in TX direction.
+                0 means the TX dummy phase is disabled.
+
+
+
+         * - ``read-command``
+           - ``int``
+           - .. code-block:: none
+
+                Read command to be sent in RX direction.
+
+
+
+         * - ``write-command``
+           - ``int``
+           - .. code-block:: none
+
+                Write command to be sent in RX direction.
+
+
+
+         * - ``command-length``
+           - ``string``
+           - .. code-block:: none
+
+                Length in bytes of the write and read commands.
+
+
+
+             Legal values: ``INSTR_DISABLED``, ``INSTR_1_BYTE``, ``INSTR_2_BYTE``
+
+         * - ``address-length``
+           - ``string``
+           - .. code-block:: none
+
+                Length in bytes of address to be sent in address phase.
+
+
+
+             Legal values: ``ADDR_DISABLED``, ``ADDR_1_BYTE``, ``ADDR_2_BYTE``, ``ADDR_3_BYTE``, ``ADDR_4_BYTE``
+
+         * - ``memmap-config``
+           - ``array``
+           - .. code-block:: none
+
+                Array of parameters to configure the memory map feature.
+                enable: whether the memory map feature is enabled.
+                address_offset: The offset in bytes to the start of the
+                                platform specific memory mapped address region.
+                size: The size in bytes of the memory mapped address region one
+                      wish to enable or disable.
+                permission: The permission granted to the region. (RW/RO)
+
+                For controller that support this feature. One may map the device
+                memory into Soc system memory map. i.e. memory mapped address region
+                So that the device may be used as an external RAM and execute code.
+
+                default =
+                <
+                  .enable         = false;
+                  .address_offset = 0;
+                  .size           = 0;
+                  .permission     = 0;
+                >
+
+
+
+         * - ``scramble-config``
+           - ``array``
+           - .. code-block:: none
+
+                Array of parameters to configure the scrambling feature.
+                enable: whether scrambling feature is enabled.
+                address_offset: The offset in bytes to the start address which
+                                can be the offset to the start of the platform
+                                specific memory mapped address region or physical device address.
+
+                size: The size in bytes of the region one wish to enable or disable.
+                For controller that support hardware scrambling, one may use it for
+                additional security to protect data or code stored in external devices.
+
+                default =
+                <
+                  .enable         = false;
+                  .address_offset = 0;
+                  .size           = 0;
+                >
+
+
+
+         * - ``ce-break-config``
+           - ``array``
+           - .. code-block:: none
+
+                Array of parameters to configure the auto CE break feature.
+                mem_boundary: Memory boundary in bytes of a device that a transfer
+                              shouldn't cross.
+                time_to_break: The maximum time of a transfer shouldn't exceed for
+                               a device in micro seconds(us).
+
+                This is typically used with devices that has memory boundaries or
+                requires periodic internal refresh. e.g. psram
+
+                default =
+                <
+                  .mem_boundary    = 0;
+                  .time_to_break   = 0;
+                >
+
+
+
+         * - ``supply-gpios``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                GPIO specifier that controls power to the device.
+
+                This property should be provided when the device has a dedicated
+                switch that controls power to the device.  The supply state is
+                entirely the responsibility of the device driver.
+
+                Contrast with vin-supply.
+
+
+
+         * - ``vin-supply``
+           - ``phandle``
+           - .. code-block:: none
+
+                Reference to the regulator that controls power to the device.
+                The referenced devicetree node must have a regulator compatible.
+
+                This property should be provided when device power is supplied
+                by a shared regulator.  The supply state is dependent on the
+                request status of all devices fed by the regulator.
+
+                Contrast with supply-gpios.  If both properties are provided
+                then the regulator must be requested before the supply GPIOS is
+                set to an active state, and the supply GPIOS must be set to an
+                inactive state before releasing the regulator.
+
+
+
+         * - ``jedec-id``
+           - ``uint8-array``
+           - .. code-block:: none
+
+                JEDEC ID as manufacturer ID, memory type, memory density
+
+
+         * - ``size``
+           - ``int``
+           - .. code-block:: none
+
+                flash capacity in bits
+
+
+         * - ``sfdp-bfp``
+           - ``uint8-array``
+           - .. code-block:: none
+
+                Contains the 32-bit words in little-endian byte order from the
+                JESD216 Serial Flash Discoverable Parameters Basic Flash
+                Parameters table.  This provides flash-specific configuration
+                information in cases were runtime retrieval of SFDP data
+                is not desired.
+
+
+
+         * - ``sfdp-ff05``
+           - ``uint8-array``
+           - .. code-block:: none
+
+                Contains the 32-bit words in little-endian byte order from the JESD216
+                SFDP xSPI Profile 1.0 table.
+
+
+
+         * - ``sfdp-ff84``
+           - ``uint8-array``
+           - .. code-block:: none
+
+                Contains the 32-bit words in little-endian byte order from the JESD216
+                SFDP 4-byte Address Instruction Parameter table.
+
+
+
+         * - ``quad-enable-requirements``
+           - ``string``
+           - .. code-block:: none
+
+                Quad Enable Requirements value from JESD216 BFP DW15.
+
+                Use NONE if the device detects 1-1-4 and 1-4-4 modes by the
+                instruction.  Use S1B6 if QE is bit 6 of the first status register
+                byte, and can be configured by reading then writing one byte with
+                RDSR and WRSR.  For other fields see the specification.
+
+
+
+             Legal values: ``NONE``, ``S2B1v1``, ``S1B6``, ``S2B7``, ``S2B1v4``, ``S2B1v5``, ``S2B1v6``
+
+         * - ``enter-4byte-addr``
+           - ``int``
+           - .. code-block:: none
+
+                Enter 4-Byte Addressing value from JESD216 BFP DW16
+
+                This property is ignored if the device is configured to use SFDP data
+                from the sfdp-bfp property (CONFIG_SPI_NOR_SFDP_DEVICETREE) or to read
+                SFDP properties at runtime (CONFIG_SPI_NOR_SFDP_RUNTIME).
+
+                For CONFIG_SPI_NOR_SFDP_MINIMAL this is the 8-bit value from bits 31:24
+                of DW16 identifying ways a device can be placed into 4-byte addressing
+                mode.  If provided as a non-zero value the driver assumes that 4-byte
+                addressing is require to access the full address range, and
+                automatically puts the device into 4-byte address mode when the device
+                is initialized.
+
+
+
+         * - ``page-size``
+           - ``int``
+           - .. code-block:: none
+
+                Number of bytes in a page from JESD216 BFP DW11
+
+                This property is only used in the CONFIG_SPI_NOR_SFDP_MINIMAL configuration.
+                It is ignored if the device is configured to use SFDP data
+                from the sfdp-bfp property (CONFIG_SPI_NOR_SFDP_DEVICETREE) or
+                if the SFDP parameters are read from the device at
+                runtime (CONFIG_SPI_NOR_SFDP_RUNTIME).
+
+                The default value is 256 bytes if the value is not specified.
+
+
+
+
+
+   .. group-tab:: Deprecated node specific properties
+
+      Deprecated properties not inherited from the base binding file.
+
+      (None)
+
+   .. group-tab:: Base properties
+
+      Properties inherited from the base binding file, which defines
+      common properties that may be set on many nodes. Not all of these
+      may apply to the "aps6404l" compatible.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``reg``
+           - ``array``
+           - .. code-block:: none
+
+                Information used to address the device. The value is specific to
+                the device (i.e. is different depending on the compatible
+                property).
+
+                The "reg" property is typically a sequence of (address, length) pairs.
+                Each pair is called a "register block". Values are
+                conventionally written in hex.
+
+                For details, see "2.3.6 reg" in Devicetree Specification v0.4.
+
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``status``
+           - ``string``
+           - .. code-block:: none
+
+                Indicates the operational status of the hardware or other
+                resource that the node represents. In particular:
+
+                  - "okay" means the resource is operational and, for example,
+                    can be used by device drivers
+                  - "disabled" means the resource is not operational and the system
+                    should treat it as if it is not present
+
+                For details, see "2.3.4 status" in Devicetree Specification v0.4.
+
+
+
+             Legal values: ``okay``, ``disabled``, ``reserved``, ``fail``, ``fail-sss``
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``compatible``
+           - ``string-array``
+           - .. code-block:: none
+
+                This property is a list of strings that essentially define what
+                type of hardware or other resource this devicetree node
+                represents. Each device driver checks for specific compatible
+                property values to find the devicetree nodes that represent
+                resources that the driver should manage.
+
+                The recommended format is "vendor,device", The "vendor" part is
+                an abbreviated name of the vendor. The "device" is usually from
+                the datasheet.
+
+                The compatible property can have multiple values, ordered from
+                most- to least-specific. Having additional values is useful when the
+                device is a specific instance of a more general family, to allow the
+                system to match the most specific driver available.
+
+                For details, see "2.3.1 compatible" in Devicetree Specification v0.4.
+
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``reg-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each register block in the "reg" property.
+                For example:
+
+                  / {
+                       soc {
+                           #address-cells = <1>;
+                           #size-cells = <1>;
+
+                           uart@1000 {
+                               reg = <0x1000 0x2000>, <0x3000 0x4000>;
+                               reg-names = "foo", "bar";
+                           };
+                       };
+                  };
+
+                The uart@1000 node has two register blocks:
+
+                  - one with base address 0x1000, size 0x2000, and name "foo"
+                  - another with base address 0x3000, size 0x4000, and name "bar"
+
+
+
+         * - ``interrupts``
+           - ``array``
+           - .. code-block:: none
+
+                Information about interrupts generated by the device, encoded as an array
+                of one or more interrupt specifiers. The format of the data in this property
+                varies by where the device appears in the interrupt tree. Devices with the same
+                "interrupt-parent" will use the same format in their interrupts properties.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``interrupts-extended``
+           - ``compound``
+           - .. code-block:: none
+
+                Extended interrupt specifier for device, used as an alternative to
+                the "interrupts" property.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each interrupt generated by a device.
+                The interrupts themselves are defined in either "interrupts" or
+                "interrupts-extended" properties.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-parent``
+           - ``phandle``
+           - .. code-block:: none
+
+                If present, this refers to the node which handles interrupts generated
+                by this device.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``label``
+           - ``string``
+           - .. code-block:: none
+
+                Human readable string describing the device. Use of this property is
+                deprecated except as needed on a case-by-case basis.
+
+                For details, see "4.1.2 Miscellaneous Properties" in Devicetree
+                Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``clocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Information about the device's clock providers. In general, this property
+                should follow conventions established in the dt-schema binding:
+
+                  https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/clock/clock.yaml
+
+
+
+         * - ``clock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each clock provider in the "clocks" property.
+
+
+
+         * - ``#address-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by address fields
+                in "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+         * - ``#size-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by size fields in
+                "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+         * - ``dmas``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                DMA channel specifiers relevant to the device.
+
+
+
+         * - ``dma-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the DMA channel specifiers in the "dmas" property.
+
+
+
+         * - ``io-channels``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                IO channel specifiers relevant to the device.
+
+
+
+         * - ``io-channel-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the IO channel specifiers in the "io-channels" property.
+
+
+
+         * - ``mboxes``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Mailbox / IPM channel specifiers relevant to the device.
+
+
+
+         * - ``mbox-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the mbox specifiers in the "mboxes" property.
+
+
+
+         * - ``power-domains``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Power domain specifiers relevant to the device.
+
+
+
+         * - ``power-domain-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the power domain specifiers in the "power-domains" property.
+
+
+
+         * - ``#power-domain-cells``
+           - ``int``
+           - .. code-block:: none
+
+                Number of cells in power-domains property
+
+
+
+         * - ``hwlocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                HW spinlock id relevant to the device.
+
+
+
+         * - ``hwlock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the hwlock specifiers in the "hwlocks" property.
+
+
+
+         * - ``zephyr,deferred-init``
+           - ``boolean``
+           - .. code-block:: none
+
+                Do not initialize device automatically on boot. Device should be manually
+                initialized using device_init().
+
+
+
+         * - ``wakeup-source``
+           - ``boolean``
+           - .. code-block:: none
+
+                Property to identify that a device can be used as wake up source.
+
+                When this property is provided a specific flag is set into the
+                device that tells the system that the device is capable of
+                wake up the system.
+
+                Wake up capable devices are disabled (interruptions will not wake up
+                the system) by default but they can be enabled at runtime if necessary.
+
+
+
+         * - ``zephyr,pm-device-runtime-auto``
+           - ``boolean``
+           - .. code-block:: none
+
+                Automatically configure the device for runtime power management after the
+                init function runs.
+
+
+
+         * - ``zephyr,disabling-power-states``
+           - ``phandles``
+           - .. code-block:: none
+
+                List of power states that will disable this device power.
+
+
+
+
+
+

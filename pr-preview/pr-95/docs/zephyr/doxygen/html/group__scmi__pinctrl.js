@@ -1,0 +1,58 @@
+var group__scmi__pinctrl =
+[
+    [ "pinctrl.h", "drivers_2firmware_2scmi_2pinctrl_8h.html", null ],
+    [ "scmi_pinctrl_settings", "structscmi__pinctrl__settings.html", [
+      [ "attributes", "structscmi__pinctrl__settings.html#a7c206eaf1a88e0d1e54d0d19c79e25c6", null ],
+      [ "config", "structscmi__pinctrl__settings.html#a5e92a3755d6dc8ccfecf696ca5eb8bd1", null ],
+      [ "function", "structscmi__pinctrl__settings.html#ade79b6c3efc5b069f74ad6e12088d6c2", null ],
+      [ "id", "structscmi__pinctrl__settings.html#a36c8e49a42cb89d4117b9e90fe1a044e", null ]
+    ] ],
+    [ "ARM_SCMI_PINCTRL_MAX_CONFIG_SIZE", "group__scmi__pinctrl.html#ga5856f69a41daebeb67bc675549a94082", null ],
+    [ "SCMI_PIN_CONTROL_PROTOCOL_SUPPORTED_VERSION", "group__scmi__pinctrl.html#ga26ceba36b1f07c6314a4ddedbe3785d1", null ],
+    [ "SCMI_PINCTRL_ATTRIBUTES_CONFIG_NUM", "group__scmi__pinctrl.html#gadd032f5989f91f734db10ca382cb6c11", null ],
+    [ "SCMI_PINCTRL_CONFIG_ATTRIBUTES", "group__scmi__pinctrl.html#ga8a504f804ca89f1fc7c7c2f8298f5b9e", null ],
+    [ "SCMI_PINCTRL_NO_FUNCTION", "group__scmi__pinctrl.html#gad3e2c57ca0d05f266c13ad5efda5f822", null ],
+    [ "SCMI_PINCTRL_SELECTOR_GROUP", "group__scmi__pinctrl.html#ga2d4fff080b1f6c62d3afb6de24c925ae", null ],
+    [ "SCMI_PINCTRL_SELECTOR_PIN", "group__scmi__pinctrl.html#ga563b6183eda65630c1883af094585095", null ],
+    [ "scmi_pinctrl_config", "group__scmi__pinctrl.html#gab5208b8108578e82acfa5dd0c8a2a96b", [
+      [ "SCMI_PINCTRL_DEFAULT", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96ba3c62801c73f96b5854edd952ce6e729b", null ],
+      [ "SCMI_PINCTRL_BIAS_BUS_HOLD", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96ba4600bb6538330e7b0228e78c8b8c5e55", null ],
+      [ "SCMI_PINCTRL_BIAS_DISABLE", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96ba8f3390e1a61d025c3682d23ed13725e8", null ],
+      [ "SCMI_PINCTRL_BIAS_HIGH_Z", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96ba18ecf549efbf006475f3c0205bbea432", null ],
+      [ "SCMI_PINCTRL_BIAS_PULL_UP", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96ba88232491b6ec4dfc73d5c945413c860e", null ],
+      [ "SCMI_PINCTRL_BIAS_PULL_DEFAULT", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96ba02ef96841a54b7f55b784d4b5c8685d2", null ],
+      [ "SCMI_PINCTRL_BIAS_PULL_DOWN", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96bae991c77daff7720e03c45b7738ec7692", null ],
+      [ "SCMI_PINCTRL_DRIVE_OPEN_DRAIN", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96baed811778f8586aeca201119a5b05fd1d", null ],
+      [ "SCMI_PINCTRL_DRIVE_OPEN_SOURCE", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96ba9a3efde347233010b1a21f7c2c244e54", null ],
+      [ "SCMI_PCINTRL_DRIVE_PUSH_PULL", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96bafcdffbc64f9648ae15f8bfa1d4d97227", null ],
+      [ "SCMI_PCINTRL_DRIVE_STRENGTH", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96baf0dd0db5fb4cdab56e4d580e0da2a0a3", null ],
+      [ "SCMI_PINCTRL_INPUT_DEBOUNCE", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96ba709f0e20f862af2b2886825731125bf4", null ],
+      [ "SCMI_PINCTRL_INPUT_MODE", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96ba264ed5f09078fdd145effc6d0fe705d4", null ],
+      [ "SCMI_PINCTRL_PULL_MODE", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96bac93aa772bcf931acdd3532774270db65", null ],
+      [ "SCMI_PINCTRL_INPUT_VALUE", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96ba2668c9faec52f0cf124af5af3e62cbd5", null ],
+      [ "SCMI_PINCTRL_INPUT_SCHMITT", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96baac8d42ee60b4251cb506b9c724d458be", null ],
+      [ "SCMI_PINCTRL_LP_MODE", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96ba84ceb297de86593719a88cfd3aaa4691", null ],
+      [ "SCMI_PINCTRL_OUTPUT_MODE", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96ba4c93a8dcc239793359a5d49087b6d378", null ],
+      [ "SCMI_PINCTRL_OUTPUT_VALUE", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96babb038fbaa33b735fc8bb749f0cc59359", null ],
+      [ "SCMI_PINCTRL_POWER_SOURCE", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96ba464371220816dbe642caf696e3b9b905", null ],
+      [ "SCMI_PINCTRL_SLEW_RATE", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96baefcb24ff6ca583f7925db6b962951629", null ],
+      [ "SCMI_PINCTRL_RESERVED_START", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96ba051880c89ea312541c87324c4d641727", null ],
+      [ "SCMI_PINCTRL_RESERVED_END", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96ba3c5302df7906c502eb31e0956a982171", null ],
+      [ "SCMI_PINCTRL_VENDOR_START", "group__scmi__pinctrl.html#ggab5208b8108578e82acfa5dd0c8a2a96ba0a19f087055a6d331b3a20a83e39c696", null ]
+    ] ],
+    [ "scmi_pinctrl_message", "group__scmi__pinctrl.html#ga370af36974b0819b68749a3c30f6e040", [
+      [ "SCMI_PINCTRL_MSG_PROTOCOL_VERSION", "group__scmi__pinctrl.html#gga370af36974b0819b68749a3c30f6e040a74c556d431c1daa009db6d7f133adce0", null ],
+      [ "SCMI_PINCTRL_MSG_PROTOCOL_ATTRIBUTES", "group__scmi__pinctrl.html#gga370af36974b0819b68749a3c30f6e040a5750d532aaaf18855ba611fa2197bef7", null ],
+      [ "SCMI_PINCTRL_MSG_PROTOCOL_MESSAGE_ATTRIBUTES", "group__scmi__pinctrl.html#gga370af36974b0819b68749a3c30f6e040a0f6442f1fdf46aec420297d1bd340f3b", null ],
+      [ "SCMI_PINCTRL_MSG_PINCTRL_ATTRIBUTES", "group__scmi__pinctrl.html#gga370af36974b0819b68749a3c30f6e040a3c572f184df374efa4ac8f436eabc498", null ],
+      [ "SCMI_PINCTRL_MSG_PINCTRL_LIST_ASSOCIATIONS", "group__scmi__pinctrl.html#gga370af36974b0819b68749a3c30f6e040a66b23f486ea16616599da97fa5e43b68", null ],
+      [ "SCMI_PINCTRL_MSG_PINCTRL_SETTINGS_GET", "group__scmi__pinctrl.html#gga370af36974b0819b68749a3c30f6e040a0effe64140e7a763f794cdee9347e59d", null ],
+      [ "SCMI_PINCTRL_MSG_PINCTRL_SETTINGS_CONFIGURE", "group__scmi__pinctrl.html#gga370af36974b0819b68749a3c30f6e040af5075bd9399cc8c125866873df3aee50", null ],
+      [ "SCMI_PINCTRL_MSG_PINCTRL_REQUEST", "group__scmi__pinctrl.html#gga370af36974b0819b68749a3c30f6e040af3750c500bb9c42ba94b6c9b4e4c01b8", null ],
+      [ "SCMI_PINCTRL_MSG_PINCTRL_RELEASE", "group__scmi__pinctrl.html#gga370af36974b0819b68749a3c30f6e040a1d9cc26a5f89eefea7ccdae7cde4f16b", null ],
+      [ "SCMI_PINCTRL_MSG_PINCTRL_NAME_GET", "group__scmi__pinctrl.html#gga370af36974b0819b68749a3c30f6e040a5ce8e341575f24e17c1031ca3cb4e6b1", null ],
+      [ "SCMI_PINCTRL_MSG_PINCTRL_SET_PERMISSIONS", "group__scmi__pinctrl.html#gga370af36974b0819b68749a3c30f6e040a169968862f7c722cbf47528750e40e67", null ],
+      [ "SCMI_PINCTRL_MSG_NEGOTIATE_PROTOCOL_VERSION", "group__scmi__pinctrl.html#gga370af36974b0819b68749a3c30f6e040aba332b64c35581ad5799818004d282e8", null ]
+    ] ],
+    [ "scmi_pinctrl_settings_configure", "group__scmi__pinctrl.html#gad7d9ca78b75cc32edefc1ea8e0e0c09e", null ]
+];

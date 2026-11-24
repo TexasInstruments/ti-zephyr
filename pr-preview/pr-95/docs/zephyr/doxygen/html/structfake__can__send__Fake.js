@@ -1,0 +1,25 @@
+var structfake__can__send__Fake =
+[
+    [ "arg0_history", "structfake__can__send__Fake.html#a3537b8b901274f1bbdb508e52a180f95", null ],
+    [ "arg0_val", "structfake__can__send__Fake.html#aa3dbf1075324f019f5127ddbd3e08c11", null ],
+    [ "arg1_history", "structfake__can__send__Fake.html#a1aa63a3a414eb9d731937b5ba7f790f0", null ],
+    [ "arg1_val", "structfake__can__send__Fake.html#a976958722e013359afcd94ce554fe652", null ],
+    [ "arg2_history", "structfake__can__send__Fake.html#ac0aa1946dbca3efb1256756124a594cd", null ],
+    [ "arg2_val", "structfake__can__send__Fake.html#a65483a432f087241c05a35e0f6d55189", null ],
+    [ "arg3_history", "structfake__can__send__Fake.html#a271db15349005a658faf23983b8fef93", null ],
+    [ "arg3_val", "structfake__can__send__Fake.html#afe78e6d75712abd6113ce1a7bc259404", null ],
+    [ "arg4_history", "structfake__can__send__Fake.html#a1fb146928dc3d81650228ef4bb77ff0a", null ],
+    [ "arg4_val", "structfake__can__send__Fake.html#aac0a0cb0a511dd54276fe822c87ac145", null ],
+    [ "arg_histories_dropped", "structfake__can__send__Fake.html#ac5fe8ae37315e3117373589e27192791", null ],
+    [ "arg_history_len", "structfake__can__send__Fake.html#a70d2168170574d8d2f2a238690537bfd", null ],
+    [ "call_count", "structfake__can__send__Fake.html#a82af086bf0a90278d0a1aba1ec4d9599", null ],
+    [ "custom_fake", "structfake__can__send__Fake.html#a97777eec2acfebebd1e5ee2339e57fa9", null ],
+    [ "custom_fake_seq", "structfake__can__send__Fake.html#a24dd4e6a13652da8992281f9b1dbf340", null ],
+    [ "custom_fake_seq_idx", "structfake__can__send__Fake.html#a32a3912960a04b4ea2f9f83e0dfe2fd1", null ],
+    [ "custom_fake_seq_len", "structfake__can__send__Fake.html#a200b5a0fa237c09ed77556be826de8b9", null ],
+    [ "return_val", "structfake__can__send__Fake.html#a5020bfced94d0f32b6e04908fcdd77e9", null ],
+    [ "return_val_history", "structfake__can__send__Fake.html#a859b16340124dbf98582a897a732403b", null ],
+    [ "return_val_seq", "structfake__can__send__Fake.html#ac547fa6437beba801329ff2227f66767", null ],
+    [ "return_val_seq_idx", "structfake__can__send__Fake.html#a96166f1712546e7e06cea495a5f17162", null ],
+    [ "return_val_seq_len", "structfake__can__send__Fake.html#aedb4b4d3fd13abbbe076d1c39863925e", null ]
+];

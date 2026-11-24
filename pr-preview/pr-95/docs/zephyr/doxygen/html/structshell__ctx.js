@@ -1,0 +1,27 @@
+var structshell__ctx =
+[
+    [ "active_cmd", "structshell__ctx.html#a3df8f9a293b4c24d81a80af2d0e0c44e", null ],
+    [ "bypass", "structshell__ctx.html#a8e02d1d9a521379ad4188b4678cc6071", null ],
+    [ "bypass_user_data", "structshell__ctx.html#a1bf19867542b2f8a3f4d99336b34296e", null ],
+    [ "cfg", "structshell__ctx.html#a5437653e57909910df742c80562c1c83", null ],
+    [ "cmd_buff", "structshell__ctx.html#a385014f2fba5cae182c3520ec934cce6", null ],
+    [ "cmd_buff_len", "structshell__ctx.html#a948d78719efe7f01b8edf151e1435af6", null ],
+    [ "cmd_buff_pos", "structshell__ctx.html#a9a8f69e6876e4788ef3961dfb769e53f", null ],
+    [ "cmd_tmp_buff_len", "structshell__ctx.html#a5dfe5d3b2e27b67a7a78d5c3ad32ff1d", null ],
+    [ "cmd_tmp_buff_pos", "structshell__ctx.html#a7d84dc50436b37f59abff667e371a9e6", null ],
+    [ "ctx", "structshell__ctx.html#ac9bed826ec7421065e6bc6e12ad213ce", null ],
+    [ "lock_sem", "structshell__ctx.html#adef66e69835bc936f9e67af2e001ab96", null ],
+    [ "log_level", "structshell__ctx.html#a3e6374150abdb9cd4875024eb6f7c5ea", null ],
+    [ "printf_buff", "structshell__ctx.html#aba89a1995fe33838d508810e60c7ea79", null ],
+    [ "prompt", "structshell__ctx.html#a261d4754f4bf3764298e264ed6e87eff", null ],
+    [ "readline_state", "structshell__ctx.html#ae1e80b422b7c08e95dd4eb412c421cff", null ],
+    [ "receive_state", "structshell__ctx.html#abc4135f23c4738fcf6a2c9d8f45d516b", null ],
+    [ "ret_val", "structshell__ctx.html#aab37b8261e69af3dfe3e4ae19de06792", null ],
+    [ "selected_cmd", "structshell__ctx.html#a0e9321e8954a7598cb6521f660480a88", null ],
+    [ "signal_event", "structshell__ctx.html#a17ba59ebe3dfef81f34b348755630e29", null ],
+    [ "state", "structshell__ctx.html#a7388fd2e850fcf37c4a421cda13661e8", null ],
+    [ "temp_buff", "structshell__ctx.html#a35085b30e92b913b16f02496c5ec6375", null ],
+    [ "tid", "structshell__ctx.html#a2cab9b799462a9f6eea898f7076f204f", null ],
+    [ "uninit_cb", "structshell__ctx.html#a0ec61f11544cb817bbd46ed4aa332123", null ],
+    [ "vt100_ctx", "structshell__ctx.html#a25b945fcaba216e039124aacec660600", null ]
+];

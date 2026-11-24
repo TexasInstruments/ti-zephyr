@@ -1,0 +1,26 @@
+var structxen__dm__op =
+[
+    [ "create_ioreq_server", "structxen__dm__op.html#a8300bc8b60fe51109dc3c7273d69ce9c", null ],
+    [ "destroy_ioreq_server", "structxen__dm__op.html#ae7c0d0ec44e59b82795fcea4b5ff3bb6", null ],
+    [ "get_ioreq_server_info", "structxen__dm__op.html#a433d368590221c9a8b7c820a0b4bc044", null ],
+    [ "inject_event", "structxen__dm__op.html#a417ab90dfe7981008a7edff89e0697fe", null ],
+    [ "inject_msi", "structxen__dm__op.html#a50e4303fab31a596f05716a36515b5be", null ],
+    [ "map_io_range_to_ioreq_server", "structxen__dm__op.html#ac443579fff941ad44fc6d8045719b472", null ],
+    [ "map_mem_type_to_ioreq_server", "structxen__dm__op.html#a8837266352e7afd7cc6d45194a76b0df", null ],
+    [ "modified_memory", "structxen__dm__op.html#a6d36645304f0dbe5eb28e4009702dd54", null ],
+    [ "nr_vcpus", "structxen__dm__op.html#a68f5cbe216835483e821bb609dc2eedf", null ],
+    [ "op", "structxen__dm__op.html#a44b7a70fbbea315c33d4f8c9f081ed78", null ],
+    [ "pad", "structxen__dm__op.html#aed44b06ac0f404b5ebbdff6dc9ed20e9", null ],
+    [ "pin_memory_cacheattr", "structxen__dm__op.html#aef2961b9ca4ac9510252018f04a7dfd9", null ],
+    [ "relocate_memory", "structxen__dm__op.html#ac01ac18c19148e9b5defdfbf29f2bc2b", null ],
+    [ "remote_shutdown", "structxen__dm__op.html#a4a06ee656fcdfc943c5c8f59fccc3314", null ],
+    [ "set_ioreq_server_state", "structxen__dm__op.html#a39a58bb759ea0834314277bd8be22832", null ],
+    [ "set_irq_level", "structxen__dm__op.html#a2a91279e19559915e8c38d10cb980e69", null ],
+    [ "set_isa_irq_level", "structxen__dm__op.html#a953a0e5cb68756d486b0313b5f824146", null ],
+    [ "set_mem_type", "structxen__dm__op.html#a69a05fdc2532b56d9ff98002f2dc1680", null ],
+    [ "set_pci_intx_level", "structxen__dm__op.html#ae9b06ea922079b143aaf62abcbeeeff3", null ],
+    [ "set_pci_link_route", "structxen__dm__op.html#a1b761c47e9cf3af4054926eff36b0b4c", null ],
+    [ "track_dirty_vram", "structxen__dm__op.html#a49ec34aafc548c06347e208107f0b82b", null ],
+    [ "u", "structxen__dm__op.html#a23546b2eefc9cada94931cd1b1d6d37d", null ],
+    [ "unmap_io_range_from_ioreq_server", "structxen__dm__op.html#a5de8448be899472f5fe70d99fe38e13f", null ]
+];

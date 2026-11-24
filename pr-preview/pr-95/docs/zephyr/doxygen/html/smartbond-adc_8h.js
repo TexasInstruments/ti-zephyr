@@ -1,0 +1,25 @@
+var smartbond_adc_8h =
+[
+    [ "SMARTBOND_GPADC_P0_08", "smartbond-adc_8h.html#afb07ad4b6a2568464b5950c1bf3e176e", null ],
+    [ "SMARTBOND_GPADC_P0_09", "smartbond-adc_8h.html#ad077fbaafcefa2a3ac390fdffd86cd23", null ],
+    [ "SMARTBOND_GPADC_P0_25", "smartbond-adc_8h.html#accd024f3103bb6876f58d68fe1bb6bd7", null ],
+    [ "SMARTBOND_GPADC_P1_09", "smartbond-adc_8h.html#a5a88c8653e3ede14d2024faf298c917a", null ],
+    [ "SMARTBOND_GPADC_P1_12", "smartbond-adc_8h.html#af8028c134a2398eba020b3b0f68294c6", null ],
+    [ "SMARTBOND_GPADC_P1_13", "smartbond-adc_8h.html#a7bc0d3430a444f484f37133fd7d45439", null ],
+    [ "SMARTBOND_GPADC_P1_18", "smartbond-adc_8h.html#ad860145eb6e933ca69d4e1f421d3121a", null ],
+    [ "SMARTBOND_GPADC_P1_19", "smartbond-adc_8h.html#a3c7184d2a3c9eb9e5b503781a56fb1fd", null ],
+    [ "SMARTBOND_GPADC_TEMP", "smartbond-adc_8h.html#ad839283b380fcdc7d377d4ee294018c2", null ],
+    [ "SMARTBOND_GPADC_V30", "smartbond-adc_8h.html#af459054a6e0128ce5b3a5406687fb9d0", null ],
+    [ "SMARTBOND_GPADC_VBAT", "smartbond-adc_8h.html#ac1cfed07ae527d07aa339e65ea4950b7", null ],
+    [ "SMARTBOND_GPADC_VDD", "smartbond-adc_8h.html#ab4a9c920d6b88dc3f717f83d19fff822", null ],
+    [ "SMARTBOND_GPADC_VSSA", "smartbond-adc_8h.html#a85229fb209179394e8796fae8f2fcc0a", null ],
+    [ "SMARTBOND_SDADC_P0_08", "smartbond-adc_8h.html#acc8ff717e7778259b64d41820ce45071", null ],
+    [ "SMARTBOND_SDADC_P0_09", "smartbond-adc_8h.html#a348443a019423fd812548f0211a811d1", null ],
+    [ "SMARTBOND_SDADC_P0_25", "smartbond-adc_8h.html#aa50c58335f6f801a9d4b42a302972874", null ],
+    [ "SMARTBOND_SDADC_P1_09", "smartbond-adc_8h.html#ac3df3ec24988b7598965e7efe4a4c6b4", null ],
+    [ "SMARTBOND_SDADC_P1_14", "smartbond-adc_8h.html#a2e4f6d361ec9c2850750b0b58499e070", null ],
+    [ "SMARTBOND_SDADC_P1_20", "smartbond-adc_8h.html#a916ae13bfee8a78be4b9da3a91e66ad6", null ],
+    [ "SMARTBOND_SDADC_P1_21", "smartbond-adc_8h.html#a84a1c8191740dbd800ae3579ca03be21", null ],
+    [ "SMARTBOND_SDADC_P1_22", "smartbond-adc_8h.html#a94c18fb6d0f3af60e61dfa9a75d747fd", null ],
+    [ "SMARTBOND_SDADC_VBAT", "smartbond-adc_8h.html#a083fd0f458f0441649f21909aba78d35", null ]
+];

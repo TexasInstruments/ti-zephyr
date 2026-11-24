@@ -1,0 +1,388 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="group__ipc__icmsg__api" kind="group">
+    <compoundname>ipc_icmsg_api</compoundname>
+    <title>Icmsg IPC library API</title>
+    <innerclass refid="structicmsg__config__t" prot="public">icmsg_config_t</innerclass>
+    <innerclass refid="structicmsg__data__t" prot="public">icmsg_data_t</innerclass>
+    <sectiondef kind="enum">
+      <memberdef kind="enum" id="group__ipc__icmsg__api_1gab26905275fd20a113d1f05d03761f910" prot="public" static="no" strong="no">
+        <type></type>
+        <name>icmsg_state</name>
+        <enumvalue id="group__ipc__icmsg__api_1ggab26905275fd20a113d1f05d03761f910a7167bae7aee28ffa39494cb0ca1175b6" prot="public">
+          <name>ICMSG_STATE_OFF</name>
+          <briefdescription>
+<para>Instance is not initialized yet. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>In this state: sending will fail, opening allowed. </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__ipc__icmsg__api_1ggab26905275fd20a113d1f05d03761f910a6108f7fe29d982a2f52653c4e97205b6" prot="public">
+          <name>ICMSG_STATE_INITIALIZING_SID_DISABLED</name>
+          <briefdescription>
+<para>Instance is initializing without session handshake. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>In this state: sending will fail, opening will fail. </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__ipc__icmsg__api_1ggab26905275fd20a113d1f05d03761f910ae9e45a00a479eb8be2d82ea2ac848dc7" prot="public">
+          <name>ICMSG_STATE_INITIALIZING_SID_ENABLED</name>
+          <briefdescription>
+<para>Instance is initializing with session handshake. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>It is waiting for remote to acknowledge local session id. In this state: sending will fail, opening is allowed (local session id will change, so the remote may get unbound() callback). </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__ipc__icmsg__api_1ggab26905275fd20a113d1f05d03761f910a6795026f474f701d404e38f5ad4766eb" prot="public">
+          <name>ICMSG_STATE_INITIALIZING_SID_DETECT</name>
+          <briefdescription>
+<para>Instance is initializing with detection of session handshake support on remote side. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>It is waiting for remote to acknowledge local session id or to send magic bytes. In this state: sending will fail, opening is allowed (local session id will change, so the remote may get unbound() callback if it supports it). </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__ipc__icmsg__api_1ggab26905275fd20a113d1f05d03761f910a1e95d66a57e9f7bd2dd818ea8182b2dd" prot="public">
+          <name>ICMSG_STATE_DISCONNECTED</name>
+          <briefdescription>
+<para>Instance was closed on remote side. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>The unbound() callback was send on local side. In this state: sending will be silently discarded (there may be outdated sends), opening is allowed. </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__ipc__icmsg__api_1ggab26905275fd20a113d1f05d03761f910ac9b07c0dd80a5e4f5029a3984d552bab" prot="public">
+          <name>ICMSG_STATE_CONNECTED_SID_DISABLED</name>
+          <briefdescription>
+<para>Instance is connected without session handshake support. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>In this state: sending will be successful, opening will fail. </para>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__ipc__icmsg__api_1ggab26905275fd20a113d1f05d03761f910a32fba02984cec57994a5ae94c4e2ab87" prot="public">
+          <name>ICMSG_STATE_CONNECTED_SID_ENABLED</name>
+          <briefdescription>
+<para>Instance is connected with session handshake support. </para>
+          </briefdescription>
+          <detaileddescription>
+<para>In this state: sending will be successful, opening is allowed (session will change and remote will get unbound() callback). </para>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/ipc/icmsg.h" line="29" column="1" bodyfile="zephyr/ipc/icmsg.h" bodystart="29" bodyend="70"/>
+      </memberdef>
+      <memberdef kind="enum" id="group__ipc__icmsg__api_1gae14e0b81c90a4bb4fc140a48a48d1b5f" prot="public" static="no" strong="no">
+        <type></type>
+        <name>icmsg_unbound_mode</name>
+        <enumvalue id="group__ipc__icmsg__api_1ggae14e0b81c90a4bb4fc140a48a48d1b5fac688a38231634863b4f3a5baa73de57a" prot="public">
+          <name>ICMSG_UNBOUND_MODE_DISABLE</name>
+          <initializer>= ICMSG_STATE_INITIALIZING_SID_DISABLED</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__ipc__icmsg__api_1ggae14e0b81c90a4bb4fc140a48a48d1b5fa644f1bdb89f1e3940909a0269c9fca07" prot="public">
+          <name>ICMSG_UNBOUND_MODE_ENABLE</name>
+          <initializer>= ICMSG_STATE_INITIALIZING_SID_ENABLED</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="group__ipc__icmsg__api_1ggae14e0b81c90a4bb4fc140a48a48d1b5fa3dbd2f53889c3d5a40948700df4d5f75" prot="public">
+          <name>ICMSG_UNBOUND_MODE_DETECT</name>
+          <initializer>= ICMSG_STATE_INITIALIZING_SID_DETECT</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/ipc/icmsg.h" line="72" column="1" bodyfile="zephyr/ipc/icmsg.h" bodystart="72" bodyend="76"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="group__ipc__icmsg__api_1ga6017af391a3135c02cec7929620789e8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int icmsg_open</definition>
+        <argsstring>(const struct icmsg_config_t *conf, struct icmsg_data_t *dev_data, const struct ipc_service_cb *cb, void *ctx)</argsstring>
+        <name>icmsg_open</name>
+        <param>
+          <type>const struct <ref refid="structicmsg__config__t" kindref="compound">icmsg_config_t</ref> *</type>
+          <declname>conf</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structicmsg__data__t" kindref="compound">icmsg_data_t</ref> *</type>
+          <declname>dev_data</declname>
+        </param>
+        <param>
+          <type>const struct <ref refid="structipc__service__cb" kindref="compound">ipc_service_cb</ref> *</type>
+          <declname>cb</declname>
+        </param>
+        <param>
+          <type>void *</type>
+          <declname>ctx</declname>
+        </param>
+        <briefdescription>
+<para>Open an icmsg instance. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Open an icmsg instance to be able to send and receive messages to a remote instance. This function is blocking until the handshake with the remote instance is completed. This function is intended to be called late in the initialization process, possibly from a thread which can be safely blocked while handshake with the remote instance is being performed.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">conf</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Structure containing configuration parameters for the icmsg instance. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="inout">dev_data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Structure containing run-time data used by the icmsg instance. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">cb</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Structure containing callback functions to be called on events generated by this icmsg instance. The pointed memory must be preserved while the icmsg instance is active. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">ctx</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to context passed as an argument to callbacks.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>0</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>on success. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EALREADY</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>when the instance is already opened. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>other</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>errno codes from dependent modules. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/ipc/icmsg.h" line="130" column="5" declfile="zephyr/ipc/icmsg.h" declline="130" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__ipc__icmsg__api_1ga0d8f5626406ca660e616de131f54e29d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int icmsg_close</definition>
+        <argsstring>(const struct icmsg_config_t *conf, struct icmsg_data_t *dev_data)</argsstring>
+        <name>icmsg_close</name>
+        <param>
+          <type>const struct <ref refid="structicmsg__config__t" kindref="compound">icmsg_config_t</ref> *</type>
+          <declname>conf</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structicmsg__data__t" kindref="compound">icmsg_data_t</ref> *</type>
+          <declname>dev_data</declname>
+        </param>
+        <briefdescription>
+<para>Close an icmsg instance. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Closing an icmsg instance results in releasing all resources used by given instance including the shared memory regions and mbox devices.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">conf</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Structure containing configuration parameters for the icmsg instance being closed. Its content must be the same as used for creating this instance with <ref refid="group__ipc__icmsg__api_1ga6017af391a3135c02cec7929620789e8" kindref="member">icmsg_open</ref>. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="inout">dev_data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Structure containing run-time data used by the icmsg instance.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>0</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>on success. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>other</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>errno codes from dependent modules. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/ipc/icmsg.h" line="148" column="5" declfile="zephyr/ipc/icmsg.h" declline="148" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__ipc__icmsg__api_1ga13b8669034ee51044df7f0623907c03b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int icmsg_send</definition>
+        <argsstring>(const struct icmsg_config_t *conf, struct icmsg_data_t *dev_data, const void *msg, size_t len)</argsstring>
+        <name>icmsg_send</name>
+        <param>
+          <type>const struct <ref refid="structicmsg__config__t" kindref="compound">icmsg_config_t</ref> *</type>
+          <declname>conf</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structicmsg__data__t" kindref="compound">icmsg_data_t</ref> *</type>
+          <declname>dev_data</declname>
+        </param>
+        <param>
+          <type>const void *</type>
+          <declname>msg</declname>
+        </param>
+        <param>
+          <type><ref refid="retained__mem_8h_1a36713c339c3c5ec6d6bd481480bdb6f9" kindref="member">size_t</ref></type>
+          <declname>len</declname>
+        </param>
+        <briefdescription>
+<para>Send a message to the remote icmsg instance. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">conf</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Structure containing configuration parameters for the icmsg instance. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="inout">dev_data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Structure containing run-time data used by the icmsg instance. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">msg</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to a buffer containing data to send. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">len</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Size of data in the <computeroutput>msg</computeroutput> buffer.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<parameterlist kind="retval"><parameteritem>
+<parameternamelist>
+<parametername>Number</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>of sent bytes. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EBUSY</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>when the instance has not finished handshake with the remote instance. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-ENODATA</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>when the requested data to send is empty. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-EBADMSG</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>when the requested data to send is too big. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>-ENOBUFS</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>when there are no TX buffers available. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>other</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>errno codes from dependent modules. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/ipc/icmsg.h" line="169" column="5" declfile="zephyr/ipc/icmsg.h" declline="169" declcolumn="5"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Icmsg IPC library API. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

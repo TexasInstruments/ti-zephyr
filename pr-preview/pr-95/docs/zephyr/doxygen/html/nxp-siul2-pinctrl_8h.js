@@ -1,0 +1,28 @@
+var nxp_siul2_pinctrl_8h =
+[
+    [ "NXP_SIUL2_IMCR_IDX_MASK", "nxp-siul2-pinctrl_8h.html#a2c2a33e5586eaf07dd3764b54f055821", null ],
+    [ "NXP_SIUL2_IMCR_IDX_SHIFT", "nxp-siul2-pinctrl_8h.html#a316d51cda9462e7bda0049b30f853e37", null ],
+    [ "NXP_SIUL2_IMCR_SIUL2_IDX_MASK", "nxp-siul2-pinctrl_8h.html#a42c0ca664d1a31f74f1bd13e7709192b", null ],
+    [ "NXP_SIUL2_IMCR_SIUL2_IDX_SHIFT", "nxp-siul2-pinctrl_8h.html#a3dddd8eb69be748526a73ac5525329f3", null ],
+    [ "NXP_SIUL2_IMCR_SSS_MASK", "nxp-siul2-pinctrl_8h.html#aeefbbd5e3e5ab906492d72a5ab716c19", null ],
+    [ "NXP_SIUL2_IMCR_SSS_SHIFT", "nxp-siul2-pinctrl_8h.html#afa8e493fe699a0d5e64cfac23b1d0d72", null ],
+    [ "NXP_SIUL2_MSCR_IDX_MASK", "nxp-siul2-pinctrl_8h.html#a93cb0632aba129160b8acfcfe9ab70c3", null ],
+    [ "NXP_SIUL2_MSCR_IDX_SHIFT", "nxp-siul2-pinctrl_8h.html#a4c8b05a8993805af069bde77a5fc23f4", null ],
+    [ "NXP_SIUL2_MSCR_SIUL2_IDX_MASK", "nxp-siul2-pinctrl_8h.html#af6831507d4ccc5872a62e7174defcad3", null ],
+    [ "NXP_SIUL2_MSCR_SIUL2_IDX_SHIFT", "nxp-siul2-pinctrl_8h.html#a239c909d58b0e8f688c0111f7e0913fe", null ],
+    [ "NXP_SIUL2_MSCR_SSS_MASK", "nxp-siul2-pinctrl_8h.html#af095432bb6b277f1c9888bbb1d417db7", null ],
+    [ "NXP_SIUL2_MSCR_SSS_SHIFT", "nxp-siul2-pinctrl_8h.html#a745f1f0626464975ac3dfd223ac4fcb8", null ],
+    [ "NXP_SIUL2_PINMUX", "nxp-siul2-pinctrl_8h.html#a1868bbbebae4daf3d1a1df7c34eef660", null ],
+    [ "NXP_SIUL2_PINMUX_GET_IMCR_IDX", "nxp-siul2-pinctrl_8h.html#adff0c48a90ec439f51cd5d75d5848cf6", null ],
+    [ "NXP_SIUL2_PINMUX_GET_IMCR_SIUL2_IDX", "nxp-siul2-pinctrl_8h.html#af688d718cffd86b8c52af7517c786782", null ],
+    [ "NXP_SIUL2_PINMUX_GET_IMCR_SSS", "nxp-siul2-pinctrl_8h.html#a33cb58d26acc34048d4d929276ea1fe7", null ],
+    [ "NXP_SIUL2_PINMUX_GET_MSCR_IDX", "nxp-siul2-pinctrl_8h.html#a8878e7774bb91df3317094d881f3ff6f", null ],
+    [ "NXP_SIUL2_PINMUX_GET_MSCR_SIUL2_IDX", "nxp-siul2-pinctrl_8h.html#a340f3ad31a281a7a1cdf9490ef8777b5", null ],
+    [ "NXP_SIUL2_PINMUX_GET_MSCR_SSS", "nxp-siul2-pinctrl_8h.html#a16e9ed31915244fbec867833ab9f2318", null ],
+    [ "NXP_SIUL2_PINMUX_IMCR_IDX", "nxp-siul2-pinctrl_8h.html#a3029b55eec45043889d081b9cabb2ee9", null ],
+    [ "NXP_SIUL2_PINMUX_IMCR_SIUL2_IDX", "nxp-siul2-pinctrl_8h.html#a943e1ac9c1150e6214c413275282ff15", null ],
+    [ "NXP_SIUL2_PINMUX_IMCR_SSS", "nxp-siul2-pinctrl_8h.html#a1e5eca64c385376038ba7c1e39bcc742", null ],
+    [ "NXP_SIUL2_PINMUX_MSCR_IDX", "nxp-siul2-pinctrl_8h.html#a848b07d7b369606f3152c3eca72093aa", null ],
+    [ "NXP_SIUL2_PINMUX_MSCR_SIUL2_IDX", "nxp-siul2-pinctrl_8h.html#aa577d3c3330b31a52c5d54bd09207b3e", null ],
+    [ "NXP_SIUL2_PINMUX_MSCR_SSS", "nxp-siul2-pinctrl_8h.html#a6863890f8fc8c0137ecfa1fd13612be8", null ]
+];

@@ -1,0 +1,25 @@
+var sip__svc__agilex__smc_8h =
+[
+    [ "MAILBOX_CANCEL_COMMAND", "sip__svc__agilex__smc_8h.html#a0a1d2a2c6a290c6b293fa71cd04975fb", null ],
+    [ "SMC_FUNC_ID_GET_SVC_VERSION", "sip__svc__agilex__smc_8h.html#afa8c0dca448e2074bfc6abeaffd26464", null ],
+    [ "SMC_FUNC_ID_MAILBOX_POLL_RESPONSE", "sip__svc__agilex__smc_8h.html#ac26572cb1321697ff33adcd471e27874", null ],
+    [ "SMC_FUNC_ID_MAILBOX_SEND_COMMAND", "sip__svc__agilex__smc_8h.html#a98d77f81a2b07bcf8305e28e0be1e4c4", null ],
+    [ "SMC_FUNC_ID_REG_READ", "sip__svc__agilex__smc_8h.html#afcaee0b300ae5fbe475c51c1d20b8e48", null ],
+    [ "SMC_FUNC_ID_REG_UPDATE", "sip__svc__agilex__smc_8h.html#ad56834ca5734a3d105e6810cb4821406", null ],
+    [ "SMC_FUNC_ID_REG_WRITE", "sip__svc__agilex__smc_8h.html#ab619bffd89340c1d72f3786d2c8d326b", null ],
+    [ "SMC_FUNC_ID_RSU_UPDATE_ADDR", "sip__svc__agilex__smc_8h.html#abf081ba2e3a8039b42c40f8a7135c113", null ],
+    [ "SMC_FUNC_ID_SET_HPS_BRIDGES", "sip__svc__agilex__smc_8h.html#a382037b06541eb54757b3ad9fd7df8a4", null ],
+    [ "SMC_PLAT_PROTO_HEADER", "sip__svc__agilex__smc_8h.html#a0ac21d31ae06d1fa1fd86253526baff2", null ],
+    [ "SMC_PLAT_PROTO_HEADER_SET_TRANS_ID", "sip__svc__agilex__smc_8h.html#aee5f5ecdeb83631a3114593e2e487a43", null ],
+    [ "SMC_PLAT_PROTO_HEADER_TRANS_ID_MASK", "sip__svc__agilex__smc_8h.html#a8fe58b94720ef6bb2cb46351c9e3da8f", null ],
+    [ "SMC_PLAT_PROTO_HEADER_TRANS_ID_OFFSET", "sip__svc__agilex__smc_8h.html#aaf01ecddc145b991b1437dc4ccd88854", null ],
+    [ "SMC_PLAT_PROTO_HEADER_VER_MASK", "sip__svc__agilex__smc_8h.html#a14cf7302d786ab126a18abbd0e757fed", null ],
+    [ "SMC_PLAT_PROTO_HEADER_VER_OFFSET", "sip__svc__agilex__smc_8h.html#ae9827c60ec0c0e0d62167672b443d136", null ],
+    [ "SMC_PLAT_PROTO_VER", "sip__svc__agilex__smc_8h.html#a149c807c9429c49b48febb7493ded05a", null ],
+    [ "SMC_STATUS_BUSY", "sip__svc__agilex__smc_8h.html#a8959eae5cbbe690922a6aa35c3e6ad19", null ],
+    [ "SMC_STATUS_ERROR", "sip__svc__agilex__smc_8h.html#a0f21a71f1245c31ef3a3a468901a7fe3", null ],
+    [ "SMC_STATUS_INVALID", "sip__svc__agilex__smc_8h.html#abca52daa3ed42c3acacd0a2f27a64c8b", null ],
+    [ "SMC_STATUS_NO_RESPONSE", "sip__svc__agilex__smc_8h.html#a1b99b2307df8b02a1f3dd36614077269", null ],
+    [ "SMC_STATUS_OKAY", "sip__svc__agilex__smc_8h.html#aff7de6199219a46e9c177557a55b20ad", null ],
+    [ "SMC_STATUS_REJECT", "sip__svc__agilex__smc_8h.html#a2350309516a2c57ec3250a53305d0627", null ]
+];
