@@ -242,6 +242,19 @@ def _exclude(page, base):
     )
 
 
+# Shared release-notes directories that span multiple SoC families but are not
+# named after a single SoC key; exclude each one for SoCs it does not apply to.
+# Uses _exclude() so labels on those pages are registered in ti_unavailable_labels.
+_RN_SHARED = {
+    "simplelink_lowpower": {"cc23xx", "cc27xx"},
+    "simplelink_wifi":     {"cc35xx"},
+}
+for _rn_dir, _rn_socs in _RN_SHARED.items():
+    if soc not in _rn_socs:
+        for _rn_page in sorted((DOC_BASE / "release_notes" / _rn_dir).rglob("*.rst")):
+            _exclude(_rn_page, DOC_BASE)
+
+
 _ACRONYMS = frozenset(
     "adc dac pwm gpio i2c spi uart can usb rtc dma led lcd".split()
 )

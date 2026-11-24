@@ -21,6 +21,10 @@ Supported Boards
      - Device
      - CPU
      - Product page
+   * - ``lp_em_cc2340r5``
+     - CC2340R5
+     - Arm Cortex-M0+ @ 48 MHz
+     - `CC2340R5 <https://www.ti.com/product/CC2340R5>`_
    * - ``lp_em_cc2340r53``
      - CC2340R53
      - Arm Cortex-M0+ @ 48 MHz
@@ -48,6 +52,9 @@ opens the matching section of that page.
    * - Board ID
      - Board page
      - Hardware features
+   * - ``lp_em_cc2340r5``
+     - :ws-doc:`CC2340R5 LaunchPad <zephyr/boards/ti/lp_em_cc2340r5/doc/index.html>`
+     - :ws-doc:`Supported features <zephyr/boards/ti/lp_em_cc2340r5/doc/index.html#supported-features>`
    * - ``lp_em_cc2340r53``
      - :ws-doc:`CC2340R53 LaunchPad <zephyr/boards/ti/lp_em_cc2340r53/doc/index.html>`
      - :ws-doc:`Supported features <zephyr/boards/ti/lp_em_cc2340r53/doc/index.html#supported-features>`

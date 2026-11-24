@@ -1,4 +1,4 @@
-.. _ti-zephyr-cc23-release-01.01.00:
+.. _ti-zephyr-cc35xx-release-01.01.00:
 
 SimpleLink Zephyr v4.4.0-ti-01.01.00 Release
 #################################################
@@ -11,7 +11,7 @@ This SimpleLink™ downstream Zephyr release is production grade and the team is
 also working on upstreaming this content to mainline Zephyr.
 
 To quickly get started, see the
-`Zephyr Trainings on SimpleLink Academy <https://dev.ti.com/tirex/explore/node?node=A__AEIJm0rwIeU.2P1OBWwlaA__SIMPLELINK-ACADEMY-CC23XX__gsUPh5j__LATEST>`__.
+`Zephyr Trainings on SimpleLink Academy <https://dev.ti.com/tirex/explore/node?isTheia=false&node=A__AEIJm0rwIeU.2P1OBWwlaA__SIMPLELINK-WIFI-ACADEMY__Ypa-HdH__LATEST>`__.
 
 Supported Devices
 =================
@@ -39,13 +39,8 @@ Known Issues and Limitations
 
 **Zephyr**
 
+None.
 
-.. list-table::
-   :header-rows: 1
-   :widths: 15 85
-   :class: force-wrap
-
-  
 Test Coverage
 =============
 
@@ -85,5 +80,5 @@ Technical Support and Product Updates
 
 - `TI SimpleLink Solutions <https://www.ti.com/wireless-connectivity/overview.html>`__
 - `TI E2E Community <https://e2e.ti.com/>`__
-- `Zephyr Trainings on SimpleLink Academy <https://dev.ti.com/tirex/explore/node?node=A__AEIJm0rwIeU.2P1OBWwlaA__SIMPLELINK-ACADEMY-CC23XX__gsUPh5j__LATEST>`__
+- `Zephyr Trainings on SimpleLink Academy <https://dev.ti.com/tirex/explore/node?isTheia=false&node=A__AEIJm0rwIeU.2P1OBWwlaA__SIMPLELINK-WIFI-ACADEMY__Ypa-HdH__LATEST>`__
 - `TI Zephyr RTOS overview <https://www.ti.com/design-development/software-design/Zephyr-RTOS.html>`__
