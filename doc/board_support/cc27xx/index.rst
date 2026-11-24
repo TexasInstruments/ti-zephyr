@@ -38,6 +38,14 @@ Supported Boards
      - CC2755P20
      - Arm Cortex-M33 @ 96 MHz
      - `CC2755P20 <https://www.ti.com/product/CC2755P20>`_
+   * - ``lp_em_cc2755r10_bg``
+     - CC2755R10_BG
+     - Arm Cortex-M33 @ 96 MHz
+     - `CC2755R10 <https://www.ti.com/product/CC2755R10>`_
+   * - ``lp_em_cc2755r7_bg``
+     - CC2755R7_BG
+     - Arm Cortex-M33 @ 96 MHz
+     - `CC2755R7 <https://www.ti.com/product/CC2755R7>`_
 
 The ``lp_em_cc2745r10_q1`` board has two configurations: build for
 ``lp_em_cc2745r10_q1/cc2745r10_q1`` by default, or for
@@ -66,6 +74,12 @@ opens the matching section of that page.
    * - ``lp_em_cc2755p20``
      - :ws-doc:`CC2755P20 LaunchPad <zephyr/boards/ti/lp_em_cc2755p20/doc/index.html>`
      - :ws-doc:`Supported features <zephyr/boards/ti/lp_em_cc2755p20/doc/index.html#supported-features>`
+   * - ``lp_em_cc2755r10_bg``
+     - :ws-doc:`CC2755R10 BG LaunchPad <zephyr/boards/ti/lp_em_cc2755r10_bg/doc/index.html>`
+     - :ws-doc:`Supported features <zephyr/boards/ti/lp_em_cc2755r10_bg/doc/index.html#supported-features>`
+   * - ``lp_em_cc2755r7_bg``
+     - :ws-doc:`CC2755R7 BG LaunchPad <zephyr/boards/ti/lp_em_cc2755r7_bg/doc/index.html>`
+     - :ws-doc:`Supported features <zephyr/boards/ti/lp_em_cc2755r7_bg/doc/index.html#supported-features>`
 
 Resources
 *********
@@ -73,4 +87,6 @@ Resources
 - `CC2745R10-Q1 product page <https://www.ti.com/product/CC2745R10-Q1>`_
 - `CC2755P10 product page <https://www.ti.com/product/CC2755P10>`_
 - `CC2755P20 product page <https://www.ti.com/product/CC2755P20>`_
+- `CC2755R10 product page <https://www.ti.com/product/CC2755R10>`_
+- `CC2755R7 product page <https://www.ti.com/product/CC2755R7>`_
 - `LP-EM-CC2745R10-Q1 LaunchPad <https://www.ti.com/tool/LP-EM-CC2745R10-Q1>`_
