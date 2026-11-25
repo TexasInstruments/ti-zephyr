@@ -2110,12 +2110,17 @@ API_RESULT appl_esl_led_timed_control_req_handler(UCHAR* data, UINT16 datalen)
                 /* copy latest parameter */
                 appl_esl_update_led_control_params(led_index, data);
             }
-            else
+            else if (APPL_ESL_ZERO_ABSOLUTE_TIME != absolute_time)
             {
-                /* A different pending time (earlier or later) cannot be queued */
+                /* A different non-zero pending time (earlier or later) cannot be queued */
                 APPL_ESL_INF("[APPL]: Sending Queue Full error response\n");
                 BT_esl_tag_send_esl_error_response(BT_ESL_QUEUE_FULL);
                 return BT_ESL_API_SUCCESS;
+            }
+            else
+            {
+                /* Absolute Time zero: do not update params, the pending command
+                 * is deleted below after the LED State response is sent */
             }
         }
 
