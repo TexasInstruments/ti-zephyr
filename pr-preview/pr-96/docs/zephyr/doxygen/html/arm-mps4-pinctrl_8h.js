@@ -1,0 +1,28 @@
+var arm_mps4_pinctrl_8h =
+[
+    [ "MPS4_ALT_FUNC_MASK", "arm-mps4-pinctrl_8h.html#a7499c07aa7f241ae37a8600ab3516025", null ],
+    [ "MPS4_ALT_FUNC_POS", "arm-mps4-pinctrl_8h.html#a8afa19b922051b18516de109ef91cfb2", null ],
+    [ "MPS4_EXP_NUM_MASK", "arm-mps4-pinctrl_8h.html#a835b77789dd9e689e35f4fbdf8ae4b0c", null ],
+    [ "MPS4_EXP_NUM_POS", "arm-mps4-pinctrl_8h.html#a1b4bb85578599bcbe2d5abcd82ae5059", null ],
+    [ "MPS4_PINCTRL_FUNC_GPIO", "arm-mps4-pinctrl_8h.html#abce528e0feff0ea28504196171437878", null ],
+    [ "MPS4_PINCTRL_FUNC_I2C", "arm-mps4-pinctrl_8h.html#acd848d6b9cd67310c7678c9c814d019d", null ],
+    [ "MPS4_PINCTRL_FUNC_SPI", "arm-mps4-pinctrl_8h.html#af70280000f1f8d002f0eee7938595220", null ],
+    [ "MPS4_PINCTRL_FUNC_UART", "arm-mps4-pinctrl_8h.html#aacc441eeb486384a97b6d495b7ede5b6", null ],
+    [ "MPS4_PINMUX", "arm-mps4-pinctrl_8h.html#aeea5b5140183c5d992cc3b786d43a9ba", null ],
+    [ "SBCON2_SCL_EXP", "arm-mps4-pinctrl_8h.html#a301bb93777a77d4fcbed8617edbe319a", null ],
+    [ "SBCON2_SDA_EXP", "arm-mps4-pinctrl_8h.html#a8c2f848c26c691ce333e05fe17c9341d", null ],
+    [ "SBCON3_SCL_EXP", "arm-mps4-pinctrl_8h.html#a42708eb48f46a3dd04242b446389057b", null ],
+    [ "SBCON3_SDA_EXP", "arm-mps4-pinctrl_8h.html#a1f600b98990e17441e52f65cc0dabddb", null ],
+    [ "SPI3_MISO_EXP", "arm-mps4-pinctrl_8h.html#a14c932b34877e7b1f004bdf3edfdcd4b", null ],
+    [ "SPI3_MOSI_EXP", "arm-mps4-pinctrl_8h.html#a95f2fe6603f5ab5de9c410dfaf87dc52", null ],
+    [ "SPI3_SCK_EXP", "arm-mps4-pinctrl_8h.html#ac3801e4481859951369757ac96612165", null ],
+    [ "SPI3_SS_EXP", "arm-mps4-pinctrl_8h.html#ae1f9ab03b508c087a9190d742b67fc2a", null ],
+    [ "SPI4_MISO_EXP", "arm-mps4-pinctrl_8h.html#a9709eee41e54142558c4930f1b034043", null ],
+    [ "SPI4_MOSI_EXP", "arm-mps4-pinctrl_8h.html#aa73c8c56e661787cc05b131f86a8478c", null ],
+    [ "SPI4_SCK_EXP", "arm-mps4-pinctrl_8h.html#aa48a51e34a517797511e7214ad00b7de", null ],
+    [ "SPI4_SS_EXP", "arm-mps4-pinctrl_8h.html#a525321e1403275e09014f3ff1fa88d78", null ],
+    [ "UART3_RXD_EXP", "arm-mps4-pinctrl_8h.html#aad1ef19e8c46127baf5ddb680f4a9c2e", null ],
+    [ "UART3_TXD_EXP", "arm-mps4-pinctrl_8h.html#aab7f8b8584aa06a033aa1e93200eb0d6", null ],
+    [ "UART4_RXD_EXP", "arm-mps4-pinctrl_8h.html#a960b6b4bf5810595c274fab5842189e4", null ],
+    [ "UART4_TXD_EXP", "arm-mps4-pinctrl_8h.html#a8f2f8e4cb191c641dad8dff6c4753e38", null ]
+];

@@ -1,0 +1,290 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="structbt__conn__auth__cb" kind="struct" language="C++" prot="public">
+    <compoundname>bt_conn_auth_cb</compoundname>
+    <includes refid="conn_8h" local="no">zephyr/bluetooth/conn.h</includes>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="structbt__conn__auth__cb_1a92391a172e158a42966f410d732424a7" prot="public" static="no" mutable="no">
+        <type>enum <ref refid="group__bt__conn_1gaa9420ff489fd5857ff076406442679ff" kindref="member">bt_security_err</ref>(*</type>
+        <definition>enum bt_security_err(* bt_conn_auth_cb::pairing_accept) (struct bt_conn *conn, const struct bt_conn_pairing_feat *const feat)</definition>
+        <argsstring>)(struct bt_conn *conn, const struct bt_conn_pairing_feat *const feat)</argsstring>
+        <name>pairing_accept</name>
+        <qualifiedname>bt_conn_auth_cb::pairing_accept</qualifiedname>
+        <briefdescription>
+<para>Query to proceed incoming pairing or not. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>On any incoming pairing req/rsp this callback will be called for the application to decide whether to allow for the pairing to continue.</para>
+<para>The pairing info received from the peer is passed to assist making the decision.</para>
+<para>As this callback is synchronous the application should return a response value immediately. Otherwise it may affect the timing during pairing. Hence, this information should not be conveyed to the user to take action.</para>
+<para>The remaining callbacks are not affected by this, but do notice that other callbacks can be called during the pairing. Eg. if pairing_confirm is registered both will be called for Just-Works pairings.</para>
+<para>This callback may be unregistered in which case pairing continues as if the Kconfig flag was not set.</para>
+<para>For BR/EDR Secure Simple Pairing (SSP), this callback is called when receiving the BT_HCI_EVT_IO_CAPA_REQ hci event. The feat is NULL here.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>conn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Connection where pairing is initiated. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>feat</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pairing req/resp info. It is NULL in BR/EDR SSP. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/bluetooth/conn.h" line="2786" column="9" bodyfile="zephyr/bluetooth/conn.h" bodystart="2829" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbt__conn__auth__cb_1a14074ca97fad6af4c58c43a00c503104" prot="public" static="no" mutable="no">
+        <type>void(*</type>
+        <definition>void(* bt_conn_auth_cb::passkey_display) (struct bt_conn *conn, unsigned int passkey)</definition>
+        <argsstring>)(struct bt_conn *conn, unsigned int passkey)</argsstring>
+        <name>passkey_display</name>
+        <qualifiedname>bt_conn_auth_cb::passkey_display</qualifiedname>
+        <briefdescription>
+<para>Display a passkey to the user. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>When called the application is expected to display the given passkey to the user, with the expectation that the passkey will then be entered on the peer device. The passkey will be in the range of 0 - 999999, and is expected to be padded with zeroes so that six digits are always shown. E.g. the value 37 should be shown as 000037.</para>
+<para>This callback may be set to NULL, which means that the local device lacks the ability do display a passkey. If set to non-NULL the cancel callback must also be provided, since this is the only way the application can find out that it should stop displaying the passkey.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>conn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Connection where pairing is currently active. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>passkey</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Passkey to show to the user. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/bluetooth/conn.h" line="2851" column="1" bodyfile="zephyr/bluetooth/conn.h" bodystart="2851" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbt__conn__auth__cb_1a10f9d22c89c95a6f3ffe0016f92445c0" prot="public" static="no" mutable="no">
+        <type>void(*</type>
+        <definition>void(* bt_conn_auth_cb::passkey_entry) (struct bt_conn *conn)</definition>
+        <argsstring>)(struct bt_conn *conn)</argsstring>
+        <name>passkey_entry</name>
+        <qualifiedname>bt_conn_auth_cb::passkey_entry</qualifiedname>
+        <briefdescription>
+<para>Request the user to enter a passkey. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>When called the user is expected to enter a passkey. The passkey must be in the range of 0 - 999999, and should be expected to be zero-padded, as that&apos;s how the peer device will typically be showing it (e.g. 37 would be shown as 000037).</para>
+<para>Once the user has entered the passkey its value should be given to the stack using the <ref refid="group__bt__conn_1ga3906d8d3d192e8a6ad1bf6b7acc32ff0" kindref="member">bt_conn_auth_passkey_entry()</ref> API.</para>
+<para>This callback may be set to NULL, which means that the local device lacks the ability to enter a passkey. If set to non-NULL the cancel callback must also be provided, since this is the only way the application can find out that it should stop requesting the user to enter a passkey.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>conn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Connection where pairing is currently active. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/bluetooth/conn.h" line="2897" column="1" bodyfile="zephyr/bluetooth/conn.h" bodystart="2897" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbt__conn__auth__cb_1a2bb6c10666d111f675fd6de5ff51410a" prot="public" static="no" mutable="no">
+        <type>void(*</type>
+        <definition>void(* bt_conn_auth_cb::passkey_confirm) (struct bt_conn *conn, unsigned int passkey)</definition>
+        <argsstring>)(struct bt_conn *conn, unsigned int passkey)</argsstring>
+        <name>passkey_confirm</name>
+        <qualifiedname>bt_conn_auth_cb::passkey_confirm</qualifiedname>
+        <briefdescription>
+<para>Request the user to confirm a passkey. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>When called the user is expected to confirm that the given passkey is also shown on the peer device.. The passkey will be in the range of 0 - 999999, and should be zero-padded to always be six digits (e.g. 37 would be shown as 000037).</para>
+<para>Once the user has confirmed the passkey to match, the <ref refid="group__bt__conn_1gab8c3ecf2a3d68e54379917844a29d995" kindref="member">bt_conn_auth_passkey_confirm()</ref> API should be called. If the user concluded that the passkey doesn&apos;t match the <ref refid="group__bt__conn_1ga89e5fc4bcab3f5598d20a9cd8ace5f59" kindref="member">bt_conn_auth_cancel()</ref> API should be called.</para>
+<para>This callback may be set to NULL, which means that the local device lacks the ability to confirm a passkey. If set to non-NULL the cancel callback must also be provided, since this is the only way the application can find out that it should stop requesting the user to confirm a passkey.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>conn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Connection where pairing is currently active. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>passkey</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Passkey to be confirmed. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/bluetooth/conn.h" line="2920" column="1" bodyfile="zephyr/bluetooth/conn.h" bodystart="2920" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbt__conn__auth__cb_1aec9f6256607ea2cd1ce1b4cdb3052b42" prot="public" static="no" mutable="no">
+        <type>void(*</type>
+        <definition>void(* bt_conn_auth_cb::oob_data_request) (struct bt_conn *conn, struct bt_conn_oob_info *info)</definition>
+        <argsstring>)(struct bt_conn *conn, struct bt_conn_oob_info *info)</argsstring>
+        <name>oob_data_request</name>
+        <qualifiedname>bt_conn_auth_cb::oob_data_request</qualifiedname>
+        <briefdescription>
+<para>Request the user to provide Out of Band (OOB) data. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>When called the user is expected to provide OOB data. The required data are indicated by the information structure.</para>
+<para>For LE Secure Connections OOB pairing, the user should provide local OOB data, remote OOB data or both depending on their availability. Their value should be given to the stack using the <ref refid="group__bt__conn_1gac365f9748ad0737f09142ee1de982503" kindref="member">bt_le_oob_set_sc_data()</ref> API.</para>
+<para>This callback must be set to non-NULL in order to support OOB pairing.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>conn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Connection where pairing is currently active. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>info</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>OOB pairing information. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/bluetooth/conn.h" line="2938" column="1" bodyfile="zephyr/bluetooth/conn.h" bodystart="2938" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbt__conn__auth__cb_1af6eb01c252ba3e32ff8bf583aa6ca0a4" prot="public" static="no" mutable="no">
+        <type>void(*</type>
+        <definition>void(* bt_conn_auth_cb::cancel) (struct bt_conn *conn)</definition>
+        <argsstring>)(struct bt_conn *conn)</argsstring>
+        <name>cancel</name>
+        <qualifiedname>bt_conn_auth_cb::cancel</qualifiedname>
+        <briefdescription>
+<para>Cancel the ongoing user request. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This callback will be called to notify the application that it should cancel any previous user request (passkey display, entry or confirmation).</para>
+<para>This may be set to NULL, but must always be provided whenever the passkey_display, passkey_entry passkey_confirm or pairing_confirm callback has been provided.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>conn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Connection where pairing is currently active. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/bluetooth/conn.h" line="2953" column="1" bodyfile="zephyr/bluetooth/conn.h" bodystart="2953" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbt__conn__auth__cb_1af4f7d3ee570b3472ee79b014be01f76e" prot="public" static="no" mutable="no">
+        <type>void(*</type>
+        <definition>void(* bt_conn_auth_cb::pairing_confirm) (struct bt_conn *conn)</definition>
+        <argsstring>)(struct bt_conn *conn)</argsstring>
+        <name>pairing_confirm</name>
+        <qualifiedname>bt_conn_auth_cb::pairing_confirm</qualifiedname>
+        <briefdescription>
+<para>Request confirmation for an incoming pairing. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This callback will be called to confirm an incoming pairing request where none of the other user callbacks is applicable.</para>
+<para>If the user decides to accept the pairing the <ref refid="group__bt__conn_1ga3e15b9deb6787d3e415bbea35c9aa91d" kindref="member">bt_conn_auth_pairing_confirm()</ref> API should be called. If the user decides to reject the pairing the <ref refid="group__bt__conn_1ga89e5fc4bcab3f5598d20a9cd8ace5f59" kindref="member">bt_conn_auth_cancel()</ref> API should be called.</para>
+<para>This callback may be set to NULL, which means that the local device lacks the ability to confirm a pairing request. If set to non-NULL the cancel callback must also be provided, since this is the only way the application can find out that it should stop requesting the user to confirm a pairing request.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>conn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Connection where pairing is currently active. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/bluetooth/conn.h" line="2973" column="1" bodyfile="zephyr/bluetooth/conn.h" bodystart="2973" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="structbt__conn__auth__cb_1ab6df1b1505dc22dd8dae0e946546c8bb" prot="public" static="no" mutable="no">
+        <type>void(*</type>
+        <definition>void(* bt_conn_auth_cb::pincode_entry) (struct bt_conn *conn, bool highsec)</definition>
+        <argsstring>)(struct bt_conn *conn, bool highsec)</argsstring>
+        <name>pincode_entry</name>
+        <qualifiedname>bt_conn_auth_cb::pincode_entry</qualifiedname>
+        <briefdescription>
+<para>Request the user to enter a passkey. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This callback will be called for a BR/EDR (Bluetooth Classic) connection where pairing is being performed. Once called the user is expected to enter a PIN code with a length between 1 and 16 digits. If the <emphasis>highsec</emphasis> parameter is set to true the PIN code must be 16 digits long.</para>
+<para>Once entered, the PIN code should be given to the stack using the <ref refid="group__bt__conn_1ga4002a1b092832807218afa8ad279ab98" kindref="member">bt_conn_auth_pincode_entry()</ref> API.</para>
+<para>This callback may be set to NULL, however in that case pairing over BR/EDR will not be possible. If provided, the cancel callback must be provided as well.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>conn</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Connection where pairing is currently active. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>highsec</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>true if 16 digit PIN is required. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/bluetooth/conn.h" line="2994" column="1" bodyfile="zephyr/bluetooth/conn.h" bodystart="2994" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>Authenticated pairing callback structure. </para>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="zephyr/bluetooth/conn.h" line="2798" column="1" bodyfile="zephyr/bluetooth/conn.h" bodystart="2798" bodyend="3020"/>
+    <listofallmembers>
+      <member refid="structbt__conn__auth__cb_1af6eb01c252ba3e32ff8bf583aa6ca0a4" prot="public" virt="non-virtual"><scope>bt_conn_auth_cb</scope><name>cancel</name></member>
+      <member refid="structbt__conn__auth__cb_1aec9f6256607ea2cd1ce1b4cdb3052b42" prot="public" virt="non-virtual"><scope>bt_conn_auth_cb</scope><name>oob_data_request</name></member>
+      <member refid="structbt__conn__auth__cb_1a92391a172e158a42966f410d732424a7" prot="public" virt="non-virtual"><scope>bt_conn_auth_cb</scope><name>pairing_accept</name></member>
+      <member refid="structbt__conn__auth__cb_1af4f7d3ee570b3472ee79b014be01f76e" prot="public" virt="non-virtual"><scope>bt_conn_auth_cb</scope><name>pairing_confirm</name></member>
+      <member refid="structbt__conn__auth__cb_1a2bb6c10666d111f675fd6de5ff51410a" prot="public" virt="non-virtual"><scope>bt_conn_auth_cb</scope><name>passkey_confirm</name></member>
+      <member refid="structbt__conn__auth__cb_1a14074ca97fad6af4c58c43a00c503104" prot="public" virt="non-virtual"><scope>bt_conn_auth_cb</scope><name>passkey_display</name></member>
+      <member refid="structbt__conn__auth__cb_1a10f9d22c89c95a6f3ffe0016f92445c0" prot="public" virt="non-virtual"><scope>bt_conn_auth_cb</scope><name>passkey_entry</name></member>
+      <member refid="structbt__conn__auth__cb_1ab6df1b1505dc22dd8dae0e946546c8bb" prot="public" virt="non-virtual"><scope>bt_conn_auth_cb</scope><name>pincode_entry</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

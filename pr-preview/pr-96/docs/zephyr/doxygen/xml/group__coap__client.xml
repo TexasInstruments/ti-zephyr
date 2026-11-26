@@ -1,0 +1,386 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.15.0" xml:lang="en-US">
+  <compounddef id="group__coap__client" kind="group">
+    <compoundname>coap_client</compoundname>
+    <title>CoAP client API</title>
+    <innerclass refid="structcoap__client__response__data" prot="public">coap_client_response_data</innerclass>
+    <innerclass refid="structcoap__client__option" prot="public">coap_client_option</innerclass>
+    <innerclass refid="structcoap__client__request" prot="public">coap_client_request</innerclass>
+    <innerclass refid="structcoap__client" prot="public">coap_client</innerclass>
+    <sectiondef kind="typedef">
+      <memberdef kind="typedef" id="group__coap__client_1ga37e6c0891c3e8eef3316e34d4b7a0318" prot="public" static="no">
+        <type>void(*</type>
+        <definition>typedef void(* coap_client_response_cb_t) (const struct coap_client_response_data *data, void *user_data)</definition>
+        <argsstring>)(const struct coap_client_response_data *data, void *user_data)</argsstring>
+        <name>coap_client_response_cb_t</name>
+        <briefdescription>
+<para>Callback for CoAP request. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This callback is called for responses to CoAP client requests. It is used to indicate errors, response codes from server or to deliver payload. Blockwise transfers cause this callback to be called sequentially with increasing payload offset and only partial content in buffer pointed by payload parameter.</para>
+<para>For multicast requests the callback is invoked once per responding server with <computeroutput>source</computeroutput> set to the unicast source address of that server. When the collection window expires, the callback is invoked one final time with <computeroutput>source</computeroutput> set to <computeroutput>NULL</computeroutput> to signal that no further responses will be delivered for this request.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>The CoAP response data. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>user_data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>User provided context. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/net/coap_client.h" line="86" column="9" bodyfile="zephyr/net/coap_client.h" bodystart="86" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="typedef" id="group__coap__client_1ga3c35cc0227385124d0ebe25688e3bc1a" prot="public" static="no">
+        <type>int(*</type>
+        <definition>typedef int(* coap_client_payload_cb_t) (size_t offset, const uint8_t **payload, size_t *len, bool *last_block, void *user_data)</definition>
+        <argsstring>)(size_t offset, const uint8_t **payload, size_t *len, bool *last_block, void *user_data)</argsstring>
+        <name>coap_client_payload_cb_t</name>
+        <briefdescription>
+<para>Callback for providing a payload for the CoAP request. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>An optional callback for providing a payload for CoAP client requests. If set in <ref refid="structcoap__client__request" kindref="compound">coap_client_request</ref>, the CoAP client library will call this callback when preparing a PUT/POST request.</para>
+<para>When called, the library provides the application with the current payload offset for the transfer and the payload block size. In return, the application sets the payload pointer, payload size and information whether more data blocks are expected. Setting the <computeroutput>last_block</computeroutput> parameter to false on the initial callback call triggers a block transfer upload. The library will keep calling the callback until the <computeroutput>last_block</computeroutput> parameter is set to false.</para>
+<para><simplesect kind="note"><para>If block transfer is used, the application is expected to provide full blocks of payload. Only the final block (i.e. when <computeroutput>last_block</computeroutput> is set to true) can be shorter than the requested block size.</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>offset</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Payload offset from the beginning of a blockwise transfer. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>payload</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A pointer for the buffer containing the payload block. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>len</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Requested (maximum) block size on input. The actual payload length on output. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>last_block</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>A pointer to the flag indicating whether more payload blocks are expected. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>user_data</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>User provided context.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>Zero on success, a negative error code to abort upload. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/net/coap_client.h" line="116" column="9" bodyfile="zephyr/net/coap_client.h" bodystart="116" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="group__coap__client_1gac85c4bcbc129b5d2be6a74f9024c84d9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int coap_client_init</definition>
+        <argsstring>(struct coap_client *client, const char *info)</argsstring>
+        <name>coap_client_init</name>
+        <param>
+          <type>struct <ref refid="structcoap__client" kindref="compound">coap_client</ref> *</type>
+          <declname>client</declname>
+        </param>
+        <param>
+          <type>const char *</type>
+          <declname>info</declname>
+        </param>
+        <briefdescription>
+<para>Initialize the CoAP client. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername direction="in">client</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Client instance. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername direction="in">info</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Name for the receiving thread of the client. Setting this NULL will result as default name of &quot;coap_client&quot;.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>int Zero on success, otherwise a negative error code. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/net/coap_client.h" line="226" column="5" declfile="zephyr/net/coap_client.h" declline="226" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__coap__client_1gab5a2ea7ca1852e14142b579f77bc5bf9" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int coap_client_req</definition>
+        <argsstring>(struct coap_client *client, int sock, const struct net_sockaddr *addr, struct coap_client_request *req, struct coap_transmission_parameters *params)</argsstring>
+        <name>coap_client_req</name>
+        <param>
+          <type>struct <ref refid="structcoap__client" kindref="compound">coap_client</ref> *</type>
+          <declname>client</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>sock</declname>
+        </param>
+        <param>
+          <type>const struct <ref refid="structnet__sockaddr" kindref="compound">net_sockaddr</ref> *</type>
+          <declname>addr</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structcoap__client__request" kindref="compound">coap_client_request</ref> *</type>
+          <declname>req</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structcoap__transmission__parameters" kindref="compound">coap_transmission_parameters</ref> *</type>
+          <declname>params</declname>
+        </param>
+        <briefdescription>
+<para>Send CoAP request. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>Operation is handled asynchronously using a background thread. If the socket isn&apos;t connected to a destination address, user must provide a destination address, otherwise the address should be set as NULL. Once the callback is called with last block set as true, socket can be closed or used for another query.</para>
+<para><simplesect kind="note"><para>If block transfer is used, the <computeroutput>payload</computeroutput> pointer provided in <computeroutput>req</computeroutput> parameter has to remain valid throughout the transaction (i.e. until the last block or an error is reported). The library will need to access the payload pointer when sending consecutive payload blocks.</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>client</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Client instance. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>sock</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Open socket file descriptor. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>addr</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>the destination address of the request, NULL if socket is already connected. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>req</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>CoAP request structure </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>params</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to transmission parameters structure or NULL to use default values. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>zero when operation started successfully or negative error code otherwise. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/net/coap_client.h" line="249" column="5" declfile="zephyr/net/coap_client.h" declline="249" declcolumn="5"/>
+      </memberdef>
+      <memberdef kind="function" id="group__coap__client_1ga3f511d4df22bece05c1ac97ff4d09a80" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void coap_client_cancel_requests</definition>
+        <argsstring>(struct coap_client *client)</argsstring>
+        <name>coap_client_cancel_requests</name>
+        <param>
+          <type>struct <ref refid="structcoap__client" kindref="compound">coap_client</ref> *</type>
+          <declname>client</declname>
+        </param>
+        <briefdescription>
+<para>Cancel all current requests. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This is intended for canceling long-running requests (e.g. GETs with the OBSERVE option set) which has gone stale for some reason. The function should also be called before the corresponding client socket is closed, to prevent the socket from being monitored by the internal polling thread.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>client</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Client instance. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/net/coap_client.h" line="262" column="6" declfile="zephyr/net/coap_client.h" declline="262" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group__coap__client_1ga71abc48834df15e7550f7f9c75918117" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void coap_client_cancel_request</definition>
+        <argsstring>(struct coap_client *client, struct coap_client_request *req)</argsstring>
+        <name>coap_client_cancel_request</name>
+        <param>
+          <type>struct <ref refid="structcoap__client" kindref="compound">coap_client</ref> *</type>
+          <declname>client</declname>
+        </param>
+        <param>
+          <type>struct <ref refid="structcoap__client__request" kindref="compound">coap_client_request</ref> *</type>
+          <declname>req</declname>
+        </param>
+        <briefdescription>
+<para>Cancel matching requests. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>This function cancels all CoAP client request that matches the given request. The request is matched based on the method, path, callback and user_data, if provided. Any field set to NULL is considered a wildcard.</para>
+<para>(struct <ref refid="structcoap__client__request" kindref="compound">coap_client_request</ref>){0} cancels all requests. (struct <ref refid="structcoap__client__request" kindref="compound">coap_client_request</ref>){.method = COAP_METHOD_GET} cancels all GET requests.</para>
+<para><parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>client</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the CoAP client instance. </para>
+</parameterdescription>
+</parameteritem>
+<parameteritem>
+<parameternamelist>
+<parametername>req</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the CoAP client request to be canceled. </para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/net/coap_client.h" line="277" column="6" declfile="zephyr/net/coap_client.h" declline="277" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="group__coap__client_1ga437ead308ea92f314fd9ebb82a6300b7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>struct <ref refid="structcoap__client__option" kindref="compound">coap_client_option</ref></type>
+        <definition>struct coap_client_option coap_client_option_initial_block2</definition>
+        <argsstring>(void)</argsstring>
+        <name>coap_client_option_initial_block2</name>
+        <param>
+          <type>void</type>
+        </param>
+        <briefdescription>
+<para>Initialise a Block2 option to be added to a request. </para>
+        </briefdescription>
+        <detaileddescription>
+<para>If the application expects a request to require a blockwise transfer, it may pre-emptively suggest a maximum block size to the server - see RFC7959 Figure 3: Block-Wise GET with Early Negotiation.</para>
+<para>This helper function returns a Block2 option to send with the initial request.</para>
+<para><simplesect kind="return"><para>CoAP client initial Block2 option structure </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/net/coap_client.h" line="290" column="25" declfile="zephyr/net/coap_client.h" declline="290" declcolumn="25"/>
+      </memberdef>
+      <memberdef kind="function" id="group__coap__client_1ga9460711a90567fccb810fb4d93dbe841" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type><ref refid="stdbool_8h_1abb452686968e48b67397da5f97445f5b" kindref="member">bool</ref></type>
+        <definition>bool coap_client_has_ongoing_exchange</definition>
+        <argsstring>(struct coap_client *client)</argsstring>
+        <name>coap_client_has_ongoing_exchange</name>
+        <param>
+          <type>struct <ref refid="structcoap__client" kindref="compound">coap_client</ref> *</type>
+          <declname>client</declname>
+        </param>
+        <briefdescription>
+<para>Check if client has ongoing exchange. </para>
+        </briefdescription>
+        <detaileddescription>
+<para><simplesect kind="note"><para>Function not only considers ongoing requests, but also lifetime of completed requests (which provides graceful duplicates handling).</para>
+</simplesect>
+<simplesect kind="note"><para>For socket handling. Function does no consider a socket POLL that has started before this call, therefore it is recommended to wait out POLL timeout before closing socket (e.g. call <ref refid="group__coap__client_1ga3f511d4df22bece05c1ac97ff4d09a80" kindref="member">coap_client_cancel_requests()</ref> which applies delay for timeout).</para>
+</simplesect>
+<parameterlist kind="param"><parameteritem>
+<parameternamelist>
+<parametername>client</parametername>
+</parameternamelist>
+<parameterdescription>
+<para>Pointer to the CoAP client instance.</para>
+</parameterdescription>
+</parameteritem>
+</parameterlist>
+<simplesect kind="return"><para>true if there is an ongoing exchange, false otherwise. </para>
+</simplesect>
+</para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/net/coap_client.h" line="307" column="6" declfile="zephyr/net/coap_client.h" declline="307" declcolumn="6"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="group__coap__client_1ga53c57dcb241786b6e0213a7198667bd0" prot="public" static="no">
+        <name>MAX_COAP_MSG_LEN</name>
+        <initializer>                          (CONFIG_COAP_CLIENT_MESSAGE_HEADER_SIZE + \
+                          CONFIG_COAP_CLIENT_MESSAGE_SIZE)</initializer>
+        <briefdescription>
+<para>Maximum size of a CoAP message. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="zephyr/net/coap_client.h" line="32" column="9" bodyfile="zephyr/net/coap_client.h" bodystart="32" bodyend="33"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+<para>CoAP client API. </para>
+    </briefdescription>
+    <detaileddescription>
+<para><simplesect kind="since"><para>3.4 </para>
+</simplesect>
+<simplesect kind="version"><para>0.1.0 </para>
+</simplesect>
+</para>
+    </detaileddescription>
+  </compounddef>
+</doxygen>

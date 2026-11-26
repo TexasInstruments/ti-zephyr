@@ -1,0 +1,227 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: tsc-keys
+.. _dtbinding_tsc_keys:
+
+tsc-keys
+########
+
+.. sidebar:: Overview
+
+   :Name: ``tsc-keys``
+   :Vendor: :ref:`Generic or vendor-independent <dt_no_vendor>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=tsc-keys>` using
+               this compatible
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   Input driver for STM32 Tocuh Sensing Controller (TSC).
+
+   This node is a st,stm32-tsc grandchild node and applies filters and
+   calculations to detect an input event on a group which is the child of
+   st,stm32-tsc. For more information see drivers/misc/st,stm32-tsc.yaml
+
+Examples
+********
+
+.. code-block:: dts
+
+   #include <zephyr/dt-bindings/input/input-event-codes.h>
+
+   &tsc {
+     compatible = "st,stm32-tsc";
+
+     tsc_group6: g6 {
+       /* ... */
+       ts1 {
+         compatible = "tsc-keys";
+         sampling-interval-ms = <10>;
+         oversampling = <10>;
+         noise-threshold = <50>;
+         zephyr,code = <INPUT_KEY_0>;
+       };
+     };
+   };
+
+
+Properties
+**********
+
+.. tabs::
+
+   .. group-tab:: Node specific properties
+
+      Properties not inherited from the base binding file.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``sampling-interval-ms``
+           - ``int``
+           - .. code-block:: none
+
+                Sampling interval in milliseconds.
+
+
+
+             This property is **required**.
+
+         * - ``oversampling``
+           - ``int``
+           - .. code-block:: none
+
+                Over sampling factor. The driver will take the average of the samples
+                taken in the sampling interval and compare it with the previous sample.
+                Larger values will reduce the noise but will increase the latency. The
+                default value is 10 so the slope will be calculated every
+                10 * sampling-interval-ms milliseconds.
+
+
+
+             This property is **required**.
+
+         * - ``noise-threshold``
+           - ``int``
+           - .. code-block:: none
+
+                This value will be used to reject the noise for both
+                directions of the slope.
+
+
+
+             This property is **required**.
+
+         * - ``sticky-key-timeout-ms``
+           - ``int``
+           - .. code-block:: none
+
+                Time in milliseconds to wait before releasing a key. By default a release
+                event will be generated after 10 seconds of the last press event if
+                the key is still pressed.
+
+
+
+             This property is **required**.
+
+         * - ``zephyr,code``
+           - ``int``
+           - .. code-block:: none
+
+                Key code to emit.
+
+
+             This property is **required**.
+
+
+
+   .. group-tab:: Deprecated node specific properties
+
+      Deprecated properties not inherited from the base binding file.
+
+      (None)
+
+   .. group-tab:: Base properties
+
+      Properties inherited from the base binding file, which defines
+      common properties that may be set on many nodes. Not all of these
+      may apply to the "tsc-keys" compatible.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``status``
+           - ``string``
+           - .. code-block:: none
+
+                Indicates the operational status of the hardware or other
+                resource that the node represents. In particular:
+
+                  - "okay" means the resource is operational and, for example,
+                    can be used by device drivers
+                  - "disabled" means the resource is not operational and the system
+                    should treat it as if it is not present
+
+                For details, see "2.3.4 status" in Devicetree Specification v0.4.
+
+
+
+             Legal values: ``okay``, ``disabled``, ``reserved``, ``fail``, ``fail-sss``
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``compatible``
+           - ``string-array``
+           - .. code-block:: none
+
+                This property is a list of strings that essentially define what
+                type of hardware or other resource this devicetree node
+                represents. Each device driver checks for specific compatible
+                property values to find the devicetree nodes that represent
+                resources that the driver should manage.
+
+                The recommended format is "vendor,device", The "vendor" part is
+                an abbreviated name of the vendor. The "device" is usually from
+                the datasheet.
+
+                The compatible property can have multiple values, ordered from
+                most- to least-specific. Having additional values is useful when the
+                device is a specific instance of a more general family, to allow the
+                system to match the most specific driver available.
+
+                For details, see "2.3.1 compatible" in Devicetree Specification v0.4.
+
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``label``
+           - ``string``
+           - .. code-block:: none
+
+                Human readable string describing the device. Use of this property is
+                deprecated except as needed on a case-by-case basis.
+
+                For details, see "4.1.2 Miscellaneous Properties" in Devicetree
+                Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``zephyr,deferred-init``
+           - ``boolean``
+           - .. code-block:: none
+
+                Do not initialize device automatically on boot. Device should be manually
+                initialized using device_init().
+
+
+
+
+
+

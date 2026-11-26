@@ -1,0 +1,22 @@
+var searchData=
+[
+  ['veml6031_5fdiv4_0',['veml6031_div4',['../group__veml6031__interface.html#ga8fdeb1ef880fb5a03c121f8d6456a738',1,'veml6031.h']]],
+  ['veml6046_5fpdd_1',['veml6046_pdd',['../group__veml6046__interface.html#ga3747fce9eeb66d848ac53793be999607',1,'veml6046.h']]],
+  ['veml60xx_5fgain_2',['veml60xx_gain',['../group__veml60xx__interface.html#gacf7907b21bea0f35196db039a709aae2',1,'veml60xx-common.h']]],
+  ['veml60xx_5fit_3',['veml60xx_it',['../group__veml60xx__interface.html#ga8945da51940f67ee875a729d6de4d287',1,'veml60xx-common.h']]],
+  ['veml60xx_5fpers_4',['veml60xx_pers',['../group__veml60xx__interface.html#gacb2554bb01df63048cdcc1894903dd73',1,'veml60xx-common.h']]],
+  ['veml7700_5fals_5fgain_5',['veml7700_als_gain',['../veml7700_8h.html#ad4a2d50801f3f4d2e1390e6c5dac565d',1,'veml7700.h']]],
+  ['veml7700_5fals_5fit_6',['veml7700_als_it',['../veml7700_8h.html#a0a65ceba1f3f7b25309033a8e6c3384b',1,'veml7700.h']]],
+  ['veml7700_5fint_5fmode_7',['veml7700_int_mode',['../veml7700_8h.html#a1f84fa22aa00479b23ada96982aa0146',1,'veml7700.h']]],
+  ['video_5fbuf_5fmemory_8',['video_buf_memory',['../group__video__interface.html#ga43aa9bdc7283175df8165332a29c3f6c',1,'video.h']]],
+  ['video_5fbuf_5ftype_9',['video_buf_type',['../group__video__interface.html#gad386b2994b56844ebe713f156b9dfe4e',1,'video.h']]],
+  ['video_5fcamera_5forientation_10',['video_camera_orientation',['../group__video__controls.html#ga1fb4e9981b362010439b9419691ac2af',1,'video-controls.h']]],
+  ['video_5fcolorfx_11',['video_colorfx',['../group__video__controls.html#ga99f4b6cf21c8baaf510fbcfccb645960',1,'video-controls.h']]],
+  ['video_5fexposure_5ftype_12',['video_exposure_type',['../group__video__controls.html#ga167cf84b8f4259e6cdd333748deafaf6',1,'video-controls.h']]],
+  ['video_5ffrmival_5ftype_13',['video_frmival_type',['../group__video__interface.html#ga6abf1fc9c35cf1d1648cde7616e7cad1',1,'video.h']]],
+  ['video_5fpower_5fline_5ffrequency_14',['video_power_line_frequency',['../group__video__controls.html#ga9db809ab56484b4b5b1a047a97e6920a',1,'video-controls.h']]],
+  ['video_5fselection_5ftarget_15',['video_selection_target',['../group__video__interface.html#gae375c0586e3505632cc69348935c9b54',1,'video.h']]],
+  ['video_5fsignal_5fresult_16',['video_signal_result',['../group__video__interface.html#ga0f50f287c4075e992fbab6d8a990d7a8',1,'video.h']]],
+  ['virtual_5finterface_5fcaps_17',['virtual_interface_caps',['../group__virtual.html#ga8f188f5c2f19960d7113da52aefe8091',1,'virtual.h']]],
+  ['vtm_5fsensor_5fattribute_18',['vtm_sensor_attribute',['../group__ti__vtm__sensor__interface.html#ga52fc6f83f2fdaab8550fbdf449291778',1,'ti_vtm.h']]]
+];

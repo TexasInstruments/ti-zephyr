@@ -1,0 +1,27 @@
+var structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2 =
+[
+    [ "conn_handle", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#adb3ce0c00b922e72373a93cb5d0f2f1f", null ],
+    [ "cs_sync_phys_supported", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#aff9e1f081101d2eabc83a7a2ce99d64f", null ],
+    [ "max_antenna_paths_supported", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#ac130ecc14ce78f0c179ad56a1985d60c", null ],
+    [ "max_consecutive_procedures_supported", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#a9e2a36e0181a8cf5a9d61b8b31e21617", null ],
+    [ "modes_supported", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#aa78b03177bbfc69de0a066f610b1cfa6", null ],
+    [ "nadm_random_capability", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#a974007b9f1d81991f55c40cb1da1c51e", null ],
+    [ "nadm_sounding_capability", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#a43a8dd8b09c9e498b64798fcfe73af53", null ],
+    [ "num_antennas_supported", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#ad1f03a6a550a5c5cb9b0c997c239ba6a", null ],
+    [ "num_config_supported", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#ab21b4a5b2e3005fc3589251c7b8f77f1", null ],
+    [ "roles_supported", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#a2e7d55a93000730a565c93b3394186e3", null ],
+    [ "rtt_aa_only_n", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#ae8091780f4153ead9a9414593b648f5a", null ],
+    [ "rtt_capability", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#aba890de001e752b497bc91bd6356c359", null ],
+    [ "rtt_random_payload_n", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#a73b7054a056ca3256098608e565033b2", null ],
+    [ "rtt_sounding_n", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#ab93bb486d50a79c34a6002885436605b", null ],
+    [ "status", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#a8695548057df5e398f65de93fd097b04", null ],
+    [ "subfeatures_supported", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#abe01a9d4d6fdb042fdfa5c045ac66519", null ],
+    [ "t_fcs_times_supported", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#a77669a86a0c75439417d4e53629a9cfd", null ],
+    [ "t_ip1_times_supported", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#ab692972f1388e6641493a5cc0faf2fac", null ],
+    [ "t_ip2_ipt_times_supported", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#a365c4afcf1c034bb42c24ce4bedbf1c3", null ],
+    [ "t_ip2_times_supported", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#aa3e4e049cbb322a35171686635e2cc9c", null ],
+    [ "t_pm_times_supported", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#ad5c7c16d0b2096d4c00156800bf9181b", null ],
+    [ "t_sw_ipt_time_supported", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#af7f35ce7c16fc7cf1d76be1450d4566c", null ],
+    [ "t_sw_time_supported", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#a0c60c0b2677a8635a185277453db9613", null ],
+    [ "tx_snr_capability", "structbt__hci__evt__le__cs__read__remote__supported__capabilities__complete__v2.html#a07642a2edeb882e5c9a2a7727e8a55fd", null ]
+];

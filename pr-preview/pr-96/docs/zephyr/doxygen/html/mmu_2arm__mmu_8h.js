@@ -1,0 +1,28 @@
+var mmu_2arm__mmu_8h =
+[
+    [ "arm_mmu_region", "structarm__mmu__region.html", "structarm__mmu__region" ],
+    [ "arm_mmu_config", "structarm__mmu__config.html", "structarm__mmu__config" ],
+    [ "MATTR_CACHE_INNER_WB_nWA", "mmu_2arm__mmu_8h.html#aa864871d6a9bcd964b356d16d284e6fa", null ],
+    [ "MATTR_CACHE_INNER_WB_WA", "mmu_2arm__mmu_8h.html#aefd9b92f9576e6565d02cd1902d97d33", null ],
+    [ "MATTR_CACHE_INNER_WT_nWA", "mmu_2arm__mmu_8h.html#a21ace71b252adcf3ef4903c28feb9254", null ],
+    [ "MATTR_CACHE_OUTER_WB_nWA", "mmu_2arm__mmu_8h.html#a875777d8e87e20dc861d0439ddfcfd19", null ],
+    [ "MATTR_CACHE_OUTER_WB_WA", "mmu_2arm__mmu_8h.html#a67253d34ae4dc883c58116c1354f3e2d", null ],
+    [ "MATTR_CACHE_OUTER_WT_nWA", "mmu_2arm__mmu_8h.html#a47edb43bfd4a767ed8365d78aca9d4a6", null ],
+    [ "MATTR_MAY_MAP_L1_SECTION", "mmu_2arm__mmu_8h.html#afa2923609302c3ae56b387ae2cc7d28f", null ],
+    [ "MATTR_NON_GLOBAL", "mmu_2arm__mmu_8h.html#a674920d803fe277dd364d324bd9de3d3", null ],
+    [ "MATTR_NON_SECURE", "mmu_2arm__mmu_8h.html#a8a5663c1705ebc0fed3165acedee100b", null ],
+    [ "MATTR_SHARED", "mmu_2arm__mmu_8h.html#a61a894a354c54f67395d0e9293e4cf31", null ],
+    [ "MMU_REGION_DT_COMPAT_FOREACH_FLAT_ENTRY", "mmu_2arm__mmu_8h.html#a3266a39e2c823047ab9a9162be60daf4", null ],
+    [ "MMU_REGION_DT_FLAT_ENTRY", "mmu_2arm__mmu_8h.html#a345c9537de9d7439c853b7f5c275d0cf", null ],
+    [ "MMU_REGION_ENTRY", "mmu_2arm__mmu_8h.html#a7ab46a0bcc5d7f2645f98067ed78ac8f", null ],
+    [ "MMU_REGION_FLAT_ENTRY", "mmu_2arm__mmu_8h.html#a7a9f450388792a5c053dd227207d255f", null ],
+    [ "MPERM_R", "mmu_2arm__mmu_8h.html#a798d4c3b727dc70d39bdce4485e75b63", null ],
+    [ "MPERM_UNPRIVILEGED", "mmu_2arm__mmu_8h.html#abcbc3a051ff2302bfcf9496220f572b1", null ],
+    [ "MPERM_W", "mmu_2arm__mmu_8h.html#a3a8f3c247e82832a527c9998daddab51", null ],
+    [ "MPERM_X", "mmu_2arm__mmu_8h.html#a18d392d8f4282d5e0f4b7b4950667a10", null ],
+    [ "MT_DEVICE", "mmu_2arm__mmu_8h.html#ab0d5bcaf320e734ca524c213bb950de1", null ],
+    [ "MT_MASK", "mmu_2arm__mmu_8h.html#aea34d2f5ddb576d5d54a82fa63778ce1", null ],
+    [ "MT_NORMAL", "mmu_2arm__mmu_8h.html#a8b006dab179dfa8965dcef3ac302746d", null ],
+    [ "MT_STRONGLY_ORDERED", "mmu_2arm__mmu_8h.html#aef13623eed6a774294ff117f0f1260d3", null ],
+    [ "mmu_config", "mmu_2arm__mmu_8h.html#afb6753aab93fd940c3fc43c11a908216", null ]
+];

@@ -1,0 +1,297 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: adi,tmc51xx-stepper-ctrl
+.. _dtbinding_adi_tmc51xx_stepper_ctrl:
+
+adi,tmc51xx-stepper-ctrl
+########################
+
+.. sidebar:: Overview
+
+   :Name: ``adi,tmc51xx-stepper-ctrl``
+   :Vendor: :ref:`Analog Devices, Inc. <dt_vendor_adi>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=adi,tmc51xx-stepper-ctrl>` using
+               this compatible
+   :Driver: :zephyr_file:`drivers/stepper/adi_tmc/tmc51xx/tmc51xx_stepper_ctrl.c`
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   Stallguard bindings for Trinamic stepper controller.
+
+Properties
+**********
+
+.. tabs::
+
+   .. group-tab:: Node specific properties
+
+      Properties not inherited from the base binding file.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``activate-stallguard2``
+           - ``boolean``
+           - .. code-block:: none
+
+                Enable StallGuard2 feature, if the driver supports it.
+
+
+
+         * - ``stallguard-threshold-velocity``
+           - ``int``
+           - .. code-block:: none
+
+                Threshold velocity for StallGuard2 to detect a stall event.
+                This value should be greater than zero.
+
+
+
+             Default value: ``1``
+
+         * - ``stallguard-velocity-check-interval-ms``
+           - ``int``
+           - .. code-block:: none
+
+                Stallguard should not be enabled during motor spin-up.
+                This delay is used to check if the actual stepper velocity is greater than
+                stallguard-threshold-velocity before enabling stallguard.
+
+
+
+             Default value: ``100``
+
+         * - ``vstart``
+           - ``int``
+           - .. code-block:: none
+
+                Motor start velocity in [µsteps/t](unsigned)
+
+                Normally, set VSTOP ≥ VSTART! VSTART may be
+                set to a higher value, when motion distance is
+                sufficient to allow deceleration to VSTOP.
+
+
+
+             Default value: ``1``
+
+         * - ``a1``
+           - ``int``
+           - .. code-block:: none
+
+                First acceleration between VSTART and V1 in [µsteps/ta²](unsigned)
+
+
+
+         * - ``v1``
+           - ``int``
+           - .. code-block:: none
+
+                First acceleration / deceleration phase threshold velocity in [µsteps/t] (unsigned)
+
+                0: Disables A1 and D1 phase, use AMAX, DMAX only
+
+
+
+         * - ``amax``
+           - ``int``
+           - .. code-block:: none
+
+                Second acceleration between V1 and VMAX in [µsteps/ta²](unsigned)
+                This is the acceleration and deceleration value
+                for velocity mode.
+
+
+
+         * - ``vmax``
+           - ``int``
+           - .. code-block:: none
+
+                Motion ramp target velocity in [µsteps/t] (for positioning ensure VMAX ≥ VSTART) (unsigned)
+                This is the target velocity in velocity mode. It can be changed any time during a motion.
+
+
+
+         * - ``dmax``
+           - ``int``
+           - .. code-block:: none
+
+                Deceleration between VMAX and V1 in [µsteps/ta²](unsigned)
+
+
+
+         * - ``d1``
+           - ``int``
+           - .. code-block:: none
+
+                Deceleration between V1 and VSTOP in [µsteps/ta²](unsigned)
+
+                Attention: Do not set 0 in positioning mode,
+                even if V1=0!
+
+
+
+             Default value: ``1``
+
+         * - ``vstop``
+           - ``int``
+           - .. code-block:: none
+
+                Motor stop velocity in [µsteps/t] (unsigned)
+
+                Attention: Set VSTOP ≥ VSTART!
+
+                Attention: Do not set 0 in positioning mode,
+                minimum 10 recommended!
+
+
+
+             Default value: ``10``
+
+         * - ``tzerowait``
+           - ``int``
+           - .. code-block:: none
+
+                Waiting time after ramping down to zero velocity before next movement or direction
+                inversion can start and before motor power down starts. Time range is about 0 to 2
+                seconds. This setting avoids excess acceleration e.g. from VSTOP to -VSTART.
+
+
+
+         * - ``ihold``
+           - ``int``
+           - .. code-block:: none
+
+                Hold current in % of run current (0-100)
+                Standstill current (0=1/32…31=32/32)
+                In combination with StealthChop mode, setting IHOLD=0 allows to choose freewheeling or coil
+                short circuit for motor stand still
+
+
+
+         * - ``irun``
+           - ``int``
+           - .. code-block:: none
+
+                Motor run current (0=1/32…31=32/32)
+                Hint: Choose sense resistors in a way, that normal
+                IRUN is 16 to 31 for best microstep performance.
+
+
+
+         * - ``iholddelay``
+           - ``int``
+           - .. code-block:: none
+
+                Controls the number of clock cycles for motor power down after a motion as soon as TZEROWAIT
+                has expired. The smooth transition avoids a motor jerk upon power down.
+                0: instant power down
+                1..15: Delay per current reduction step in multiple of 2^18 clocks
+
+
+
+         * - ``tcoolthrs``
+           - ``int``
+           - .. code-block:: none
+
+                This is the lower threshold velocity for switching on smart
+                energy CoolStep and StallGuard feature. (unsigned)
+                Set this parameter to disable CoolStep at low speeds, where it
+                cannot work reliably. The stop on stall function (enable with
+                sg_stop when using internal motion controller) and the stall
+                output signal become enabled when exceeding this velocity. In
+                non-DcStep mode, it becomes disabled again once the velocity
+                falls below this threshold.
+                TCOOLTHRS ≥ TSTEP ≥ THIGH:
+                - CoolStep is enabled, if configured
+                - StealthChop voltage PWM mode is disabled
+                TCOOLTHRS ≥ TSTEP
+                - Stop on stall is enabled, if configured
+                - Stall output signal (DIAG0/1) is enabled, if configured
+
+
+
+         * - ``thigh``
+           - ``int``
+           - .. code-block:: none
+
+                This velocity setting allows velocity dependent switching into
+                a different chopper mode and fullstepping to maximize torque.
+                (unsigned)
+                The stall detection feature becomes switched off for 2-3
+                electrical periods whenever passing THIGH threshold to
+                compensate for the effect of switching modes.
+                TSTEP ≤ THIGH:
+                - CoolStep is disabled (motor runs with normal current
+                scale)
+                - StealthChop voltage PWM mode is disabled
+                - If vhighchm is set, the chopper switches to chm=1
+                with TFD=0 (constant off time with slow decay, only).
+                - If vhighfs is set, the motor operates in fullstep mode,
+                and the stall detection becomes switched over to
+                DcStep stall detection.
+
+
+
+         * - ``tpwmthrs``
+           - ``int``
+           - .. code-block:: none
+
+                This is the upper velocity for StealthChop voltage PWM mode.
+                TSTEP ≥ TPWMTHRS
+                - StealthChop PWM mode is enabled, if configured
+                - DcStep is disabled
+
+
+
+         * - ``tpowerdown``
+           - ``int``
+           - .. code-block:: none
+
+                TPOWERDOWN sets the delay time after stand still (stst) of the
+                motor to motor current power down. Time range is about 0 to
+                4 seconds.
+                Attention: A minimum setting of 2 is required to allow
+                automatic tuning of StealthChop PWM_OFS_AUTO.
+                Reset Default = 10
+                0…((2^8)-1) * 2^18 tCLK
+
+
+
+             Default value: ``10``
+
+
+
+   .. group-tab:: Deprecated node specific properties
+
+      Deprecated properties not inherited from the base binding file.
+
+      (None)
+
+   .. group-tab:: Base properties
+
+      Properties inherited from the base binding file, which defines
+      common properties that may be set on many nodes. Not all of these
+      may apply to the "adi,tmc51xx-stepper-ctrl" compatible.
+
+      (None)
+
+

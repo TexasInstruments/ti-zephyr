@@ -1,0 +1,25 @@
+var group__devicetree_generic_foreach =
+[
+    [ "DT_COMPAT_FOREACH_STATUS_OKAY_VARGS", "group__devicetree-generic-foreach.html#ga368d08572b01efacdad370e6ceb515f9", null ],
+    [ "DT_FOREACH_ANCESTOR", "group__devicetree-generic-foreach.html#gac4f9fee38bffbd5d315d386fe3c7bc91", null ],
+    [ "DT_FOREACH_CHILD", "group__devicetree-generic-foreach.html#ga2f4eead8e8190110f5c0eb353e6a408f", null ],
+    [ "DT_FOREACH_CHILD_SEP", "group__devicetree-generic-foreach.html#ga1fbeb335d66745803dbf7a185bf10afc", null ],
+    [ "DT_FOREACH_CHILD_SEP_VARGS", "group__devicetree-generic-foreach.html#ga0042485aef7caaa48fa252b76a6629aa", null ],
+    [ "DT_FOREACH_CHILD_STATUS_OKAY", "group__devicetree-generic-foreach.html#gae907df926b94f1da52b1ab701392f3bd", null ],
+    [ "DT_FOREACH_CHILD_STATUS_OKAY_SEP", "group__devicetree-generic-foreach.html#ga97414c01ebbb6df5ee2862c0ee9d44ce", null ],
+    [ "DT_FOREACH_CHILD_STATUS_OKAY_SEP_VARGS", "group__devicetree-generic-foreach.html#gaf46c1ac296f0d6c9388c3ca6fb4ca5cd", null ],
+    [ "DT_FOREACH_CHILD_STATUS_OKAY_VARGS", "group__devicetree-generic-foreach.html#ga8bbf6992e5f90d8a28035ea6211dd2a3", null ],
+    [ "DT_FOREACH_CHILD_VARGS", "group__devicetree-generic-foreach.html#gae7461e9fa4687bf88cdd7c76f30986de", null ],
+    [ "DT_FOREACH_NODE", "group__devicetree-generic-foreach.html#gad27b29ae71a3d3294984fd3bc721121d", null ],
+    [ "DT_FOREACH_NODE_VARGS", "group__devicetree-generic-foreach.html#ga4e708120bf839568b1215a6c21c54eed", null ],
+    [ "DT_FOREACH_NODELABEL", "group__devicetree-generic-foreach.html#gad5585436896efc4c5154a93b5980d3b0", null ],
+    [ "DT_FOREACH_NODELABEL_VARGS", "group__devicetree-generic-foreach.html#ga2a88abdb46158bcf36a8c976a1e2186d", null ],
+    [ "DT_FOREACH_PROP_ELEM", "group__devicetree-generic-foreach.html#ga118a0477ab297a1bda9e16acf556babc", null ],
+    [ "DT_FOREACH_PROP_ELEM_SEP", "group__devicetree-generic-foreach.html#ga72d0b6859b4fc61cde518aee118d9ed8", null ],
+    [ "DT_FOREACH_PROP_ELEM_SEP_VARGS", "group__devicetree-generic-foreach.html#ga29120ee8718b889273dc2649ab25438f", null ],
+    [ "DT_FOREACH_PROP_ELEM_VARGS", "group__devicetree-generic-foreach.html#gaae36970d49c860414374c76e136a9607", null ],
+    [ "DT_FOREACH_STATUS_OKAY", "group__devicetree-generic-foreach.html#ga52b34316d269cc8d8ef2244d3ca460b8", null ],
+    [ "DT_FOREACH_STATUS_OKAY_NODE", "group__devicetree-generic-foreach.html#ga926f68202042c9db05390e628787f916", null ],
+    [ "DT_FOREACH_STATUS_OKAY_NODE_VARGS", "group__devicetree-generic-foreach.html#ga9aa3ee2b90a4ec30621597f4d1448c51", null ],
+    [ "DT_FOREACH_STATUS_OKAY_VARGS", "group__devicetree-generic-foreach.html#ga99cf30d6cf4847ed99ba7d81ad2b49d0", null ]
+];

@@ -1,0 +1,18 @@
+var group__ICM42686__ACCEL__DATA__RATE =
+[
+    [ "ICM42686_DT_ACCEL_ODR_100", "group__ICM42686__ACCEL__DATA__RATE.html#ga646476319872dee9f9aad7b81bbd5224", null ],
+    [ "ICM42686_DT_ACCEL_ODR_1000", "group__ICM42686__ACCEL__DATA__RATE.html#gad1a1f1ff011690cc3b56b7ff86336a3b", null ],
+    [ "ICM42686_DT_ACCEL_ODR_12_5", "group__ICM42686__ACCEL__DATA__RATE.html#gafb5acfc89e580cec600bfe3cad20c8a2", null ],
+    [ "ICM42686_DT_ACCEL_ODR_16000", "group__ICM42686__ACCEL__DATA__RATE.html#gad2bb69689667ddc36ce5b6976d297594", null ],
+    [ "ICM42686_DT_ACCEL_ODR_1_5625", "group__ICM42686__ACCEL__DATA__RATE.html#ga6fb220853ef49be013ff6d475e14a17d", null ],
+    [ "ICM42686_DT_ACCEL_ODR_200", "group__ICM42686__ACCEL__DATA__RATE.html#ga3f9eded7e8846a4e88275e5b6938c496", null ],
+    [ "ICM42686_DT_ACCEL_ODR_2000", "group__ICM42686__ACCEL__DATA__RATE.html#ga7fff6c8ca5c1fbacaf03d87cb49a4ae3", null ],
+    [ "ICM42686_DT_ACCEL_ODR_25", "group__ICM42686__ACCEL__DATA__RATE.html#gaf0101542510ee1dcfda88709d426cbaf", null ],
+    [ "ICM42686_DT_ACCEL_ODR_32000", "group__ICM42686__ACCEL__DATA__RATE.html#ga625f1df6ef6e22fef1b24989cceda243", null ],
+    [ "ICM42686_DT_ACCEL_ODR_3_125", "group__ICM42686__ACCEL__DATA__RATE.html#gace7b5b17fce265c174c9db2fe19c4520", null ],
+    [ "ICM42686_DT_ACCEL_ODR_4000", "group__ICM42686__ACCEL__DATA__RATE.html#ga1c2d0d0f910b36ddefc9135f90884abb", null ],
+    [ "ICM42686_DT_ACCEL_ODR_50", "group__ICM42686__ACCEL__DATA__RATE.html#ga07bd4b377204b75acbc34ebad27ed19e", null ],
+    [ "ICM42686_DT_ACCEL_ODR_500", "group__ICM42686__ACCEL__DATA__RATE.html#ga7de3aee656da50ad36340f8757510723", null ],
+    [ "ICM42686_DT_ACCEL_ODR_6_25", "group__ICM42686__ACCEL__DATA__RATE.html#ga2d5d7996d2a99293759a1eef2f1bae4b", null ],
+    [ "ICM42686_DT_ACCEL_ODR_8000", "group__ICM42686__ACCEL__DATA__RATE.html#ga9d3dc68385c3cc4f86923bc8399bc0a5", null ]
+];

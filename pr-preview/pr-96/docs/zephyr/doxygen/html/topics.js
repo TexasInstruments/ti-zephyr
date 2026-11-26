@@ -1,0 +1,28 @@
+var topics =
+[
+    [ "ARM64 DT memory attributes", "group__dt__binding__arm64__mem__attr.html", "group__dt__binding__arm64__mem__attr" ],
+    [ "Audio", "group__audio__interface.html", "group__audio__interface" ],
+    [ "Connectivity", "group__connectivity.html", "group__connectivity" ],
+    [ "Device Drivers", "group__io__interfaces.html", "group__io__interfaces" ],
+    [ "Device Model", "group__device__model.html", "group__device__model" ],
+    [ "Devicetree", "group__devicetree.html", "group__devicetree" ],
+    [ "Error numbers", "group__system__errno.html", "group__system__errno" ],
+    [ "FocalTech IOCTRL Pin Control", "group__focaltech__pinctrl__macros.html", "group__focaltech__pinctrl__macros" ],
+    [ "FocalTech Reset Configuration Macros", "group__focaltech__reset__macros.html", "group__focaltech__reset__macros" ],
+    [ "FocalTech Reset Control Module Registers", "group__focaltech__reset__regs.html", "group__focaltech__reset__regs" ],
+    [ "FocalTech Reset Enable/Disable Definitions", "group__focaltech__reset__enables.html", "group__focaltech__reset__enables" ],
+    [ "GNSS configuration", "group__st87mxx__gnss__configuration.html", "group__st87mxx__gnss__configuration" ],
+    [ "HL78xx Constants and Macros", "group__hl78xx__constants.html", "group__hl78xx__constants" ],
+    [ "Internal and System API", "group__internal__api.html", "group__internal__api" ],
+    [ "Kernel APIs", "group__kernel__apis.html", "group__kernel__apis" ],
+    [ "Memory Management APIs", "group__mem__mgmt.html", "group__mem__mgmt" ],
+    [ "Operating System Services", "group__os__services.html", "group__os__services" ],
+    [ "Renesas RA Clock Divider Generators", "group__ra__cgc__div.html", "group__ra__cgc__div" ],
+    [ "ST87Mxx Constants", "group__st87mxx__constants.html", "group__st87mxx__constants" ],
+    [ "Testing", "group__testing.html", "group__testing" ],
+    [ "Texas Instruments MSPM0", "group__clock__control__mspm0.html", "group__clock__control__mspm0" ],
+    [ "Texas Instruments TISCI", "group__clock__control__tisci.html", "group__clock__control__tisci" ],
+    [ "Third-party", "group__third__party.html", "group__third__party" ],
+    [ "Utilities", "group__utilities.html", "group__utilities" ],
+    [ "WIFI scanning configuration", "group__st87mxx__wscan__configuration.html", "group__st87mxx__wscan__configuration" ]
+];

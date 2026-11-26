@@ -1,0 +1,207 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: nxp,pca9422-charger
+.. _dtbinding_nxp_pca9422_charger:
+
+nxp,pca9422-charger
+###################
+
+.. sidebar:: Overview
+
+   :Name: ``nxp,pca9422-charger``
+   :Vendor: :ref:`NXP Semiconductors <dt_vendor_nxp>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=nxp,pca9422-charger>` using
+               this compatible
+   :Driver: :zephyr_file:`drivers/charger/charger_pca9422.c`
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   NXP PCA9422 battery charger
+
+Properties
+**********
+
+.. tabs::
+
+   .. group-tab:: Node specific properties
+
+      Properties not inherited from the base binding file.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``constant-charge-current-max-microamp``
+           - ``int``
+           - .. code-block:: none
+
+                Fast Charge current set at init time in uA, available range is 2.5mA to 640mA.
+                The value specified will be rounded down to the closest implemented
+                value. If set to 0 (default) skip setting the charge current value at
+                driver initialization.
+
+
+
+             This property is **required**.
+
+             Default value: ``100000``
+
+         * - ``constant-charge-voltage-max-microvolt``
+           - ``int``
+           - .. code-block:: none
+
+                The maximum voltage that the battery will be charged at, defaults to
+                4.2V, matching the device default reset configuration.
+
+
+
+             This property is **required**.
+
+             Default value: ``4200000``
+
+         * - ``precharge-current-percent``
+           - ``int``
+           - .. code-block:: none
+
+                Precharge current as x%(7% or 16%) of Fast charge current.
+                Refer to CHARGER_CNTL_1 register description for details.
+
+
+
+             Default value: ``16``
+
+             Legal values: ``7``, ``16``
+
+         * - ``charge-termination-current-percent``
+           - ``int``
+           - .. code-block:: none
+
+                Topoff current as x%*10 (2.5%, 5.0%, 7.5%, or 10.0%)
+                of Fast charge current. Charge will finish when charging
+                current is less than topoff current.
+                Refer to CHARGER_CNTL_4 register description for details.
+
+
+
+             Default value: ``25``
+
+             Legal values: ``25``, ``50``, ``75``, ``100``
+
+         * - ``re-charge-threshold-microvolt``
+           - ``int``
+           - .. code-block:: none
+
+                Recharge threshold in relation to Vbat_reg.
+                Refer to CHARGER_CNTL_4 register description for details.
+
+
+
+             Default value: ``100000``
+
+             Legal values: ``100000``, ``150000``, ``200000``
+
+         * - ``input-current-limit-microamp``
+           - ``int``
+           - .. code-block:: none
+
+                Input current limit on VIN, available range is 45mA to 1195mA.
+
+
+
+             Default value: ``470000``
+
+         * - ``system-voltage-min-threshold-microvolt``
+           - ``int``
+           - .. code-block:: none
+
+                System regulation voltage. It is higher 200mV than Vbat_reg.
+                Vbatreg will clamp by Vsys_reg - 200mV.
+
+
+
+             Default value: ``4550000``
+
+         * - ``device-chemistry``
+           - ``string``
+           - .. code-block:: none
+
+                This describes the chemical technology of the battery. The "lithium-ion" value is a blanket type for all lithium-ion batteries. If the specific chemistry is unknown, this value can be used instead of the precise "lithium-ion-X" options.
+
+
+             Legal values: ``nickel-cadmium``, ``nickel-metal-hydride``, ``lithium-ion``, ``lithium-ion-polymer``, ``lithium-ion-iron-phosphate``, ``lithium-ion-manganese-oxide``
+
+         * - ``ocv-capacity-table-0``
+           - ``array``
+           - .. code-block:: none
+
+                An array providing the open circuit voltage (OCV) , which is used to look
+                up battery capacity according to current OCV value. The OCV unit is
+                microvolts.
+
+                Unlike the linux equivalent this array is required to be 11 elements
+                long, representing the voltages for 0-100% charge in 10% steps.
+
+
+
+         * - ``charge-full-design-microamp-hours``
+           - ``int``
+           - .. code-block:: none
+
+                battery design capacity
+
+
+         * - ``re-charge-voltage-microvolt``
+           - ``int``
+           - .. code-block:: none
+
+                limit to automatically start charging again
+
+
+         * - ``precharge-current-microamp``
+           - ``int``
+           - .. code-block:: none
+
+                current for pre-charge phase
+
+
+         * - ``charge-term-current-microamp``
+           - ``int``
+           - .. code-block:: none
+
+                current for charge termination phase
+
+
+
+
+   .. group-tab:: Deprecated node specific properties
+
+      Deprecated properties not inherited from the base binding file.
+
+      (None)
+
+   .. group-tab:: Base properties
+
+      Properties inherited from the base binding file, which defines
+      common properties that may be set on many nodes. Not all of these
+      may apply to the "nxp,pca9422-charger" compatible.
+
+      (None)
+
+

@@ -1,0 +1,25 @@
+var stdlib_8h =
+[
+    [ "EXIT_FAILURE", "stdlib_8h.html#a73efe787c131b385070f25d18b7c9aa4", null ],
+    [ "EXIT_SUCCESS", "stdlib_8h.html#a687984f47d8cce148d1b914d2b79612a", null ],
+    [ "abort", "stdlib_8h.html#a4bef6384a1777699c6eba3125e690419", null ],
+    [ "abs", "stdlib_8h.html#ae0743c61576232ed6a443e6269af2b84", null ],
+    [ "aligned_alloc", "stdlib_8h.html#a8006724372b77924155bd8618fe57516", null ],
+    [ "atoi", "stdlib_8h.html#a30670a60464f77af17dfb353353d6df8", null ],
+    [ "bsearch", "stdlib_8h.html#a5edc8d086d2525fdcd63486536cb4d9a", null ],
+    [ "calloc", "stdlib_8h.html#a2807e26a012717736641384f91ab2563", null ],
+    [ "exit", "stdlib_8h.html#ab924785decfca67fd65380b76a269206", null ],
+    [ "free", "stdlib_8h.html#afbedc913aa4651b3c3b4b3aecd9b4711", null ],
+    [ "getenv", "stdlib_8h.html#ab1ec8cf93b9478de49bb3e77465ab4af", null ],
+    [ "labs", "stdlib_8h.html#a8f842d6a8002a51ca6930a076ea86549", null ],
+    [ "llabs", "stdlib_8h.html#a5613b9b7ce990f94ceaaf1f455cc98e6", null ],
+    [ "malloc", "stdlib_8h.html#a9c36d0fe3ec4675cbffdc9b52f5fb399", null ],
+    [ "qsort", "stdlib_8h.html#a216aaec88b41d3e2f8502a5b3365ea81", null ],
+    [ "qsort_r", "stdlib_8h.html#a108744e70f6e2ca952e88277145d5346", null ],
+    [ "realloc", "stdlib_8h.html#ad28fed1039f35d754710633141b4edf0", null ],
+    [ "reallocarray", "stdlib_8h.html#aa34babf7c7883ba6714ac6d010952465", null ],
+    [ "strtol", "stdlib_8h.html#a311071298c2fe3e5d7057f396a6acfdc", null ],
+    [ "strtoll", "stdlib_8h.html#afb901aa665b7e2e3e27025ca77fecd1b", null ],
+    [ "strtoul", "stdlib_8h.html#a6d257fc3f00865d0556ed7327c312b55", null ],
+    [ "strtoull", "stdlib_8h.html#ae5835422eb2dfc17ea8deb3b15bcc541", null ]
+];

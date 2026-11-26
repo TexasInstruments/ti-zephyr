@@ -1,0 +1,12 @@
+var group__ICM45686__GYRO__SCALE =
+[
+    [ "ICM45686_DT_GYRO_FS_1000", "group__ICM45686__GYRO__SCALE.html#ga573e9a7c2517f47690a2bb57fa02e9e4", null ],
+    [ "ICM45686_DT_GYRO_FS_125", "group__ICM45686__GYRO__SCALE.html#ga9cc1fe4f1738e8695c7e7e6fa7df44e9", null ],
+    [ "ICM45686_DT_GYRO_FS_15_625", "group__ICM45686__GYRO__SCALE.html#gaef81e5104573864864de5781692df31d", null ],
+    [ "ICM45686_DT_GYRO_FS_2000", "group__ICM45686__GYRO__SCALE.html#ga7eada42888012443169b722b68590e30", null ],
+    [ "ICM45686_DT_GYRO_FS_250", "group__ICM45686__GYRO__SCALE.html#gadc7a6ca2050179c0049f03797988d3e3", null ],
+    [ "ICM45686_DT_GYRO_FS_31_25", "group__ICM45686__GYRO__SCALE.html#ga2dfe38c6ebef4b45f95b9383450b6799", null ],
+    [ "ICM45686_DT_GYRO_FS_4000", "group__ICM45686__GYRO__SCALE.html#ga02e33c717d16c4f6e8ad39f41098a368", null ],
+    [ "ICM45686_DT_GYRO_FS_500", "group__ICM45686__GYRO__SCALE.html#gacd9c8c364e136f66e0dac901f5a8d470", null ],
+    [ "ICM45686_DT_GYRO_FS_62_5", "group__ICM45686__GYRO__SCALE.html#ga27956d51388dea37fd9f1d8e4ca286b6", null ]
+];

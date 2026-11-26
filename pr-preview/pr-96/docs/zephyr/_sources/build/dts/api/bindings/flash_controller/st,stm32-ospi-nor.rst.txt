@@ -1,0 +1,627 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: st,stm32-ospi-nor
+.. _dtbinding_st_stm32_ospi_nor:
+
+st,stm32-ospi-nor (on ospi bus)
+###############################
+
+.. sidebar:: Overview
+
+   :Name: ``st,stm32-ospi-nor``
+   :Vendor: :ref:`STMicroelectronics <dt_vendor_st>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=st,stm32-ospi-nor>` using
+               this compatible
+   :Driver: :zephyr_file:`drivers/flash/flash_stm32_ospi.c`
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   STM32 OSPI Flash controller supporting the JEDEC CFI interface
+
+Examples
+********
+
+.. code-block:: dts
+
+   mx25lm51245: ospi-nor-flash@0 {
+       compatible = "st,stm32-ospi-nor";
+       reg = <0>;
+       size = <DT_SIZE_M(512)>; /* 512 Mbits */
+       data-mode = <OSPI_OPI_MODE>; /* access on 8 data lines */
+       data-rate = <OSPI_DTR_TRANSFER>; /* access in DTR */
+       ospi-max-frequency = <DT_FREQ_M(50)>;
+       status = "okay";
+   };
+
+
+Properties
+**********
+
+.. tabs::
+
+   .. group-tab:: Node specific properties
+
+      Properties not inherited from the base binding file.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``size``
+           - ``int``
+           - .. code-block:: none
+
+                Flash Memory size in bits
+
+
+             This property is **required**.
+
+         * - ``ospi-max-frequency``
+           - ``int``
+           - .. code-block:: none
+
+                Maximum clock frequency of device's OSPI interface in Hz
+
+
+             This property is **required**.
+
+         * - ``reset-gpios``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                RESETn pin
+
+
+         * - ``reset-gpios-duration``
+           - ``int``
+           - .. code-block:: none
+
+                The duration (in ms) for the flash memory reset pulse
+
+
+         * - ``spi-bus-width``
+           - ``int``
+           - .. code-block:: none
+
+                The width of (Octo)SPI bus to which flash memory is connected.
+
+                Possible values are :
+                 - OSPI_SPI_MODE  <1> = SPI mode on 1 data line
+                 - OSPI_DUAL_MODE <2> = Dual mode on 2 data lines
+                 - OSPI_QUAD_MODE <4> = Quad mode on 4 data lines
+                 - OSPI_OPI_MODE  <8> = Octo mode on 8 data lines
+
+
+
+             This property is **required**.
+
+             Legal values: ``1``, ``2``, ``4``, ``8``
+
+         * - ``data-rate``
+           - ``int``
+           - .. code-block:: none
+
+                The SPI data Rate is STR or DTR
+
+                Possible values are :
+                 - OSPI_STR_TRANSFER <1> = Single Rate Transfer
+                 - OSPI_DTR_TRANSFER <2> = Dual Rate Transfer (only with OSPI_OPI_MODE)
+
+
+
+             This property is **required**.
+
+             Legal values: ``1``, ``2``
+
+         * - ``writeoc``
+           - ``string``
+           - .. code-block:: none
+
+                The value encodes number of I/O lines used for the opcode,
+                address, and data.
+
+                There is no info about quad page program opcodes in the SFDP
+                tables, hence it has been assumed that NOR flash memory
+                supporting 1-4-4 mode also would support fast page programming.
+
+                Intended for modes other than OSPI_OPI_MODE.
+
+                If absent, then program page opcode is determined by the
+                `spi-bus-width`:
+
+                * OSPI_SPI_MODE -> PP 1-1-1 (0x02)
+                * OSPI_DUAL_MODE -> PP 1-1-2 (0xA2)
+                * OSPI_QUAD_MODE -> PP 1-4-4 (0x38)
+
+
+
+             Legal values: ``PP``, ``PP_1_1_2``, ``PP_1_1_4``, ``PP_1_4_4``
+
+         * - ``four-byte-opcodes``
+           - ``boolean``
+           - .. code-block:: none
+
+                Some NOR-Flash ICs use different opcodes when operating in
+                4 byte addressing mode.
+
+                When enabled, then 3 byte opcodes will be converted to
+                4 byte opcodes.
+
+                * PP 1-1-1 (0x02) -> PP 1-1-1 4B (0x12)
+                * PP 1-1-4 (0x32) -> PP 1-1-4 4B (0x34)
+                * PP 1-4-4 (0x38) -> PP 1-4-4 4B (0x3E)
+
+                * READ 1-1-1 (0x03) -> READ 1-1-1 4B (0x13)
+                * READ FAST 1-1-1 (0x0B) -> READ FAST 1-1-1 4B (0x0C)
+                * DREAD 1-1-2 (0x3B) -> DREAD 1-1-2 4B (0x3C)
+                * 2READ 1-2-2 (0xBB) -> 2READ 1-2-2 4B (0xBC)
+                * QREAD 1-1-4 (0x6B) -> QREAD 1-1-4 4B (0x6C)
+                * 4READ 1-4-4 (0xEB) -> 4READ 1-4-4 4B (0xEC)
+
+
+
+         * - ``requires-ulbpr``
+           - ``boolean``
+           - .. code-block:: none
+
+                Indicates the device requires the ULBPR (0x98) command.
+
+                Some flash chips such as the Microchip SST26VF series have a block
+                protection register that initializes to write-protected. Use this
+                property to indicate that the BPR must be unlocked before write
+                operations can proceed.
+
+
+
+         * - ``jedec-id``
+           - ``uint8-array``
+           - .. code-block:: none
+
+                JEDEC ID as manufacturer ID, memory type, memory density
+
+
+         * - ``sfdp-bfp``
+           - ``uint8-array``
+           - .. code-block:: none
+
+                Contains the 32-bit words in little-endian byte order from the
+                JESD216 Serial Flash Discoverable Parameters Basic Flash
+                Parameters table.  This provides flash-specific configuration
+                information in cases were runtime retrieval of SFDP data
+                is not desired.
+
+
+
+         * - ``sfdp-ff05``
+           - ``uint8-array``
+           - .. code-block:: none
+
+                Contains the 32-bit words in little-endian byte order from the JESD216
+                SFDP xSPI Profile 1.0 table.
+
+
+
+         * - ``sfdp-ff84``
+           - ``uint8-array``
+           - .. code-block:: none
+
+                Contains the 32-bit words in little-endian byte order from the JESD216
+                SFDP 4-byte Address Instruction Parameter table.
+
+
+
+         * - ``quad-enable-requirements``
+           - ``string``
+           - .. code-block:: none
+
+                Quad Enable Requirements value from JESD216 BFP DW15.
+
+                Use NONE if the device detects 1-1-4 and 1-4-4 modes by the
+                instruction.  Use S1B6 if QE is bit 6 of the first status register
+                byte, and can be configured by reading then writing one byte with
+                RDSR and WRSR.  For other fields see the specification.
+
+
+
+             Legal values: ``NONE``, ``S2B1v1``, ``S1B6``, ``S2B7``, ``S2B1v4``, ``S2B1v5``, ``S2B1v6``
+
+         * - ``enter-4byte-addr``
+           - ``int``
+           - .. code-block:: none
+
+                Enter 4-Byte Addressing value from JESD216 BFP DW16
+
+                This property is ignored if the device is configured to use SFDP data
+                from the sfdp-bfp property (CONFIG_SPI_NOR_SFDP_DEVICETREE) or to read
+                SFDP properties at runtime (CONFIG_SPI_NOR_SFDP_RUNTIME).
+
+                For CONFIG_SPI_NOR_SFDP_MINIMAL this is the 8-bit value from bits 31:24
+                of DW16 identifying ways a device can be placed into 4-byte addressing
+                mode.  If provided as a non-zero value the driver assumes that 4-byte
+                addressing is require to access the full address range, and
+                automatically puts the device into 4-byte address mode when the device
+                is initialized.
+
+
+
+         * - ``page-size``
+           - ``int``
+           - .. code-block:: none
+
+                Number of bytes in a page from JESD216 BFP DW11
+
+                This property is only used in the CONFIG_SPI_NOR_SFDP_MINIMAL configuration.
+                It is ignored if the device is configured to use SFDP data
+                from the sfdp-bfp property (CONFIG_SPI_NOR_SFDP_DEVICETREE) or
+                if the SFDP parameters are read from the device at
+                runtime (CONFIG_SPI_NOR_SFDP_RUNTIME).
+
+                The default value is 256 bytes if the value is not specified.
+
+
+
+
+
+   .. group-tab:: Deprecated node specific properties
+
+      Deprecated properties not inherited from the base binding file.
+
+      (None)
+
+   .. group-tab:: Base properties
+
+      Properties inherited from the base binding file, which defines
+      common properties that may be set on many nodes. Not all of these
+      may apply to the "st,stm32-ospi-nor" compatible.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``reg``
+           - ``array``
+           - .. code-block:: none
+
+                Flash Memory base address and size in bytes
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``status``
+           - ``string``
+           - .. code-block:: none
+
+                Indicates the operational status of the hardware or other
+                resource that the node represents. In particular:
+
+                  - "okay" means the resource is operational and, for example,
+                    can be used by device drivers
+                  - "disabled" means the resource is not operational and the system
+                    should treat it as if it is not present
+
+                For details, see "2.3.4 status" in Devicetree Specification v0.4.
+
+
+
+             Legal values: ``okay``, ``disabled``, ``reserved``, ``fail``, ``fail-sss``
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``compatible``
+           - ``string-array``
+           - .. code-block:: none
+
+                This property is a list of strings that essentially define what
+                type of hardware or other resource this devicetree node
+                represents. Each device driver checks for specific compatible
+                property values to find the devicetree nodes that represent
+                resources that the driver should manage.
+
+                The recommended format is "vendor,device", The "vendor" part is
+                an abbreviated name of the vendor. The "device" is usually from
+                the datasheet.
+
+                The compatible property can have multiple values, ordered from
+                most- to least-specific. Having additional values is useful when the
+                device is a specific instance of a more general family, to allow the
+                system to match the most specific driver available.
+
+                For details, see "2.3.1 compatible" in Devicetree Specification v0.4.
+
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``reg-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each register block in the "reg" property.
+                For example:
+
+                  / {
+                       soc {
+                           #address-cells = <1>;
+                           #size-cells = <1>;
+
+                           uart@1000 {
+                               reg = <0x1000 0x2000>, <0x3000 0x4000>;
+                               reg-names = "foo", "bar";
+                           };
+                       };
+                  };
+
+                The uart@1000 node has two register blocks:
+
+                  - one with base address 0x1000, size 0x2000, and name "foo"
+                  - another with base address 0x3000, size 0x4000, and name "bar"
+
+
+
+         * - ``interrupts``
+           - ``array``
+           - .. code-block:: none
+
+                Information about interrupts generated by the device, encoded as an array
+                of one or more interrupt specifiers. The format of the data in this property
+                varies by where the device appears in the interrupt tree. Devices with the same
+                "interrupt-parent" will use the same format in their interrupts properties.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``interrupts-extended``
+           - ``compound``
+           - .. code-block:: none
+
+                Extended interrupt specifier for device, used as an alternative to
+                the "interrupts" property.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each interrupt generated by a device.
+                The interrupts themselves are defined in either "interrupts" or
+                "interrupts-extended" properties.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-parent``
+           - ``phandle``
+           - .. code-block:: none
+
+                If present, this refers to the node which handles interrupts generated
+                by this device.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``label``
+           - ``string``
+           - .. code-block:: none
+
+                Human readable string describing the device. Use of this property is
+                deprecated except as needed on a case-by-case basis.
+
+                For details, see "4.1.2 Miscellaneous Properties" in Devicetree
+                Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``clocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Information about the device's clock providers. In general, this property
+                should follow conventions established in the dt-schema binding:
+
+                  https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/clock/clock.yaml
+
+
+
+         * - ``clock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each clock provider in the "clocks" property.
+
+
+
+         * - ``#address-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by address fields
+                in "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+         * - ``#size-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by size fields in
+                "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+         * - ``dmas``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                DMA channel specifiers relevant to the device.
+
+
+
+         * - ``dma-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the DMA channel specifiers in the "dmas" property.
+
+
+
+         * - ``io-channels``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                IO channel specifiers relevant to the device.
+
+
+
+         * - ``io-channel-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the IO channel specifiers in the "io-channels" property.
+
+
+
+         * - ``mboxes``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Mailbox / IPM channel specifiers relevant to the device.
+
+
+
+         * - ``mbox-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the mbox specifiers in the "mboxes" property.
+
+
+
+         * - ``power-domains``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Power domain specifiers relevant to the device.
+
+
+
+         * - ``power-domain-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the power domain specifiers in the "power-domains" property.
+
+
+
+         * - ``#power-domain-cells``
+           - ``int``
+           - .. code-block:: none
+
+                Number of cells in power-domains property
+
+
+
+         * - ``hwlocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                HW spinlock id relevant to the device.
+
+
+
+         * - ``hwlock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the hwlock specifiers in the "hwlocks" property.
+
+
+
+         * - ``zephyr,deferred-init``
+           - ``boolean``
+           - .. code-block:: none
+
+                Do not initialize device automatically on boot. Device should be manually
+                initialized using device_init().
+
+
+
+         * - ``wakeup-source``
+           - ``boolean``
+           - .. code-block:: none
+
+                Property to identify that a device can be used as wake up source.
+
+                When this property is provided a specific flag is set into the
+                device that tells the system that the device is capable of
+                wake up the system.
+
+                Wake up capable devices are disabled (interruptions will not wake up
+                the system) by default but they can be enabled at runtime if necessary.
+
+
+
+         * - ``zephyr,pm-device-runtime-auto``
+           - ``boolean``
+           - .. code-block:: none
+
+                Automatically configure the device for runtime power management after the
+                init function runs.
+
+
+
+         * - ``zephyr,disabling-power-states``
+           - ``phandles``
+           - .. code-block:: none
+
+                List of power states that will disable this device power.
+
+
+
+
+
+

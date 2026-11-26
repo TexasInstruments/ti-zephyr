@@ -1,0 +1,642 @@
+:orphan:
+
+.. raw:: html
+
+    <!--
+    FIXME: do not limit page width until content uses another representation
+    format other than tables
+    -->
+    <style>.wy-nav-content { max-width: none; !important }</style>
+
+.. dtcompatible:: renesas,rza2m-pinctrl
+.. _dtbinding_renesas_rza2m_pinctrl:
+
+renesas,rza2m-pinctrl
+#####################
+
+.. sidebar:: Overview
+
+   :Name: ``renesas,rza2m-pinctrl``
+   :Vendor: :ref:`Renesas Electronics Corporation <dt_vendor_renesas>`
+   :Used in: :zephyr:board-catalog:`List of boards <#compatibles=renesas,rza2m-pinctrl>` using
+               this compatible
+   :Driver: :zephyr_file:`drivers/pinctrl/renesas/rz/pinctrl_renesas_rza2m.c`
+
+Description
+***********
+
+
+
+.. code-block:: none
+
+   Renesas RZ/A2M pin controller
+
+   The Renesas RZ/A2M pin controller is a node responsible for controlling
+   pin function selection and pin properties, such as routing the TX and RX of UART4
+   to pin 0 and pin 1 of port 9.
+
+   #include <zephyr/dt-bindings/pinctrl/renesas/pinctrl-rza2m.h>
+   example_pins: device_pin {
+       device-pinmux {
+         pinmux = <RZA2M_PINMUX(PORT_09, 0, 4)>, /* TXD */
+                  <RZA2M_PINMUX(PORT_09, 1, 4)>; /* RXD */
+       };
+   };
+
+Properties
+**********
+
+Top level properties
+====================
+
+
+These property descriptions apply to "renesas,rza2m-pinctrl"
+nodes themselves. This page also describes child node
+properties in the following sections.
+
+.. tabs::
+
+   .. group-tab:: Node specific properties
+
+      Properties not inherited from the base binding file.
+
+      (None)
+
+   .. group-tab:: Deprecated node specific properties
+
+      Deprecated properties not inherited from the base binding file.
+
+      (None)
+
+   .. group-tab:: Base properties
+
+      Properties inherited from the base binding file, which defines
+      common properties that may be set on many nodes. Not all of these
+      may apply to the "renesas,rza2m-pinctrl" compatible.
+
+      .. list-table::
+         :widths: 1 1 4
+         :header-rows: 1
+
+         * - Name
+           - Type
+           - Details
+
+         * - ``reg``
+           - ``array``
+           - .. code-block:: none
+
+                Information used to address the device. The value is specific to
+                the device (i.e. is different depending on the compatible
+                property).
+
+                The "reg" property is typically a sequence of (address, length) pairs.
+                Each pair is called a "register block". Values are
+                conventionally written in hex.
+
+                For details, see "2.3.6 reg" in Devicetree Specification v0.4.
+
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``status``
+           - ``string``
+           - .. code-block:: none
+
+                Indicates the operational status of the hardware or other
+                resource that the node represents. In particular:
+
+                  - "okay" means the resource is operational and, for example,
+                    can be used by device drivers
+                  - "disabled" means the resource is not operational and the system
+                    should treat it as if it is not present
+
+                For details, see "2.3.4 status" in Devicetree Specification v0.4.
+
+
+
+             Legal values: ``okay``, ``disabled``, ``reserved``, ``fail``, ``fail-sss``
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``compatible``
+           - ``string-array``
+           - .. code-block:: none
+
+                This property is a list of strings that essentially define what
+                type of hardware or other resource this devicetree node
+                represents. Each device driver checks for specific compatible
+                property values to find the devicetree nodes that represent
+                resources that the driver should manage.
+
+                The recommended format is "vendor,device", The "vendor" part is
+                an abbreviated name of the vendor. The "device" is usually from
+                the datasheet.
+
+                The compatible property can have multiple values, ordered from
+                most- to least-specific. Having additional values is useful when the
+                device is a specific instance of a more general family, to allow the
+                system to match the most specific driver available.
+
+                For details, see "2.3.1 compatible" in Devicetree Specification v0.4.
+
+
+
+             This property is **required**.
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``reg-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each register block in the "reg" property.
+                For example:
+
+                  / {
+                       soc {
+                           #address-cells = <1>;
+                           #size-cells = <1>;
+
+                           uart@1000 {
+                               reg = <0x1000 0x2000>, <0x3000 0x4000>;
+                               reg-names = "foo", "bar";
+                           };
+                       };
+                  };
+
+                The uart@1000 node has two register blocks:
+
+                  - one with base address 0x1000, size 0x2000, and name "foo"
+                  - another with base address 0x3000, size 0x4000, and name "bar"
+
+
+
+         * - ``interrupts``
+           - ``array``
+           - .. code-block:: none
+
+                Information about interrupts generated by the device, encoded as an array
+                of one or more interrupt specifiers. The format of the data in this property
+                varies by where the device appears in the interrupt tree. Devices with the same
+                "interrupt-parent" will use the same format in their interrupts properties.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``interrupts-extended``
+           - ``compound``
+           - .. code-block:: none
+
+                Extended interrupt specifier for device, used as an alternative to
+                the "interrupts" property.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each interrupt generated by a device.
+                The interrupts themselves are defined in either "interrupts" or
+                "interrupts-extended" properties.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``interrupt-parent``
+           - ``phandle``
+           - .. code-block:: none
+
+                If present, this refers to the node which handles interrupts generated
+                by this device.
+
+                For details, see "2.4 Interrupts and Interrupt Mapping" in
+                Devicetree Specification v0.4.
+
+
+
+         * - ``label``
+           - ``string``
+           - .. code-block:: none
+
+                Human readable string describing the device. Use of this property is
+                deprecated except as needed on a case-by-case basis.
+
+                For details, see "4.1.2 Miscellaneous Properties" in Devicetree
+                Specification v0.4.
+
+
+
+             See :ref:`dt-important-props` for more information.
+
+         * - ``clocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Information about the device's clock providers. In general, this property
+                should follow conventions established in the dt-schema binding:
+
+                  https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/clock/clock.yaml
+
+
+
+         * - ``clock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to each clock provider in the "clocks" property.
+
+
+
+         * - ``#address-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by address fields
+                in "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+         * - ``#size-cells``
+           - ``int``
+           - .. code-block:: none
+
+                This property encodes the number of <u32> cells used by size fields in
+                "reg" properties in this node's children.
+
+                For details, see "2.3.5 #address-cells and #size-cells" in Devicetree
+                Specification v0.4.
+
+
+
+         * - ``dmas``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                DMA channel specifiers relevant to the device.
+
+
+
+         * - ``dma-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the DMA channel specifiers in the "dmas" property.
+
+
+
+         * - ``io-channels``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                IO channel specifiers relevant to the device.
+
+
+
+         * - ``io-channel-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the IO channel specifiers in the "io-channels" property.
+
+
+
+         * - ``mboxes``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Mailbox / IPM channel specifiers relevant to the device.
+
+
+
+         * - ``mbox-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the mbox specifiers in the "mboxes" property.
+
+
+
+         * - ``power-domains``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                Power domain specifiers relevant to the device.
+
+
+
+         * - ``power-domain-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the power domain specifiers in the "power-domains" property.
+
+
+
+         * - ``#power-domain-cells``
+           - ``int``
+           - .. code-block:: none
+
+                Number of cells in power-domains property
+
+
+
+         * - ``hwlocks``
+           - ``phandle-array``
+           - .. code-block:: none
+
+                HW spinlock id relevant to the device.
+
+
+
+         * - ``hwlock-names``
+           - ``string-array``
+           - .. code-block:: none
+
+                Optional names given to the hwlock specifiers in the "hwlocks" property.
+
+
+
+         * - ``zephyr,deferred-init``
+           - ``boolean``
+           - .. code-block:: none
+
+                Do not initialize device automatically on boot. Device should be manually
+                initialized using device_init().
+
+
+
+         * - ``wakeup-source``
+           - ``boolean``
+           - .. code-block:: none
+
+                Property to identify that a device can be used as wake up source.
+
+                When this property is provided a specific flag is set into the
+                device that tells the system that the device is capable of
+                wake up the system.
+
+                Wake up capable devices are disabled (interruptions will not wake up
+                the system) by default but they can be enabled at runtime if necessary.
+
+
+
+         * - ``zephyr,pm-device-runtime-auto``
+           - ``boolean``
+           - .. code-block:: none
+
+                Automatically configure the device for runtime power management after the
+                init function runs.
+
+
+
+         * - ``zephyr,disabling-power-states``
+           - ``phandles``
+           - .. code-block:: none
+
+                List of power states that will disable this device power.
+
+
+
+
+
+
+Grandchild node properties
+==========================
+
+.. list-table::
+   :widths: 1 1 4
+   :header-rows: 1
+
+   * - Name
+     - Type
+     - Details
+
+   * - ``pinmux``
+     - ``array``
+     - .. code-block:: none
+
+          Pinmux configuration node.
+          Values are constructed from GPIO port number, pin number, and
+          alternate function configuration number using the RZA2M_PINMUX()
+          helper macro in pinctrl-rza2m.h
+
+
+
+       This property is **required**.
+
+   * - ``drive-strength``
+     - ``int``
+     - .. code-block:: none
+
+          The DSCR register controls driving ability of the ports.
+          The PCKIO register controls driving ability of the CKIO pin.
+          The PSDMMC(0/1/2) registers specify the driving ability of the pins of the SD/MMC.
+          The PSPIBSC register specifies the driving ability of the pins
+            of the SPI multi I/O bus controller.
+
+
+
+       Legal values: ``0``, ``1``, ``2``
+
+   * - ``bias-disable``
+     - ``boolean``
+     - .. code-block:: none
+
+          disable any pin bias
+
+
+   * - ``bias-high-impedance``
+     - ``boolean``
+     - .. code-block:: none
+
+          high impedance mode ("third-state", "floating")
+
+
+   * - ``bias-bus-hold``
+     - ``boolean``
+     - .. code-block:: none
+
+          latch weakly
+
+
+   * - ``bias-pull-up``
+     - ``boolean``
+     - .. code-block:: none
+
+          enable pull-up resistor
+
+
+   * - ``bias-pull-down``
+     - ``boolean``
+     - .. code-block:: none
+
+          enable pull-down resistor
+
+
+   * - ``bias-pull-pin-default``
+     - ``boolean``
+     - .. code-block:: none
+
+          use pin's default pull state
+
+
+   * - ``drive-push-pull``
+     - ``boolean``
+     - .. code-block:: none
+
+          drive actively high and low
+
+
+   * - ``drive-open-drain``
+     - ``boolean``
+     - .. code-block:: none
+
+          drive with open drain (hardware AND)
+
+
+   * - ``drive-open-source``
+     - ``boolean``
+     - .. code-block:: none
+
+          drive with open source (hardware OR)
+
+
+   * - ``drive-strength-microamp``
+     - ``int``
+     - .. code-block:: none
+
+          maximum sink or source current in μA
+
+
+   * - ``input-enable``
+     - ``boolean``
+     - .. code-block:: none
+
+          enable input on pin (e.g. enable an input buffer, no effect on output)
+
+
+
+   * - ``input-disable``
+     - ``boolean``
+     - .. code-block:: none
+
+          disable input on pin (e.g. disable an input buffer, no effect on output)
+
+
+
+   * - ``input-schmitt-enable``
+     - ``boolean``
+     - .. code-block:: none
+
+          enable schmitt-trigger mode
+
+
+   * - ``input-schmitt-disable``
+     - ``boolean``
+     - .. code-block:: none
+
+          disable schmitt-trigger mode
+
+
+   * - ``input-debounce``
+     - ``int``
+     - .. code-block:: none
+
+          Takes the debounce time in μsec, as argument or 0 to disable debouncing
+
+
+
+   * - ``power-source``
+     - ``int``
+     - .. code-block:: none
+
+          select between different power supplies
+
+
+   * - ``low-power-enable``
+     - ``boolean``
+     - .. code-block:: none
+
+          enable low power mode
+
+
+   * - ``low-power-disable``
+     - ``boolean``
+     - .. code-block:: none
+
+          disable low power mode
+
+
+   * - ``output-disable``
+     - ``boolean``
+     - .. code-block:: none
+
+          disable output on a pin (e.g. disable an output buffer)
+
+
+   * - ``output-enable``
+     - ``boolean``
+     - .. code-block:: none
+
+          enable output on a pin without actively driving it (e.g. enable an output
+          buffer)
+
+
+
+   * - ``output-low``
+     - ``boolean``
+     - .. code-block:: none
+
+          set the pin to output mode with low level
+
+
+   * - ``output-high``
+     - ``boolean``
+     - .. code-block:: none
+
+          set the pin to output mode with high level
+
+
+   * - ``sleep-hardware-state``
+     - ``boolean``
+     - .. code-block:: none
+
+          indicate this is sleep related state which will be programmed into
+          the registers for the sleep state
+
+
+
+   * - ``slew-rate``
+     - ``int``
+     - .. code-block:: none
+
+          set the slew rate
+
+
+   * - ``skew-delay``
+     - ``int``
+     - .. code-block:: none
+
+          This affects the expected clock skew on input pins and the delay
+          before latching a value to an output pin. Typically indicates how
+            many double-inverters are used to delay the signal.
+
+
+
