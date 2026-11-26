@@ -1,4 +1,4 @@
-.. ti-socs: mspm0 mspm33 am62l
+.. ti-socs: mspm0 mspm33 am62l am13
 
 .. _ti-zephyr-component-pwm:
 
@@ -11,8 +11,15 @@ PWM
       :titlesonly:
       :maxdepth: 1
 
-      am62l/ecap
-      am62l/ehrpwm
+      ehrpwm/index
+
+.. only:: am13 or am62l
+   
+   .. toctree::
+      :titlesonly:
+      :maxdepth: 1
+
+      ecap/index
 
 .. only:: mspm0 or mspm33
 

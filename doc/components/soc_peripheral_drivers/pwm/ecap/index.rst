@@ -1,4 +1,4 @@
-.. ti-socs: am62l
+.. ti-socs: am62l am13
 
 .. _ti-zephyr-component-ecap:
 
