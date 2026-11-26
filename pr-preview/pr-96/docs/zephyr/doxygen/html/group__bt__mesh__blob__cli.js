@@ -2,7 +2,7 @@ var group__bt__mesh__blob__cli =
 [
     [ "bt_mesh_blob_target_pull", "structbt__mesh__blob__target__pull.html", [
       [ "block_report_timestamp", "structbt__mesh__blob__target__pull.html#a9234ee3246890285b5cd30c32866b718", null ],
-      [ "missing", "structbt__mesh__blob__target__pull.html#af6343d963c94e89420f391644044bc22", null ]
+      [ "missing", "structbt__mesh__blob__target__pull.html#a19fc9a8a0b5202887e7fd73028805774", null ]
     ] ],
     [ "bt_mesh_blob_target", "structbt__mesh__blob__target.html", [
       [ "acked", "structbt__mesh__blob__target.html#a4eef4809023e8d4a4ee8beece5e83160", null ],

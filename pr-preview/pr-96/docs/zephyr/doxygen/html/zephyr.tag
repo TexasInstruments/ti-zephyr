@@ -8318,17 +8318,17 @@
       <arglist>(void)</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>_Bool</type>
       <name>arch_cache_is_ptr_cached</name>
       <anchorfile>group__arch-cache.html</anchorfile>
-      <anchor>ga9ed1c303508eb68db80f14fdb6eb7faa</anchor>
+      <anchor>gac71f7d75165de9402a2df3edaa1556aa</anchor>
       <arglist>(void *ptr)</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>_Bool</type>
       <name>arch_cache_is_ptr_uncached</name>
       <anchorfile>group__arch-cache.html</anchorfile>
-      <anchor>gab6bdf8089dce42e4463f761bae56e652</anchor>
+      <anchor>ga5f69fb79310089a3d40bc5b4f08bdd5e</anchor>
       <arglist>(void *ptr)</arglist>
     </member>
     <member kind="function">
@@ -570436,24 +570436,24 @@
       <arglist>(name, num_bits)</arglist>
     </member>
     <member kind="function" static="yes">
-      <type>static _Bool</type>
+      <type>static bool</type>
       <name>atomic_test_bit</name>
       <anchorfile>group__atomic__apis.html</anchorfile>
-      <anchor>ga153c7d3a124e95ddf29e6f65bd124e44</anchor>
+      <anchor>ga190ddc108f45e7649689753c08658eae</anchor>
       <arglist>(const atomic_t *target, int bit)</arglist>
     </member>
     <member kind="function" static="yes">
-      <type>static _Bool</type>
+      <type>static bool</type>
       <name>atomic_test_and_clear_bit</name>
       <anchorfile>group__atomic__apis.html</anchorfile>
-      <anchor>ga4878e529d511f7e11db63fa5728bd352</anchor>
+      <anchor>ga53159437721084da0ec8ee70ec212472</anchor>
       <arglist>(atomic_t *target, int bit)</arglist>
     </member>
     <member kind="function" static="yes">
-      <type>static _Bool</type>
+      <type>static bool</type>
       <name>atomic_test_and_set_bit</name>
       <anchorfile>group__atomic__apis.html</anchorfile>
-      <anchor>ga042174774d12e52519be91ee6aeaf2ec</anchor>
+      <anchor>ga7ff45e13aa5f8be5d7a550e49f5c720b</anchor>
       <arglist>(atomic_t *target, int bit)</arglist>
     </member>
     <member kind="function" static="yes">
@@ -570474,21 +570474,21 @@
       <type>static void</type>
       <name>atomic_set_bit_to</name>
       <anchorfile>group__atomic__apis.html</anchorfile>
-      <anchor>ga694d6953cc75e92a4d8e387256c0a2ed</anchor>
-      <arglist>(atomic_t *target, int bit, _Bool val)</arglist>
+      <anchor>gad749f16ca51ffc26e7303988de1b8dbf</anchor>
+      <arglist>(atomic_t *target, int bit, bool val)</arglist>
     </member>
     <member kind="function">
-      <type>_Bool</type>
+      <type>bool</type>
       <name>atomic_cas</name>
       <anchorfile>group__atomic__apis.html</anchorfile>
-      <anchor>gaef275bd78e093e5b5177ef725d0f570a</anchor>
+      <anchor>gab879da5aa1ffcc317adc664c016586f7</anchor>
       <arglist>(atomic_t *target, atomic_val_t old_value, atomic_val_t new_value)</arglist>
     </member>
     <member kind="function">
-      <type>_Bool</type>
+      <type>bool</type>
       <name>atomic_ptr_cas</name>
       <anchorfile>group__atomic__apis.html</anchorfile>
-      <anchor>gac83bb88616b79ffcfff140377bea983d</anchor>
+      <anchor>ga98f03db5ef2b36ff3412506a7f6d9558</anchor>
       <arglist>(atomic_ptr_t *target, atomic_ptr_val_t old_value, atomic_ptr_val_t new_value)</arglist>
     </member>
     <member kind="function">
@@ -643718,8 +643718,8 @@
       <type>uint8_t</type>
       <name>missing</name>
       <anchorfile>structbt__mesh__blob__target__pull.html</anchorfile>
-      <anchor>af6343d963c94e89420f391644044bc22</anchor>
-      <arglist>[DIV_ROUND_UP(0, 8)]</arglist>
+      <anchor>a19fc9a8a0b5202887e7fd73028805774</anchor>
+      <arglist>[DIV_ROUND_UP(CONFIG_BT_MESH_BLOB_CHUNK_COUNT_MAX, 8)]</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -717687,17 +717687,17 @@
       <arglist>(void)</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>_Bool</type>
       <name>arch_cache_is_ptr_cached</name>
       <anchorfile>group__arch-cache.html</anchorfile>
-      <anchor>ga9ed1c303508eb68db80f14fdb6eb7faa</anchor>
+      <anchor>gac71f7d75165de9402a2df3edaa1556aa</anchor>
       <arglist>(void *ptr)</arglist>
     </member>
     <member kind="function">
-      <type>bool</type>
+      <type>_Bool</type>
       <name>arch_cache_is_ptr_uncached</name>
       <anchorfile>group__arch-cache.html</anchorfile>
-      <anchor>gab6bdf8089dce42e4463f761bae56e652</anchor>
+      <anchor>ga5f69fb79310089a3d40bc5b4f08bdd5e</anchor>
       <arglist>(void *ptr)</arglist>
     </member>
     <member kind="function">
@@ -720200,24 +720200,24 @@
       <arglist>(name, num_bits)</arglist>
     </member>
     <member kind="function" static="yes">
-      <type>static _Bool</type>
+      <type>static bool</type>
       <name>atomic_test_bit</name>
       <anchorfile>group__atomic__apis.html</anchorfile>
-      <anchor>ga153c7d3a124e95ddf29e6f65bd124e44</anchor>
+      <anchor>ga190ddc108f45e7649689753c08658eae</anchor>
       <arglist>(const atomic_t *target, int bit)</arglist>
     </member>
     <member kind="function" static="yes">
-      <type>static _Bool</type>
+      <type>static bool</type>
       <name>atomic_test_and_clear_bit</name>
       <anchorfile>group__atomic__apis.html</anchorfile>
-      <anchor>ga4878e529d511f7e11db63fa5728bd352</anchor>
+      <anchor>ga53159437721084da0ec8ee70ec212472</anchor>
       <arglist>(atomic_t *target, int bit)</arglist>
     </member>
     <member kind="function" static="yes">
-      <type>static _Bool</type>
+      <type>static bool</type>
       <name>atomic_test_and_set_bit</name>
       <anchorfile>group__atomic__apis.html</anchorfile>
-      <anchor>ga042174774d12e52519be91ee6aeaf2ec</anchor>
+      <anchor>ga7ff45e13aa5f8be5d7a550e49f5c720b</anchor>
       <arglist>(atomic_t *target, int bit)</arglist>
     </member>
     <member kind="function" static="yes">
@@ -720238,21 +720238,21 @@
       <type>static void</type>
       <name>atomic_set_bit_to</name>
       <anchorfile>group__atomic__apis.html</anchorfile>
-      <anchor>ga694d6953cc75e92a4d8e387256c0a2ed</anchor>
-      <arglist>(atomic_t *target, int bit, _Bool val)</arglist>
+      <anchor>gad749f16ca51ffc26e7303988de1b8dbf</anchor>
+      <arglist>(atomic_t *target, int bit, bool val)</arglist>
     </member>
     <member kind="function">
-      <type>_Bool</type>
+      <type>bool</type>
       <name>atomic_cas</name>
       <anchorfile>group__atomic__apis.html</anchorfile>
-      <anchor>gaef275bd78e093e5b5177ef725d0f570a</anchor>
+      <anchor>gab879da5aa1ffcc317adc664c016586f7</anchor>
       <arglist>(atomic_t *target, atomic_val_t old_value, atomic_val_t new_value)</arglist>
     </member>
     <member kind="function">
-      <type>_Bool</type>
+      <type>bool</type>
       <name>atomic_ptr_cas</name>
       <anchorfile>group__atomic__apis.html</anchorfile>
-      <anchor>gac83bb88616b79ffcfff140377bea983d</anchor>
+      <anchor>ga98f03db5ef2b36ff3412506a7f6d9558</anchor>
       <arglist>(atomic_ptr_t *target, atomic_ptr_val_t old_value, atomic_ptr_val_t new_value)</arglist>
     </member>
     <member kind="function">
@@ -877913,6 +877913,7 @@
     <docanchor file="index.html" title="Introduction">md__2home_2runner_2work_2ti-zephyr_2ti-zephyr_2zephyr_2doc_2__doxygen_2mainpage</docanchor>
   </compound>
 </tagfile>
-en_2mainpage</docanchor>
+agfile>
+r>
   </compound>
 </tagfile>
